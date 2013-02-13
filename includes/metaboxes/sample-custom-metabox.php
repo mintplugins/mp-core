@@ -75,7 +75,7 @@ add_filter('mp_custom_plugin_items_array','mp_paintings_additional_items_array')
 
 //Create Metabox class
 global $my_metabox;
-$my_metabox = new mp_core_New_Metabox($add_meta_box, $items_array);
+$my_metabox = new MP_CORE_Metabox($add_meta_box, $items_array);
 
 
 //Get all the fields in a specific repeater to an array

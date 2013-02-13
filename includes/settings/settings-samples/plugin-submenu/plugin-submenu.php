@@ -6,7 +6,7 @@ $args = array('parent_slug' => 'edit.php?post_type=download', 'title' => __('Plu
 
 //Initialize settings class
 global $plugin_submenu;
-$plugin_submenu = new mp_core_Settings($args);
+$plugin_submenu = new MP_CORE_Settings($args);
 
 
 //Include other option tabs

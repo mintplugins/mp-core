@@ -13,7 +13,7 @@ function my_plugin_settings(){
 	
 	//Initialize settings class
 	global $my_plugin_settings_class;
-	$my_plugin_settings_class = new mp_core_Settings($args);
+	$my_plugin_settings_class = new MP_CORE_Settings($args);
 	
 	//Include other option tabs
 	include_once( 'settings-tab-general.php' );

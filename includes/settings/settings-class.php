@@ -18,7 +18,7 @@
  * @since Foundation 1.0
  */
  
-class mp_core_Settings{
+class MP_CORE_Settings{
 	
 	protected $_args;
 	protected $_settings_array = array();

@@ -3,8 +3,8 @@
  * Plugin Checker Class for the wp_core Plugin by Move Plugins
  * http://moveplugins.com/plugin-checker-class/
  */
-if ( !class_exists( 'mp_core_plugin_checker' ) ){
-	class mp_core_plugin_checker{
+if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
+	class MP_CORE_Plugin_Checker{
 		
 		public function __construct($args){
 			

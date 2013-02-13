@@ -13,7 +13,7 @@ function mp_core_theme_updater() {
 		'plugin_required' => true,
 		'plugin_download_link' => 'http://moveplugins.com'
 	);
-	$mp_core_theme_updater = new mp_core_plugin_checker($args);
+	$mp_core_theme_updater = new MP_CORE_Plugin_Checker($args);
 }
 add_action( 'after_setup_theme', 'mp_core_theme_updater' );
 
@@ -31,7 +31,7 @@ function mp_core_edd() {
 		'plugin_required' => false,
 		'plugin_download_link' => 'http://moveplugins.com'
 	);
-	$mp_core_edd = new mp_core_plugin_checker($args);
+	$mp_core_edd = new MP_CORE_Plugin_Checker($args);
 }
 add_action( 'after_setup_theme', 'mp_core_edd' );
 
@@ -49,6 +49,6 @@ function mp_core_akismet() {
 		'plugin_required' => true ,
 		'plugin_download_link' => 'http://moveplugins.com'
 	);
-	$mp_core_akismet = new mp_core_plugin_checker($args);
+	$mp_core_akismet = new MP_CORE_Plugin_Checker($args);
 }
 add_action( 'after_setup_theme', 'mp_core_akismet' );

@@ -6,7 +6,7 @@ $args = array('title' => __('Theme Options', 'mp_core'), 'slug' => 'mp_theme_opt
 
 //Initialize settings class
 global $theme_options;
-$theme_options = new mp_core_Settings($args);
+$theme_options = new MP_CORE_Settings($args);
 
 
 //Include other option tabs

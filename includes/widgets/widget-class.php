@@ -8,7 +8,7 @@
  * Extends WP_Widget include saving settings and displaying them to the user. 
  * This class is meant to be extended with a custom construct function. See http://moveplugins.com/widget-class/ for more
  */
-class mp_core_Widget extends WP_Widget {
+class MP_CORE_Widget extends WP_Widget {
 		
 	public function moveplugins_enqueue_scripts(){
 		//color picker scripts
@@ -117,6 +117,6 @@ class mp_core_Widget extends WP_Widget {
             }
 		echo '</p>';
 	}
-} // class mp_core_Widget
+} // class MP_CORE_Widget
 
 include_once( 'custom-widgets/sample-custom-widget.php' );

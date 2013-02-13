@@ -1,8 +1,8 @@
 <?php
 /**
- * Extends mp_core_Widget to create custom widget class.
+ * Extends MP_CORE_Widget to create custom widget class.
  */
-class my_custom_Widget extends mp_core_Widget {
+class My_Custom_Widget extends MP_CORE_Widget {
 
 	/**
 	 * Register widget with WordPress.
@@ -14,7 +14,7 @@ class my_custom_Widget extends mp_core_Widget {
 			array( 'description' => __( 'A Foo Widget', 'text_domain' ), ) // Args
 		);
 		
-		//enqueue scripts defined in mp_core_Widget
+		//enqueue scripts defined in MP_CORE_Widget
 		add_action( 'admin_enqueue_scripts', array( $this, 'moveplugins_enqueue_scripts' ) );
 	
 		$this->_form = array (
