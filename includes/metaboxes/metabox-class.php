@@ -21,19 +21,21 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		public function mp_core_enqueue_scripts(){
+			//mp_core_metabox_css
+			wp_enqueue_style( 'mp_core_metabox_css', plugins_url('css/mp_core_metabox.css', dirname(__FILE__)) );
 			//color picker scripts
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker-load', plugins_url( '/mp_core/includes/js/wp-color-picker.js'),  array( 'jquery') );
+			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery') );
 			//media upload scripts
 			wp_enqueue_media();
 			//image uploader script
-			wp_enqueue_script( 'image-upload', plugins_url( '/mp_core/includes/js/image-upload.js' ),  array( 'jquery' ) );
+			wp_enqueue_script( 'image-upload', plugins_url( 'js/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
 			//duplicator script
-			wp_enqueue_script( 'field-duplicator', plugins_url( '/mp_core/includes/js/field-duplicator.js' ),  array( 'jquery' ) );	
+			wp_enqueue_script( 'field-duplicator', plugins_url( 'js/field-duplicator.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 			//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
-			wp_enqueue_script( 'sortable', plugins_url( '/mp_core/includes/js/sortable.js' ),  array( 'jquery' ) );	
-			wp_enqueue_script( 'mp_set_sortables', plugins_url( '/mp_core/includes/js/mp_set_sortables.js' ),  array( 'jquery', 'sortable' ) );	
+			wp_enqueue_script( 'sortable', plugins_url( 'js/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/mp_set_sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
 			//do_action
 			do_action('mp_core_' . $this->_args['metabox_id'] . '_metabox_custom_scripts');
 		}
@@ -136,7 +138,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								}
 								
 								//This is the last one in a set of repeatable fields
-								echo '<a class="mp_duplicate button" style="margin-right:5px">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button" style="margin-right:5px">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a>';
+								echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a></div>';
 								echo '</li>';
 								
 								//bump the repeat_counter to the next number of the array
@@ -169,7 +171,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							}
 							
 							//This is the last one in a set of repeatable fields
-							echo '<a class="mp_duplicate button" style="margin-right:5px">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button" style="margin-right:5px">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a>';
+							echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a></div>';
 							echo '</li>';
 						}
 						
@@ -364,90 +366,90 @@ if (!class_exists('MP_CORE_Metabox')){
 		* basictext field
 		*/
 		function basictext($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
 			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " size="25" />';
-			echo '</label>';
-			echo '</p>'; 
+			echo '</label></div>';
+			echo '</div>'; 
 		}
 		/**
 		* textbox field
 		*/
 		function textbox($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* checkbox field
 		*/
 		function checkbox($field_id, $field_title, $field_description, $value, $classname, $field_select_values, $field_preset_value){
 			$checked = empty($value) ? '' : 'checked';
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_preset_value . '" size="25" ' . $checked . '/>';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* url field
 		*/
 		function url($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* date field
 		*/
 		function date($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* number field
 		*/
 		function number($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* textarea field
 		*/
 		function textarea($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
 			echo '<textarea id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" rows="4" cols="50">';
 			echo $value;
 			echo '</textarea>';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* select field
 		*/
 		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';   
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
 			?>
 			<label for="<?php echo $field_id; ?>">
 				<select name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>">
@@ -459,30 +461,30 @@ if (!class_exists('MP_CORE_Metabox')){
 				</select>
 			</label>
 			<?php        
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* colorpicker field
 		*/
 		function colorpicker($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
 			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" size="25" />';
-			echo '</p>'; 
+			echo '</div>'; 
 		}
 		/**
 		* mediaupload field
 		*/
 		function mediaupload($field_id, $field_title, $field_description, $value, $classname){
-			echo '<p><label for="' . $field_id . '">';
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . $field_description : '';
-			echo '</label><br />';
+			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
 			?>       
 			<!-- Upload button and text field -->
-			<input class="custom_media_url <?php echo $classname; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
+			<input class="custom_media_url <?php echo $classname; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $value ); ?>">
 			<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 			
 			<?php
@@ -490,12 +492,12 @@ if (!class_exists('MP_CORE_Metabox')){
 			if ( isset($value) ){
 				$ext = pathinfo($value, PATHINFO_EXTENSION);
 				if ($ext == 'png' || $ext == 'jpg'){
-					?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display:inline-block;" /><?php
+					?><img class="custom_media_image" src="<?php echo $value; ?>" style="display:inline-block;" /><?php
 				}else{
-					?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display: none;" /><?php
+					?><img class="custom_media_image" src="<?php echo $value; ?>" style="display: none;" /><?php
 				}
 			}
-		echo '</p>';   
+		echo '</div>';   
 	
 		}
 		/**

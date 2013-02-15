@@ -1,0 +1,42 @@
+/**
+ * Metabox Style
+ * http://moveplugins.com
+ */
+ 
+.mp_duplicate, .mp_duplicate_remove{
+	margin:10px 5px 0px 0px!important; 
+}
+
+.mp_field{
+	border-bottom: solid 1px #dfdfdf;
+	padding-bottom:10px;
+	margin:10px 0px 0px 0px; 
+}
+.mp_field > label{
+	margin:0px 0px 5px 0px!important;	
+}
+.mp_title{
+	margin-bottom:5px;	
+}
+.custom_media_url{
+	margin-bottom:10px; 
+	clear:right; 
+}
+.custom_media_image{
+	max-width:30px;
+	margin-left:10px;
+	position:absolute;
+}
+.repeater_container{
+	padding:0;
+	margin:0;
+}
+.repeater_container li{
+	padding-bottom:10px;
+	margin-bottom:15px;
+}
+.mp_duplicate_buttons{
+	padding-bottom:10px;
+	border-bottom: solid 1px #999;
+	width:220px;
+}
