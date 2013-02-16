@@ -236,9 +236,9 @@ class MP_CORE_Settings{
 			if (isset($value)){
 				$ext = pathinfo($value, PATHINFO_EXTENSION);
 				if ($ext == 'png' || $ext == 'jpg'){
-					?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display:inline-block;" /><?php
+					?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display:inline-block;" /><?php
 				}else{
-					?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display: none;" /><?php
+					?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display: none;" /><?php
 				}
 			}
 		echo '</label>';   

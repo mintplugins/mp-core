@@ -10,10 +10,10 @@ jQuery(document).ready(function($){
 			//if this is an image, display the thumbnail above the upload button
 			var ext = attachment.url.split('.').pop();
 			if (ext == 'png' || ext == 'jpg'){
-				$(button).next().attr('src', attachment.url);
-				$(button).next().css('display', 'inline-block');
+				$(button).parent().next().attr('src', attachment.url);
+				$(button).parent().next().css('display', 'inline-block');
 			}else{
-				$(button).next().css('display', 'none');
+				$(button).next().next().css('display', 'none');
 			}
 			
 			//put the url of the file in the field just above the button
