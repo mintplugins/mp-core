@@ -31,7 +31,7 @@ add_action( 'my_plugin_settings_do_settings_hook', 'my_plugin_settings_general_t
 function my_plugin_settings_general_create(){
 	
 	//This variable must be the name of the variable that stores the class.
-	global $my_plugin_settings_class;
+	global $my_plugin_settings_page;
 	
 	register_setting(
 		'my_plugin_settings_general',
@@ -49,7 +49,7 @@ function my_plugin_settings_general_create(){
 	add_settings_field(
 		'enable_disable',
 		__( 'Enable/Disable Envato Check', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'select' ),
+		array( &$my_plugin_settings_page, 'select' ),
 		'my_plugin_settings_general',
 		'envato_check_settings',
 		array(
@@ -64,7 +64,7 @@ function my_plugin_settings_general_create(){
 	add_settings_field(
 		'envato_username',
 		__( 'Envato Username', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'textbox' ),
+		array( &$my_plugin_settings_page, 'textbox' ),
 		'my_plugin_settings_general',
 		'envato_check_settings',
 		array(
@@ -78,7 +78,7 @@ function my_plugin_settings_general_create(){
 	add_settings_field(
 		'envato_api_key',
 		__( 'Envato API Key', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'textbox' ),
+		array( &$my_plugin_settings_page, 'textbox' ),
 		'my_plugin_settings_general',
 		'envato_check_settings',
 		array(
@@ -92,7 +92,7 @@ function my_plugin_settings_general_create(){
 	add_settings_field(
 		'redirect_page',
 		__( 'Redirect Page', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'select' ),
+		array( &$my_plugin_settings_page, 'select' ),
 		'my_plugin_settings_general',
 		'envato_check_settings',
 		array(
@@ -100,14 +100,14 @@ function my_plugin_settings_general_create(){
 			'value'       => mp_core_get_option( 'my_plugin_settings_general',  'redirect_page' ),
 			'description' => __( 'Select the page you want to redirect your users to after they create an account', 'my_plugin' ),
 			'registration'=> 'my_plugin_settings_general',
-			'options'=> $my_plugin_settings_class->get_all_pages() 
+			'options'=> $my_plugin_settings_page->get_all_pages() 
 		)
 	);
 	
 	add_settings_field(
 		'envato_message',
 		__( 'Envato Message', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'wp_editor' ),
+		array( &$my_plugin_settings_page, 'wp_editor' ),
 		'my_plugin_settings_general',
 		'envato_check_settings',
 		array(

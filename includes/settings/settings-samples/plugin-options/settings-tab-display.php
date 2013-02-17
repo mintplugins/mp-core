@@ -11,7 +11,7 @@
 * Display tab at top of Theme Options page
 */
 function my_plugin_settings_display_tab_title($active_tab){ 
-	$tab_title = __('Envato Check Settings' , 'my_plugin');
+	$tab_title = __('Display Settings' , 'my_plugin');
 	if ($active_tab == 'my_plugin_settings_display'){ $active_class = 'nav-tab-active'; }else{$active_class = "";}
 	echo ('<a href="?page=my_plugin_settings&tab=my_plugin_settings_display" class="nav-tab ' . $active_class . '">' . $tab_title . '</a>');
 }
@@ -31,7 +31,7 @@ add_action( 'my_plugin_settings_do_settings_hook', 'my_plugin_settings_display_t
 function my_plugin_settings_display_create(){
 	
 	//This variable must be the name of the variable that stores the class.
-	global $my_plugin_settings_class;
+	global $my_plugin_settings_page;
 	
 	register_setting(
 		'my_plugin_settings_display',
@@ -49,7 +49,7 @@ function my_plugin_settings_display_create(){
 	add_settings_field(
 		'enable_disable',
 		__( 'Enable/Disable Envato Check', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'select' ),
+		array( &$my_plugin_settings_page, 'select' ),
 		'my_plugin_settings_display',
 		'envato_check_settings',
 		array(
@@ -64,7 +64,7 @@ function my_plugin_settings_display_create(){
 	add_settings_field(
 		'envato_username',
 		__( 'Envato Username', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'textbox' ),
+		array( &$my_plugin_settings_page, 'textbox' ),
 		'my_plugin_settings_display',
 		'envato_check_settings',
 		array(
@@ -78,7 +78,7 @@ function my_plugin_settings_display_create(){
 	add_settings_field(
 		'envato_api_key',
 		__( 'Envato API Key', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'textbox' ),
+		array( &$my_plugin_settings_page, 'textbox' ),
 		'my_plugin_settings_display',
 		'envato_check_settings',
 		array(
@@ -92,7 +92,7 @@ function my_plugin_settings_display_create(){
 	add_settings_field(
 		'redirect_page',
 		__( 'Redirect Page', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'select' ),
+		array( &$my_plugin_settings_page, 'select' ),
 		'my_plugin_settings_display',
 		'envato_check_settings',
 		array(
@@ -100,14 +100,14 @@ function my_plugin_settings_display_create(){
 			'value'       => mp_core_get_option( 'my_plugin_settings_display',  'redirect_page' ),
 			'description' => __( 'Select the page you want to redirect your users to after they create an account', 'my_plugin' ),
 			'registration'=> 'my_plugin_settings_display',
-			'options'=> $my_plugin_settings_class->get_all_pages() 
+			'options'=> $my_plugin_settings_page->get_all_pages() 
 		)
 	);
 	
 	add_settings_field(
 		'envato_message',
 		__( 'Envato Message', 'my_plugin' ), 
-		array( &$my_plugin_settings_class, 'wp_editor' ),
+		array( &$my_plugin_settings_page, 'wp_editor' ),
 		'my_plugin_settings_display',
 		'envato_check_settings',
 		array(

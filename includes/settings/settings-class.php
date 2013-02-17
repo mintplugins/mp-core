@@ -15,7 +15,7 @@
  * which is used when the option is saved, to ensure that our option values are properly
  * formatted, and safe.
  *
- * @since Foundation 1.0
+ * @since mp_core 1.0
  */
  
 class MP_CORE_Settings{
@@ -46,7 +46,7 @@ class MP_CORE_Settings{
 	 *
 	 * This function is attached to the admin_menu action hook.
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	public function mp_core_add_page() {
 		
@@ -87,7 +87,7 @@ class MP_CORE_Settings{
 	/**
 	 * Renders the Theme Options administration screen.
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	public function mp_core_render_page() {
 		?>
@@ -119,7 +119,7 @@ class MP_CORE_Settings{
 	/**
 	 * Number Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function number( $args = array() ) {
 		$defaults = array(
@@ -149,7 +149,7 @@ class MP_CORE_Settings{
 	/**
 	 * Textarea Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function textarea( $args = array() ) {
 		$defaults = array(
@@ -176,7 +176,7 @@ class MP_CORE_Settings{
 	/**
 	 * Tiny MCE editor Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function wp_editor( $args = array() ) {
 		$defaults = array(
@@ -206,7 +206,7 @@ class MP_CORE_Settings{
 	/**
 	 * Image Upload Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function mediaupload( $args = array() ) {
 		$defaults = array(
@@ -247,7 +247,7 @@ class MP_CORE_Settings{
 	/**
 	 * Textbox Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function textbox( $args = array() ) {
 		
@@ -274,7 +274,7 @@ class MP_CORE_Settings{
 	/**
 	 * Radio Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function radio( $args = array() ) {
 		$defaults = array(
@@ -304,7 +304,7 @@ class MP_CORE_Settings{
 	/**
 	 * Select Field
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function select( $args = array() ) {
 		$defaults = array(
@@ -337,7 +337,7 @@ class MP_CORE_Settings{
 	/**
 	 * Color Picker
 	 *
-	 * @since Foundation 1.0
+	 * @since mp_core 1.0
 	 */
 	function colorpicker($args = array() ) {
 		$defaults = array(
@@ -417,7 +417,7 @@ class MP_CORE_Settings{
  * The $registration variable must match the name of the set of options. It is set in the register_settings function. 
  * If the $key variable is set, it will return just that setting. If not, it will return the entire set of settings as an array.
  *
- * @since Foundation 1.0
+ * @since mp_core 1.0
  */
 function mp_core_get_option($registration, $key='') {
 	$saved = (array) get_option( $registration );	
