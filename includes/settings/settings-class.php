@@ -57,31 +57,67 @@ class MP_CORE_Settings{
 		if ($this->_args['type'] == 'menu' || $this->_args['type'] == 'object' || $this->_args['type'] == 'utility'){
 			if (isset($this->_args['icon']) && !isset($this->_args['position'])){ 
 				//Icon has been specified but position has not
-				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), $this->_args['icon']);
+				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), $this->_args['icon']);
 			}
 			elseif (!isset($this->_args['icon']) && isset($this->_args['position'])){ 
 				//Position has been specified but icon has not
-				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), NULL, $this->_args['position']);
+				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), NULL, $this->_args['position']);
 			}
 			elseif (isset($this->_args['icon']) && isset($this->_args['position'])){ 
 				//Both Icon and position have been specified
-				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), $this->_args['icon'], $this->_args['position']);
+				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ), $this->_args['icon'], $this->_args['position']);
 			}
 			else {
 				//Neither icon nor position have been specified
-				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ));
+				$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ));
 			}
 		}
 		//Call function 'add_submenu_page'
 		elseif ($this->_args['type'] == 'submenu'){
 			//Args if this is a 'submenu'
-			$menu_page = $page_function_name( $this->_args['parent_slug'], $this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ));
+			$menu_page = $page_function_name( $this->_args['parent_slug'], $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ));
 		//Call one of the administration menus funtions: 
 		}else{
 			//Basic page args
-			$menu_page = $page_function_name($this->_args['title'], $this->_args['title'], 'edit_theme_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' )
+			$menu_page = $page_function_name($this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' )
 			);
 		}		
+	}
+	
+	/**
+	 * Renders the Theme Options administration screen.
+	 *
+	 * @since mp_core 1.0
+	 */
+	function mp_core_new_tab($tab_title, $tab_slug) {
+		
+		$parent_slug = isset($this->_args['parent_slug']) ? $this->_args['parent_slug'] : NULL;
+		
+		/**
+		* Display tab at top of Theme Options page
+		*/
+		$mp_core_display_tab_title = function ($active_tab) use ($tab_title, $tab_slug, $parent_slug){ 
+			
+			//Set tab link based on whether there is a parent_slug
+			if (empty($parent_slug)){
+				//This is not a submenu
+				$tab_link = '?page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+			}else{
+				//This is a submenu
+				$question_char = strrpos($parent_slug, "?");
+				if ($question_char === false) { // note: three equal signs
+					$tab_link = get_admin_url() . $parent_slug . '?page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+				}else{
+					$tab_link = get_admin_url() . $parent_slug . '&page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+				}
+			}
+			
+			//Add this tab to the page
+			if ($active_tab == $this->_args['slug'] . '_' . $tab_slug){ $active_class = 'nav-tab-active'; }else{$active_class = "";}
+			echo ('<a href="' . $tab_link . '" class="nav-tab ' . $active_class . '">' . $tab_title . '</a>');
+		};
+		add_action( $this->_args['slug'] . '_new_tab_hook', $mp_core_display_tab_title );
+
 	}
 	
 	/**
@@ -106,266 +142,302 @@ class MP_CORE_Settings{
 	
 			<form method="post" action="options.php">
 				<?php
-					do_action($this->_args['slug'] . '_do_settings_hook');
-					$active_tab();
+				
+					/**
+					* Check Permissions
+					*/
+					if ( !current_user_can( 'manage_options' ) )  {
+						wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+					}
+	
+					/**
+					* Display the options for the active tab
+					*/
+					settings_fields( $active_tab );
+					do_settings_sections( $active_tab );
+		
 					submit_button();
 				?>
 			</form>
 		</div>
 		<?php
 	}
+}
+
+/* Fields ***************************************************************/
+/**
+ * Number Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_number( $args = array() ) {
+	$defaults = array(
+		'menu'        => '', 
+		'min'         => 1,
+		'max'         => 100,
+		'step'        => 1,
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
 	
-	/* Fields ***************************************************************/
-	/**
-	 * Number Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function number( $args = array() ) {
-		$defaults = array(
-			'menu'        => '', 
-			'min'         => 1,
-			'max'         => 100,
-			'step'        => 1,
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-	?>
-		<label for="<?php echo esc_attr( $id ); ?>">
-			<input type="number" min="<?php echo absint( $min ); ?>" max="<?php echo absint( $max ); ?>" step="<?php echo absint( $step ); ?>" name="<?php echo $name; ?>" id="<?php echo $id ?>" value="<?php echo esc_attr( $value ); ?>" />
-			<?php echo $description; ?>
-		</label>
-	<?php
-	} 
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
 	
-	/**
-	 * Textarea Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function textarea( $args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-	?>
-		<label for="<?php echo $id; ?>">
-			<textarea name="<?php echo $name; ?>" id="<?php echo $id; ?>" class="code large-text" rows="3" cols="30"><?php echo esc_textarea( $value ); ?></textarea>
-			<br />
-			<?php echo $description; ?>
-		</label>
-	<?php
-	} 
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo esc_attr( $id ); ?>">
+		<input type="number" min="<?php echo absint( $min ); ?>" max="<?php echo absint( $max ); ?>" step="<?php echo absint( $step ); ?>" name="<?php echo $name; ?>" id="<?php echo $id ?>" value="<?php echo esc_attr( $value ); ?>" />
+		<?php echo $description; ?>
+	</label>
+<?php
+} 
+
+/**
+ * Textarea Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_textarea( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
 	
-	/**
-	 * Tiny MCE editor Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function wp_editor( $args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
 	
-		?><label for="<?php echo $id; ?>"><?php
-			
-			wp_editor( html_entity_decode($value) , $name, $settings = array('textarea_rows' => 5));
-            
-			echo $description; ?>
-            
-		</label><?php
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo $id; ?>">
+		<textarea name="<?php echo $name; ?>" id="<?php echo $id; ?>" class="code large-text" rows="3" cols="30"><?php echo esc_textarea( $value ); ?></textarea>
+		<br />
+		<?php echo $description; ?>
+	</label>
+<?php
+} 
+
+/**
+ * Tiny MCE editor Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_wp_editor( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
 	
-	} 
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
 	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+
+	?><label for="<?php echo $id; ?>"><?php
+		
+		wp_editor( html_entity_decode($value) , $name, $settings = array('textarea_rows' => 5));
+		
+		echo $description; ?>
+		
+	</label><?php
+
+} 
+
+
+/**
+ * Image Upload Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_mediaupload( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
 	
-	/**
-	 * Image Upload Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function mediaupload( $args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-		
-		if (isset($_REQUEST['file'])){
-				$value = wp_get_attachment_url( $_REQUEST['file'] );
-		}
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
 	
-		echo '<label for="' . $id . '">';?>       
-			<!-- Upload button and text field -->
-			<input class="custom_media_url" id="<?php echo $id; ?>" type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
-			<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
-			
-			<?php
-			//Image thumbnail
-			if (isset($value)){
-				$ext = pathinfo($value, PATHINFO_EXTENSION);
-				if ($ext == 'png' || $ext == 'jpg'){
-					?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display:inline-block;" /><?php
-				}else{
-					?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display: none;" /><?php
-				}
-			}
-		echo '</label>';   
-	} 
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
 	
-	/**
-	 * Textbox Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function textbox( $args = array() ) {
-		
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-	?>
-		<label for="<?php echo $id; ?>">
-			<input type="text" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>">
-			<br /><?php echo $description; ?>
-		</label>
-	<?php
-	} 
-	
-	/**
-	 * Radio Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function radio( $args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'options'     => array(),
-			'description' => '',
-			'registration' => '' ,
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-	?>
-		<?php foreach ( $options as $option_id => $option_label ) : ?>
-		<label title="<?php echo esc_attr( $option_label ); ?>">
-			<input type="radio" name="<?php echo $name; ?>" value="<?php echo $option_id; ?>" <?php checked( $option_id, $value ); ?>>
-			<?php echo esc_attr( $option_label ); ?>
-		</label>
-			<br />
-		<?php endforeach; ?>
-	<?php
+	if (isset($_REQUEST['file'])){
+			$value = wp_get_attachment_url( $_REQUEST['file'] );
 	}
-	
-	/**
-	 * Select Field
-	 *
-	 * @since mp_core 1.0
-	 */
-	function select( $args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'options'     => array(),
-			'description' => '',
-			'registration' => '' 
-		);
+
+	echo '<label for="' . $id . '">';?>       
+		<!-- Upload button and text field -->
+		<input class="custom_media_url" id="<?php echo $id; ?>" type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
+		<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-		?>
-		<label for="<?php echo $id; ?>">
-			<select name="<?php echo $name; ?>">
-				<?php foreach ( $options as $option_id => $option_label ) : ?>
-				<option value="<?php echo esc_attr( $option_label ); ?>" <?php selected( $option_label, $value ); ?>>
-					<?php echo esc_attr( $option_label ); ?>
-				</option>
-				<?php endforeach; ?>
-			</select>
-			<?php echo $description; ?>
-		</label>
-	<?php
-	}
-	
-	/**
-	 * Color Picker
-	 *
-	 * @since mp_core 1.0
-	 */
-	function colorpicker($args = array() ) {
-		$defaults = array(
-			'name'        => '',
-			'value'       => '',
-			'description' => '',
-			'registration' => '' 
-		);
-		
-		$args = wp_parse_args( $args, $defaults );
-		extract( $args );
-		
-		$id   = esc_attr( $name );
-		$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
-		?>
-		<div class="color-picker">
-			<input type="text" class="of-color" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" size="25" />
-			<?php echo $description; ?>
-			
-		</div>
 		<?php
+		//Image thumbnail
+		if (isset($value)){
+			$ext = pathinfo($value, PATHINFO_EXTENSION);
+			if ($ext == 'png' || $ext == 'jpg'){
+				?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display:inline-block;" /><?php
+			}else{
+				?><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:30px; display: none;" /><?php
+			}
+		}
+	echo '</label>';   
+} 
+
+/**
+ * Textbox Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_textbox( $args = array() ) {
+	
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo $id; ?>">
+		<input type="text" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>">
+		<br /><?php echo $description; ?>
+	</label>
+<?php
+} 
+
+/**
+ * Radio Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_radio( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'options'     => array(),
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<?php foreach ( $options as $option_id => $option_label ) : ?>
+	<label title="<?php echo esc_attr( $option_label ); ?>">
+		<input type="radio" name="<?php echo $name; ?>" value="<?php echo $option_id; ?>" <?php checked( $option_id, $value ); ?>>
+		<?php echo esc_attr( $option_label ); ?>
+	</label>
+		<br />
+	<?php endforeach; ?>
+<?php
+}
+
+/**
+ * Select Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_select( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'options'     => array(),
+		'description' => '',
+		'registration' => '' 
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+	?>
+	<label for="<?php echo $id; ?>">
+		<select name="<?php echo $name; ?>">
+			<?php foreach ( $options as $option_id => $option_label ) : ?>
+			<option value="<?php echo esc_attr( $option_label ); ?>" <?php selected( $option_label, $value ); ?>>
+				<?php echo esc_attr( $option_label ); ?>
+			</option>
+			<?php endforeach; ?>
+		</select>
+		<?php echo $description; ?>
+	</label>
+<?php
+}
+
+/**
+ * Color Picker
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_colorpicker($args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' 
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+	?>
+	<div class="color-picker">
+		<input type="text" class="of-color" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" size="25" />
+		<?php echo $description; ?>
+		
+	</div>
+	<?php
+}
+
+/* Helpers ***************************************************************/
+
+function mp_core_get_categories() {
+	$output = array();
+	$terms  = get_terms( array( 'category' ), array( 'hide_empty' => 0 ) );
+	
+	foreach ( $terms as $term ) {
+		$output[ $term->term_id ] = $term->name;
 	}
 	
-	/* Helpers ***************************************************************/
+	return $output;
+}
+
+function mp_core_get_all_pages() {
+	$output = array();
+	$terms = get_pages(); 
 	
-	public function get_categories() {
+	foreach ( $terms as $term ) {
+		$output[ $term->ID ] = $term->post_title;
+	}
+	
+	return $output;
+}
+
+function mp_core_get_product_cats() {
+	if (taxonomy_exists('product_cat')){
 		$output = array();
-		$terms  = get_terms( array( 'category' ), array( 'hide_empty' => 0 ) );
+		$terms  = get_terms( array( 'product_cat' ), array( 'hide_empty' => 0 ) );
 		
 		foreach ( $terms as $term ) {
 			$output[ $term->term_id ] = $term->name;
@@ -373,42 +445,18 @@ class MP_CORE_Settings{
 		
 		return $output;
 	}
-	
-	public function get_all_pages() {
+}
+
+function mp_core_get_download_cats() {
+	if (taxonomy_exists('download_cat')){
 		$output = array();
-		$terms = get_pages(); 
+		$terms  = get_terms( array( 'download_cat' ), array( 'hide_empty' => 0 ) );
 		
 		foreach ( $terms as $term ) {
-			$output[ $term->ID ] = $term->post_title;
+			$output[ $term->term_id ] = $term->name;
 		}
 		
 		return $output;
-	}
-	
-	public function get_product_cats() {
-		if (taxonomy_exists('product_cat')){
-			$output = array();
-			$terms  = get_terms( array( 'product_cat' ), array( 'hide_empty' => 0 ) );
-			
-			foreach ( $terms as $term ) {
-				$output[ $term->term_id ] = $term->name;
-			}
-			
-			return $output;
-		}
-	}
-	
-	public function get_download_cats() {
-		if (taxonomy_exists('download_cat')){
-			$output = array();
-			$terms  = get_terms( array( 'download_cat' ), array( 'hide_empty' => 0 ) );
-			
-			foreach ( $terms as $term ) {
-				$output[ $term->term_id ] = $term->name;
-			}
-			
-			return $output;
-		}
 	}
 }
 

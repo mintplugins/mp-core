@@ -1,77 +1,112 @@
 <?php			
+/**
+ * This is the code that will create a new tab of settings for your page.
+ * To create a new tab and set up this page:
+ * Step 1. Duplicate this page and include it in the "class initialization function".
+ * Step 1. Do a find-and-replace for the term 'my_submenu_settings' and replace it with the slug you set when initializing this class
+ * Step 2. Do a find and replace for 'general' and replace it with your desired tab slug
+ * Step 3. Go to line 17 and set the title for this tab.
+ * Step 4. Begin creating your custom options on line 30
+ * Go here for full setup instructions: 
+ * http://moveplugins.com/settings-class/
+ */
 
-function mp_plugin_submenu_general_create(){
-	global $plugin_submenu;
+/**
+* Create new tab
+*/
+$my_submenu_settings->mp_core_new_tab(__('General Settings' , 'my_plugin'), 'general');
+
+/**
+* Create the options for this tab
+*/
+function my_submenu_settings_general_create(){
+	
 	register_setting(
-		'mp_plugin_submenu_general',
-		'mp_plugin_submenu_general',
-		'mp_plugin_submenu_general_validate'
+		'my_submenu_settings_general',
+		'my_submenu_settings_general',
+		'mp_core_settings_validate'
 	);
 	
 	add_settings_section(
-		'slider_settings',
-		__( 'Slider Settings', 'mp_core' ),
+		'envato_check_settings',
+		__( 'Envato Check Settings', 'my_plugin' ),
 		'__return_false',
-		'mp_plugin_submenu_general'
+		'my_submenu_settings_general'
 	);
 	
 	add_settings_field(
-		'featured_category',
-		__( 'Featured Slider Category', 'mp_core' ), 
-		array( &$plugin_submenu, 'mediaupload' ),
-		'mp_plugin_submenu_general',
-		'slider_settings',
+		'enable_disable',
+		__( 'Enable/Disable Envato Check', 'my_plugin' ), 
+		'mp_core_select',
+		'my_submenu_settings_general',
+		'envato_check_settings',
 		array(
-			'name'        => 'featured_category',
-			'value'       => $plugin_submenu->mp_core_get_option( 'mp_plugin_submenu_general',  'featured_category' ),
-			'description' => __( 'Posts in this category will be used on the homepage&#39;s slider.', 'mp_core' ),
-			'registration'=> 'mp_plugin_submenu_general'
+			'name'        => 'enable_disable',
+			'value'       => mp_core_get_option( 'my_submenu_settings_general',  'enable_disable' ),
+			'description' => __( 'Do you want the Envato Checker to be enabled or disabled?', 'my_plugin' ),
+			'registration'=> 'my_submenu_settings_general',
+			'options'=> array('enabled', 'disabled')
+		)
+	);
+	
+	add_settings_field(
+		'envato_username',
+		__( 'Envato Username', 'my_plugin' ), 
+		'mp_core_textbox',
+		'my_submenu_settings_general',
+		'envato_check_settings',
+		array(
+			'name'        => 'envato_username',
+			'value'       => mp_core_get_option( 'my_submenu_settings_general',  'envato_username' ),
+			'description' => __( 'Enter your Envato Username', 'my_plugin' ),
+			'registration'=> 'my_submenu_settings_general',
+		)
+	);
+	
+	add_settings_field(
+		'envato_api_key',
+		__( 'Envato API Key', 'my_plugin' ), 
+		'mp_core_textbox',
+		'my_submenu_settings_general',
+		'envato_check_settings',
+		array(
+			'name'        => 'envato_api_key',
+			'value'       => mp_core_get_option( 'my_submenu_settings_general',  'envato_api_key' ),
+			'description' => __( 'Enter your Envato API Key', 'my_plugin' ),
+			'registration'=> 'my_submenu_settings_general',
+		)
+	);
+	
+	add_settings_field(
+		'redirect_page',
+		__( 'Redirect Page', 'my_plugin' ), 
+		'mp_core_select',
+		'my_submenu_settings_general',
+		'envato_check_settings',
+		array(
+			'name'        => 'redirect_page',
+			'value'       => mp_core_get_option( 'my_submenu_settings_general',  'redirect_page' ),
+			'description' => __( 'Select the page you want to redirect your users to after they create an account', 'my_plugin' ),
+			'registration'=> 'my_submenu_settings_general',
+			'options'=> mp_core_get_all_pages() 
+		)
+	);
+	
+	add_settings_field(
+		'envato_message',
+		__( 'Envato Message', 'my_plugin' ), 
+		'mp_core_wp_editor',
+		'my_submenu_settings_general',
+		'envato_check_settings',
+		array(
+			'name'        => 'envato_message',
+			'value'       => mp_core_get_option( 'my_submenu_settings_general',  'envato_message' ),
+			'description' => __( 'This is the message that will appear over the Purchase Code verification form.', 'my_plugin' ),
+			'registration'=> 'my_submenu_settings_general',
 		)
 	);
 	
 	//additional general settings
-	do_action('mp_plugin_submenu_additional_general_settings_hook');
+	do_action('my_submenu_settings_additional_general_settings_hook');
 }
-add_action( 'admin_init', 'mp_plugin_submenu_general_create' );
-
-/**
- * Display tab at top of Theme Options page
- */
-function mp_plugin_submenu_general_tab_title($active_tab){ 
-	if ($active_tab == 'mp_plugin_submenu_general'){ $active_class = 'nav-tab-active'; }else{$active_class = "";}
-	echo ('<a href="?page=mp_plugin_submenu&tab=mp_plugin_submenu_general" class="nav-tab ' . $active_class . '">General Options</a>');
-}
-add_action( 'mp_plugin_submenu_new_tab_hook', 'mp_plugin_submenu_general_tab_title' );
-
-/**
- * Display the content for this tab
- */
-function mp_plugin_submenu_general_tab_content(){
-	function mp_plugin_submenu_general() {  
-		settings_fields( 'mp_plugin_submenu_general' );
-		do_settings_sections( 'mp_plugin_submenu_general' );
-	}
-}
-add_action( 'mp_plugin_submenu_do_settings_hook', 'mp_plugin_submenu_general_tab_content' );
-
-/**
- * Sanitize and validate form input. Accepts an array, return a sanitized array.
- *
- * @param array $input Unknown values.
- * @return array Sanitized theme options ready to be stored in the database.
- *
- * @since Lighthouse 1.0
- */
-function mp_plugin_submenu_general_validate( $input ) {
-	global $plugin_submenu;
-	$output = array();
-	
-	foreach ($input as $key => $option){
-		if ( isset ( $option ) )
-		$output[ $key ] = esc_attr( $option );
-	}	
-	
-	$output = wp_parse_args( $output,$plugin_submenu->mp_core_get_option( 'mp_plugin_submenu_general' ) );	
-		
-	return apply_filters( 'mp_plugin_submenu_general_validate', $output, $input );
-}
+add_action( 'admin_init', 'my_submenu_settings_general_create' );

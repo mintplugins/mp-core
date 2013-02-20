@@ -98,53 +98,16 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 */
 
 /**
- * Custom Theme Options
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-class.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/theme-options/theme-options.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-options/plugin-options.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-submenu/plugin-submenu.php' );
-
-/**
- * Custom template tags for this theme.
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/template-tags/template-tags.php' );
-
-/**
- * Custom functions that act independently of the theme templates
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/extras.php' );
-	
-/**
- * Implement the Custom Header feature
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/custom-wp/custom-header.php' );
-
-/**
- * Implement the Custom Background feature
- */
-//require( MP_CORE_PLUGIN_DIR . 'includes/custom-wp/custom-background.php' );
-
-/**
- * Theme Customizer Custom Options
- */
-//require( MP_CORE_PLUGIN_DIR . 'includes/theme-customizer/customize.php' );
-
-/**
  * Include Plugin Checker
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
 
 /**
- * Include Misc Functions
+ * Include Settings Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
-	
-/**
- * Include AQ Resizer
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer_ratio_check.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-class.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-options/plugin-options.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-submenu/plugin-submenu.php' );
 
 /**
  * Include Metabox Class
@@ -152,9 +115,56 @@ require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer_ratio_check.php' )
 require( MP_CORE_PLUGIN_DIR . 'includes/metaboxes/metabox-class.php' );
 
 /**
- * Include Foo Widget
+ * Include Widget Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
+
+/**
+ * Include AQ Resizer
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer_ratio_check.php' );
+
+/*
+|--------------------------------------------------------------------------
+| THEME SPECIFIC INCLUDES
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Custom template tags for this theme.
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/template-tags.php' );
+
+/**
+ * Custom functions that act independently of the theme templates
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/extras.php' );
+	
+/**
+ * Implement the Custom Header feature
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/custom-wp/custom-header.php' );
+
+/**
+ * Implement the Custom Background feature
+ */
+//require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/custom-wp/custom-background.php' );
+
+/**
+ * Theme Customizer Custom Options
+ */
+//require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/customize.php' );
+
+/**
+ * Include Misc Functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/misc-functions.php' );
+
+/**
+ * Include WPFC template functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/wpfc/misc-functions.php' );
 
 if( is_admin() ) {
 	//none at the moment
