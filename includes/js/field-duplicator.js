@@ -2,7 +2,7 @@ jQuery(document).ready(function($){
 	
 	$(document).on("click", ".mp_duplicate", function(){ 
 	
-		var theoriginal = $(this).parent();
+		var theoriginal = $(this).parent().parent();
 		var theclone = theoriginal.clone();
 		var metabox_container = theoriginal.parent();
 		var therepeaterclass = '.'+theoriginal.attr('class');
@@ -46,7 +46,7 @@ jQuery(document).ready(function($){
 	
 	$(document).on("click", ".mp_duplicate_remove", function(){ 
 	
-		var theoriginal = $(this).parent();
+		var theoriginal = $(this).parent().parent();
 		var metabox_container = theoriginal.parent();
 		var therepeaterclass = '.'+theoriginal.attr('class');
 		var name_number = 0;

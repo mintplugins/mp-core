@@ -19,8 +19,8 @@
 *
 * @return str|array
 */
-if ( !function_exists( 'aq_resize' ) ){
-	function aq_resize( $url, $width, $height = null, $crop = null, $single = true ) {
+if ( !function_exists( 'mp_aq_resize' ) ){
+	function mp_aq_resize( $url, $width, $height = null, $crop = null, $single = true ) {
 		
 		//validate inputs
 		if(!$url OR !$width ) return false;
