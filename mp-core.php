@@ -70,12 +70,12 @@ function mp_core_textdomain() {
 
 
 	// Traditional WordPress plugin locale filter
-	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'mp_core' );
-	$mofile        = sprintf( '%1$s-%2$s.mo', 'mp_core', $locale );
+	$locale        = apply_filters( 'plugin_locale',  get_locale(), 'mp-core' );
+	$mofile        = sprintf( '%1$s-%2$s.mo', 'mp-core', $locale );
 
 	// Setup paths to current locale file
 	$mofile_local  = $mp_core_lang_dir . $mofile;
-	$mofile_global = WP_LANG_DIR . '/mp_core/' . $mofile;
+	$mofile_global = WP_LANG_DIR . '/mp-core/' . $mofile;
 
 	if ( file_exists( $mofile_global ) ) {
 		// Look in global /wp-content/languages/mp_core folder
@@ -122,8 +122,8 @@ require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
 /**
  * Include AQ Resizer
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq_resizer_ratio_check.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq-resizer.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq-resizer-ratio-check.php' );
 
 /*
 |--------------------------------------------------------------------------
