@@ -484,7 +484,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '</label></div>';
 			?>       
 			<!-- Upload button and text field -->
-            <div class=mp_media_upload">
+            <div class="mp_media_upload">
                 <input class="custom_media_url <?php echo $classname; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $value ); ?>">
                 <a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 			</div>

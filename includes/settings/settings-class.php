@@ -276,9 +276,12 @@ function mp_core_mediaupload( $args = array() ) {
 	}
 
 	echo '<label for="' . $id . '">';?>       
-		<!-- Upload button and text field -->
-		<input class="custom_media_url" id="<?php echo $id; ?>" type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
+		       
+        <!-- Upload button and text field -->
+        <div class="mp_media_upload">
+            <input class="custom_media_url" id="<?php echo $id; ?>" type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
 		<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
+        </div>
 		
 		<?php
 		//Image thumbnail
