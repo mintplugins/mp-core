@@ -113,11 +113,11 @@ if (!class_exists('MP_CORE_Metabox')){
 										
 										//If a value has been saved
 										if (isset($repeater_set[$thefield['field_id']])){
-											//Check if the type of value is a checkbox and it is empty
+											//If this is an empty checkbox, set the field value to be empty
 											if ($thefield['field_type'] == 'checkbox' && empty($repeater_set[$thefield['field_id']])){
 												$field_value = '';
 											}
-											//If it's not a checkbox than use the saved value.
+											//Otherwise use the saved value.
 											else{
 												$field_value = $repeater_set[$thefield['field_id']];
 											}
@@ -190,7 +190,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						if ( isset($_GET['post'])){
 							// Use get_post_meta to retrieve an existing value from the database and use the value for the form
 							$value = get_post_meta( $this->_post_id, $key = $field['field_id'], $single = true );
-							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array
+							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
 							if ($field['field_type'] != "checkbox"){
 								$value = !empty($value) ? $value : $field['field_value'];
 							}
@@ -313,7 +313,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						'em' => array(),
 						'strong' => array()
 					);
-					$data = $field['field_type'] == 'textarea' ? wp_kses($post_value, $allowed_tags) : sanitize_text_field( $post_value );
+					$data = $field['field_type'] == 'textarea' ? wp_kses(htmlentities($post_value, ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
 					// Update $data 
 					update_post_meta($this->_post_id, $field['field_id'], $data);
 				}

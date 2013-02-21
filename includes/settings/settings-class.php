@@ -280,7 +280,7 @@ function mp_core_mediaupload( $args = array() ) {
         <!-- Upload button and text field -->
         <div class="mp_media_upload">
             <input class="custom_media_url" id="<?php echo $id; ?>" type="text" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" style="margin-bottom:10px; clear:right;">
-		<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
+			<a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
         </div>
 		
 		<?php
@@ -318,6 +318,38 @@ function mp_core_textbox( $args = array() ) {
 ?>
 	<label for="<?php echo $id; ?>">
 		<input type="text" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>">
+		<br /><?php echo $description; ?>
+	</label>
+<?php
+} 
+
+/**
+ * Checkbox Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_checkbox( $args = array() ) {
+	
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'preset_value'       => '',
+		'description' => '',
+		'registration' => '',
+	);
+	
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$null_name = esc_attr( sprintf( $registration . '[%s]', $name . '_null' ) );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+	
+?>
+	<label for="<?php echo $id; ?>">
+		<input type="checkbox" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $preset_value ); ?>" <?php echo empty($value) ? '' : 'checked'; ?>>
+        <input type="hidden" id="<?php echo $id; ?>_null" name="<?php echo $null_name; ?>" value="<?php echo esc_attr( $preset_value ); ?>_null">
 		<br /><?php echo $description; ?>
 	</label>
 <?php
@@ -521,14 +553,19 @@ function mp_core_settings_validate( $input ) {
 		'em' => array(),
 		'strong' => array()
 	);
-		
-	foreach ($input as $key => $option){
-		if ( isset ( $option ) )
-		$output[ $key ] = wp_kses(htmlentities($option, ENT_QUOTES), $allowed_tags );
-					
-	}	
+	
+	if (isset($input)){
+		foreach ($input as $key => $option){
+			if ( isset ($option) ) {
+				$output[ $key ] = wp_kses(htmlentities($option, ENT_QUOTES), $allowed_tags );
+			}
+			else{
+				$output[ $key ] = '';
+			}			
+		}	
+	}
 	
 	$output = wp_parse_args( $output,mp_core_get_option( 'mp_envato_check_settings_general' ) );	
-		
+	
 	return apply_filters( 'mp_core_settings_validate', $output, $input );
 }
