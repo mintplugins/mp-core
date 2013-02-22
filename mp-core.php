@@ -122,8 +122,13 @@ require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
 /**
  * Include AQ Resizer
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq-resizer.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/aq_resizer/aq-resizer-ratio-check.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer-ratio-check.php' );
+
+/**
+ * Include jplayer template tag
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/jplayer/jplayer.php' );
 
 /*
 |--------------------------------------------------------------------------

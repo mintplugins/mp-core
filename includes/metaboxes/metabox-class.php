@@ -327,41 +327,6 @@ if (!class_exists('MP_CORE_Metabox')){
 			}
 		}
 		
-		public function get_repeater_field($post_id, $repeater){
-				//Set default for $fields
-				$fields = array();
-				
-				//Get the array of variables stored in the database for this repeater
-				$current_stored_repeater = get_post_meta( $post_id, $key = $repeater, $single = true );
-				
-				//This is a brand new repeater
-				$repeat_counter = 0;
-					
-				//Loop the same amount of times the user clicked 'repeat' (including the first one that was there before they clicked 'repeat')
-				foreach ($current_stored_repeater as $repeater_set) {
-					
-					foreach ($this->_metabox_items_array as $thefield){
-						if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $repeater){
-							
-							$fields[$repeat_counter][$thefield['field_id']] = array(
-									'field_id'           => $thefield['field_id'],
-									'field_title'        => $thefield['field_title'],
-									'field_description'  => $thefield['field_description'],
-									'field_value'        => isset($repeater_set[$thefield['field_id']]) ? $repeater_set[$thefield['field_id']] : '',
-									'field_class'        => 'mp_repeater'
-							);				
-						}	
-					}
-					
-					//bump the repeat_counter to the next number of the array
-					$repeat_counter = $repeat_counter + 1;
-				
-				}
-				
-				return $fields;
-		}//End function get_repeater_field
-		
-		
 		/**
 		* basictext field
 		*/

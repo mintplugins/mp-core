@@ -14,11 +14,11 @@ class MP_CORE_Widget extends WP_Widget {
 		//color picker scripts
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker-load', plugins_url( '/mp_core/includes/js/wp-color-picker.js'),  array( 'jquery' ) );
+		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery' ) );
 		//media upload scripts
 		wp_enqueue_media();
 		//image uploader script
-		wp_enqueue_script( 'image-upload', plugins_url( '/mp_core/includes/js/image-upload.js' ),  array( 'jquery' ) );	
+		wp_enqueue_script( 'image-upload', plugins_url( 'js/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 	}
 	/**
 	 * Sanitize widget form values as they are saved.
@@ -102,17 +102,18 @@ class MP_CORE_Widget extends WP_Widget {
             <label for="<?php echo esc_attr( $field_id ); ?>"><strong><?php echo $field_title ?></strong> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
         
             <!-- Upload button and text field -->
-            <input class="custom_media_url" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" type="text" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" value="<?php echo esc_attr( $value ); ?>">
-            <a href="#" class="button custom_media_upload" style="margin-bottom:10px;"><?php _e('Upload', 'mp_core'); ?></a>
-            
+            <div class="mp_media_upload">
+                <input class="custom_media_url" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" type="text" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" value="<?php echo esc_attr( $value ); ?>">
+                <a href="#" class="button custom_media_upload" style="margin-bottom:10px;"><?php _e('Upload', 'mp_core'); ?></a>
+            </div>
             <?php
             //Image thumbnail
             if (isset($value)){
                 $ext = pathinfo($value, PATHINFO_EXTENSION);
                 if ($ext == 'png' || $ext == 'jpg'){
-                    ?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display:inline-block;" /><?php
+                    ?><img class="custom_media_image" src="<?php echo $value; ?>" style="display:inline-block;" /><?php
                 }else{
-                    ?><br /><img class="custom_media_image" src="<?php echo $value; ?>" style="max-width:100px; display: none;" /><?php
+                    ?><img class="custom_media_image" src="<?php echo $value; ?>" style="display: none;" /><?php
                 }
             }
 		echo '</p>';

@@ -34,11 +34,11 @@ class MP_CORE_Settings{
 		//color picker scripts
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker-load', plugins_url( '/mp_core/includes/js/wp-color-picker.js'),  array( 'jquery' ) );
+		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery' ) );
 		//media upload scripts
 		wp_enqueue_media();
 		//image uploader script
-		wp_enqueue_script( 'image-upload', plugins_url( '/mp_core/includes/js/image-upload.js' ),  array( 'jquery' ) );	
+		wp_enqueue_script( 'image-upload', plugins_url( 'js/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 	}
 	
 	/**
