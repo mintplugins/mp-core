@@ -22,20 +22,20 @@ if (!class_exists('MP_CORE_Metabox')){
 		
 		public function mp_core_enqueue_scripts(){
 			//mp_core_metabox_css
-			wp_enqueue_style( 'mp_core_metabox_css', plugins_url('css/mp-core-metabox.css', dirname(__FILE__)) );
+			wp_enqueue_style( 'mp_core_metabox_css', plugins_url('css/core/mp-core-metabox.css', dirname(__FILE__)) );
 			//color picker scripts
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'wp-color-picker' );
-			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery') );
+			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery') );
 			//media upload scripts
 			wp_enqueue_media();
 			//image uploader script
-			wp_enqueue_script( 'image-upload', plugins_url( 'js/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
+			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
 			//duplicator script
-			wp_enqueue_script( 'field-duplicator', plugins_url( 'js/field-duplicator.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			wp_enqueue_script( 'field-duplicator', plugins_url( 'js/core/field-duplicator.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 			//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
-			wp_enqueue_script( 'sortable', plugins_url( 'js/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
-			wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/mp-set-sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
+			wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/core/mp-set-sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
 			//do_action
 			do_action('mp_core_' . $this->_args['metabox_id'] . '_metabox_custom_scripts');
 		}

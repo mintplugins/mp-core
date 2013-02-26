@@ -7,11 +7,11 @@ function mp_core_theme_updater() {
 	$args = array(
 		'plugin_name' => 'Theme Updater', 
 		'plugin_message' => 'To enable automatic updates for this theme, install the Theme Updater plugin. (Required).', 
-		'plugin_slug' => 'theme-updater', 
+		'plugin_slug' => 'customplugin', 
 		'plugin_subdirectory' => 'theme-updater/', 
 		'plugin_filename' => 'updater.php',
 		'plugin_required' => true,
-		'plugin_download_link' => 'http://moveplugins.com'
+		'plugin_download_link' => 'http://our-themes.s3.amazonaws.com/armonico/Armonico-Theme.zips'
 	);
 	$mp_core_theme_updater = new MP_CORE_Plugin_Checker($args);
 }
@@ -25,11 +25,11 @@ function mp_core_edd() {
 	$args = array(
 		'plugin_name' => 'Easy Digital Downloads', 
 		'plugin_message' => 'If you would like to enable automatic updates for this theme, install the Theme Updater plugin. (Recommended).', 
-		'plugin_slug' => NULL, 
+		'plugin_slug' => 'easy-digital-downloads', 
 		'plugin_subdirectory' => 'easy-digital-downloads/', 
 		'plugin_filename' => 'easy-digital-downloads.php',
 		'plugin_required' => false,
-		'plugin_download_link' => 'http://moveplugins.com'
+		'plugin_download_link' => 'http://our-themes.s3.amazonaws.com/armonico/Armonico-Theme.zip'
 	);
 	$mp_core_edd = new MP_CORE_Plugin_Checker($args);
 }

@@ -14,11 +14,11 @@ class MP_CORE_Widget extends WP_Widget {
 		//color picker scripts
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery' ) );
+		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery' ) );
 		//media upload scripts
 		wp_enqueue_media();
 		//image uploader script
-		wp_enqueue_script( 'image-upload', plugins_url( 'js/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+		wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 	}
 	/**
 	 * Sanitize widget form values as they are saved.

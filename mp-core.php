@@ -101,6 +101,7 @@ add_action( 'init', 'mp_core_textdomain', 1 );
  * Include Plugin Checker
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
  * Include Settings Class
@@ -124,11 +125,6 @@ require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer.php' );
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer-ratio-check.php' );
-
-/**
- * Include jplayer template tag
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/jplayer/jplayer.php' );
 
 /*
 |--------------------------------------------------------------------------
