@@ -101,7 +101,7 @@ add_action( 'init', 'mp_core_textdomain', 1 );
  * Include Plugin Checker
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
+//require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
  * Include Settings Class

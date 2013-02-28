@@ -75,6 +75,12 @@ if (!class_exists('MP_CORE_Metabox')){
 				// Use nonce for verification
 				wp_nonce_field( plugin_basename( __FILE__ ), $field['field_id'] . '_metabox_nonce' );	
 				
+				// Filter for title of this field
+				$field['field_title'] = has_filter('mp_' . $field['field_id'] . '_title') ? apply_filters( 'mp_' . $field['field_id'] . '_title', $field['field_title'], $this->_post_id) : $field['field_title'];
+				
+				// Filter for description of this field
+				$field['field_description'] = has_filter('mp_' . $field['field_id'] . '_description') ? apply_filters( 'mp_' . $field['field_id'] . '_description', $field['field_description'], $this->_post_id) : $field['field_description'];
+				
 				//This is the first field in a set of repeater
 				if ( isset($field['field_repeater']) && $prev_repeater != $field['field_repeater']){
 					
@@ -333,7 +339,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function basictext($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " size="25" />';
 			echo '</label></div>';
 			echo '</div>'; 
@@ -344,7 +350,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function textbox($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
 			echo '</div>'; 
@@ -356,7 +362,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			$checked = empty($value) ? '' : 'checked';
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_preset_value . '" size="25" ' . $checked . '/>';
 			echo '</div>'; 
@@ -367,7 +373,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function url($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
 			echo '</div>'; 
@@ -378,7 +384,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function date($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
 			echo '</div>'; 
@@ -389,7 +395,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function number($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
 			echo '</div>'; 
@@ -400,7 +406,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function textarea($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo '<textarea id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" rows="4" cols="50">';
 			echo $value;
@@ -413,7 +419,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';   
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
 			<label for="<?php echo $field_id; ?>">
@@ -434,7 +440,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function colorpicker($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" size="25" />';
 			echo '</div>'; 
@@ -445,7 +451,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		function mediaupload($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo $field_description != "" ? ' - ' . '<em>' . $field_description . '</em>' : '';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			?>       
 			<!-- Upload button and text field -->
