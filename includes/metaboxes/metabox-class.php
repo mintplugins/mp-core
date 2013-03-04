@@ -340,7 +340,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " size="25" />';
+			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " size="50" />';
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -352,7 +352,18 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
+			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="40" />';
+			echo '</div>'; 
+		}
+		/**
+		* password field
+		*/
+		function password($field_id, $field_title, $field_description, $value, $classname){
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="40" />';
 			echo '</div>'; 
 		}
 		/**
@@ -364,7 +375,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_preset_value . '" size="25" ' . $checked . '/>';
+			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_preset_value . '" ' . $checked . '/>';
 			echo '</div>'; 
 		}
 		/**
@@ -375,7 +386,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
+			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="60" />';
 			echo '</div>'; 
 		}
 		/**
@@ -386,7 +397,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
+			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
 			echo '</div>'; 
 		}
 		/**
@@ -397,7 +408,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="25" />';
+			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="20" />';
 			echo '</div>'; 
 		}
 		/**
@@ -442,7 +453,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" size="25" />';
+			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" size="50" />';
 			echo '</div>'; 
 		}
 		/**
