@@ -197,10 +197,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			$created_file = $wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE);
 			
 			//Unzip the temp zip file
-			unzip_file($filename, trailingslashit($upload_dir));
+			unzip_file($filename, trailingslashit($upload_dir) . '/' . $this->_args['plugin_slug']);
 			
 			//Delete the temp zipped file
-			$wp_filesystem->rmdir($filename);
+			//$wp_filesystem->rmdir($filename);
 			
 			//If the file was not created, output a message.
 			if ( ! $created_file ) {
@@ -222,3 +222,4 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 
 	}
 }
+
