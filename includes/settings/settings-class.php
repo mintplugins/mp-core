@@ -469,6 +469,24 @@ function mp_core_get_all_pages() {
 	return $output;
 }
 
+function mp_core_get_all_downloads() {
+	
+	$args = array(
+		'posts_per_page'  => 0,
+		'post_type'       => 'download',
+		'post_status'     => 'publish',
+		'suppress_filters' => true 
+	);
+	
+	$downloads = get_posts( $args );
+	
+	foreach ($downloads as $download) {
+		$return_array[$download->ID] = $download->post_title;
+	}
+		
+	return $return_array;
+}
+
 function mp_core_get_product_cats() {
 	if (taxonomy_exists('product_cat')){
 		$output = array();

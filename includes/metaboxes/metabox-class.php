@@ -5,12 +5,12 @@
  */
 if (!class_exists('MP_CORE_Metabox')){
 	class MP_CORE_Metabox{
-		
+				
 		protected $_args;
 		protected $_metabox_items_array = array();
 		
 		public function __construct($args, $items_array){
-					
+								
 			$this->_args = $args;
 			$this->_metabox_items_array = $items_array;
 			
@@ -435,9 +435,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>
 			<label for="<?php echo $field_id; ?>">
 				<select name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>">
-					<?php foreach ( $select_values as $select_value ) : ?>
+					<?php foreach ( $select_values as $select_value => $select_text) : ?>
 					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
-						<?php echo esc_attr( $select_value ); ?>
+						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>
 					</option>
 					<?php endforeach; ?>
 				</select>
