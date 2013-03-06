@@ -107,8 +107,8 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
  * Include Settings Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-class.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-options/plugin-options.php' );
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-submenu/plugin-submenu.php' );
+//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-options/plugin-options.php' );
+//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-submenu/plugin-submenu.php' );
 
 /**
  * Include Metabox Class
