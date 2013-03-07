@@ -472,7 +472,7 @@ function mp_core_get_all_pages() {
 function mp_core_get_all_downloads() {
 	
 	$args = array(
-		'posts_per_page'  => 0,
+		'posts_per_page'  => -1,
 		'post_type'       => 'download',
 		'post_status'     => 'publish',
 		'suppress_filters' => true 

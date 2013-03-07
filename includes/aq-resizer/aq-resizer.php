@@ -49,8 +49,15 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 		$ext = $info['extension'];
 		list($orig_w,$orig_h) = getimagesize($img_path);
 		
+		//If the original width and height of the image are not larger than the retina size required, set them back to the passed-in values
+		if ($aq_width > ($orig_w) || $aq_height > ($orig_h)){	
+			$aq_width = $width;
+			$aq_height = $height;
+		}
+		
 		//get image size after cropping
 		$dims = image_resize_dimensions($orig_w, $orig_h, $aq_width, $aq_height, $crop);
+		
 		$dst_w = $dims[4];
 		$dst_h = $dims[5];
 		
@@ -66,17 +73,17 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 			$dst_h = $orig_h;
 		}
 		//else check if cache exists
-		elseif(file_exists($destfilename) && getimagesize($destfilename)) {
-			$img_url = "{$upload_url}{$dst_rel_path}-{$suffix}.{$ext}";
-		} 
+		//elseif(file_exists($destfilename) && getimagesize($destfilename)) {
+			//$img_url = "{$upload_url}{$dst_rel_path}-{$suffix}.{$ext}";
+		//}
 		//else, we resize the image and return the new resized image url
 		else {
-			
+						
 			// Note: This pre-3.5 fallback check will edited out in subsequent version
 			if(function_exists('wp_get_image_editor')) {
 			
 				$editor = wp_get_image_editor($img_path);
-				
+								
 				if ( is_wp_error( $editor ) || is_wp_error( $editor->resize( $aq_width, $aq_height, $crop ) ) )
 					return false;
 				
