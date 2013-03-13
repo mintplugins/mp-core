@@ -340,7 +340,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " size="50" />';
+			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " />';
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -352,7 +352,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="40" />';
+			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
 		/**
@@ -363,7 +363,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="40" />';
+			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
 		/**
@@ -386,7 +386,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="60" />';
+			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
 		/**
@@ -453,7 +453,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" size="50" />';
+			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
 		/**

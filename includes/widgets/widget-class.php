@@ -10,7 +10,7 @@
  */
 class MP_CORE_Widget extends WP_Widget {
 		
-	public function moveplugins_enqueue_scripts(){
+	public function mp_widget_enqueue_scripts(){
 		//color picker scripts
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
@@ -31,6 +31,7 @@ class MP_CORE_Widget extends WP_Widget {
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
+		
 		$instance = array();		
 		
 			foreach ($this->_form as $updatekey => $updateentry){	
@@ -51,10 +52,16 @@ class MP_CORE_Widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-				
+			
 		foreach ($this->_form as $formkey => $formentry){	
-				//Show the field type and pass the variables
-				$this->$formentry['field_type']( $formentry['field_id'], $formentry['field_title'], $formentry['field_description'], isset( $instance[$formentry['field_id']] ) ? esc_attr( $instance[$formentry['field_id']] ) : '');
+			//Show the field type and pass the variables
+			$this->$formentry['field_type']( 
+				$formentry['field_id'], 
+				$formentry['field_title'], 
+				$formentry['field_description'], 
+				!empty( $instance[$formentry['field_id']] ) ? esc_attr( $instance[$formentry['field_id']] ) : NULL,
+				isset( $formentry['field_select_values'] ) ? $formentry['field_select_values'] : NULL
+			);
 		}
 		
 	}
@@ -66,8 +73,90 @@ class MP_CORE_Widget extends WP_Widget {
 	function textbox($field_id, $field_title, $field_description, $value){
 		?>
         <p>
-            <label for="<?php echo esc_attr( $field_id ); ?>"><strong><?php echo $field_title ?></strong> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
             <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="text" value="<?php echo $value; ?>" />
+        </p>
+        <?php		
+	}
+	
+	/**
+	* url field
+	*/
+	function url($field_id, $field_title, $field_description, $value){
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="url" value="<?php echo $value; ?>" />
+        </p>
+        <?php		
+	}
+	
+	/**
+	* date field
+	*/
+	function date($field_id, $field_title, $field_description, $value){
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="date" value="<?php echo $value; ?>" />
+        </p>
+        <?php		
+	}
+	
+	/**
+	* password field
+	*/
+	function password($field_id, $field_title, $field_description, $value){
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="password" value="<?php echo $value; ?>" />
+        </p>
+        <?php		
+	}
+	
+	/**
+	* number field
+	*/
+	function number($field_id, $field_title, $field_description, $value){
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="number" value="<?php echo $value; ?>" />
+        </p>
+        <?php		
+	}
+	
+	/**
+	* select field
+	*/
+	function select($field_id, $field_title, $field_description, $value, $field_select_values){
+		?>
+    
+        <p>
+        <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo !empty($field_description) ? ' - ' . $field_description : ''; ?> </label><br />
+            <label for="<?php echo $field_id; ?>">
+				<select name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" >
+					<?php foreach ( $field_select_values as $select_value => $select_text) : ?>
+					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
+						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>
+					</option>
+					<?php endforeach; ?>
+				</select>
+			</label>
+        </p>
+        <?php		
+	}
+	
+	/**
+	* checkbox field
+	*/
+	function checkbox($field_id, $field_title, $field_description, $value){
+		$checked = empty($value) ? '' : 'checked';
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="checkbox" value="<?php echo $field_id; ?>" <?php echo $checked; ?>/>
         </p>
         <?php		
 	}
@@ -78,7 +167,7 @@ class MP_CORE_Widget extends WP_Widget {
 	function textarea($field_id, $field_title, $field_description, $value){
 		?>
         <p>
-            <label for="<?php echo esc_attr( $field_id ); ?>"><strong><?php echo $field_title ?></strong> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
             <textarea class="widefat" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" rows="4" cols="50" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" ><?php echo $value; ?></textarea>
         </p>
         <?php	
@@ -89,7 +178,7 @@ class MP_CORE_Widget extends WP_Widget {
 	function colorpicker($field_id, $field_title, $field_description, $value){
 		?>
         <p>
-            <label for="<?php echo esc_attr( $field_id ); ?>"><strong><?php echo $field_title ?></strong> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
             <input class="of-color" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" type="text" value="<?php echo $value; ?>" >
         </p>
         <?php		
@@ -99,7 +188,7 @@ class MP_CORE_Widget extends WP_Widget {
 	*/
 	function mediaupload($field_id, $field_title, $field_description, $value){
         echo '<p>';?>
-            <label for="<?php echo esc_attr( $field_id ); ?>"><strong><?php echo $field_title ?></strong> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
         
             <!-- Upload button and text field -->
             <div class="mp_media_upload">
@@ -119,5 +208,3 @@ class MP_CORE_Widget extends WP_Widget {
 		echo '</p>';
 	}
 } // class MP_CORE_Widget
-
-include_once( 'custom-widgets/sample-custom-widget.php' );

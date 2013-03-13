@@ -73,9 +73,9 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 			$dst_h = $orig_h;
 		}
 		//else check if cache exists
-		//elseif(file_exists($destfilename) && getimagesize($destfilename)) {
-			//$img_url = "{$upload_url}{$dst_rel_path}-{$suffix}.{$ext}";
-		//}
+		elseif(file_exists($destfilename) && getimagesize($destfilename)) {
+			$img_url = "{$upload_url}{$dst_rel_path}-{$suffix}.{$ext}";
+		}
 		//else, we resize the image and return the new resized image url
 		else {
 						

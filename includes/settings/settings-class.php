@@ -324,6 +324,34 @@ function mp_core_textbox( $args = array() ) {
 } 
 
 /**
+ * Email Field
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_email( $args = array() ) {
+	
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo $id; ?>">
+		<input type="email" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>">
+		<br /><?php echo $description; ?>
+	</label>
+<?php
+} 
+
+
+/**
  * Checkbox Field
  *
  * @since mp_core 1.0
@@ -336,19 +364,22 @@ function mp_core_checkbox( $args = array() ) {
 		'preset_value'       => '',
 		'description' => '',
 		'registration' => '',
+		'checked_by_default' => ''
 	);
-	
 	
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
 	
 	$id   = esc_attr( $name );
 	$null_name = esc_attr( sprintf( $registration . '[%s]', $name . '_null' ) );
+	$null_value = mp_core_get_option( $registration,  $name . '_null' );
+	$value = empty( $null_value ) && $checked_by_default == 'true' ? $preset_value : $value;
 	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
 	
 ?>
 	<label for="<?php echo $id; ?>">
 		<input type="checkbox" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $preset_value ); ?>" <?php echo empty($value) ? '' : 'checked'; ?>>
+        <!--This null field exists for the situation where a checkbox is the only value on a page and is saved with it being un-checked - the null field gives it something to save -->
         <input type="hidden" id="<?php echo $id; ?>_null" name="<?php echo $null_name; ?>" value="<?php echo esc_attr( $preset_value ); ?>_null">
 		<br /><?php echo $description; ?>
 	</label>
@@ -408,7 +439,7 @@ function mp_core_select( $args = array() ) {
 	<label for="<?php echo $id; ?>">
 		<select name="<?php echo $name; ?>">
 			<?php foreach ( $options as $option_id => $option_label ) : ?>
-			<option value="<?php echo esc_attr( $option_label ); ?>" <?php selected( $option_label, $value ); ?>>
+			<option value="<?php echo esc_attr( $option_id ); ?>" <?php selected( $option_id, $value ); ?>>
 				<?php echo esc_attr( $option_label ); ?>
 			</option>
 			<?php endforeach; ?>
@@ -447,17 +478,6 @@ function mp_core_colorpicker($args = array() ) {
 
 /* Helpers ***************************************************************/
 
-function mp_core_get_categories() {
-	$output = array();
-	$terms  = get_terms( array( 'category' ), array( 'hide_empty' => 0 ) );
-	
-	foreach ( $terms as $term ) {
-		$output[ $term->term_id ] = $term->name;
-	}
-	
-	return $output;
-}
-
 function mp_core_get_all_pages() {
 	$output = array();
 	$terms = get_pages(); 
@@ -469,42 +489,28 @@ function mp_core_get_all_pages() {
 	return $output;
 }
 
-function mp_core_get_all_downloads() {
+function mp_core_get_all_cpt($slug) {
 	
 	$args = array(
 		'posts_per_page'  => -1,
-		'post_type'       => 'download',
+		'post_type'       => $slug,
 		'post_status'     => 'publish',
 		'suppress_filters' => true 
 	);
 	
-	$downloads = get_posts( $args );
+	$cpts = get_posts( $args );
 	
-	foreach ($downloads as $download) {
-		$return_array[$download->ID] = $download->post_title;
+	foreach ($cpts as $cpt) {
+		$return_array[$cpt->ID] = $cpt->post_title;
 	}
 		
 	return $return_array;
 }
 
-function mp_core_get_product_cats() {
-	if (taxonomy_exists('product_cat')){
+function mp_core_get_all_tax($slug) {
+	if (taxonomy_exists($slug)){
 		$output = array();
-		$terms  = get_terms( array( 'product_cat' ), array( 'hide_empty' => 0 ) );
-		
-		foreach ( $terms as $term ) {
-			$output[ $term->term_id ] = $term->name;
-		}
-		
-		return $output;
-	}
-}
-
-function mp_core_get_download_cats() {
-	if (taxonomy_exists('download_cat')){
-		$output = array();
-		$terms  = get_terms( array( 'download_cat' ), array( 'hide_empty' => 0 ) );
-		
+		$terms  = get_terms( array( $slug ), array( 'hide_empty' => 0 ) );
 		foreach ( $terms as $term ) {
 			$output[ $term->term_id ] = $term->name;
 		}
@@ -583,7 +589,7 @@ function mp_core_settings_validate( $input ) {
 		}	
 	}
 	
-	$output = wp_parse_args( $output,mp_core_get_option( 'mp_envato_check_settings_general' ) );	
+	$output = wp_parse_args( $output, $input );	
 	
 	return apply_filters( 'mp_core_settings_validate', $output, $input );
 }

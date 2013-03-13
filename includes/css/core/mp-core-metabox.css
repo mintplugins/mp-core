@@ -15,6 +15,9 @@
 .mp_field > label{
 	margin:0px 0px 5px 0px!important;	
 }
+.mp_field input{
+	width:60%;
+}
 .mp_title{
 	margin-bottom:5px;	
 }
