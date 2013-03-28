@@ -1,19 +1,19 @@
 <?php
 /**
- * mp_core Theme Options
+ * mp_core Settings Class
  *
  * @package mp_core
  * @since mp_core 1.0
  */
 
 /**
- * Register the form setting for our mp_core_options array.
+ * Class to create new options page
  *
- * This function is attached to the admin_init action hook.
- *
- * This call to register_setting() registers a validation callback, mp_core_theme_display_options_validate(),
+ * This contains a call to register_setting() registers a validation callback, mp_core_settings_validate(),
  * which is used when the option is saved, to ensure that our option values are properly
  * formatted, and safe.
+ *
+ * It also creates the page for settings and outputs the settings passed-in to the class.
  *
  * @since mp_core 1.0
  */

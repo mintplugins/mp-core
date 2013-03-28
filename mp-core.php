@@ -121,6 +121,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/metaboxes/metabox-class.php' );
 require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
 
 /**
+ * Include Shortcode Class
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/shortcodes/shortcode-insert-class.php' );
+
+/**
  * Include AQ Resizer
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer.php' );
