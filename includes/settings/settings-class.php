@@ -93,27 +93,29 @@ class MP_CORE_Settings{
 		
 		$parent_slug = isset($this->_args['parent_slug']) ? $this->_args['parent_slug'] : NULL;
 		
+		$settings_slug = $this->_args['slug'];
+		
 		/**
 		* Display tab at top of Theme Options page
 		*/
-		$mp_core_display_tab_title = function ($active_tab) use ($tab_title, $tab_slug, $parent_slug){ 
+		$mp_core_display_tab_title = function ($active_tab) use ($settings_slug, $tab_title, $tab_slug, $parent_slug){ 
 			
 			//Set tab link based on whether there is a parent_slug
 			if (empty($parent_slug)){
 				//This is not a submenu
-				$tab_link = '?page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+				$tab_link = '?page=' . $settings_slug . '&tab=' . $settings_slug . '_' . $tab_slug;
 			}else{
 				//This is a submenu
 				$question_char = strrpos($parent_slug, "?");
 				if ($question_char === false) { // note: three equal signs
-					$tab_link = get_admin_url() . $parent_slug . '?page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+					$tab_link = get_admin_url() . $parent_slug . '?page=' . $settings_slug . '&tab=' . $settings_slug . '_' . $tab_slug;
 				}else{
-					$tab_link = get_admin_url() . $parent_slug . '&page=' . $this->_args['slug'] . '&tab=' . $this->_args['slug'] . '_' . $tab_slug;
+					$tab_link = get_admin_url() . $parent_slug . '&page=' . $settings_slug . '&tab=' . $settings_slug . '_' . $tab_slug;
 				}
 			}
 			
 			//Add this tab to the page
-			if ($active_tab == $this->_args['slug'] . '_' . $tab_slug){ $active_class = 'nav-tab-active'; }else{$active_class = "";}
+			if ($active_tab == $settings_slug . '_' . $tab_slug){ $active_class = 'nav-tab-active'; }else{$active_class = "";}
 			echo ('<a href="' . $tab_link . '" class="nav-tab ' . $active_class . '">' . $tab_title . '</a>');
 		};
 		add_action( $this->_args['slug'] . '_new_tab_hook', $mp_core_display_tab_title );
