@@ -7,13 +7,13 @@
  * @package mp_core
  * @since mp_core 1.0
  */
-
-if ( ! function_exists( 'mp_core_content_nav' ) ) :
+ 
 /**
  * Display navigation to next/previous pages when applicable
  *
  * @since mp_core 1.0
  */
+if ( ! function_exists( 'mp_core_content_nav' ) ) :
 function mp_core_content_nav( $nav_id ) {
 	global $wp_query, $post;
 

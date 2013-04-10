@@ -104,6 +104,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
 //require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
+ * Include Updater
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/updater/class-edd-updater.php' );
+
+/**
  * Include Settings Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-class.php' );
@@ -153,29 +158,24 @@ require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/template-ta
 require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/extras.php' );
 	
 /**
- * Implement the Custom Header feature
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/custom-wp/custom-header.php' );
-
-/**
- * Implement the Custom Background feature
- */
-//require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/custom-wp/custom-background.php' );
-
-/**
  * Theme Customizer Custom Options
  */
-//require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/customize.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/customize.php' );
+
+/**
+ * Theme Customizer Logo 
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/logo.php' );
+
+/**
+ * Comments
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/comments/template-tag.php' );
 
 /**
  * Include Misc Functions
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/misc-functions.php' );
-
-/**
- * Include WPFC template functions
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/wpfc/misc-functions.php' );
 
 if( is_admin() ) {
 	//none at the moment
