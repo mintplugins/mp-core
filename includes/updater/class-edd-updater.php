@@ -29,7 +29,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				include( dirname( __FILE__ ) . '/EDD_SL_Theme_Updater.php' );
 			}
 					
-			$license = trim( $this->_args['software_license_key'] );
+			$license = trim( mp_core_get_option( $this->_args['software_licence_option_tab'], 'edd_licence_key' ) );
 			
 			//Get theme info
 			$theme = wp_get_theme($this->_args['software_slug']); // $theme->Name
@@ -52,11 +52,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		function edd_activate_license() {
  
 			// listen for our activate button to be clicked
-			if( isset( $_POST[ $this->_args['software_option_tab']] ) ) {
+			if( isset( $_POST[ $this->_args['software_licence_option_tab'] ] ) ) {
 				 				 
-				// retrieve the license from the database
-				$license = trim( $this->_args['software_license_key'] );
-		 
+				// retrieve the license from the $_POST
+				$license = trim( $_POST[ $this->_args['software_licence_option_tab'] ][ 'edd_licence_key' ] );	 
 		 
 				// data to send in our API request
 				$api_params = array( 
