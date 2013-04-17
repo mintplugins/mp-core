@@ -86,17 +86,17 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			if( isset( $_POST[ $this->_args['software_license_setting'] ] ) ) {
 				
 				// retrieve the license from the $_POST
-				$licence = trim( $_POST[ $this->_args['software_license_setting'] ][ 'license_key' ] );	 
+				$license = trim( $_POST[ $this->_args['software_license_setting'] ][ 'license_key' ] );	 
 								
 				//If the length of the key matches the length of normal EDD licenses, do an EDD update
-				if ( strlen( $this->_args['post_license'] ) == 32 ){
+				if ( strlen( $license ) == 32 ){
 					
 					//Set args for EDD Licence check function
 					$args = array(
 						'software_api_url' => $this->_args['software_api_url'],
 						'software_slug'    => $this->_args['software_slug'],
 						'software_name'    => $this->_args['software_name'],
-						'software_license' => $licence,
+						'software_license' => $license,
 					);
 						
 					//Check and update EDD Licence
@@ -104,17 +104,17 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				}
 				
 				//If the length of the key matches the length of normal ENVATO licenses, do an ENVATO update
-				elseif(strlen( $this->_args['post_license'] ) == 36){
+				elseif(strlen( $license ) == 36){
 					
 					//Set args for ENVATO Licence check function
 					$args = array(
 						'software_envato_username' => $this->_args['software_envato_username'],
 						'software_envato_api_key' => $this->_args['software_envato_api_key'],
-						'software_license' => $licence,
+						'software_license' => $license,
 					);
 								
 					//Check and Update Envato Licence
-					update_option( $this->_args['software_slug'] . '_license_status_valid', mp_repo_envato_license_check($args) );	
+					update_option( $this->_args['software_slug'] . '_license_status_valid', mp_core_envato_license_check($args) );	
 				}
 				
 				//This license length doesn't match any we are checking for and therefore, this license is not valid

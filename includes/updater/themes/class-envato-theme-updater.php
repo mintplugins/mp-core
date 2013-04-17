@@ -88,6 +88,9 @@ if ( !class_exists( 'MP_CORE_Envato_Theme_Updater' ) ){
 		function theme_update_transient($value) {
 			
 			$update_data = $this->check_for_update();
+			
+			//Add the license to the package URL
+			$update_data['package'] = add_query_arg('license', $this->_args['software_license'], $update_data['package'] );
 					
 			if ( $update_data ) {
 				$value->response[ $this->_args['software_slug'] ] = $update_data;
