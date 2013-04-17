@@ -1,0 +1,18 @@
+/**
+ * Settings Style
+ * http://moveplugins.com
+ */
+
+.mp-core-green-light{
+	display:inline-block;
+	width:10px;
+	height:10px;
+	background-color:#00FF00;	
+}
+
+.mp-core-red-light{
+	display:inline-block;
+	width:10px;
+	height:10px;
+	background-color:#F00;	
+}

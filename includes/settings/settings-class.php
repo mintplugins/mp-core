@@ -31,6 +31,8 @@ class MP_CORE_Settings{
 	}
 	
 	public function mp_core_enqueue_scripts(){
+		//mp_core_metabox_css
+		wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
 		//color picker scripts
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
@@ -474,6 +476,31 @@ function mp_core_colorpicker($args = array() ) {
 		<input type="text" class="of-color" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" size="25" />
 		<?php echo $description; ?>
 		
+	</div>
+	<?php
+}
+
+/**
+ * Light
+ *
+ * @since mp_core 1.0
+ */
+function mp_core_true_false_light($args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$class = $value == true ? 'mp-core-green-light' : 'mp-core-red-light';
+	
+	?>
+	<div class="mp-core-true-false-light">
+		<div class="<?php echo $class; ?>"></div>
+		<?php echo $description; ?>
 	</div>
 	<?php
 }

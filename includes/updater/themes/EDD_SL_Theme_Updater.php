@@ -12,14 +12,14 @@ class EDD_SL_Theme_Updater {
 		$args = wp_parse_args( $args, array(
 			'remote_api_url' => 'http://easydigitaldownloads.com',
 			'request_data'   => array(),
-			'theme_slug'     => get_stylesheet(),
+			'theme_slug'     => get_template(),
 			'item_name'      => '',
 			'license'        => '',
 			'version'        => '',
 			'author'         => ''
 		) );
 		extract( $args );
-
+		
 		$theme                = wp_get_theme( sanitize_key( $theme_slug ) );
 		$this->license        = $license;
 		$this->item_name      = $item_name;
@@ -77,6 +77,7 @@ class EDD_SL_Theme_Updater {
 		if ( $update_data ) {
 			$value->response[ $this->theme_slug ] = $update_data;
 		}
+		
 		return $value;
 	}
 
@@ -130,12 +131,13 @@ class EDD_SL_Theme_Updater {
 				$update_data->sections = maybe_unserialize( $update_data->sections );
 				set_transient( $this->response_key, $update_data, strtotime( '+12 hours' ) );
 			}
+
 		}
 
 		if ( version_compare( $this->version, $update_data->new_version, '>=' ) ) {
 			return false;
 		}
-
+		
 		return (array) $update_data;
 	}
 }

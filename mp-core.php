@@ -104,9 +104,9 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
 //require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
- * Include Updater
+ * Include Theme and Plugin Updater
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/updater/class-edd-updater.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/updater/updater.php' );
 
 /**
  * Include Settings Class
