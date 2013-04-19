@@ -18,10 +18,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Theme Update Function	
 			add_action( 'admin_init', array( &$this, 'mp_core_update_theme' ) ); 	
 			
-			//Create Option page for updates
-			add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
-			
-			//Show Option Page on Themes page as well
+			//Show License Option on Themes page
 			add_action( 'load-themes.php', array( $this, 'themes_page') ); 
 						
 		}
@@ -120,16 +117,11 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				//If the length of the key matches the length of normal ENVATO licenses, do an ENVATO update
 				elseif(strlen( $license ) == 36){
 					
-					//Set args for ENVATO Licence check function
-					$args = array(
-						'software_envato_username' => $this->_args['software_envato_username'],
-						'software_envato_api_key' => $this->_args['software_envato_api_key'],
-						'software_envato_item_id' => $this->_args['software_envato_item_id'],
-						'software_license' => $license,
-					);
+					//Check the response from the repo if this license is valid					
+					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_slug'] . '/?envato-check&license=' . $license );
 								
 					//Check and Update Envato Licence
-					update_option( $this->_args['software_slug'] . '_license_status_valid', mp_core_envato_license_check($args) );	
+					update_option( $this->_args['software_slug'] . '_license_status_valid', $envato_response );	
 				}
 				
 				//This license length doesn't match any we are checking for and therefore, this license is not valid
@@ -138,50 +130,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				}
 					
 			}
-		}
-		/***********************************************
-		* Add our menu item
-		***********************************************/
-		
-		function updates_menu() {
-			add_theme_page( 'Theme License', 'Theme License', 'manage_options',  $this->_args['software_slug'] . '-updates', array( &$this, 'updates_page' ) );
-		}	
-				
-		/***********************************************
-		* Updates Settings Page
-		***********************************************/
-		
-		function updates_page() {
-			
-			$license 	= get_option( $this->_args['software_slug'] . '_license_key' );
-			$status 	= get_option( $this->_args['software_slug'] . '_license_status_valid' );
-			?>
-			<div id="mp-core-theme-license-wrap" class="wrap">
-				<h2><?php _e('Theme License Options'); ?></h2>
-				<form method="post">
-									
-					<table class="form-table">
-						<tbody>
-							<tr valign="top">	
-								<th scope="row" valign="top">
-									<?php _e('License Key'); ?>
-								</th>
-								<td>
-									<input id="edd_sample_theme_license" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-									<label class="description" for="<?php echo $this->_args['software_slug']; ?>_license_key"><?php _e('Enter your license key'); ?></label>
-                                    
-                                    <?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? 'Your license is valid' : 'This license is not valid!' ) ); ?>
-                                    
-                                    <?php wp_nonce_field( $this->_args['software_slug'] . '_nonce', $this->_args['software_slug'] . '_nonce' ); ?>
-								</td>
-							</tr>
-						</tbody>
-					</table>	
-					<?php submit_button(); ?>
-				
-				</form>
-			</div>
-			<?php
 		}
 		
 		/***********************************************
