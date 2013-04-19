@@ -9,6 +9,7 @@ function mp_core_envato_license_check($args = array() ) {
 	$args = wp_parse_args( $args, array(
 		'software_envato_username' => '',
 		'software_envato_api_key' => '',
+		'software_envato_item_id' => '',
 		'software_license' => '',
 	) );
 	
@@ -24,9 +25,9 @@ function mp_core_envato_license_check($args = array() ) {
 	
 	// Verify Key		
 	$response = json_decode($ch_data, true);
-	
-	// If Verify Purchase is set
-	if( isset($response['verify-purchase']['buyer']) ){
+		
+	// If Verify Purchase is set and the returned item id == the item ID passed in
+	if( isset($response['verify-purchase']['buyer']) && $response['verify-purchase']['item_id'] == $software_envato_item_id ){
 	
 		//This license is valid
 		return true;

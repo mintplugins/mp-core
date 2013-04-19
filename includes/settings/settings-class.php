@@ -81,8 +81,7 @@ class MP_CORE_Settings{
 		//Call one of the administration menus funtions: 
 		}else{
 			//Basic page args
-			$menu_page = $page_function_name($this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' )
-			);
+			$menu_page = $page_function_name( $this->_args['title'], $this->_args['title'], 'manage_options', $this->_args['slug'], array( &$this, 'mp_core_render_page' ) );
 		}		
 	}
 	

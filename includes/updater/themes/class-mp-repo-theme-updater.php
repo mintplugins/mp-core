@@ -1,13 +1,20 @@
 <?php
 /**
- * Plugin Checker Class for the wp_core Plugin by Move Plugins
- * http://moveplugins.com/plugin-checker-class/
+ * Sends for a theme update from the mp_repo plugin instaled on the API site
+ * http://moveplugins.com/MP_CORE_MP_REPO_Theme_Updater/
  */
-if ( !class_exists( 'MP_CORE_Envato_Theme_Updater' ) ){
-	class MP_CORE_Envato_Theme_Updater{
+if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
+	class MP_CORE_MP_REPO_Theme_Updater{
 		
 		public function __construct($args){
-						
+			
+			//Parse args					
+			$args = wp_parse_args( $args, array( 
+				'software_api_url' 	=> '',
+				'software_license' 	=> NULL,
+				'software_slug' 	=> ''
+			) );
+			
 			//Get args
 			$this->_args = $args;
 			
@@ -89,8 +96,8 @@ if ( !class_exists( 'MP_CORE_Envato_Theme_Updater' ) ){
 			
 			$update_data = $this->check_for_update();
 			
-			//Add the license to the package URL
-			$update_data['package'] = add_query_arg('license', $this->_args['software_license'], $update_data['package'] );
+			//Add the license to the package URL if the license passed in is not NULL
+			$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
 					
 			if ( $update_data ) {
 				$value->response[ $this->_args['software_slug'] ] = $update_data;
@@ -99,6 +106,10 @@ if ( !class_exists( 'MP_CORE_Envato_Theme_Updater' ) ){
 			return $value;
 		}
 		
+		/**
+		 * Check for Update for this theme
+		 *
+		 */
 		function check_for_update() {
 			
 			$theme = wp_get_theme( $this->_args['software_slug'] );
