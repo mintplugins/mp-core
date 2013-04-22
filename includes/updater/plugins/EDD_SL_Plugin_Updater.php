@@ -35,6 +35,7 @@ class EDD_SL_Plugin_Updater {
 
 		// Set up hooks.
 		$this->hook();
+
 	}
 
 	/**
@@ -44,7 +45,7 @@ class EDD_SL_Plugin_Updater {
 	 *
 	 * @return void
 	 */
-	private function hook() {
+	private function hook() {		
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
 		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 	}
@@ -63,8 +64,7 @@ class EDD_SL_Plugin_Updater {
 	 * @return array Modified update array with custom plugin data.
 	 */
 	function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
-
-
+		
 		if( empty( $_transient_data ) ) return $_transient_data;
 
 		$to_send = array( 'slug' => $this->slug );
@@ -112,7 +112,7 @@ class EDD_SL_Plugin_Updater {
 	 * @return false||object
 	 */
 	private function api_request( $_action, $_data ) {
-
+		
 		global $wp_version;
 
 		$data = array_merge( $this->api_data, $_data );
@@ -126,8 +126,11 @@ class EDD_SL_Plugin_Updater {
 			'slug' 			=> $this->slug,
 			'author'		=> $data['author']
 		);
-		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params, 'user-agent' => 'EDDSoftwareLicensing' ) );
-
+		
+		//mp_core change: Removed 'user-agent' => 'EDDSoftwareLicensing' 
+		//$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params, 'user-agent' => 'EDDSoftwareLicensing' ) );
+		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+				
 		if ( !is_wp_error( $request ) ):
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
 			if( $request )

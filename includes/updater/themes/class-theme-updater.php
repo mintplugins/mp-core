@@ -17,10 +17,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Theme Update Function	
 			add_action( 'admin_init', array( &$this, 'mp_core_update_theme' ) ); 	
-			
-			//Create Option page for updates
-			add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
-			
+						
 			//Show Option Page on Themes page as well
 			add_action( 'load-themes.php', array( $this, 'themes_page') ); 
 						
@@ -163,7 +160,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 									<?php _e('License Key'); ?>
 								</th>
 								<td>
-									<input id="edd_sample_theme_license" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
+									<input id="<?php echo $this->_args['software_slug']; ?>_license_key" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
 									<label class="description" for="<?php echo $this->_args['software_slug']; ?>_license_key"><?php _e('Enter your license key'); ?></label>
                                     
                                     <?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? 'Your license is valid' : 'This license is not valid!' ) ); ?>
@@ -196,7 +193,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Decalre slug variable
 			$software_slug = $this->_args['software_slug'];
 			
-			//Dispplay the license on the themes page
+			//Display the license on the themes page
 			$display_license = function () use ($software_slug){
 				$license 	= get_option( $this->_args['software_slug'] . '_license_key' );
 				$status 	= get_option( $this->_args['software_slug'] . '_license_status_valid' );
@@ -208,7 +205,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
                     
 					<form method="post">
 										
-						<input style="float:left; margin-right:10px;" id="edd_sample_theme_license" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+						<input style="float:left; margin-right:10px;" id="<?php echo $this->_args['software_slug']; ?>_license_key" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
 						<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 						
 						<?php wp_nonce_field( $this->_args['software_slug'] . '_nonce', $this->_args['software_slug'] . '_nonce' ); ?>

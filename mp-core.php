@@ -3,8 +3,8 @@
 Plugin Name: Move Plugins - Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: 1.0
-Author: Phil Johnston
+Version: beta1.0.0.0
+Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
 Domain Path: languages
@@ -26,6 +26,9 @@ License: GPL2
     along with this program; if not, write to the Free Software
     Move Plugins Core, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
+// Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +110,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
  * Include Theme and Plugin Updater
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/updater/updater.php' );
+
+/**
+ * Keep mp_core updated
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/updater/mp-core-update.php' );
 
 /**
  * Include Settings Class

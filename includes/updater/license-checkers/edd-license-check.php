@@ -27,10 +27,10 @@ function mp_core_edd_license_check($args = array() ) {
 		'license' 	=> $software_license, 
 		'item_name' => urlencode( $software_name ) // the name of our product in EDD
 	);
-
+	
 	// Call the custom API.
 	$response = wp_remote_get( add_query_arg( $api_params, $software_api_url ) );
-	
+		
 	// make sure the response came back okay
 	if ( is_wp_error( $response ) )
 		return false;

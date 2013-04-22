@@ -12,7 +12,7 @@ class EDD_SL_Theme_Updater {
 		$args = wp_parse_args( $args, array(
 			'remote_api_url' => 'http://easydigitaldownloads.com',
 			'request_data'   => array(),
-			'theme_slug'     => get_template(),
+			'theme_slug'     => get_template(), //mp_core change from get_stylesheet to get_template - fix for child themes
 			'item_name'      => '',
 			'license'        => '',
 			'version'        => '',
@@ -89,7 +89,7 @@ class EDD_SL_Theme_Updater {
 
 		$theme = wp_get_theme( $this->theme_slug );
 				
-		$update_data = get_transient( $this->response_key ); //malachi-update-response
+		$update_data = get_transient( $this->response_key ); 
 				
 		if ( false === $update_data ) {
 			$failed = false;
@@ -102,6 +102,8 @@ class EDD_SL_Theme_Updater {
 				'author'		=> $this->author
 			);
 			
+			//mp_core change: Removed 'user-agent' => 'EDDSoftwareLicensing' 
+			//$response = wp_remote_post( $this->remote_api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params, 'user-agent' => 'EDDSoftwareLicensing' ) );
 			$response = wp_remote_post( $this->remote_api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 			
 			// make sure the response was successful
@@ -111,7 +113,7 @@ class EDD_SL_Theme_Updater {
 			
 			$update_data = json_decode( wp_remote_retrieve_body( $response ) );
 			
-			//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
+			//mp_core change: temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
 			$update_data->url =  $update_data->homepage;
 			
 			if ( ! is_object( $update_data ) ) {
