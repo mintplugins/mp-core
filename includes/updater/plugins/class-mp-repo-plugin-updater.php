@@ -1,167 +1,148 @@
 <?php
 /**
  * Sends for a theme update from the mp_repo plugin instaled on the API site
- * http://moveplugins.com/MP_CORE_MP_REPO_Theme_Updater/
+ * http://moveplugins.com/MP_CORE_MP_REPO_Plugin_Updater/
  */
-if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
-	class MP_CORE_MP_REPO_Theme_Updater{
+if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
+	class MP_CORE_MP_REPO_Plugin_Updater{
 		
 		public function __construct($args){
 			
 			//Parse args					
 			$args = wp_parse_args( $args, array( 
+				'software_version' 	=> '',
+				'software_file_url' => '',
 				'software_api_url' 	=> '',
 				'software_license' 	=> NULL,
-				'software_slug' 	=> ''
+				'software_name' 	=> ''
 			) );
 			
 			//Get args
 			$this->_args = $args;
 			
-			//Response Key
-			$this->response_key = $this->_args['software_slug'] . '-update-response';
-			
-			//Theme Data
-			$theme = wp_get_theme( sanitize_key( $this->_args['software_slug'] ) );
-			$this->version = ! empty( $version ) ? $version : $theme->get( 'Version' );
-						
-			//Hook to transient update themes to check for new updates
-			add_filter( 'site_transient_update_themes', array( &$this, 'theme_update_transient' ) );
-			
-			//Hooks which delete the theme transient
-			add_filter( 'delete_site_transient_update_themes', array( &$this, 'delete_theme_update_transient' ) );
-			add_action( 'load-update-core.php', array( &$this, 'delete_theme_update_transient' ) );
-			add_action( 'load-themes.php', array( &$this, 'delete_theme_update_transient' ) );	
-			
-			//Update Nag on Themes Screen
-			add_action( 'load-themes.php', array( &$this, 'load_themes_screen' ) );			
-								
+			$this->api_url  = trailingslashit( $this->_args['software_api_url'] ); //EG: http://moveplugins.com
+			$this->name     = plugin_basename( $this->_args['software_file_url'] ); //EG: mp-core/mp-core.php
+			$this->slug     = basename( $this->_args['software_file_url'], '.php'); //EG: mp-core
+			$this->version  = $this->_args['software_version']; //EG: 1.0
+			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
+		
+			// Set up hooks.
+			$this->hook();
+											
+			//Delete transients for testing purposes if WP_DEBUG is on
+			if ( ( defined( 'WP_DEBUG' ) && WP_DEBUG ) )
+                $this->delete_transients();
+											
 		}
 		
 		/**
-		 * Load thickbox on themes screen and call update nag
+		 * Delete transients (runs when WP_DEBUG is on)
+		 * For testing purposes the site transient will be reset on each page load
 		 *
+		 * @since 1.0
+		 * @return void
 		 */
-		function load_themes_screen() {
-			add_thickbox();
-			add_action( 'admin_notices', array( &$this, 'update_nag' ) );
+		public function delete_transients () {
+			delete_site_transient( 'update_plugins' );
+		}
+					
+		/**
+		 * Set up Wordpress filters to hook into WP's update process.
+		 *
+		 * @uses add_filter()
+		 *
+		 * @return void
+		 */
+		private function hook() {		
+			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
+			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
+			
+			print_r (get_site_transient( 'update_plugins' ));
 		}
 		
 		/**
-		 * Update notice on Themes screen
+		 * Check for Updates at the defined API endpoint and modify the update array.
 		 *
+		 * This function dives into the update api just when Wordpress creates its update array,
+		 * then adds a custom API call and injects the custom plugin data retrieved from the API.
+		 * It is reassembled from parts of the native Wordpress plugin update code.
+		 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
+		 *
+		 * @uses api_request()
+		 *
+		 * @param array $_transient_data Update array build by Wordpress.
+		 * @return array Modified update array with custom plugin data.
 		 */
-		function update_nag() {
-			$theme = wp_get_theme( $this->_args['software_slug'] );
+		function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
+			
+			if( empty( $_transient_data ) ) return $_transient_data;
 	
-			$api_response = get_transient( $this->response_key );
+			$to_send = array( 'slug' => $this->slug );
 	
-			if( false === $api_response )
+			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+	
+			if( false !== $api_response && is_object( $api_response ) ) {
+				if( version_compare( $this->version, $api_response->new_version, '<' ) )
+					$_transient_data->response[$this->name] = $api_response;
+		}
+			return $_transient_data;
+		}
+		
+		/**
+		 * Updates information on the "View version x.x details" page with custom data.
+		 *
+		 * @uses api_request()
+		 *
+		 * @param mixed $_data
+		 * @param string $_action
+		 * @param object $_args
+		 * @return object $_data
+		 */
+		function plugins_api_filter( $_data, $_action = '', $_args = null ) {
+			if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
+	
+			$to_send = array( 'slug' => $this->slug );
+	
+			$api_response = $this->api_request( 'plugin_information', $to_send );
+			if ( false !== $api_response ) $_data = $api_response;
+			
+			return $_data;
+		}
+		
+		/**
+		 * Calls the API and, if successfull, returns the object delivered by the API.
+		 *
+		 * @uses get_bloginfo()
+		 * @uses wp_remote_post()
+		 * @uses is_wp_error()
+		 *
+		 * @param string $_action The requested action.
+		 * @param array $_data Parameters for the API action.
+		 * @return false||object
+		 */
+		private function api_request( $_action, $_data ) {
+			
+			global $wp_version;
+	
+			
+			if( $_data['slug'] != $this->slug )
 				return;
 	
-			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $this->_args['software_slug'] ), 'upgrade-theme_' . $this->_args['software_slug'] );
-			$update_onclick = ' onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update." ) ) . '\') ) {return true;}return false;"';
-	
-			if ( version_compare( $this->version, $api_response->new_version, '<' ) ) {
-	
-				echo '<div id="update-nag">';
-					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
-						$theme->get( 'Name' ),
-						$api_response->new_version,
-						'#TB_inline?width=640&amp;inlineId=' . $this->_args['software_slug'] . '_changelog',
-						$theme->get( 'Name' ),
-						$update_url,
-						$update_onclick
-					);
-				echo '</div>';
-				echo '<div id="' . $this->_args['software_slug'] . '_' . 'changelog" style="display:none;">';
-					echo wpautop( $api_response->sections['changelog'] );
-				echo '</div>';
-			}
-		}
-				
-		/**
-		 * Delete the transient for this theme
-		 *
-		 */
-		function delete_theme_update_transient() {
-			delete_transient( $this->response_key );
-		}
-		
-		/**
-		 * Update the transient for this theme
-		 *
-		 */
-		function theme_update_transient($value) {
-			
-			$update_data = $this->check_for_update();
-			
-			//Add the license to the package URL if the license passed in is not NULL
-			$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
-					
-			if ( $update_data ) {
-				$value->response[ $this->_args['software_slug'] ] = $update_data;
-			}
-			
-			return $value;
-		}
-		
-		/**
-		 * Check for Update for this theme
-		 *
-		 */
-		function check_for_update() {
-			
-			$theme = wp_get_theme( $this->_args['software_slug'] );
-								
-			$update_data = get_transient( $this->response_key ); //malachi-update-response
-				
-			if ( false == $update_data ) {
-				
-				$failed = false;
-	
-				$api_params = array(
+			$api_params = array(
 					'api' => 'true'
 				);
 								
-				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-								
-				// make sure the response was successful
-				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-					$failed = true;
-				}
-				
-				$update_data = json_decode( wp_remote_retrieve_body( $response ) );
-				
-				//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
-				$update_data->url =  $update_data->homepage;
-				
-				if ( ! is_object( $update_data ) ) {
-					$failed = true;
-				}
-	
-				// if the response failed, try again in 30 minutes
-				if ( $failed ) {
-					$data = new stdClass;
-					$data->new_version = $this->version;
-					set_transient( $this->response_key, $data, strtotime( '+30 minutes' ) );
-					return false;
-				}
-	
-				// if the status is 'ok', return the update arguments
-				if ( ! $failed ) {
-					$update_data->sections = maybe_unserialize( $update_data->sections );
-					set_transient( $this->response_key, $update_data, strtotime( '+12 hours' ) );
-				}
-	
-			}
-	
-			if ( version_compare( $this->version, $update_data->new_version, '>=' ) ) {
+			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+					
+			if ( !is_wp_error( $request ) ):
+				$request = json_decode( wp_remote_retrieve_body( $request ) );
+				if( $request )
+					$request->sections = maybe_unserialize( $request->sections );
+				print_r($request);	
+				return $request;
+			else:
 				return false;
-			}
-	
-			return (array) $update_data;
+			endif;
 		}
 	}
 }
-

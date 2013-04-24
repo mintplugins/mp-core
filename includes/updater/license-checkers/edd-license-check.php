@@ -10,10 +10,11 @@ function mp_core_edd_license_check($args = array() ) {
 	
 	$args = wp_parse_args( $args, array(
 		'software_api_url' => 'http://moveplugins.com',
-		'software_slug'    => '',
 		'software_name'    => '',
 		'software_license' => '',
 	) );
+	
+	$plugin_name_slug = sanitize_title ( $args['software_name'] ); //EG move-plugins-core
 	
 	extract( $args );
 	
@@ -25,7 +26,7 @@ function mp_core_edd_license_check($args = array() ) {
 	$api_params = array( 
 		'edd_action'=> 'activate_license', 
 		'license' 	=> $software_license, 
-		'item_name' => urlencode( $software_name ) // the name of our product in EDD
+		'item_name' => $plugin_name_slug // the name of our product in EDD
 	);
 	
 	// Call the custom API.
@@ -39,7 +40,7 @@ function mp_core_edd_license_check($args = array() ) {
 	$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 	// $license_data->license will be either "active" or "inactive"
-	update_option( $software_slug . '_license_status', $license_data->license );
+	update_option( $plugin_name_slug . '_license_status', $license_data->license );
 	
 	/***********************************************
 	* Check if the license is valid

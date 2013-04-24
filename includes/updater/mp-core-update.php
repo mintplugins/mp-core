@@ -6,9 +6,8 @@
  if (!function_exists('mp_core_update')){
 	function mp_core_update() {
 		$args = array(
-			'software_name' => 'mp_core', //<- The name of this Software in EDD
-			'software_slug' => 'mp_core', //<- The slug (directory name) for this software. Make sure it matches the slug on the WP repo, edd, and mp_repo
-			'software_api_url' => 'http://moveplugins.com/',//The URL where EDD and mp_repo are installed and checked
+			'software_name' => 'Move Plugins Core', //<- The exact name of this Plugin. Make sure it matches the title in your mp_repo, edd, and the WP.org repo
+			'software_api_url' => 'http://moveplugins.com',//The URL where EDD and mp_repo are installed and checked
 			'software_filename' => 'mp-core.php',
 			'software_licenced' => true, //<-Boolean
 		);

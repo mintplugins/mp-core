@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Move Plugins - Core
+Plugin Name: Move Plugins Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
 Version: beta1.0.0.0

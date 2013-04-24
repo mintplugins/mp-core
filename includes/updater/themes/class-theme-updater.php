@@ -29,49 +29,47 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		function mp_core_update_theme(){
 			
 			//Get license		
-			$license = isset( $_POST[ $this->_args['software_slug'] . '_license_key' ] ) ? 
-			//Get from $_POST if the license exists there
-			trim( $_POST[ $this->_args['software_slug'] . '_license_key' ] ) : 
-			//Otherwise, get from Database saved setting
-			trim( get_option( $this->_args['software_slug'] . '_license_key' ) );
+			$license = trim( get_option( $this->_args['software_slug'] . '_license_key' ) );
+			
+			//If License if valud
+			if ( get_option( $this->_args['software_slug'] . '_license_status_valid' ) ){
 									
-			//EDD Length: If the length of the key matches the length of normal EDD licenses, do an EDD update
-			if ( strlen( $license ) == 32 ){
-				
-				//Do EDD Update
-				if ( !class_exists( 'EDD_SL_Theme_Updater' ) ) {
-					// Load our custom theme updater
-					include( dirname( __FILE__ ) . '/EDD_SL_Theme_Updater.php' );
+				//EDD Length: If the length of the key matches the length of normal EDD licenses, do an EDD update
+				if ( strlen( $license ) == 32 ){
+					
+					//Do EDD Update
+					if ( !class_exists( 'EDD_SL_Theme_Updater' ) ) {
+						// Load our custom theme updater
+						include( dirname( __FILE__ ) . '/EDD_SL_Theme_Updater.php' );
+					}
+									
+					//Get theme info
+					$theme = wp_get_theme($this->_args['software_slug']); // $theme->Name
+													
+					//Get current theme version
+					$theme_current_version = $theme->Version;
+					
+					//Call the EDD_Theme Updater Class
+					$edd_updater = new EDD_SL_Theme_Updater( array( 
+							'remote_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
+							'version' 			=> $theme_current_version, 				// The current theme version we are running
+							'license' 			=> $license, 		// The license key (used get_option above to retrieve from DB)
+							'item_name' 		=> $this->_args['software_name'],	// The name of this theme
+							'author'			=> ''	// The author's name
+						)
+					);
+					
 				}
-								
-				//Get theme info
-				$theme = wp_get_theme($this->_args['software_slug']); // $theme->Name
-												
-				//Get current theme version
-				$theme_current_version = $theme->Version;
-				
-				//Call the EDD_Theme Updater Class
-				$edd_updater = new EDD_SL_Theme_Updater( array( 
-						'remote_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
-						'version' 			=> $theme_current_version, 				// The current theme version we are running
-						'license' 			=> $license, 		// The license key (used get_option above to retrieve from DB)
-						'item_name' 		=> $this->_args['software_name'],	// The name of this theme
-						'author'			=> ''	// The author's name
-					)
-				);
-				
-			}
-			//Envato Length: If the length of the key matches the length of normal envato licenses, do an envato update
-			elseif ( strlen( $license ) == 36){
-				
-				//Do EDD Update
-				if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ) {
-					// Load our custom theme updater
-					include( dirname( __FILE__ ) . '/class-mp-repo-theme-updater.php' );
-				}
-												
-				//If there is a license entered, call the EDD_Theme Updater Class
-				if ( !empty( $license ) ) {
+				//Envato Length: If the length of the key matches the length of normal envato licenses, do an envato update
+				elseif ( strlen( $license ) == 36){
+					
+					//Do EDD Update
+					if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ) {
+						// Load our custom theme updater
+						include( dirname( __FILE__ ) . '/class-mp-repo-theme-updater.php' );
+					}
+													
+					//Call the EDD_Theme Updater Class
 					$edd_updater = new MP_CORE_MP_REPO_Theme_Updater( array( 
 							'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 							'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
@@ -119,9 +117,14 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					
 					//Check the response from the repo if this license is valid					
 					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_slug'] . '/?envato-check&license=' . $license );
-								
-					//Check and Update Envato Licence
-					update_option( $this->_args['software_slug'] . '_license_status_valid', $envato_response );	
+										
+					if ($envato_response['body']) {
+						//Check and Update Envato Licence
+						update_option( $this->_args['software_slug'] . '_license_status_valid', $envato_response );	
+					}else{
+						//Check and Update Envato Licence
+						update_option( $this->_args['software_slug'] . '_license_status_valid', false );	
+					}
 					
 				}
 				
