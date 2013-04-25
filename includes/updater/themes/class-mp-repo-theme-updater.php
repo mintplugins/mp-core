@@ -10,20 +10,21 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 			
 			//Parse args					
 			$args = wp_parse_args( $args, array( 
-				'software_api_url' 	=> '',
-				'software_license' 	=> NULL,
-				'software_slug' 	=> ''
+				'software_api_url' 	=> '', 	// Our store URL that is running EDD
+				'software_license' 	=> NULL, // The license key (used get_option above to retrieve from DB)
+				'software_name_slug' 	=> '',	// The slug of this theme
 			) );
 			
 			//Get args
 			$this->_args = $args;
 			
-			//Response Key
-			$this->response_key = $this->_args['software_slug'] . '-update-response';
-			
 			//Theme Data
-			$theme = wp_get_theme( sanitize_key( $this->_args['software_slug'] ) );
+			$this->theme_slug = sanitize_key( get_template() );
+			$theme = wp_get_theme( sanitize_key( $this->theme_slug ) );
 			$this->version = ! empty( $version ) ? $version : $theme->get( 'Version' );
+			
+			//Response Key
+			$this->response_key = $this->theme_slug . '-update-response';			
 						
 			//Hook to transient update themes to check for new updates
 			add_filter( 'site_transient_update_themes', array( &$this, 'theme_update_transient' ) );
@@ -52,14 +53,14 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 		 *
 		 */
 		function update_nag() {
-			$theme = wp_get_theme( $this->_args['software_slug'] );
+			$theme = wp_get_theme( $this->theme_slug );
 	
 			$api_response = get_transient( $this->response_key );
 	
 			if( false === $api_response )
 				return;
 	
-			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $this->_args['software_slug'] ), 'upgrade-theme_' . $this->_args['software_slug'] );
+			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $this->theme_slug ), 'upgrade-theme_' . $this->theme_slug );
 			$update_onclick = ' onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update." ) ) . '\') ) {return true;}return false;"';
 	
 			if ( version_compare( $this->version, $api_response->new_version, '<' ) ) {
@@ -68,13 +69,13 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
 						$theme->get( 'Name' ),
 						$api_response->new_version,
-						'#TB_inline?width=640&amp;inlineId=' . $this->_args['software_slug'] . '_changelog',
+						'#TB_inline?width=640&amp;inlineId=' . $this->theme_slug . '_changelog',
 						$theme->get( 'Name' ),
 						$update_url,
 						$update_onclick
 					);
 				echo '</div>';
-				echo '<div id="' . $this->_args['software_slug'] . '_' . 'changelog" style="display:none;">';
+				echo '<div id="' . $this->theme_slug . '_' . 'changelog" style="display:none;">';
 					echo wpautop( $api_response->sections['changelog'] );
 				echo '</div>';
 			}
@@ -100,7 +101,7 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 			$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
 					
 			if ( $update_data ) {
-				$value->response[ $this->_args['software_slug'] ] = $update_data;
+				$value->response[ $this->theme_slug ] = $update_data;
 			}
 			
 			return $value;
@@ -112,7 +113,7 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 		 */
 		function check_for_update() {
 			
-			$theme = wp_get_theme( $this->_args['software_slug'] );
+			$theme = wp_get_theme( $this->theme_slug );
 								
 			$update_data = get_transient( $this->response_key ); //malachi-update-response
 				
@@ -121,10 +122,12 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 				$failed = false;
 	
 				$api_params = array(
-					'api' => 'true'
+					'api' => 'true',
+					'slug' => $this->theme_slug,
+					'theme' => true
 				);
 								
-				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
 								
 				// make sure the response was successful
 				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
@@ -132,7 +135,7 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 				}
 				
 				$update_data = json_decode( wp_remote_retrieve_body( $response ) );
-				
+							
 				//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
 				$update_data->url =  $update_data->homepage;
 				

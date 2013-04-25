@@ -110,7 +110,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 							// Load our custom theme updater
 							include( dirname( __FILE__ ) . '/class-mp-repo-plugin-updater.php' );
 						}
-														
+													
 						//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
 						$edd_updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 
 								'software_version'  => $plugin_data['Version'],
@@ -118,6 +118,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 								'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 								'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
 								'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
+								'software_author'   => $plugin_data['Author']
 							)
 						);
 						

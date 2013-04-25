@@ -64,8 +64,6 @@ class EDD_SL_Plugin_Updater {
 	private function hook() {		
 		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
 		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
-		
-		print_r (get_site_transient( 'update_plugins' ));
 	}
 
 	/**
@@ -149,7 +147,7 @@ class EDD_SL_Plugin_Updater {
 		//mp_core change: Removed 'user-agent' => 'EDDSoftwareLicensing' 
 		//$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params, 'user-agent' => 'EDDSoftwareLicensing' ) );
 		$request = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-				
+		
 		if ( !is_wp_error( $request ) ):
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
 			if( $request )

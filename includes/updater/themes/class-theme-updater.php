@@ -11,6 +11,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				
 			//Get args
 			$this->_args = $args;
+			$this->theme_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
 			
 			//Set the "Green Light" Notification option for this license		
 			add_action( 'admin_init', array( &$this, 'set_license_green_light' ) ); 
@@ -29,10 +30,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		function mp_core_update_theme(){
 			
 			//Get license		
-			$license = trim( get_option( $this->_args['software_slug'] . '_license_key' ) );
+			$license = trim( get_option( $this->theme_name_slug . '_license_key' ) );
 			
 			//If License if valud
-			if ( get_option( $this->_args['software_slug'] . '_license_status_valid' ) ){
+			if ( get_option( $this->theme_name_slug . '_license_status_valid' ) ){
 									
 				//EDD Length: If the length of the key matches the length of normal EDD licenses, do an EDD update
 				if ( strlen( $license ) == 32 ){
@@ -44,7 +45,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					}
 									
 					//Get theme info
-					$theme = wp_get_theme($this->_args['software_slug']); // $theme->Name
+					$theme = wp_get_theme($this->theme_name_slug); // $theme->Name
 													
 					//Get current theme version
 					$theme_current_version = $theme->Version;
@@ -73,7 +74,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					$edd_updater = new MP_CORE_MP_REPO_Theme_Updater( array( 
 							'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 							'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
-							'software_slug' 	=> $this->_args['software_slug'],	// The slug of this theme
+							'software_name' 	=> $this->theme_name_slug,	// The slug of this theme
 						)
 					);
 				}
@@ -85,17 +86,17 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 */
 		function set_license_green_light(){
 			// listen for our activate button to be clicked
-			if( isset( $_POST[ $this->_args['software_slug'] . '_license_key' ] ) ) {
+			if( isset( $_POST[ $this->theme_name_slug . '_license_key' ] ) ) {
 				
 				//Check nonce
-				if( ! check_admin_referer( $this->_args['software_slug'] . '_nonce', $this->_args['software_slug'] . '_nonce' ) ) 	
+				if( ! check_admin_referer( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ) ) 	
 					return; // get out if we didn't click the Activate button
 				
 				// retrieve the license from the $_POST
-				$license = trim( $_POST[ $this->_args['software_slug'] . '_license_key' ] );
+				$license = trim( $_POST[ $this->theme_name_slug . '_license_key' ] );
 				
 				//Sanitize and update license
-				update_option( $this->_args['software_slug'] . '_license_key', wp_kses(htmlentities($license, ENT_QUOTES), '' ) );	 
+				update_option( $this->theme_name_slug . '_license_key', wp_kses(htmlentities($license, ENT_QUOTES), '' ) );	 
 								
 				//If the length of the key matches the length of normal EDD licenses, do an EDD update
 				if ( strlen( $license ) == 32 ){
@@ -103,34 +104,33 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					//Set args for EDD Licence check function
 					$args = array(
 						'software_api_url' => $this->_args['software_api_url'],
-						'software_slug'    => $this->_args['software_slug'],
 						'software_name'    => $this->_args['software_name'],
 						'software_license' => $license,
 					);
 						
 					//Check and update EDD Licence. The mp_core_edd_license_check function in in the mp_core
-					update_option( $this->_args['software_slug'] . '_license_status_valid', mp_core_edd_license_check($args) );	
+					update_option( $this->theme_name_slug . '_license_status_valid', mp_core_edd_license_check($args) );	
 				}
 				
 				//If the length of the key matches the length of normal ENVATO licenses, do an ENVATO update
 				elseif(strlen( $license ) == 36){
 					
 					//Check the response from the repo if this license is valid					
-					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_slug'] . '/?envato-check&license=' . $license );
+					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->theme_name_slug . '/?envato-check&license=' . $license );
 										
 					if ($envato_response['body']) {
 						//Check and Update Envato Licence
-						update_option( $this->_args['software_slug'] . '_license_status_valid', $envato_response );	
+						update_option( $this->theme_name_slug . '_license_status_valid', $envato_response );	
 					}else{
 						//Check and Update Envato Licence
-						update_option( $this->_args['software_slug'] . '_license_status_valid', false );	
+						update_option( $this->theme_name_slug . '_license_status_valid', false );	
 					}
 					
 				}
 				
 				//This license length doesn't match any we are checking for and therefore, this license is not valid
 				else{
-					update_option( $this->_args['software_slug'] . '_license_status_valid', false );
+					update_option( $this->theme_name_slug . '_license_status_valid', false );
 				}
 					
 			}
@@ -140,7 +140,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		***********************************************/
 		
 		function updates_menu() {
-			add_theme_page( 'Theme License', 'Theme License', 'manage_options',  $this->_args['software_slug'] . '-updates', array( &$this, 'updates_page' ) );
+			add_theme_page( 'Theme License', 'Theme License', 'manage_options',  $this->theme_name_slug . '-updates', array( &$this, 'updates_page' ) );
 		}	
 				
 		/***********************************************
@@ -149,8 +149,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		
 		function updates_page() {
 			
-			$license 	= get_option( $this->_args['software_slug'] . '_license_key' );
-			$status 	= get_option( $this->_args['software_slug'] . '_license_status_valid' );
+			$license 	= get_option( $this->theme_name_slug . '_license_key' );
+			$status 	= get_option( $this->theme_name_slug . '_license_status_valid' );
 			?>
 			<div id="mp-core-theme-license-wrap" class="wrap">
 				<h2><?php _e('Theme License Options'); ?></h2>
@@ -163,12 +163,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 									<?php _e('License Key'); ?>
 								</th>
 								<td>
-									<input id="<?php echo $this->_args['software_slug']; ?>_license_key" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-									<label class="description" for="<?php echo $this->_args['software_slug']; ?>_license_key"><?php _e('Enter your license key'); ?></label>
+									<input id="<?php echo $this->theme_name_slug; ?>_license_key" name="<?php echo $this->theme_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
+									<label class="description" for="<?php echo $this->theme_name_slug; ?>_license_key"><?php _e('Enter your license key'); ?></label>
                                     
                                     <?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? 'Your license is valid' : 'This license is not valid!' ) ); ?>
                                     
-                                    <?php wp_nonce_field( $this->_args['software_slug'] . '_nonce', $this->_args['software_slug'] . '_nonce' ); ?>
+                                    <?php wp_nonce_field( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ); ?>
 								</td>
 							</tr>
 						</tbody>
@@ -194,12 +194,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			add_action( 'admin_enqueue_scripts', 'enqueue_themes_scripts' );
 			
 			//Decalre slug variable
-			$software_slug = $this->_args['software_slug'];
+			$software_slug = $this->theme_name_slug;
 			
 			//Display the license on the themes page
 			$display_license = function () use ($software_slug){
-				$license 	= get_option( $this->_args['software_slug'] . '_license_key' );
-				$status 	= get_option( $this->_args['software_slug'] . '_license_status_valid' );
+				$license 	= get_option( $this->theme_name_slug . '_license_key' );
+				$status 	= get_option( $this->theme_name_slug . '_license_status_valid' );
 				?>
 				<div id="mp-core-theme-license-wrap" class="wrap">
 					
@@ -208,10 +208,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
                     
 					<form method="post">
 										
-						<input style="float:left; margin-right:10px;" id="<?php echo $this->_args['software_slug']; ?>_license_key" name="<?php echo $this->_args['software_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+						<input style="float:left; margin-right:10px;" id="<?php echo $this->theme_name_slug; ?>_license_key" name="<?php echo $this->theme_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
 						<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 						
-						<?php wp_nonce_field( $this->_args['software_slug'] . '_nonce', $this->_args['software_slug'] . '_nonce' ); ?>
+						<?php wp_nonce_field( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ); ?>
 									
 						<?php submit_button(__('Submit License', 'mp_core') ); ?>
 					

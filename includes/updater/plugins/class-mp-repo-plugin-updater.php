@@ -14,7 +14,8 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 				'software_file_url' => '',
 				'software_api_url' 	=> '',
 				'software_license' 	=> NULL,
-				'software_name' 	=> ''
+				'software_name' 	=> '',
+				'software_author' 	=> ''
 			) );
 			
 			//Get args
@@ -30,8 +31,8 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 			$this->hook();
 											
 			//Delete transients for testing purposes if WP_DEBUG is on
-			if ( ( defined( 'WP_DEBUG' ) && WP_DEBUG ) )
-                $this->delete_transients();
+			//if ( ( defined( 'WP_DEBUG' ) && WP_DEBUG ) )
+                //$this->delete_transients();
 											
 		}
 		
@@ -57,7 +58,6 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
-			print_r (get_site_transient( 'update_plugins' ));
 		}
 		
 		/**
@@ -80,11 +80,15 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 			$to_send = array( 'slug' => $this->slug );
 	
 			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+			
+			//Add the license to the package URL if the license passed in is not NULL
+			$api_response->package = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $api_response->package ) : $api_response->package;
 	
 			if( false !== $api_response && is_object( $api_response ) ) {
 				if( version_compare( $this->version, $api_response->new_version, '<' ) )
 					$_transient_data->response[$this->name] = $api_response;
 		}
+			//print_r ($_transient_data);
 			return $_transient_data;
 		}
 		
@@ -129,16 +133,16 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 				return;
 	
 			$api_params = array(
-					'api' => 'true'
+					'api' => 'true',
+					'slug' => $this->slug,
+					'author' => '' //$this->_args['software_version'] - not working for some reason
 				);
 								
-			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-					
+			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );							
 			if ( !is_wp_error( $request ) ):
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
 				if( $request )
 					$request->sections = maybe_unserialize( $request->sections );
-				print_r($request);	
 				return $request;
 			else:
 				return false;

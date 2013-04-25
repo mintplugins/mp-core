@@ -112,7 +112,7 @@ class EDD_SL_Theme_Updater {
 			}
 			
 			$update_data = json_decode( wp_remote_retrieve_body( $response ) );
-			
+						
 			//mp_core change: temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
 			$update_data->url =  $update_data->homepage;
 			
