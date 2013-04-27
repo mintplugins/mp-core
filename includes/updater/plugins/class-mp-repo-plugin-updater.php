@@ -15,12 +15,12 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 				'software_api_url' 	=> '',
 				'software_license' 	=> NULL,
 				'software_name' 	=> '',
-				'software_author' 	=> ''
 			) );
 			
 			//Get args
 			$this->_args = $args;
 			
+			//Set variables
 			$this->api_url  = trailingslashit( $this->_args['software_api_url'] ); //EG: http://moveplugins.com
 			$this->name     = plugin_basename( $this->_args['software_file_url'] ); //EG: mp-core/mp-core.php
 			$this->slug     = basename( $this->_args['software_file_url'], '.php'); //EG: mp-core

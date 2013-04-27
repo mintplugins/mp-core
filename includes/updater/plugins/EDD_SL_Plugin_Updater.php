@@ -37,9 +37,9 @@ class EDD_SL_Plugin_Updater {
 		$this->hook();
 		
 		//Delete transients for testing purposes if WP_DEBUG is on
-		if ( ( defined( 'WP_DEBUG' ) && WP_DEBUG ) )
-                $this->delete_transients();
-
+		if ( ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) {
+               // $this->delete_transients();
+		}
 	}
 	
 	/**

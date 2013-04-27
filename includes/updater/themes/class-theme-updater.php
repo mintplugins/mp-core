@@ -11,6 +11,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				
 			//Get args
 			$this->_args = $args;
+			
+			//Theme Name Slug
 			$this->theme_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
 			
 			//Set the "Green Light" Notification option for this license		

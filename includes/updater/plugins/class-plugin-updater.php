@@ -8,26 +8,28 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 	class MP_CORE_Plugin_Updater{
 		
 		public function __construct($args){
-			
-			//Add 1 to the global_plugin_update_num - This variable is used during registering javascrits
-			global $global_plugin_update_num;
-			$global_plugin_update_num = $global_plugin_update_num + 1;
-				
+							
 			//Get args
 			$this->_args = $args;
-			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
 			
-			//Set the "Green Light" Notification option for this license		
-			add_action( 'admin_init', array( &$this, 'set_license_green_light' ) ); 
+			//Plugin Name Slug
+			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		
+			
+			//If this software is licensed, show license field on plugins page
+			if ( $this->_args['software_licenced'] ){
+				
+				//Set the "Green Light" Notification option for this license		
+				add_action( 'admin_init', array( &$this, 'set_license_green_light' ) ); 
+			
+				//Show Option Page on Plugins page as well
+				add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 
+				
+				//Create Option page for updates
+				//add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
+			}
 			
 			//Plugin Update Function	
 			add_action( 'admin_init', array( &$this, 'mp_core_update_plugin' ) ); 	
-			
-			//Create Option page for updates
-			add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
-			
-			//Show Option Page on Plugins page as well
-			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 
 						
 		}
 					
@@ -63,9 +65,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licenced'] ){
-				
+								
 				//Disable update check from the WP.org plugin repo
-				function cws_hidden_plugin_12345( $r, $url ) {
+				$disable_plugin_check_from_wp = function ( $r, $url ) {
 					if ( 0 !== strpos( $url, 'http://api.wordpress.org/plugins/update-check' ) )
 						return $r; // Not a plugin update request. Bail immediately.
 					$plugins = unserialize( $r['body']['plugins'] );
@@ -73,8 +75,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					unset( $plugins->active[ array_search( plugin_basename( __FILE__ ), $plugins->active ) ] );
 					$r['body']['plugins'] = serialize( $plugins );
 					return $r;
-				}
-				add_filter( 'http_request_args', 'cws_hidden_plugin_12345', 5, 2 );
+				};
+				add_filter( 'http_request_args', $disable_plugin_check_from_wp, 5, 2 );
 
 				
 				//Get license		
@@ -118,47 +120,30 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 								'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 								'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
 								'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
-								'software_author'   => $plugin_data['Author']
 							)
 						);
 						
 					}
 				}
 			}
-			//If this software does not require a license, check for update from WP Repo first, then from MP repo
+			//If this software does not require a license, check for update from MP repo
 			else{
-				
-				/** If plugins_api isn't available, load the file that holds the function */
-				if ( ! function_exists( 'plugins_api' ) )
-					require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
-
-
-				//Check if this plugin exists in the WordPress Repo
-				$args = array( 'slug' => $this->plugin_name_slug);
-				$api = plugins_api( 'plugin_information', $args );
-				
-				// "Oops! this plugin doesn't exist in the repo. 
-				if (isset($api->errors)){ 
-										
+																		
 					//Do Free mp_repo Update
 					if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
 						// Load our custom plugin updater
 						include( dirname( __FILE__ ) . '/class-mp-repo-plugin-updater.php' );
 					}
-													
-					//Create instance of the MP_CORE_MP_REPO_Plugin_Updater Updater Class
+																									
+					//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
 					$edd_updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 
+							'software_version'  => $plugin_data['Version'],
+							'software_file_url'  => $plugin_url,
 							'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
-							'software_license' 	=> NULL,
+							'software_license' 	=> NULL, // The license key (used get_option above to retrieve from DB)
 							'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
 						)
-					);
-					
-				//Otherwise do nothing because this is on the WP repo
-				}else{
-					//Do update directly from wordpress.org plugin repo
-				}
-						
+					);						
 			}
 		}
 		
@@ -265,6 +250,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Globalize the $global_plugin_update_num variable. It stores the number of times we've localized a plugin updater script
 			global $global_plugin_update_num;
 			
+			//Add 1 to the global_plugin_update_num - This variable is used during registering javascrits
+			$global_plugin_update_num = $global_plugin_update_num + 1;
+			
 			//Declare slug variable
 			$software_name_slug = sanitize_title ( $this->_args['software_name'] ) ;
 			 
@@ -292,7 +280,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				?>
                 <div id="<?php echo $software_name_slug; ?>-plugin-license-wrap" class="wrap">
 					
-                    <p class="theme-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
+                    <p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
                     
 					<form method="post">
 										

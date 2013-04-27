@@ -547,6 +547,25 @@ function mp_core_get_all_tax($slug) {
 	}
 }
 
+function mp_core_get_posts_by_cat($catid){
+	$category_query_args = array(
+		'cat' => $catid
+	);
+	
+	$category_query = new WP_Query( $category_query_args );	
+	
+	if ( $category_query->have_posts() ) {
+		 while ( $category_query->have_posts() ) { 
+		 	 $category_query->the_post();
+			// Loop output goes here
+			$return_array[get_the_ID()] = get_the_title(); 
+			
+		 }
+	}
+	
+	return $return_array;
+}
+
 /**
  * Returns the options array 
  * The $registration variable must match the name of the set of options. It is set in the register_settings function. 
