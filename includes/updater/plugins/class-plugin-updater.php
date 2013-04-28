@@ -30,7 +30,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Plugin Update Function	
 			add_action( 'admin_init', array( &$this, 'mp_core_update_plugin' ) ); 	
-						
+									
 		}
 					
 		/***********************************************

@@ -111,7 +111,7 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 			
 		} else { 
 		
-			echo ('<a href="' . admin_url( 'themes.php?page=custom-header' ) . '">Upload your logo</a>'); 
+			echo ('<a href="' . admin_url( 'customize.php' ) . '">' . __( 'Upload your logo', 'mp_core' ) . '</a>'); 
 			
 		}
 		

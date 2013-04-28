@@ -364,7 +364,6 @@ function mp_core_checkbox( $args = array() ) {
 	$defaults = array(
 		'name'        => '',
 		'value'       => '',
-		'preset_value'       => '',
 		'description' => '',
 		'registration' => '',
 		'checked_by_default' => ''
@@ -376,14 +375,14 @@ function mp_core_checkbox( $args = array() ) {
 	$id   = esc_attr( $name );
 	$null_name = esc_attr( sprintf( $registration . '[%s]', $name . '_null' ) );
 	$null_value = mp_core_get_option( $registration,  $name . '_null' );
-	$value = empty( $null_value ) && $checked_by_default == 'true' ? $preset_value : $value;
+	$value = empty( $null_value ) && $checked_by_default == 'true' ? $name : $value;
 	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
 	
 ?>
 	<label for="<?php echo $id; ?>">
-		<input type="checkbox" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $preset_value ); ?>" <?php echo empty($value) ? '' : 'checked'; ?>>
+		<input type="checkbox" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $name ); ?>" <?php echo empty($value) ? '' : 'checked'; ?>>
         <!--This null field exists for the situation where a checkbox is the only value on a page and is saved with it being un-checked - the null field gives it something to save -->
-        <input type="hidden" id="<?php echo $id; ?>_null" name="<?php echo $null_name; ?>" value="<?php echo esc_attr( $preset_value ); ?>_null">
+        <input type="hidden" id="<?php echo $id; ?>_null" name="<?php echo $null_name; ?>" value="<?php echo esc_attr( $name ); ?>_null">
 		<br /><?php echo $description; ?>
 	</label>
 <?php

@@ -103,7 +103,7 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 /**
  * Include Plugin Checker
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/plugin-checker.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
 //require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
@@ -119,24 +119,27 @@ require( MP_CORE_PLUGIN_DIR . 'includes/updater/mp-core-update.php' );
 /**
  * Include Settings Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-class.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-options/plugin-options.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/settings/settings-samples/plugin-submenu/plugin-submenu.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/settings/class-settings.php' );
 
 /**
  * Include Metabox Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/metaboxes/metabox-class.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/metaboxes/class-metabox.php' );
 
 /**
  * Include Widget Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/widgets/widget-class.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/widgets/class-widget.php' );
 
 /**
  * Include Shortcode Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/shortcodes/shortcode-insert-class.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/shortcodes/class-shortcode-insert.php' );
+
+/**
+ * Include Customizer Class
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/customizer/class-customizer.php' );
 
 /**
  * Include AQ Resizer
@@ -164,21 +167,16 @@ require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/template-ta
  * Custom functions that act independently of the theme templates
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/extras.php' );
-	
-/**
- * Theme Customizer Custom Options
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/customize.php' );
 
 /**
- * Theme Customizer Logo 
+ * Theme Customizer Logo Template Tag
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-customizer/logo.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/logo.php' );
 
 /**
- * Comments
+ * Comments Template Tag
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/comments/template-tag.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/comments.php' );
 
 /**
  * Include Misc Functions
