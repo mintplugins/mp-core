@@ -200,8 +200,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Display the license on the themes page
 			$display_license = function () use ($software_slug){
-				$license 	= get_option( $this->theme_name_slug . '_license_key' );
-				$status 	= get_option( $this->theme_name_slug . '_license_status_valid' );
+				$license 	= get_option( $software_slug . '_license_key' );
+				$status 	= get_option( $software_slug . '_license_status_valid' );
 				?>
 				<div id="mp-core-theme-license-wrap" class="wrap">
 					
@@ -210,10 +210,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
                     
 					<form method="post">
 										
-						<input style="float:left; margin-right:10px;" id="<?php echo $this->theme_name_slug; ?>_license_key" name="<?php echo $this->theme_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+						<input style="float:left; margin-right:10px;" id="<?php echo $software_slug; ?>_license_key" name="<?php echo $software_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
 						<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 						
-						<?php wp_nonce_field( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ); ?>
+						<?php wp_nonce_field( $software_slug . '_nonce', $software_slug . '_nonce' ); ?>
 									
 						<?php submit_button(__('Submit License', 'mp_core') ); ?>
 					
