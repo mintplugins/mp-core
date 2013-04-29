@@ -137,6 +137,7 @@ class MP_CORE_Widget extends WP_Widget {
         <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo !empty($field_description) ? ' - ' . $field_description : ''; ?> </label><br />
             <label for="<?php echo $field_id; ?>">
 				<select name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" >
+                	<option value="null">
 					<?php foreach ( $field_select_values as $select_value => $select_text) : ?>
 					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
 						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>

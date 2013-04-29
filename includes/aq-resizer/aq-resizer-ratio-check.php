@@ -44,7 +44,23 @@ if ( !function_exists( 'aq_resize_get_pixelratio' ) ){
 					}
 				}
 			</script>
+            
 			<?php
+			//Assume retina if no Cookie enabled
+			/**
+			* Set filters for 2x AQ Resizer
+			*/
+			function retina_aq_width_resizer($width){
+				$width = $width * 2;	
+				return $width;
+			}
+			add_filter('aq_resize_width', 'retina_aq_width_resizer');
+			//
+			function retina_aq_height_resizer($height){
+				$height = $height * 2;
+				return $height;	
+			}
+			add_filter('aq_resize_height', 'retina_aq_height_resizer');
 		}//isset($_COOKIE["pixel_ratio"]) 
 	}//get_pixelratio
 }

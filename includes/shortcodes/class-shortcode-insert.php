@@ -256,6 +256,7 @@ class MP_CORE_Shortcode_Insert{
 		?>
 		<label for="<?php echo $field_id; ?>">
 			<select id="<?php echo $field_id; ?>" name="<?php echo $field_id; ?>" class="<?php echo $field_id; ?>">
+            	<option value="null">
 				<?php foreach ( $value as $select_value => $select_text) : ?>
 				<option value="<?php echo esc_attr( $select_value ); ?>">
 					<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>

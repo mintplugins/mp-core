@@ -51,7 +51,7 @@ function mp_core_header_customizer(){
 	new MP_CORE_Customizer($args);
 }
 
-add_action ('plugins_loaded', 'mp_core_header_customizer');
+add_action ('after_setup_theme', 'mp_core_header_customizer');
 
 
  
