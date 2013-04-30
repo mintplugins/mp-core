@@ -59,6 +59,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Complete plugin url
 			$plugin_url = $all_plugins_dir[0] . 'wp-content/plugins/' . $plugin_dir_and_name; 
+			$this->_plugin_url = $plugin_url;
 			
 			//Get plugin data
 			$plugin_data = get_plugin_data( $plugin_url, $markup = true, $translate = true );
@@ -66,19 +67,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licenced'] ){
 								
-				//Disable update check from the WP.org plugin repo
-				$disable_plugin_check_from_wp = function ( $r, $url ) {
-					if ( 0 !== strpos( $url, 'http://api.wordpress.org/plugins/update-check' ) )
-						return $r; // Not a plugin update request. Bail immediately.
-					$plugins = unserialize( $r['body']['plugins'] );
-					unset( $plugins->plugins[ plugin_basename( __FILE__ ) ] );
-					unset( $plugins->active[ array_search( plugin_basename( __FILE__ ), $plugins->active ) ] );
-					$r['body']['plugins'] = serialize( $plugins );
-					return $r;
-				};
-				add_filter( 'http_request_args', $disable_plugin_check_from_wp, 5, 2 );
+				//Disable check on WP.org repo for this plugin
+				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
 
-				
 				//Get license		
 				$license = trim( get_option( $this->plugin_name_slug . '_license_key' ) );
 				
@@ -260,6 +251,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			</div>
 	   
 			<?php
+		}
+		
+		/**
+		 * Disable update check from the WP.org plugin repo
+		 */
+		function disable_plugin_check_from_wp( $r, $url ) {
+			if ( 0 === strpos( $url, 'http://api.wordpress.org/plugins/update-check/' ) ) {
+				$plugin = plugin_basename( $this->_plugin_url );
+				$plugins = unserialize( $r['body']['plugins'] );
+				unset( $plugins->plugins[$plugin] );
+				unset( $plugins->active[array_search( $plugin, $plugins->active )] );
+				$r['body']['plugins'] = serialize( $plugins );
+			}
+			return $r;
 		}
 	}
 }
