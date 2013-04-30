@@ -196,109 +196,70 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					
 			}
 		}
-		/***********************************************
-		* Add our menu item
-		***********************************************/
 		
-		function updates_menu() {
-			add_theme_page( 'Plugin License', 'Plugin License', 'manage_options',  $this->plugin_name_slug . '-updates', array( &$this, 'updates_page' ) );
-		}	
+		/**
+		 * This function is called on the plguins page only
+		 */
+		function plugins_page() {
 				
-		/***********************************************
-		* Updates Settings Page
-		***********************************************/
-		
-		function updates_page() {
+			//Enqueue scripts for plugins page			
+			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
 			
-			$license 	= get_option( $this->plugin_name_slug . '_license_key' );
-			$status 	= get_option( $this->plugin_name_slug . '_license_status_valid' );
-			?>
-			<div id="mp-core-theme-license-wrap" class="wrap">
-				<h2><?php _e('Plugin License Options'); ?></h2>
-				<form method="post">
-									
-					<table class="form-table">
-						<tbody>
-							<tr valign="top">	
-								<th scope="row" valign="top">
-									<?php _e('License Key'); ?>
-								</th>
-								<td>
-									<input id="edd_sample_theme_license" name="<?php echo $this->plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-									<label class="description" for="<?php echo $this->plugin_name_slug; ?>_license_key"><?php _e('Enter your license key'); ?></label>
-                                    
-                                    <?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? 'Your license is valid' : 'This license is not valid!' ) ); ?>
-                                    
-                                    <?php wp_nonce_field( $this->plugin_name_slug . '_nonce', $this->plugin_name_slug . '_nonce' ); ?>
-								</td>
-							</tr>
-						</tbody>
-					</table>	
-					<?php submit_button(); ?>
-				
-				</form>
-			</div>
-			<?php
+			//Show license on plugin page
+			add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+			
 		}
 		
-		/***********************************************
-		* This function is called on the themes page only
-		***********************************************/
-		
-		function plugins_page() {
+		/**
+		 * Enqueue Jquery on Plugin page to place license in correct spot
+		 */
+		function enqueue_license_script () {
 			
 			//Globalize the $global_plugin_update_num variable. It stores the number of times we've localized a plugin updater script
 			global $global_plugin_update_num;
 			
 			//Add 1 to the global_plugin_update_num - This variable is used during registering javascrits
 			$global_plugin_update_num = $global_plugin_update_num + 1;
+				
+			//Enqueue script for this plugin
+			wp_enqueue_script( $this->plugin_name_slug. '-plugins-placement', plugins_url( 'js/plugins-page.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 			
-			//Declare slug variable
-			$software_name_slug = sanitize_title ( $this->_args['software_name'] ) ;
-			 
-			//Enqueue Jquery on Plugin page to place license in correct spot
-			$enqueue_license_script = function () use ($software_name_slug, $global_plugin_update_num) {
-				
-				//Enqueue script for this plugin
-				wp_enqueue_script( $software_name_slug . '-plugins-placement', plugins_url( 'js/plugins-page.js', dirname(__FILE__) ),  array( 'jquery' ) );	
-				
-				//Pass slug variable to the js
-				wp_localize_script( $software_name_slug . '-plugins-placement', 'mp_core_update_plugin_vars' . $global_plugin_update_num , array(
-						'name_slug' => $software_name_slug
-					)
-				);		
+			//Pass slug variable to the js
+			wp_localize_script( $this->plugin_name_slug. '-plugins-placement', 'mp_core_update_plugin_vars' . $global_plugin_update_num , array(
+					'name_slug' => $this->plugin_name_slug
+				)
+			);		
 								
-			};
-			add_action( 'admin_enqueue_scripts', $enqueue_license_script );
+		}
+		
+		/**
+		 * Display the license on the plugins page
+		 */
+		function display_license(){
 			
-			//Display the license on the plugins page
-			$display_license = function () use ($software_name_slug, $global_plugin_update_num){
+			//Get and set license and status
+			$license 	= get_option( $this->plugin_name_slug . '_license_key' );
+			$status 	= get_option( $this->plugin_name_slug . '_license_status_valid' );
+			?>
+			<div id="<?php echo $this->plugin_name_slug; ?>-plugin-license-wrap" class="wrap">
 				
-				//Get and set license and status
-				$license 	= get_option( $software_name_slug . '_license_key' );
-				$status 	= get_option( $software_name_slug . '_license_status_valid' );
-				?>
-                <div id="<?php echo $software_name_slug; ?>-plugin-license-wrap" class="wrap">
+				<p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
+				
+				<form method="post">
+									
+					<input style="float:left; margin-right:10px;" id="<?php echo $this->plugin_name_slug; ?>_license_key" name="<?php echo $this->plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 					
-                    <p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
-                    
-					<form method="post">
-										
-						<input style="float:left; margin-right:10px;" id="<?php echo $software_name_slug; ?>_license_key" name="<?php echo $software_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
-						<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
+					<?php wp_nonce_field( $this->plugin_name_slug . '_nonce', $this->plugin_name_slug . '_nonce' ); ?>
+							
+					<br />
 						
-						<?php wp_nonce_field( $software_name_slug . '_nonce', $software_name_slug . '_nonce' ); ?>
-								
-                        <br />
-                        	
-						<?php submit_button(__('Submit License', 'mp_core') ); ?>
-					
-					</form>
-				</div>
-           
-				<?php
-			};
-			add_action( 'admin_notices', $display_license ); 
+					<?php submit_button(__('Submit License', 'mp_core') ); ?>
+				
+				</form>
+			</div>
+	   
+			<?php
 		}
 	}
 }

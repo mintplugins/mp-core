@@ -137,91 +137,50 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					
 			}
 		}
-		/***********************************************
-		* Add our menu item
-		***********************************************/
 		
-		function updates_menu() {
-			add_theme_page( 'Theme License', 'Theme License', 'manage_options',  $this->theme_name_slug . '-updates', array( &$this, 'updates_page' ) );
-		}	
-				
-		/***********************************************
-		* Updates Settings Page
-		***********************************************/
-		
-		function updates_page() {
+		/**
+		 * This function is called on the themes page only
+		 */
+		function themes_page() {
 			
+			//Enqueue scripts for theme page
+			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_themes_scripts' ) );
+			
+			//Display license on themes page
+			add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+		}
+		
+		/**
+		 * Enqueue Jquery on Theme page to place license in correct spot
+		 */
+		function enqueue_themes_scripts() {
+			wp_enqueue_script( 'mp-core-themes-placement', plugins_url( 'js/themes-page.js', dirname(__FILE__) ),  array( 'jquery' ) );		
+		}	
+		
+		/**
+		 * Display the license on the themes page
+		 */
+		function display_license(){
 			$license 	= get_option( $this->theme_name_slug . '_license_key' );
 			$status 	= get_option( $this->theme_name_slug . '_license_status_valid' );
 			?>
 			<div id="mp-core-theme-license-wrap" class="wrap">
-				<h2><?php _e('Theme License Options'); ?></h2>
+				
+				<strong><?php echo __('Updates', 'mp_core'); ?></strong><br />
+				<p class="theme-description"><?php echo __('Enter your license key to enable automatic updates'); ?></p>
+				
 				<form method="post">
 									
-					<table class="form-table">
-						<tbody>
-							<tr valign="top">	
-								<th scope="row" valign="top">
-									<?php _e('License Key'); ?>
-								</th>
-								<td>
-									<input id="<?php echo $this->theme_name_slug; ?>_license_key" name="<?php echo $this->theme_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
-									<label class="description" for="<?php echo $this->theme_name_slug; ?>_license_key"><?php _e('Enter your license key'); ?></label>
-                                    
-                                    <?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? 'Your license is valid' : 'This license is not valid!' ) ); ?>
-                                    
-                                    <?php wp_nonce_field( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ); ?>
-								</td>
-							</tr>
-						</tbody>
-					</table>	
-					<?php submit_button(); ?>
+					<input style="float:left; margin-right:10px;" id="<?php echo $this->theme_name_slug; ?>_license_key" name="<?php echo $this->theme_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
+					
+					<?php wp_nonce_field( $this->theme_name_slug . '_nonce', $this->theme_name_slug . '_nonce' ); ?>
+								
+					<?php submit_button(__('Submit License', 'mp_core') ); ?>
 				
 				</form>
 			</div>
 			<?php
-		}
-		
-		/***********************************************
-		* This function is called on the themes page only
-		***********************************************/
-		
-		function themes_page() {
-			
-			//Enqueue Jquery on Theme page to place license in correct spot
-			function enqueue_themes_scripts() {
-				
-				wp_enqueue_script( 'mp-core-themes-placement', plugins_url( 'js/themes-page.js', dirname(__FILE__) ),  array( 'jquery' ) );		
-			}		
-			add_action( 'admin_enqueue_scripts', 'enqueue_themes_scripts' );
-			
-			//Decalre slug variable
-			$software_slug = $this->theme_name_slug;
-			
-			//Display the license on the themes page
-			$display_license = function () use ($software_slug){
-				$license 	= get_option( $software_slug . '_license_key' );
-				$status 	= get_option( $software_slug . '_license_status_valid' );
-				?>
-				<div id="mp-core-theme-license-wrap" class="wrap">
-					
-                    <strong><?php echo __('Updates', 'mp_core'); ?></strong><br />
-                    <p class="theme-description"><?php echo __('Enter your license key to enable automatic updates'); ?></p>
-                    
-					<form method="post">
-										
-						<input style="float:left; margin-right:10px;" id="<?php echo $software_slug; ?>_license_key" name="<?php echo $software_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
-						<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
-						
-						<?php wp_nonce_field( $software_slug . '_nonce', $software_slug . '_nonce' ); ?>
-									
-						<?php submit_button(__('Submit License', 'mp_core') ); ?>
-					
-					</form>
-				</div>
-				<?php
-			};
-			add_action( 'admin_notices', $display_license ); 
 		}
 	}
 }
