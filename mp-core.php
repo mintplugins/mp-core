@@ -119,7 +119,7 @@ require( MP_CORE_PLUGIN_DIR . 'includes/updater/mp-core-update.php' );
 /**
  * Include Settings Class
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/settings/class-settings.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/settings/class-settings-php-5.2.php' );
 
 /**
  * Include Metabox Class

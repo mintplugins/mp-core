@@ -14,7 +14,15 @@
 /**
 * Create new tab
 */
-$my_plugin_settings->mp_core_new_tab(__('General Settings' , 'my_plugin'), 'general');
+function my_plugin_settings_settings_new_tab(){
+	
+	//Create array containing the title and slug for this new tab
+	return array( 'title' => __('My Plugin Settings' , 'my_plugin'), 'slug' => 'general' );
+	
+}
+
+//Hook into the new tab hook filter contained in the settings class in the Move Plugins Core
+add_filter('my_plugin_settings_settings_new_tab_hook', 'my_plugin_settings_settings_new_tab');
 
 /**
 * Create the options for this tab
