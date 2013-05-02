@@ -104,7 +104,6 @@ add_action( 'init', 'mp_core_textdomain', 1 );
  * Include Plugin Checker
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/default-plugins.php' );
 
 /**
  * Include Theme and Plugin Updater
@@ -159,32 +158,6 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/template-tags/template-ta
 */
 
 /**
- * Custom template tags for this theme.
+ * Theme Specific scripts
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/template-tags.php' );
-
-/**
- * Custom functions that act independently of the theme templates
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/extras.php' );
-
-/**
- * Theme Customizer Logo Template Tag
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/logo.php' );
-
-/**
- * Comments Template Tag
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/comments.php' );
-
-/**
- * Include Misc Functions
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/misc-functions.php' );
-
-if( is_admin() ) {
-	//none at the moment
-} else {
-	//none at the moment
-}
+require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-specific.php' );
