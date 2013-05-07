@@ -23,6 +23,11 @@ function mp_core_theme_specific_scripts(){
 	require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/comments.php' );
 	
 	/**
+	 * Comments Template Tag
+	 */
+	require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/template-tags/pagination.php' );
+	
+	/**
 	 * Include Misc Functions
 	 */
 	require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/misc-functions.php' );

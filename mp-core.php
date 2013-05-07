@@ -151,6 +151,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer-ratio-check.php' )
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/template-tags/template-tags.php' );
 
+/**
+ * Get Data Functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
+
 /*
 |--------------------------------------------------------------------------
 | THEME SPECIFIC INCLUDES

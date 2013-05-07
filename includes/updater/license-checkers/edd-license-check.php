@@ -1,7 +1,7 @@
 <?php
 /*
  * Function which takes a license
- * Attempts to activate it<br />
+ * Attempts to activate it
  * and checks EDD to see if it is active
  *
  * Returns true or false

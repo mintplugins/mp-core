@@ -486,68 +486,6 @@ function mp_core_true_false_light($args = array() ) {
 	<?php
 }
 
-/* Helpers ***************************************************************/
-
-function mp_core_get_all_pages() {
-	$output = array();
-	$terms = get_pages(); 
-	
-	foreach ( $terms as $term ) {
-		$output[ $term->ID ] = $term->post_title;
-	}
-	
-	return $output;
-}
-
-function mp_core_get_all_cpt($slug) {
-	
-	$args = array(
-		'posts_per_page'  => -1,
-		'post_type'       => $slug,
-		'post_status'     => 'publish',
-		'suppress_filters' => true 
-	);
-	
-	$cpts = get_posts( $args );
-	
-	foreach ($cpts as $cpt) {
-		$return_array[$cpt->ID] = $cpt->post_title;
-	}
-		
-	return $return_array;
-}
-
-function mp_core_get_all_tax($slug) {
-	if (taxonomy_exists($slug)){
-		$output = array();
-		$terms  = get_terms( array( $slug ), array( 'hide_empty' => 0 ) );
-		foreach ( $terms as $term ) {
-			$output[ $term->term_id ] = $term->name;
-		}
-		
-		return $output;
-	}
-}
-
-function mp_core_get_posts_by_cat($catid){
-	$category_query_args = array(
-		'cat' => $catid
-	);
-	
-	$category_query = new WP_Query( $category_query_args );	
-	
-	if ( $category_query->have_posts() ) {
-		 while ( $category_query->have_posts() ) { 
-		 	 $category_query->the_post();
-			// Loop output goes here
-			$return_array[get_the_ID()] = get_the_title(); 
-			
-		 }
-	}
-	
-	return $return_array;
-}
-
 /**
  * Returns the options array 
  * The $registration variable must match the name of the set of options. It is set in the register_settings function. 

@@ -66,7 +66,7 @@ class MP_CORE_Customizer{
 		
 		foreach ( $this->_args as $section ){
 			foreach ( $section['settings'] as $id => $setting ){
-				if ( $setting['arg'] != 'background-image' ){
+				if ( $setting['arg'] != 'background-image' && $setting['arg'] != 'background-disabled'){
 					$wp_customize->get_setting( $id )->transport = 'postMessage';
 				}
 			}

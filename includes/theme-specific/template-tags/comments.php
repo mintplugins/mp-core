@@ -178,5 +178,8 @@ function mp_core_comment_form(){
 	
 	//Call the comment_form function
 	comment_form($args); 
+	
+	//Paginate the comment links
+	paginate_comments_links();
 		
 }
