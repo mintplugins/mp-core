@@ -18,6 +18,8 @@ function mp_core_get_all_pages() {
  */
 function mp_core_get_all_post_types($args = array('public' => true, '_builtin' => false ) ) {
 	
+	$return_array = array();
+	
 	$output = 'objects'; // names or objects
 	$post_types = get_post_types($args,$output); 
 			
