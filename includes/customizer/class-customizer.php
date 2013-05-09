@@ -64,11 +64,18 @@ class MP_CORE_Customizer{
 	 */
 	function mp_core_customize_register_transport( $wp_customize ) {
 		
+		$no_transport_types = array( 'background-image', 'background-disabled', 'responsive' );
+		
+		//Fiter hook for args to ignore and make the page refresh
+		$no_transport_types = apply_filters( 'mp_core_customizer_transport_ignore_types', $no_transport_types );
+		
 		foreach ( $this->_args as $section ){
 			foreach ( $section['settings'] as $id => $setting ){
-				if ( $setting['arg'] != 'background-image' && $setting['arg'] != 'background-disabled'){
-					$wp_customize->get_setting( $id )->transport = 'postMessage';
-				}
+				
+					if ( !in_array( $setting['arg'], $no_transport_types ) ){
+						$wp_customize->get_setting( $id )->transport = 'postMessage';
+					}
+				
 			}
 		}
 	}
@@ -122,6 +129,7 @@ class MP_CORE_Customizer{
 							}
 							
 						}
+						
 						//Display
 						elseif( $setting['arg'] == "display" ){
 							
@@ -130,6 +138,7 @@ class MP_CORE_Customizer{
 							echo $setting['arg'] . ':' . $display_val . ';';
 							
 						}
+						
 						//Other
 						else{
 							
