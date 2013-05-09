@@ -67,7 +67,7 @@ function mp_core_make_home_page( $oldname, $oldtheme=false ){
 				'post_type' => 'page'
 			);
 			
-			//$home_page = wp_insert_post( $home_page );
+			$home_page = wp_insert_post( $home_page );
 			
 			//Assign the Home page template to it
 			update_post_meta( $home_page, '_wp_page_template', 'templates/page-template-home.php' );
