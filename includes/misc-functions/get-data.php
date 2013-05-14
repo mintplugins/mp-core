@@ -53,7 +53,7 @@ function mp_core_get_all_posts_by_type($slug) {
 /**
  * Get all Posts by a certain taxonomy
  */
-function mp_core_get_all_posts_by_tax($slug) {
+function mp_core_get_all_terms_by_tax($slug) {
 	if (taxonomy_exists($slug)){
 		$output = array();
 		$terms  = get_terms( array( $slug ), array( 'hide_empty' => 0 ) );

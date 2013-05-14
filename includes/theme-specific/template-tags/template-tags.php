@@ -129,7 +129,7 @@ function mp_core_archive_page_title(){
 		printf( '<span>' . single_cat_title( '', false ) . '</span>' );
 
 	} elseif ( is_tag() ) {
-		printf( __( 'Tag Archives: %s', 'mp_core' ), '<span>' . single_tag_title( '', false ) . '</span>' );
+		printf('<span>' . single_tag_title( '', false ) . '</span>' );
 
 	} elseif ( is_author() ) {
 		/* Queue the first post, that way we know
@@ -143,7 +143,7 @@ function mp_core_archive_page_title(){
 		 */
 		rewind_posts();
 	} elseif ( get_post_type() ) {
-		printf( '<span>' . post_type_archive_title() . '</span>' );
+		is_tax() ? printf( '<span>' . single_tag_title( '', false ) . '</span>' ) : post_type_archive_title();
 	} elseif ( is_day() ) {
 		printf( __( 'Daily Archives: %s', 'mp_core' ), '<span>' . get_the_date() . '</span>' );
 

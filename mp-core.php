@@ -156,6 +156,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/template-tags/template-ta
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
 
+/**
+ * Misc Functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
+
 /*
 |--------------------------------------------------------------------------
 | THEME SPECIFIC INCLUDES

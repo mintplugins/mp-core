@@ -52,10 +52,18 @@ endif;
  */
 function mp_core_make_home_page( $oldname, $oldtheme=false ){
 	
+		//Check what "show-on-front is set to	
+		$show_on_front = get_option( 'show_on_front');
+		
+		//If it is set to "Show latest posts", set it to show a page on front
+		if ( $show_on_front == 'posts' ){
+			update_option( 'show_on_front', 'page');
+		}
+			
 		//Check for page template:
 		$home_page_template = mp_core_is_pagetemplate_active('templates/page-template-home.php');
-			
-		//Check if the home page template is in use:
+					
+		//If the home page template is NOT in use:
 		if ( !$home_page_template ){
 					
 			//Create page for Home
@@ -86,6 +94,7 @@ function mp_core_make_home_page( $oldname, $oldtheme=false ){
 	}
 //To use place this in theme:
 //add_action("after_switch_theme", "mp_core_make_home_page", 10 ,  2);
+//register_activation_hook( ABSPATH . 'wp-content/plugins/mp-core/mp-core.php', "mp_core_make_home_page" );
 
 /**
  * Check if a page template is in use
