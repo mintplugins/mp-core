@@ -74,7 +74,7 @@ class MP_CORE_Shortcode_Insert{
 				//Loop through all options in this shortcode
 				<?php foreach ($this->_args['shortcode_options'] as $option){
 					
-					//Only create functions for checbox types
+					//Only create functions for checkbox types
 					if ($option['option_type'] == "checkbox"){
 						
 						//Set default value for the checkbox id javascript variable
@@ -103,7 +103,7 @@ class MP_CORE_Shortcode_Insert{
 					<?php }
 				} ?>
 			});
-				function insertShortcode() {
+				function insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode() {
 	
 					// Send the shortcode to the editor
 					window.send_to_editor('[<?php echo $this->_args['shortcode_id']; 
@@ -116,7 +116,7 @@ class MP_CORE_Shortcode_Insert{
 							}
 							//If this is not a checkbox
 							else{
-								echo ' ' . $option['option_id'] . '="'; ?>' + jQuery('#<?php echo $option['option_id']; ?>').val() + '<?php echo '"'; 
+								echo ' ' . $option['option_id'] . '="'; ?>' + jQuery('#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>').val() + '<?php echo '"'; 
 							}
 						}
 					
@@ -136,7 +136,7 @@ class MP_CORE_Shortcode_Insert{
 					
                        	//Call the function for this option type. EG textbox, select, checkbox etc
 					    $this->$option['option_type'](
-							$option['option_id'], //<-- $field_id
+							$this->_args['shortcode_id'] . '_' . $option['option_id'], //<-- $field_id
 							$option['option_title'], //<-- $field_title
 							$option['option_description'], //<-- $field_description
 							$option['option_value'] //<-- $value
@@ -144,7 +144,7 @@ class MP_CORE_Shortcode_Insert{
                     }
 					?>
 					<p class="submit">
-						<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insertShortcode();" />
+						<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode();" />
 						<a id="<?php echo $this->_args['shortcode_id']; ?>-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
 					</p>
 				</div>
