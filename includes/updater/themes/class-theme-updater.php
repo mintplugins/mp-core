@@ -86,7 +86,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 						$edd_updater = new MP_CORE_MP_REPO_Theme_Updater( array( 
 								'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 								'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
-								'software_name' 	=> $this->theme_name_slug,	// The slug of this theme
+								'software_name_slug' => $this->theme_name_slug,	// The slug of this theme
 							)
 						);
 					}
@@ -105,7 +105,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					$edd_updater = new MP_CORE_MP_REPO_Theme_Updater( array( 
 							'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
 							'software_license' 	=> NULL,
-							'software_name' 	=> $this->theme_name_slug,	// The slug of this theme
+							'software_name_slug' 	=> $this->theme_name_slug,	// The slug of this theme
 						)
 					);
 				

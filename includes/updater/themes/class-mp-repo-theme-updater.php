@@ -124,11 +124,12 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 				$api_params = array(
 					'api' => 'true',
 					'slug' => $this->theme_slug,
-					'theme' => true
+					'theme' => true,
+					'license' => $this->_args['software_license']
 				);
 								
 				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-								
+															
 				// make sure the response was successful
 				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 					$failed = true;
