@@ -2,7 +2,7 @@
 Contributors: johnstonphilip
 Donate link: http://moveplugins.com/
 Tags: framework
-Requires at least: 3.5
+Requires at least: 3.3
 Tested up to: 3.6
 Stable tag: 1.0
 License: GPLv2 or later

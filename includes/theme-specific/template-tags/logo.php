@@ -20,25 +20,25 @@ function mp_core_header_customizer(){
 					'type'       => 'image',
 					'default'    => '',
 					'priority'   => 9,
-					'element'    => '.mp-core-logo',
+					'element'    => '#mp-core-logo',
 					'jquery_function_name' => 'attr',
 					'arg' => 'src'
 				),
 				'mp_core_logo_width' => array(
 					'label'      => __( 'Logo Width (Pixels)', 'mp_core' ),
-					'type'       => 'text',
+					'type'       => 'textbox',
 					'default'    => '',
 					'priority'   => 9,
-					'element'    => '.mp-core-logo',
+					'element'    => '#mp-core-logo',
 					'jquery_function_name' => 'attr',
 					'arg' => 'width'
 				),
 				'mp_core_logo_height' => array(
 					'label'      => __( 'Logo Height (Pixels)', 'mp_core' ),
-					'type'       => 'text',
+					'type'       => 'textbox',
 					'default'    => '',
 					'priority'   => 9,
-					'element'    => '.mp-core-logo',
+					'element'    => '#mp-core-logo',
 					'jquery_function_name' => 'attr',
 					'arg' => 'height'
 				)
@@ -105,13 +105,22 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 		
 			echo '<a href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
 				
-			echo '<img class="mp-core-logo" src="' . mp_aq_resize( $logo_image, $image_width, $image_height, true) . '" width="' . $image_width . '" height="' . $image_height . '" alt="home" />';
+			echo '<img id="mp-core-logo" src="' . mp_aq_resize( $logo_image, $image_width, $image_height, true) . '" width="' . $image_width . '" height="' . $image_height . '" alt="home" />';
 				
 			echo '</a>';
 			
 		} else { 
-		
-			echo ('<a href="' . admin_url( 'customize.php' ) . '">' . __( 'Upload your logo', 'mp_core' ) . '</a>'); 
+			
+			global $wp_customize;
+	
+			if ( !isset( $wp_customize ) ) {
+				//We're not on the customizer page so load the "Add new logo" button
+				echo ('<a id="mp-core-upload-logo" href="' . admin_url( 'customize.php' ) . '">' . __( 'Upload your logo', 'mp_core' ) . '</a>'); 
+			}
+			else{
+				//We are on the customizer page so load the placeholder for the logo
+				echo '<img id="mp-core-logo" src="" alt="home" />';
+			}
 			
 		}
 		

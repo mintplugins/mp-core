@@ -16,7 +16,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		
 			
 			//If this software is licensed, show license field on plugins page
-			if ( $this->_args['software_licenced'] ){
+			if ( $this->_args['software_licensed'] ){
 				
 				//Set the "Green Light" Notification option for this license		
 				add_action( 'admin_init', array( &$this, 'set_license_green_light' ) ); 
@@ -65,7 +65,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$plugin_data = get_plugin_data( $plugin_url, $markup = true, $translate = true );
 			
 			//If this software is licensed, do checks for updates using the license
-			if ( $this->_args['software_licenced'] ){
+			if ( $this->_args['software_licensed'] ){
 								
 				//Disable check on WP.org repo for this plugin
 				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );

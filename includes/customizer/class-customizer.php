@@ -111,7 +111,7 @@ class MP_CORE_Customizer{
 				
 				$theme_mod_id = get_theme_mod( $id );
 				
-				if  ( !empty( $setting['arg'] ) ){
+				if  ( !empty( $setting['arg'] ) && $setting['arg'] != "responsive" ){
 					echo $setting['element'] . '{';
 						
 						//Background Image
@@ -247,7 +247,7 @@ class MP_CORE_Customizer{
 	 *
 	 * @return void
 	 */
-	 function text( $wp_customize, $section_id, $setting_id, $setting ){
+	 function textbox( $wp_customize, $section_id, $setting_id, $setting ){
 		 
 		 $wp_customize->add_control( $setting_id, array(
 			'label'      => $setting['label'],
