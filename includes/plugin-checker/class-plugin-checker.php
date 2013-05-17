@@ -22,7 +22,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			
 			//Make sure we are not on the "plugin install" page - where this message isn't necessary
 			$page = isset($_GET['page']) ?$_GET['page'] : NULL;
-			if ( !empty( strpos($page, 'mp_core_update_plugin_page_') ) ){
+			$page_check = strpos($page, 'mp_core_update_plugin_page_');
+			
+			if ( empty( $page_check ) ){
 				//Check for plugin in question
 				add_action( 'admin_notices', array( $this, 'mp_core_plugin_check_notice') );
 			}
