@@ -192,12 +192,18 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * This function is called on the plguins page only
 		 */
 		function plugins_page() {
-				
-			//Enqueue scripts for plugins page			
-			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
 			
-			//Show license on plugin page
-			add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+			$plugin_status = isset( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : NULL;
+			
+			if ( $plugin_status == 'all' || !isset( $plugin_status ) ){
+				
+				//Enqueue scripts for plugins page			
+				add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
+				
+				//Show license on plugin page
+				add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+			
+			}
 			
 		}
 		
