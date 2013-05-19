@@ -84,7 +84,8 @@ class MP_CORE_Shortcode_Insert{
 						//Create a function which, when the checkbox is clicked, checks if this checkbox is checked or not 
 						//and stores the corresponding "true" or "false" in a variable named after the option_id
 						//*
-						jQuery( "#<?php echo $option['option_id']; ?>" ).change(function() {
+						jQuery( "#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>" ).change(function() {
+							
 						  //Check if the checked attribute exists
 						  var checked = jQuery(this).attr('checked');
 						  

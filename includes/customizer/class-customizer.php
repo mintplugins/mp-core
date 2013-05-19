@@ -71,9 +71,11 @@ class MP_CORE_Customizer{
 		
 		foreach ( $this->_args as $section ){
 			foreach ( $section['settings'] as $id => $setting ){
-				
-					if ( !in_array( $setting['arg'], $no_transport_types ) ){
+								
+					if ( !in_array( $setting['arg'], $no_transport_types ) && !empty( $setting['arg'] ) ){
+						
 						$wp_customize->get_setting( $id )->transport = 'postMessage';
+						
 					}
 				
 			}
@@ -225,8 +227,14 @@ class MP_CORE_Customizer{
 				//Set default for priority if not filled out
 				 $setting['priority'] = !empty( $setting['priority'] ) ? $setting['priority'] : 10;
 				
-				//Call the function to add the control for this type
-				$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting );
+				if ( isset ($setting['choices'] ) ){
+					//Call the function to add the control for this type
+					$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting, $setting['choices'] );
+				}
+				else{
+					//Call the function to add the control for this type
+					$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting );
+				}
 				
 			}
 	
@@ -365,7 +373,7 @@ class MP_CORE_Customizer{
 	 }	
 	 
 	 /**
-	 * Type image Field. Used to add a control for the image type
+	 * Type color Field. Used to add a control for the image type
 	 *
 	 * @since mp_core 1.0
 	 *
@@ -382,6 +390,27 @@ class MP_CORE_Customizer{
 			'settings'       => $setting_id,
 			'priority'       => $setting['priority']
 		) ) );
+	
+	 }	
+	 
+	 /**
+	 * Type Select Field. Used to add a control for the image type
+	 *
+	 * @since mp_core 1.0
+	 *
+	 * @param $id
+	 * @param $section - array
+	 *
+	 * @return void
+	 */
+	 function select( $wp_customize, $section_id, $setting_id, $setting, $choices ){
+		
+		$wp_customize->add_control( $setting_id, array(
+			'label' => $setting['label'],
+			'section' => $section_id,
+			'type' => 'select',
+			'choices' => $choices
+		) );
 	
 	 }	
 

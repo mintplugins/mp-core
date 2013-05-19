@@ -141,6 +141,12 @@ require( MP_CORE_PLUGIN_DIR . 'includes/shortcodes/class-shortcode-insert.php' )
 require( MP_CORE_PLUGIN_DIR . 'includes/customizer/class-customizer.php' );
 
 /**
+ * Include Font Class
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/fonts/class-font.php' );
+
+
+/**
  * Include AQ Resizer
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer.php' );
