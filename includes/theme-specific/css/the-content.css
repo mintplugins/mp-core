@@ -8,7 +8,7 @@
 /* Images
 -------------------------------------------------------------- */
 
-.entry-content img {
+.entry-content img, .page-content img {
 	margin: 0 0 1.5em 0;
 }
 .alignleft,
@@ -71,4 +71,17 @@ blockquote.right {
 	text-align: left;
 	width: 33%;
 }
-
+/* Dropdowns
+-------------------------------------------------------------- */
+.entry-content ul, .page-content ul {
+	list-style:inside disc;
+	margin:10px 0px 10px 0px;
+}
+/* Strong
+-------------------------------------------------------------- */
+strong{
+	font-weight:bold;	
+}
+em{
+	font-style:italic;	
+}

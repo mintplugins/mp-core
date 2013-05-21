@@ -143,7 +143,16 @@ function mp_core_archive_page_title(){
 		 */
 		rewind_posts();
 	} elseif ( get_post_type() ) {
+		
+		//If taxonomy
 		is_tax() ? printf( '<span>' . single_tag_title( '', false ) . '</span>' ) : post_type_archive_title();
+		
+		//If page or single
+		is_page() || is_single() ? the_title( ) : NULL;
+		
+		//If search 
+		is_search() ? printf( __( 'Search Results for: %s', 'mp_core' ), '<span>' . get_search_query() . '</span>' ) : NULL;
+		
 	} elseif ( is_day() ) {
 		printf( __( 'Daily Archives: %s', 'mp_core' ), '<span>' . get_the_date() . '</span>' );
 
@@ -153,7 +162,8 @@ function mp_core_archive_page_title(){
 	} elseif ( is_year() ) {
 		printf( __( 'Yearly Archives: %s', 'mp_core' ), '<span>' . get_the_date( 'Y' ) . '</span>' );
 
-	} else {
+	} 
+	else {
 		_e( 'Archives', 'mp_core' );
 
 	}

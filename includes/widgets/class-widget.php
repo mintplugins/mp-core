@@ -11,14 +11,23 @@
 class MP_CORE_Widget extends WP_Widget {
 		
 	public function mp_widget_enqueue_scripts(){
-		//color picker scripts
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker' ) );
-		//media upload scripts
-		wp_enqueue_media();
-		//image uploader script
-		wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+		
+		
+		//Get current page
+		$current_page = get_current_screen();
+		
+		//Only load if we are not on the nav menu page - where some of our scripts seem to be conflicting
+		if ( $current_page->base != 'nav-menus' ){
+			
+			//color picker scripts
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker' ) );
+			//media upload scripts
+			wp_enqueue_media();
+			//image uploader script
+			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+		}
 	}
 	/**
 	 * Sanitize widget form values as they are saved.

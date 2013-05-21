@@ -31,16 +31,24 @@ class MP_CORE_Settings{
 	}
 	
 	public function mp_core_enqueue_scripts(){
-		//mp_core_metabox_css
-		wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
-		//color picker scripts
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker' ) );
-		//media upload scripts
-		wp_enqueue_media();
-		//image uploader script
-		wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+		
+		//Get current page
+		$current_page = get_current_screen();
+		
+		//Only load if we are not on the nav menu page - where some of our scripts seem to be conflicting
+		if ( $current_page->base != 'nav-menus' ){
+			//mp_core_metabox_css
+			wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
+			//color picker scripts
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker' ) );
+			//media upload scripts
+			wp_enqueue_media();
+			//image uploader script
+			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			
+		}
 	}
 	
 	/**
