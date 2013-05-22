@@ -99,8 +99,13 @@ if ( ! function_exists( 'mp_core_comment' ) ) {
 			<article id="comment-<?php comment_ID(); ?>" class="comment">
 				<footer>
 					<div class="comment-author vcard">
-						<?php echo get_avatar( $comment, 40 ); ?>
-						<?php printf( __( '%s <span class="says">says:</span>', 'temp' ), sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
+                    	
+                        <?php //Filter hook for avatar image size
+						$size = has_filter( 'mp_core_avatar_size' ) ? apply_filters( 'mp_core_avatar_size', 96 ) : 96;
+						?>
+                    
+						<?php echo mp_core_get_avatar( $comment, $size ); ?>
+						<?php printf( sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
 					</div><!-- .comment-author .vcard -->
 					<?php if ( $comment->comment_approved == '0' ) : ?>
 						<em><?php _e( 'Your comment is awaiting moderation.', 'temp' ); ?></em>
@@ -111,7 +116,6 @@ if ( ! function_exists( 'mp_core_comment' ) ) {
 						<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>"><time datetime="<?php comment_time( 'c' ); ?>">
 						<?php printf( _x( '%1$s at %2$s', '1: date, 2: time', 'temp' ), get_comment_date(), get_comment_time() ); ?>
 						</time></a>
-						<?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?>
 					</div><!-- .comment-meta .commentmetadata -->
 				</footer>
 	
@@ -119,6 +123,7 @@ if ( ! function_exists( 'mp_core_comment' ) ) {
 	
 				<div class="reply">
 					<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+                    <?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?>
 				</div><!-- .reply -->
 			</article><!-- #comment-## -->
 	

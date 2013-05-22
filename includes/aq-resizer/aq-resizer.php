@@ -56,22 +56,42 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 			
 			//If the original width and height of the image are not larger than the passed-in values, find the lowest common denominator and create a cropped image at the same ratio
 			if ($aq_width > ($orig_w) || $aq_height > ($orig_h)){	
+			
 				//If the width is greater than the height
 				if ( $aq_width > $aq_height ){
 					
 					//Find the lowest common denominator of width=? when height=1
 					$width_lcd = $aq_width / $aq_height;
+										
+					//Find the value for height
+					$adjusted_aq_height = $orig_w / $width_lcd;
 					
-					//Find the value which we need to multiply 1 by to get the correct height ratio
-					$height_multiplier = $orig_w / $width_lcd;
+					//Set the width to the actual width of the image						
+					$adjusted_aq_width = $orig_w;
 					
-					//Multiply the height multiplier by 1 to get the height
-					$aq_height = 1 * $height_multiplier;
+					//If the height of the image is shorter than it needs to be with the width at actual size,
+					if ( $adjusted_aq_height > $orig_h ){
+						
+						//Find out how wide we can make this image without being too short on the height
+						
+						//Find the lowest common denominator of width=? when height=1
+						$height_lcd = $aq_height / $aq_width;
+											
+						//Find the value for width
+						$adjusted_aq_width = $orig_h / $height_lcd;
+						
+						//Set the width to the actual width of the image						
+						$adjusted_aq_height = $orig_h;
+						
+						
+					}
+						
+					$aq_width = $adjusted_aq_width;	
+					$aq_height = $adjusted_aq_height;	
 					
-					//return $aq_height; 
-					
-					$aq_width = $orig_w;
+								
 				}
+			
 			}
 		}
 		

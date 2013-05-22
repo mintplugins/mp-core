@@ -6,7 +6,17 @@
 /**
  *The_featured_image - displays the featured image of a post
  */
-function mp_core_the_featured_image( $post_id, $width, $height, $before = NULL, $after = NULL ){
+function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = NULL, $before = NULL, $after = NULL ){
+	
+	//Default setting for post id if blank
+	global $post;
+	$post_id = isset( $post_id ) ? $post_id : $post->ID;
+	
+	//Default width if blank
+	$width = isset( $width ) ? $width : 600;
+	
+	//Default width if blank
+	$height = isset( $height ) ? $height : 600;
 	
 	//Set default for featured image
 	$image_url = has_filter('mp_featured_image_default') ? get_filter('mp_featured_image_default', '') : NULL;
@@ -30,6 +40,28 @@ function mp_core_get_avatar_url( $get_avatar ){
     $matches = explode("src='", $get_avatar);
     $matches = explode("'", $matches[1]);
 	return ($matches[0]);
+}
+
+/**
+ * Get avatar tag
+ *
+ * Filter mp_core_comments_args
+ */
+function mp_core_get_avatar( $comment, $size ){
+	
+	//Double the size for retina screens
+	$size_doubled = $size * 2;
+	
+	//Get the avatar img tag
+	$avatar_tag = get_avatar( $comment, $size_doubled );
+		
+	//Explode the img tag
+	$exploded_avatar = explode( "src='", $avatar_tag );	
+	$avatar_url = explode( "'", $exploded_avatar[1] ); 
+	$avatar_url = trim( $avatar_url[0]);
+	
+	return '<img alt="" src="' . $avatar_url . '" class="avatar avatar-' . $size . ' photo" width="' . $size . '" height="' . $size . '" >';
+	
 }
 
 /**
