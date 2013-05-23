@@ -75,7 +75,7 @@ blockquote.right {
 -------------------------------------------------------------- */
 .entry-content ul, .page-content ul {
 	list-style:inside disc;
-	margin:10px 0px 10px 0px;
+	margin:10px 0px 20px 0px;
 }
 /* Strong
 -------------------------------------------------------------- */
@@ -84,4 +84,9 @@ strong{
 }
 em{
 	font-style:italic;	
+}
+/* P tags
+-------------------------------------------------------------- */
+.entry-content p, .page-content p{
+	margin-bottom: 20px;
 }
