@@ -293,7 +293,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								'em' => array(),
 								'strong' => array()
 							);
-							if ($field['field_type'] == 'textarea'){
+							if ($field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ){
 								$repeat_field[$field['field_id']] = wp_kses(htmlentities($repeat_field[$field['field_id']], ENT_QUOTES), $allowed_tags ); }
 							else{
 								$repeat_field[$field['field_id']] = sanitize_text_field( $repeat_field[$field['field_id']] );	
@@ -326,7 +326,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						'em' => array(),
 						'strong' => array()
 					);
-					$data = $field['field_type'] == 'textarea' ? wp_kses(htmlentities($post_value, ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
+					$data = $field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ? wp_kses(htmlentities($post_value, ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
 					// Update $data 
 					update_post_meta($this->_post_id, $field['field_id'], $data);
 				}
