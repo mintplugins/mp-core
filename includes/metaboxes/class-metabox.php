@@ -432,6 +432,17 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '</div>'; 
 		}
 		/**
+		* WordPress editor field
+		*/
+		function wp_editor($field_id, $field_title, $field_description, $value, $classname){
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
+			echo wp_editor( html_entity_decode($value) , $field_id, $settings = array('textarea_rows' => 5));			
+			echo '</div>'; 
+		}
+		/**
 		* select field
 		*/
 		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){

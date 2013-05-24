@@ -71,10 +71,15 @@ blockquote.right {
 	text-align: left;
 	width: 33%;
 }
-/* Dropdowns
+/* Lists
 -------------------------------------------------------------- */
 .entry-content ul, .page-content ul {
 	list-style:inside disc;
+	margin:10px 0px 20px 0px;
+}
+.entry-content ol, .page-content ol {
+	list-style:inside;
+	list-style-type:decimal;
 	margin:10px 0px 20px 0px;
 }
 /* Strong
