@@ -217,7 +217,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$preset_value = isset($field['field_value']) ? $field['field_value'] : '';
 						
 						//call function for field type (function name stored in $this->$field['field_type']
-						$this->$field['field_type']( $field['field_id'], $field['field_title'], $field['field_description'], $value, NULL, $field_select_values, $preset_value);
+						$this->$field['field_type']( $field['field_id'], $field['field_title'], $field['field_description'], $value, $field['field_id'], $field_select_values, $preset_value);
 					}
 				}
 			}

@@ -102,7 +102,7 @@ function mp_core_get_all_tax_terms() {
 /**
  * Get all Posts in a tax term that have a related tax term. Ie all the posts in a "tshirt" category with the tag "red"
  */
-function mp_core_get_all_posts_in_tax_by_tax( $args = array(array('base_archive' => 'true', 'base_taxonomy' => 'product_cat', 'related_taxonomy_items' => 'product_tag')) ){
+function mp_core_get_all_posts_in_tax_by_tax( $args = array(array('base_archive' => 'true', 'base_taxonomy' => 'category', 'related_taxonomy_items' => 'post_tag')) ){
 	global $wpdb;
 
 		if (isset($args['base_archive'])){
