@@ -194,15 +194,18 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		function plugins_page() {
 			
 			$plugin_status = isset( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : NULL;
+			$action = isset( $_GET['action'] ) ? $_GET['action'] : NULL;
 			
 			if ( $plugin_status == 'all' || !isset( $plugin_status ) ){
+				if ($action != 'delete-selected' || !isset( $action ) ){
 				
-				//Enqueue scripts for plugins page			
-				add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
+					//Enqueue scripts for plugins page			
+					add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
+					
+					//Show license on plugin page
+					add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
 				
-				//Show license on plugin page
-				add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
-			
+				}
 			}
 			
 		}

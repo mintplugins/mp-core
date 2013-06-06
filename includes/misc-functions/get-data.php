@@ -27,12 +27,35 @@ function mp_core_get_all_post_types($args = array('public' => true, '_builtin' =
 		$return_array[$id] = $post_type->labels->name;
 	}
 	return ( $return_array );
+	
+	//Only use this function on or after the 'register_sidebar' hook
+}
+
+/**
+ * Get all Post Types that are hierarchical into an associative array
+ */
+function mp_core_get_all_hierarchical_post_types($args = array('public' => true, '_builtin' => false, 'hierarchical' => true ) ) {
+	
+	$return_array = array();
+	
+	$output = 'objects'; // names or objects
+	$post_types = get_post_types($args,$output); 
+			
+	foreach ($post_types as $id => $post_type ) {
+		
+		$return_array[$id] = $post_type->labels->name;
+	}
+	return ( $return_array );
+	
+	//Only use this function on or after the 'register_sidebar' hook
 }
 
 /**
  * Get all Post by a certain post type
  */
 function mp_core_get_all_posts_by_type($slug) {
+	
+	$return_array = array();
 	
 	$args = array(
 		'posts_per_page'  => -1,

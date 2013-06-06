@@ -241,7 +241,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Loop through each item in the passed array
 			foreach ($this->_metabox_items_array as $field){
 			
-				// verify this came from the our screen and with proper authorization,
+				// verify this came from our screen and with proper authorization,
 				// because save_post can be triggered at other times
 				if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
 					if ( !wp_verify_nonce( $_POST[$field['field_id'] . '_metabox_nonce'], plugin_basename( __FILE__ ) ) )
@@ -264,9 +264,10 @@ if (!class_exists('MP_CORE_Metabox')){
 				
 				//If the passed array has the field_repeater value set, than loop through all of the fields with that repeater
 				if ( isset($field['field_repeater']) ){
-					//If this repeater as not already been handled, go through and save it.
+					//If this repeater has not already been looped through and saved, loop through and save it.
+					//Because if this is a repeater, the whole repeater gets looped through and saved and never touched again
 					if ($prev_repeater != $field['field_repeater']){
-						//If the previous field was the last in a set of repeaters, update that set of repeater now
+						//But first check if the previous field was the last in a set of repeaters. If so, update that set of repeaters now
 						if ($prev_repeater != false){
 							// Update $data 
 							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);

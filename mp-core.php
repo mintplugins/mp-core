@@ -167,6 +167,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
 
+/**
+ * Misc Functions - Reorder Posts Scripts
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/reorder-posts.php' );
+
 /*
 |--------------------------------------------------------------------------
 | THEME SPECIFIC INCLUDES
