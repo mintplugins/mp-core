@@ -383,7 +383,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_preset_value . '" ' . $checked . '/>';
+			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_id . '" ' . $checked . '/>';
 			echo '</div>'; 
 		}
 		/**
@@ -406,6 +406,17 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
+			echo '</div>'; 
+		}
+		/**
+		* time field
+		*/
+		function time($field_id, $field_title, $field_description, $value, $classname){
+			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+			echo '<input type="time" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
 			echo '</div>'; 
 		}
 		/**
