@@ -3,7 +3,7 @@
 Plugin Name: Move Plugins Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.5.3
+Version: beta1.0.5.4
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -144,6 +144,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/customizer/class-customizer.php' );
  * Include Font Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/fonts/class-font.php' );
+
+/**
+ * Include Custom Post Type With Dates creator
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/custom-post-types/class-cpt.php' );
 
 
 /**
