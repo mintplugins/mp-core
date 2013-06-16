@@ -3,15 +3,23 @@
 
 //Admin scripts
 function mp_core_admin_enqueue_scripts(){
+	
+	//Get current page
+	$current_page = get_current_screen();
+	
+	//Only load if we are on an edit based page
+	if ( $current_page->base == 'edit' ){
  	
-	//Sortable Posts js	
-	wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
-	
-	//Allows posts to be reordered by dragging and dropping if the 'menu_order' column has been added to the post type
-	wp_enqueue_script( 'mp-sortable-posts-js', plugins_url( 'js/core/mp-sortable-posts.js', dirname(__FILE__)),  array( 'jquery') );
-	
-	//Style the 'menu_order' column
-	wp_enqueue_style( 'mp-sortable-posts-css', plugins_url( 'css/core/mp-core-sortable-posts.css', dirname(__FILE__) ) );
+		//Sortable Posts js	
+		wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+		
+		//Allows posts to be reordered by dragging and dropping if the 'menu_order' column has been added to the post type
+		wp_enqueue_script( 'mp-sortable-posts-js', plugins_url( 'js/core/mp-sortable-posts.js', dirname(__FILE__)),  array( 'jquery') );
+		
+		//Style the 'menu_order' column
+		wp_enqueue_style( 'mp-sortable-posts-css', plugins_url( 'css/core/mp-core-sortable-posts.css', dirname(__FILE__) ) );
+		
+	}
 	
 }
 add_action( 'admin_enqueue_scripts', 'mp_core_admin_enqueue_scripts' );
