@@ -78,6 +78,8 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 		$video_code = '<iframe style="position:absolute; width:100%; height:100%; top:0; left:0px;';
 		$video_code .= '" ' . $video_code_explode[1];
 		
+		apply_filters( 'mp_core_oembed_video_code', $video_code );
+		
 		$html_output = '<div class="mp-core-oembed-full-width-div" style="display:inline-block; position:relative; width:100%;';
 		$html_output .= !empty( $min_width ) ? ' min-width:' . $min_width . 'px; margin: 0px auto 0px auto;' : NULL;
 		$html_output .= !empty( $max_width ) ? ' max-width:' . $max_width . 'px; margin: 0px auto 0px auto;' : NULL;

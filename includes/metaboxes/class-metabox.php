@@ -292,10 +292,11 @@ if (!class_exists('MP_CORE_Metabox')){
 								),
 								'br' => array(),
 								'em' => array(),
-								'strong' => array()
+								'strong' => array(),
+								'p' => array(),
 							);
 							if ($field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ){
-								$repeat_field[$field['field_id']] = wp_kses(htmlentities($repeat_field[$field['field_id']], ENT_QUOTES), $allowed_tags ); }
+								$repeat_field[$field['field_id']] = wp_kses(htmlentities(wpautop( $repeat_field[$field['field_id']], true ), ENT_QUOTES), $allowed_tags ); }
 							else{
 								$repeat_field[$field['field_id']] = sanitize_text_field( $repeat_field[$field['field_id']] );	
 							}
@@ -325,9 +326,11 @@ if (!class_exists('MP_CORE_Metabox')){
 						),
 						'br' => array(),
 						'em' => array(),
-						'strong' => array()
+						'strong' => array(),
+						'p' => array()
 					);
-					$data = $field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ? wp_kses(htmlentities($post_value, ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
+					$data = $field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ? wp_kses(htmlentities(wpautop( $post_value, true ), ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
+					
 					// Update $data 
 					update_post_meta($this->_post_id, $field['field_id'], $data);
 				}
@@ -451,7 +454,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo wp_editor( html_entity_decode($value) , $field_id, $settings = array('textarea_rows' => 5));			
+			echo wp_editor( html_entity_decode($value) , $field_id, $settings = array('textarea_rows' => 15));			
 			echo '</div>'; 
 		}
 		/**
@@ -465,7 +468,6 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>
 			<label for="<?php echo $field_id; ?>">
 				<select name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>">
-					<option value="null">
 					<?php foreach ( $select_values as $select_value => $select_text) : ?>
 					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
 						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>

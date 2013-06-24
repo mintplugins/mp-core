@@ -9,7 +9,7 @@ if ( ! function_exists( 'mp_core_paginate_links' ) ) :
 	function mp_core_paginate_links( $args = array() ) {
 		
 		global $wp_query;
-		
+				
 		if ( get_query_var( 'paged' ) ) {
 			$current_page = get_query_var( 'paged' );
 		} else if ( get_query_var( 'page' ) ) {
