@@ -295,8 +295,12 @@ if (!class_exists('MP_CORE_Metabox')){
 								'strong' => array(),
 								'p' => array(),
 							);
-							if ($field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ){
-								$repeat_field[$field['field_id']] = wp_kses(htmlentities(wpautop( $repeat_field[$field['field_id']], true ), ENT_QUOTES), $allowed_tags ); }
+							if ( $field['field_type'] == 'textarea' ){
+								$repeat_field[$field['field_id']] = wp_kses(htmlentities( $repeat_field[$field['field_id']], ENT_QUOTES), $allowed_tags ); 
+							}
+							elseif( $field['field_type'] == 'wp_editor' ){
+								$repeat_field[$field['field_id']] = wp_kses(htmlentities(wpautop( $repeat_field[$field['field_id']], true ), ENT_QUOTES), $allowed_tags ); 
+							}
 							else{
 								$repeat_field[$field['field_id']] = sanitize_text_field( $repeat_field[$field['field_id']] );	
 							}
@@ -329,7 +333,15 @@ if (!class_exists('MP_CORE_Metabox')){
 						'strong' => array(),
 						'p' => array()
 					);
-					$data = $field['field_type'] == 'textarea' || $field['field_type'] == 'wp_editor' ? wp_kses(htmlentities(wpautop( $post_value, true ), ENT_QUOTES), $allowed_tags) : sanitize_text_field( $post_value );
+					if ( $field['field_type'] == 'textarea' ){
+						$data = wp_kses( htmlentities( $post_value, ENT_QUOTES ), $allowed_tags );
+					}
+					elseif( $field['field_type'] == 'wp_editor' ){
+						$data = wp_kses( htmlentities( wpautop( $post_value, true ), ENT_QUOTES ), $allowed_tags );
+					}
+					else{
+						$data = sanitize_text_field( $post_value );
+					}
 					
 					// Update $data 
 					update_post_meta($this->_post_id, $field['field_id'], $data);

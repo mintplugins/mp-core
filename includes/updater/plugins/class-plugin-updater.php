@@ -24,6 +24,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				//Show Option Page on Plugins page as well
 				add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 
 				
+				//Enqueue style for license
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') ); 
+				
 				//Create Option page for updates
 				//add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
 			}
@@ -31,6 +34,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Plugin Update Function	
 			add_action( 'admin_init', array( &$this, 'mp_core_update_plugin' ) ); 	
 									
+		}
+		
+		function enqueue_scripts(){
+			
+			//Enqueue style for this license message
+			wp_enqueue_style( 'mp-core-plugin-updater-css', plugins_url( 'css/updater.css', dirname(__FILE__) ) );		
+			
 		}
 					
 		/***********************************************
@@ -195,18 +205,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			$plugin_status = isset( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : NULL;
 			$action = isset( $_GET['action'] ) ? $_GET['action'] : NULL;
+				
+			//Enqueue scripts for plugins page			
+			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
 			
-			if ( $plugin_status == 'all' || !isset( $plugin_status ) ){
-				if ($action != 'delete-selected' || !isset( $action ) ){
-				
-					//Enqueue scripts for plugins page			
-					add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
-					
-					//Show license on plugin page
-					add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
-				
-				}
-			}
+			//Show license on plugin page
+			add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+			
 			
 		}
 		
@@ -241,7 +246,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$license 	= get_option( $this->plugin_name_slug . '_license_key' );
 			$status 	= get_option( $this->plugin_name_slug . '_license_status_valid' );
 			?>
-			<div id="<?php echo $this->plugin_name_slug; ?>-plugin-license-wrap" class="wrap">
+			<div id="<?php echo $this->plugin_name_slug; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
 				
 				<p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
 				
