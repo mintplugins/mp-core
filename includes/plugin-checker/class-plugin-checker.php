@@ -274,7 +274,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			
 			//If we are unable to find the file, let the user know
 			if ( ! $saved_file ) {
-				die('<p>' . __('Unable to find file! Please contact the author of this plugin.', 'mp_core') . '</p>');
+				die('<p>' . __('Unable to download file! Your webhost may be blocking cross-server connections. You will have to manually download and install this plugin. <br /><br />It looks like this plugin may be available for download here: ' . $this->_args['plugin_download_link'] . '<br /> Download it, and then go to "Appearace > Plugins > Add New > Upload" to upload the plugin and activate it. <br /><br /> If the plugin link above does not download the plugin for you, contact the author of the plugin for a download link.', 'mp_core') . '</p>');
 			}
 						
 			//Place the temp zipped file in the plugins directory
