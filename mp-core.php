@@ -3,7 +3,7 @@
 Plugin Name: Move Plugins Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.6.2
+Version: beta1.0.6.3
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -113,8 +113,8 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.ph
 /**
  * Include Plugin Directory
  */
-//require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/class-plugin-directory.php' );
-//require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/mp-core-plugin-directory.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/class-plugin-directory.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/mp-core-plugin-directory.php' );
 
 /**
  * Include Theme and Plugin Updater
