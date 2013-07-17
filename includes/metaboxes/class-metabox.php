@@ -226,8 +226,11 @@ if (!class_exists('MP_CORE_Metabox')){
 		/* When the post is saved, saves our custom data */	
 		public function mp_core_save_data() {
 			
+			//Check if post type has been set
+			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;
+			
 			//If we are saving this post type - we dont' want to save every single metabox that has been created using this class - only this post type
-			if ( $this->_args['metabox_posttype'] == $_POST['post_type'] ) {
+			if ( $this->_args['metabox_posttype'] == $this_post_type ) {
 				
 			   global $post;
 			   $this->_post_id = isset($post->ID) ? $post->ID : '';
