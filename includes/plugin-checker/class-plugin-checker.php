@@ -150,7 +150,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 						//If it doesn't, display link which downloads it from your custom URL
 						if (isset($api->errors)){ 
 							// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-							printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $this->_args['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $this->_args['plugin_slug'] . '&action=install-plugin&plugin=' . $this->_args['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $this->_args['plugin_download_link']  ) ) ) );	
+							printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $this->_args['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $this->_args['plugin_slug'] . '&action=install-plugin&plugin=' . $this->_args['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $this->plugin_name_slug  ) ) ) );	
 							
 						}else{
 							//Otherwise display the WordPress.org Repo Install button
