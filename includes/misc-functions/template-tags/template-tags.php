@@ -77,9 +77,7 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 		$video_code_explode = explode( '<iframe ', $video_code_explode );
 		$video_code = '<iframe style="position:absolute; width:100%; height:100%; top:0; left:0px;';
 		$video_code .= '" ' . $video_code_explode[1];
-		
-		echo $video_code_explode[1];
-		
+				
 		apply_filters( 'mp_core_oembed_video_code', $video_code );
 		
 		$html_output = '<div class="mp-core-oembed-full-width-div" style="display:inline-block; position:relative; width:100%;';
