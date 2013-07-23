@@ -53,7 +53,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 						//Include EDD Update Class
 						if ( !class_exists( 'EDD_SL_Theme_Updater' ) ) {
 							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/EDD_SL_Theme_Updater.php' );
+							include( dirname( __FILE__ ) . '/edd/EDD_SL_Theme_Updater.php' );
 						}
 										
 						//Get theme info
@@ -79,7 +79,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 						//Include MP REPO Update Class
 						if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ) {
 							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/class-mp-repo-theme-updater.php' );
+							include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-theme-updater.php' );
 						}
 														
 						//Call the MP REPO Updater Class
@@ -98,7 +98,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					//Include MP REPO Update Class
 					if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ) {
 						// Load our custom theme updater
-						include( dirname( __FILE__ ) . '/class-mp-repo-theme-updater.php' );
+						include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-theme-updater.php' );
 					}
 													
 					//Call the MP REPO Updater Class
@@ -183,6 +183,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 * Enqueue Jquery on Theme page to place license in correct spot
 		 */
 		function enqueue_themes_scripts() {
+			//Enqueue style for this license message
+			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );			
 			wp_enqueue_script( 'mp-core-themes-placement', plugins_url( 'js/themes-page.js', dirname(__FILE__) ),  array( 'jquery' ) );		
 		}	
 		

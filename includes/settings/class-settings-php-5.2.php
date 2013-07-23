@@ -37,7 +37,7 @@ class MP_CORE_Settings{
 		
 		//Only load if we are not on the nav menu page - where some of our scripts seem to be conflicting
 		if ( $current_page->base != 'nav-menus' ){
-			//mp_core_metabox_css
+			//mp_core_settings_css
 			wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
 			//color picker scripts
 			wp_enqueue_style( 'wp-color-picker' );

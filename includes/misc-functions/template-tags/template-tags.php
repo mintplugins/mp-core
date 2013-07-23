@@ -4,7 +4,7 @@
  */
  
 /**
- *The_featured_image - displays the featured image of a post
+ *The_featured_image - returns the featured image of a post
  */
 function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = NULL, $before = NULL, $after = NULL ){
 	

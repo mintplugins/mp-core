@@ -9,7 +9,7 @@ function mp_core_plugin_directory(){
 		'parent_slug' => 'plugins.php/',
 		'page_title' => 'Move Plugins',
 		'slug' => 'mp_core_plugin_directory',
-		'directory_list_url' => 'http://repo.moveplugins.com/repo-group/mp-stacks/'
+		'directory_list_url' => 'http://repo.moveplugins.com/repo-group/move-plugins/'
 	);
 	
 	new MP_CORE_Plugin_Directory( $args );

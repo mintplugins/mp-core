@@ -39,7 +39,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		function enqueue_scripts(){
 			
 			//Enqueue style for this license message
-			wp_enqueue_style( 'mp-core-plugin-updater-css', plugins_url( 'css/updater.css', dirname(__FILE__) ) );		
+			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );	
 			
 		}
 					
@@ -92,7 +92,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 						//Do EDD Update
 						if ( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/EDD_SL_Plugin_Updater.php' );
+							include( dirname( __FILE__ ) . '/edd/EDD_SL_Plugin_Updater.php' );
 						}
 																
 						//Call the EDD_Plugin Updater Class
@@ -111,7 +111,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 						//Do Envato Update
 						if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
 							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/class-mp-repo-plugin-updater.php' );
+							include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
 						}
 													
 						//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
@@ -133,7 +133,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					//Do Free mp_repo Update
 					if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
 						// Load our custom plugin updater
-						include( dirname( __FILE__ ) . '/class-mp-repo-plugin-updater.php' );
+						include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
 					}
 																									
 					//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class

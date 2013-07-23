@@ -1,11 +1,6 @@
 <?php
 
 /**
- * Include edd license checker function
- */
-require( 'license-checkers/edd-license-check.php' );
-
-/**
  * Include Theme Updater
  */
 require( 'themes/class-theme-updater.php' );

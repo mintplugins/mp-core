@@ -3,7 +3,7 @@
 Plugin Name: Move Plugins Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.6.4
+Version: beta1.0.6.5
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -101,19 +101,28 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 */
 
 /**
- * Include Plugin Checker
+ * Include License Checking functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/licensing/licensing-functions.php' );
+
+/**
+ * Include Plugin Checker Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
 
 /**
- * Include Plugin Installer
+ * Include Plugin Installer Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.php' );
 
 /**
- * Include Plugin Directory
+ * Include Plugin Directory Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/class-plugin-directory.php' );
+
+/**
+ * Include Move Plugins Directory Page
+ */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/mp-core-plugin-directory.php' );
 
 /**
@@ -155,12 +164,6 @@ require( MP_CORE_PLUGIN_DIR . 'includes/customizer/class-customizer.php' );
  * Include Font Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/fonts/class-font.php' );
-
-/**
- * Include Custom Post Type With Dates creator
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/custom-post-types/class-cpt.php' );
-
 
 /**
  * Include AQ Resizer
