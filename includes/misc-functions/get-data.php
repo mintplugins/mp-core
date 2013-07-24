@@ -16,15 +16,19 @@ function mp_core_get_all_pages() {
 /**
  * Get all Post Types into an associative array
  */
-function mp_core_get_all_post_types($args = array('public' => true, '_builtin' => false ) ) {
+function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' => false ), $exlude_slugs = array() ) {
 	
 	$return_array = array();
 	
 	$output = 'objects'; // names or objects
-	$post_types = get_post_types($args,$output); 
+	$post_types = get_post_types( $args, $output ); 
 			
-	foreach ($post_types as $id => $post_type ) {
-		$return_array[$id] = $post_type->labels->name;
+	foreach ( $post_types as $id => $post_type ) {
+		
+		//exclude post types that match the $exclude_slugs array
+		if ( !in_array( $return_array[$id], $exlude_slugs ) ) { 
+			$return_array[$id] = $post_type->labels->name;
+		}
 	}
 	return ( $return_array );
 	
@@ -91,20 +95,27 @@ function mp_core_get_all_terms_by_tax($slug) {
 /**
  * Get all taxonomiy terms - ALL of them. Yeah...ALL of them
  */
-function mp_core_get_all_tax_terms() {
+function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
 	
 	//Should probably add the ability to exlude tax terms you know you dont want
 	
 	$taxonomies = get_taxonomies();
 	
+	$return_array = array();
+	
 	$all_taxonomies = array();
 	
 	foreach ($taxonomies as $taxonomy ) {
 		
-		$all_taxonomies[$taxonomy] = get_terms( $taxonomy, array(
-			'orderby'    => 'count',
-			'hide_empty' => 0
-		 ) );
+		//exclude post types that match the $exclude_slugs array
+		if ( !in_array( $taxonomy, $exclude_slugs ) ) { 
+		
+			$all_taxonomies[$taxonomy] = get_terms( $taxonomy, array(
+				'orderby'    => 'count',
+				'hide_empty' => 0
+			 ) );
+		 
+		}
 	 	
 	}
 	//print_r ($all_taxonomies);
