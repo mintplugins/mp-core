@@ -19,6 +19,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 			
 			// Create update/install plugin page
 			add_action('admin_menu', array( $this, 'mp_core_install_plugin_page') );
+			
+			ob_start();
 											
 		}
 	
@@ -178,11 +180,17 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 			//Display a successfully installed message
 			echo '<p>' . __('Successfully Installed ', 'mp_core') .  $this->_args['plugin_name']  . '</p>';
 			
-			//Activate button
-			echo '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $this->_args['plugin_slug'] . '/' . $this->_args['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $this->_args['plugin_slug'] . '/' . $this->_args['plugin_filename']) . '" title="' . esc_attr__('Activate this plugin') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $this->_args['plugin_name'] . '"</a>'; 	
+			//Activate button -- this has been removed to test direct activation
+			//echo '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $this->_args['plugin_slug'] . '/' . $this->_args['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $this->_args['plugin_slug'] . '/' . $this->_args['plugin_filename']) . '" title="' . esc_attr__('Activate this plugin') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $this->_args['plugin_name'] . '"</a>'; 	
 						
 			//Display link to plugins page
-			echo '<p><a href="' . network_admin_url('plugins.php') . '">' . __('View all Plugins', 'mp_core') . '</a></p>'; 
+			//echo '<p><a href="' . network_admin_url('plugins.php') . '">' . __('View all Plugins', 'mp_core') . '</a></p>'; 
+			
+			//Activate plugin
+			activate_plugin( trailingslashit($upload_dir) . $this->_args['plugin_slug'] . '/' . $this->_args['plugin_filename'] );
+			
+			//Redirect user back to dashboard
+			header( 'Location: ' . $_SERVER['HTTP_REFERER'] );	
 			
 			echo '</div>';
 			

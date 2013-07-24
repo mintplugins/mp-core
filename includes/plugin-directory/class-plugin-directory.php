@@ -12,10 +12,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			$this->_args = $args;
 						
 			//Make sure we are on the directory page
-			$page = isset($_GET['page']) ? $_GET['page'] : NULL;
+			$this->_page = isset($_GET['page']) ? $_GET['page'] : NULL;
+			$this->_mp_page_source = isset($_GET['mp-source']) ? $_GET['mp-source'] : NULL;
 			
 			//If we are on the directory page or the mp_core_install_plugin page
-			if ( $page == $this->_args['slug'] || stripos( $page, 'mp_core_install_plugin_page_' ) !== false ) {
+			if ( $this->_page  == $this->_args['slug'] || $this->_mp_page_source == 'mp-core-directory' ) {
 				
 				//Create install page for each plugin		
 				$this->create_install_pages();
@@ -75,14 +76,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				$license = get_option( $plugin_name_slug . '_license_key' );
 				$license_valid = get_option( $plugin_name_slug . '_license_status_valid' );
 				
-				// Create update/install plugin page
-				new MP_CORE_Plugin_Installer( $plugin, $license );
+				//If we are on the install page for this plugin
+				if ( $this->_page == 'mp_core_install_plugin_page_' .  $plugin['plugin_slug'] ){
+					
+					// Create update/install plugin page
+					new MP_CORE_Plugin_Installer( $plugin, $license );
+					
+				}
 				
 				//If the install button for this plugin has been clicked and license entered is valid
 				if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) && $license_valid ) {
 					
 					//Redirect to plugin install page
-					header( 'Location: ' . admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
+					header( 'Location: ' . admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&mp-source=mp-core-directory&action=install-plugin&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
 					
 				}
 				//If the install button for this plugin has been clicked and license entered is NOT valid!
@@ -121,33 +127,55 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				//Plugin Name Slug
 				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core		
 				
-				//This next section figures out what do make the $install_button variable
+				//This next section figures out what do make the $install_output variable
 				
 				//Check if plugin is installed
 				$check_plugin = $this->check_if_plugin_is_on_this_server( $plugin );
 				
 				//If the plugin is active
 				if ( $check_plugin['plugin_active'] ) {
-					
-					//Set $install_button to do nothing but say the plugin is active
-					$install_button = 'Plugin is active';
+										
+					//Show the green light
+					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+						$install_output .= '<div class="mp-core-green-light"></div>';
+					$install_output .= '</div>';	
+				
+					//Set $install_output to say the plugin is active
+					$install_output .= 'Plugin is active';
 					
 					//If this plugin requires a license, show that license
-					$install_button .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin ) : NULL;
+					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
 					
 				}
 				//If the plugin is installed but is not active
 				elseif ( $check_plugin['plugin_exists'] ) {
 					
-					//Set $install_button to "Activate" plugin
-					$install_button = '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
+					//Show the red light
+					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+						$install_output .= '<div class="mp-core-red-light"></div>';
+					$install_output .= '</div>';	
+					
+					//Set $install_output to say the plugin is installed but not active
+					$install_output .= 'Plugin is installed but not active';
+					
+					//Set $install_output to "Activate" plugin
+					$install_output .= '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
 					
 					//If this plugin requires a license, show that license
-					$install_button .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin ) : NULL;
+					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
 					
 				}
 				//If the plugin isn't instaled or active
 				else{
+					
+					
+					//Show the red light
+					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+						$install_output .= '<div class="mp-core-red-light"></div>';
+					$install_output .= '</div>';	
+					
+					//Set $install_output to say the plugin is installed but not active
+					$install_output .= 'Plugin is not installed.';
 												
 					/** If plugins_api isn't available, load the file that holds the function */
 					if ( ! function_exists( 'plugins_api' ) )
@@ -163,16 +191,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						
 						//If this plugin requires a license, show that license
 						if ( $plugin['plugin_licensed'] == true ){
-							$install_button = $this->display_license( $plugin_name_slug, $check_plugin );
+													
+							//show license
+							$install_output .= $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] );
+							
 						}
 						else{
+							
 							// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-							$install_button = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
+							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
 						}
 											
 					}else{
 						//Otherwise display the WordPress.org Repo Install button
-						$install_button = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug ) ) ) );	
+						$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug ) ) ) );	
 					
 					}
 					
@@ -186,8 +218,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						
 						<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>
 						
-						<div class="mp-core-directory-price">' . $plugin['plugin_buy_link'] . '</div>
-
 						<h3>' . $plugin['plugin_name'] . '</h3>
 						
 						<div class="theme-author">
@@ -198,7 +228,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						
 						<div class="action-links">
 							
-								' . $install_button . '
+								' . $install_output . '
 									
 						</div>
 
@@ -218,7 +248,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 *
 		 * return $output - HTML output for the license button
 		 */
-		public function display_license( $plugin_name_slug, $check_plugin ){
+		public function display_license( $plugin_name_slug, $check_plugin, $buy_url, $price ){
 			
 			//Get and set license and status
 			$license 	= get_option( $plugin_name_slug . '_license_key' );
@@ -229,49 +259,86 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			//If this license is valid
 			if ( $status == true ){
 				
-				//Just show a message that the license is valid and a link to update it
-				$output .= '<p class="plugin-description">' . __('License Valid', 'mp_core') . ' | ' . '<a class="mp-core-update-license">Update License</a>' . '</p>';
+				//Show a message that the license is valid
+				$output .= __('License Valid', 'mp_core');
 				
+				//Show the green light
 				$output .= '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
 					$output .= '<div class="mp-core-green-light"></div>';
-				$output .= '</div>';
+				$output .= '</div>';		
 				
+				//Show a link to update the license
+				$output .= ' | ' . '<a class="mp-core-update-license">Update License</a>';
+				
+				//If the plugin is already active and installed
 				if ( $check_plugin['plugin_active'] == true && $check_plugin['plugin_exists'] == true) {
 					//UPDATE LICENSE FORM - initally hidden
 					$output .= '<form method="post" class="mp-core-directory-update-license-form">';
 				}
+				//If the plugin doesn't even exist on this server
 				else{
 					//UPDATE LICENSE BUTTON - initially shown
 					$output .= '<form method="post">';
 				}
 				
+					//The input field for the license
+					$output .= '<input style="float:left; margin-right:10px;" id="' . $plugin_name_slug . '_license_key" name="' . $plugin_name_slug . '_license_key" type="text" class="mp-core-cirectory-license-input regular-text" value="' . esc_attr( $license ) . '" />';
+												
+					//Nonce								
+					$output .= wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce', true, false );
+					
+					//Separation		
+					$output .= '<br />';
+					
+					//Show the submit and install button
+					$output .= get_submit_button(__('Submit License and Install', 'mp_core') );
+				
+				//End of license form
+				$output .= '</form>';
+				
+				
 			}
 			//If this license is not valid
 			else{
+										
+				//If a license has been entered incorectly
+				if ( !empty( $license ) ) {	
+									
+					//Show Red Light
+					$output .= '<div class="mp-core-true-false-light mp-core-directory-true-false-light">';
+							$output .= '<div class="mp-core-red-light"></div>';
+					$output .= '</div>';
 					
-				$output .= '<p class="plugin-description">' . __('Enter your license key to install this plugin', 'mp_core') . '</p>';
+					//Show message that license is not valid
+					$output .= __('Current License is not valid.', 'mp_core');
 				
-				$output .= '<div class="mp-core-true-false-light mp-core-directory-true-false-light">';
-						$output .= '<div class="mp-core-red-light"></div>';
-				$output .= '</div>';
-			
+				}
+				
+				//Show the buy button
+				$output .= '<div class="mp-core-directory-buy"><a class="button" href="' . $buy_url . '" target="_blank">' . __( 'Get License Now - ', 'mp_core' ) . $price . '</a></div>'; 
+				
+				//Ask the user if they already have a license.
+				$output .= '<div class="mp-core-directory-license-msg">' . __('Already have a license? Enter here to install:', 'mp_core') . '</div>';
+				
+				//License Form
 				$output .= '<form method="post">';
-				
-			}
-											
-			$output .= '<input style="float:left; margin-right:10px;" id="' . $plugin_name_slug . '_license_key" name="' . $plugin_name_slug . '_license_key" type="text" class="mp-core-cirectory-license-input regular-text" value="' . esc_attr( $license ) . '" />		';				
-												
-			$output .= wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce', true, false );
 					
-			$output .= '<br />';
-			
-			//Show the submit and install button
-			$output .= get_submit_button(__('Submit License and Install', 'mp_core') );
-			
-			
-		
-		$output .= '</form>';
-						
+					//License Input Field
+					$output .= '<input style="float:left; margin-right:10px;" id="' . $plugin_name_slug . '_license_key" name="' . $plugin_name_slug . '_license_key" type="text" class="mp-core-cirectory-license-input regular-text" value="' . esc_attr( $license ) . '" />		';				
+					
+					//Nonce							
+					$output .= wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce', true, false );
+					
+					//Separation	
+					$output .= '<br />';
+					
+					//Show the submit and install button
+					$output .= get_submit_button(__('Submit License and Install', 'mp_core') );
+				
+				//End license form
+				$output .= '</form>';
+				
+			}								
 			
 							
 			$output .= '</div>';

@@ -20,14 +20,14 @@
 /* Directory Styles */
 .mp-core-directory-true-false-light{
 	float:left;
-	margin-left:5px;
-	padding:13px 0px 0px 0px;	
+	padding:1px 5px 0px 0px;	
 }
 .mp-core-directory-update-license-form{
 	display:none;	
 }
 .mp-core-plugin-directory-license-wrap .mp-core-cirectory-license-input{
 	width:100%;	
+	margin-top:5px;
 }
 .plugins_page_mp_core_plugin_directory .available-theme{
 	position:relative;
@@ -39,4 +39,15 @@
 	background-color: rgba(0, 0, 0, 0.27);
 	color: #fff;
 	padding: 7px;
+}
+.mp-core-directory-buy{
+	margin-top:10px;	
+}
+.mp-core-directory-license-msg{
+	clear:left;
+	margin:10px 0px 0px 0px;
+	padding:0px;	
+}
+.plugins_page_mp_core_plugin_directory .submit{
+	padding-top:5px;	
 }
