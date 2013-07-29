@@ -16,7 +16,7 @@ function mp_core_get_all_pages() {
 /**
  * Get all Post Types into an associative array
  */
-function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' => false ), $exlude_slugs = array() ) {
+function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' => false ) ) {
 	
 	$return_array = array();
 	
@@ -25,10 +25,7 @@ function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' 
 			
 	foreach ( $post_types as $id => $post_type ) {
 		
-		//exclude post types that match the $exclude_slugs array
-		if ( !in_array( $return_array[$id], $exlude_slugs ) ) { 
 			$return_array[$id] = $post_type->labels->name;
-		}
 	}
 	return ( $return_array );
 	

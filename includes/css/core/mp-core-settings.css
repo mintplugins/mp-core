@@ -29,7 +29,7 @@
 	width:100%;	
 	margin-top:5px;
 }
-.plugins_page_mp_core_plugin_directory .available-theme{
+.available-theme{
 	position:relative;
 }
 .mp-core-directory-price{
@@ -48,6 +48,6 @@
 	margin:10px 0px 0px 0px;
 	padding:0px;	
 }
-.plugins_page_mp_core_plugin_directory .submit{
+.mp-core-plugin-directory-license-wrap .submit{
 	padding-top:5px;	
 }
