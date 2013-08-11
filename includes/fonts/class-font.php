@@ -33,7 +33,7 @@ class MP_CORE_Font{
  	*/
 	function mp_core_enqueue_scripts() {
 		
-		$google_font_face = wp_remote_get( 'http://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
+		$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
 		
 		if ( !strpos( $google_font_face['body'], 'Error' )){
 			$google_font_face = str_replace("font-family: '" . $this->_font_family . "';", "font-family: '" . $this->_css_font_family . "';", $google_font_face['body'] );

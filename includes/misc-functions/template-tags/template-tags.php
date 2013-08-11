@@ -70,7 +70,7 @@ function mp_core_get_avatar( $comment, $size ){
  */ 
 function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 	
-	$video_code_explode = wp_oembed_get($video_url);
+	$video_code_explode = !is_array( $video_url ) ? wp_oembed_get( $video_url ) : NULL;
 	
 	if ( !empty($video_code_explode) ){
 		

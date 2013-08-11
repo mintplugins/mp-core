@@ -66,6 +66,10 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 		//Variables
 		$logo_image = get_theme_mod( 'mp_core_logo' );
 		
+		if (is_ssl()) {
+			$logo_image = str_replace( 'http://', 'https://', $logo_image );
+		}
+		
 		if ( ! empty( $logo_image ) ) { 
 			
 			//Get sizes from customizer			

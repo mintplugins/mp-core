@@ -105,7 +105,7 @@ class EDD_SL_Theme_Updater {
 			//mp_core change: Removed 'user-agent' => 'EDDSoftwareLicensing' 
 			//$response = wp_remote_post( $this->remote_api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params, 'user-agent' => 'EDDSoftwareLicensing' ) );
 			$response = wp_remote_post( $this->remote_api_url, array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-			
+						
 			// make sure the response was successful
 			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 				$failed = true;

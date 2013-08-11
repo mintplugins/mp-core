@@ -34,6 +34,10 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 		$upload_dir = $upload_info['basedir'];
 		$upload_url = $upload_info['baseurl'];
 		
+		if ( is_ssl() ) {
+			$upload_url = str_replace( 'http://', 'https://', $upload_url );
+		}
+		
 		//check if $img_url is local
 		if(strpos( $url, $upload_url ) === false) return false;
 		
