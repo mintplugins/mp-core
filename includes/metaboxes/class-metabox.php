@@ -487,6 +487,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>
 			<label for="<?php echo $field_id; ?>">
 				<select name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>">
+                	<option value=""></option>
 					<?php foreach ( $select_values as $select_value => $select_text) : ?>
 					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
 						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>

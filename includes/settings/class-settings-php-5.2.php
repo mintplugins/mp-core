@@ -430,6 +430,7 @@ function mp_core_select( $args = array() ) {
 	?>
 	<label for="<?php echo $id; ?>">
 		<select name="<?php echo $name; ?>">
+			<option value=""></option>
 			<?php foreach ( $options as $option_id => $option_label ) : ?>
 			<option value="<?php echo esc_attr( $option_id ); ?>" <?php selected( $option_id, $value ); ?>>
 				<?php echo esc_attr( $option_label ); ?>
