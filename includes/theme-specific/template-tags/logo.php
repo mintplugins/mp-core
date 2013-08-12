@@ -109,7 +109,7 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 		
 			echo '<a href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
 				
-			echo '<img id="mp-core-logo" src="' . mp_aq_resize( $logo_image, $image_width, $image_height, true) . '" width="' . $image_width . '" height="' . $image_height . '" alt="home" />';
+			echo '<img id="mp-core-logo" src="' . $logo_image . '" width="' . $image_width . '" height="' . $image_height . '" alt="home" />';
 				
 			echo '</a>';
 			
