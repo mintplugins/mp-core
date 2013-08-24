@@ -7,7 +7,7 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 	class MP_CORE_Verify_License{
 		
 		public function __construct($args){
-			
+						
 			//Get args
 			$this->_args = $args;
 			
@@ -24,9 +24,10 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 		}
 		
 		/**
-		 * Function which stores and verifies a license
+		 * Function which stores and verifies a license using the mp_repo plugin on the software_api_url
 		 */
 		public function store_and_verify_license(){
+						
 			// listen for our activate button to be clicked
 			if( isset( $_POST[ $this->software_name_slug . '_license_key' ] ) ) {
 				
@@ -34,41 +35,23 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 				if( ! check_admin_referer( $this->software_name_slug . '_nonce', $this->software_name_slug . '_nonce' ) ) 	
 					return; // get out if we didn't click the Activate button
 				
-				// retrieve the license from the $_POST
-				$license = trim( $_POST[ $this->software_name_slug . '_license_key' ] );
+				//Retrieve the license from the $_POST
+				$license_key = trim( $_POST[ $this->software_name_slug . '_license_key' ] );
+				
+				//Old License Key
+				$old_license_key = get_option( $this->software_name_slug . '_license_key' );	 
 				
 				//Sanitize and update license
-				update_option( $this->software_name_slug . '_license_key', wp_kses(htmlentities($license, ENT_QUOTES), '' ) );	 
-								
-				//If the length of the key matches the length of normal EDD licenses, do an EDD update
-				if ( strlen( $license ) == 32 ){
-					
-					//Set args for EDD Licence check function
-					$args = array(
-						'software_api_url' => $this->_args['software_api_url'],
-						'software_name'    => $this->_args['software_name'],
-						'software_license' => $license,
-					);
-						
-					//Check and update EDD Licence. The mp_core_edd_license_check function in in the mp_core
-					update_option( $this->software_name_slug . '_license_status_valid', mp_core_edd_license_check($args) );	
-				}
+				update_option( $this->software_name_slug . '_license_key', wp_kses(htmlentities($license_key, ENT_QUOTES), '' ) );	 
+											
+				//Check the response from the repo if this license is valid					
+				$mp_repo_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->software_name_slug . '/?license_check=true&license_key=' . $license_key . '&old_license_key=' . $old_license_key );
+															
+				//Retreive the body from the response - which should only have a 1 or a 0
+				$mp_repo_response_boolean = ( json_decode( wp_remote_retrieve_body( $mp_repo_response ) ) );
 				
-				//If the length of the key matches the length of normal ENVATO licenses, do an ENVATO update
-				elseif(strlen( $license ) == 36){
-					
-					//Check the response from the repo if this license is valid					
-					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->software_name_slug . '/?envato-check&license=' . $license );
-								
-					//Check and Update Envato Licence
-					update_option( $this->software_name_slug . '_license_status_valid', $envato_response );	
-					
-				}
-				
-				//This license length doesn't match any we are checking for and therefore, this license is not valid
-				else{
-					update_option( $this->software_name_slug . '_license_status_valid', false );
-				}
+				//Check and Update Licence
+				update_option( $this->software_name_slug . '_license_status_valid', $mp_repo_response_boolean );	
 					
 			}
 		}

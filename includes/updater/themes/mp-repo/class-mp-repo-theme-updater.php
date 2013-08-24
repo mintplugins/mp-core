@@ -56,13 +56,13 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 			$theme = wp_get_theme( $this->theme_slug );
 	
 			$api_response = get_transient( $this->response_key );
-	
+						
 			if( false === $api_response )
 				return;
 	
 			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $this->theme_slug ), 'upgrade-theme_' . $this->theme_slug );
 			$update_onclick = ' onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update." ) ) . '\') ) {return true;}return false;"';
-	
+			
 			if ( version_compare( $this->version, $api_response->new_version, '<' ) ) {
 	
 				echo '<div id="update-nag">';
@@ -97,8 +97,8 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 			
 			$update_data = $this->check_for_update();
 			
-			//Add the license to the package URL if the license passed in is not NULL
-			$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
+			//Add the license to the package URL if the license passed in is not NULL - this is now done in the mp_repo plugin
+			//$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
 					
 			if ( $update_data ) {
 				$value->response[ $this->theme_slug ] = $update_data;
@@ -125,11 +125,11 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ){
 					'api' => 'true',
 					'slug' => $this->theme_slug,
 					'theme' => true,
-					'license' => $this->_args['software_license']
+					'license_key' => $this->_args['software_license']
 				);
 								
 				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->_args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-															
+																			
 				// make sure the response was successful
 				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 					$failed = true;

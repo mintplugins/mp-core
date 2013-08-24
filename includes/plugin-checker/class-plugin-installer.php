@@ -70,19 +70,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					
 				}
 				
-				
-				//Set up API args for EDD Software Licensing Response
 				$api_params = array(
-					'edd_action' 	=> 'get_version',
-					'license' 		=> $this->_license,
-					'name' 			=> $this->_args['plugin_name'],
-					'slug' 			=> $this->plugin_name_slug,
-					'author'		=> NULL
+					'api' => 'true',
+					'slug' => $this->plugin_name_slug,
+					'author' => NULL, //$this->_args['software_version'] - not working for some reason
+					'license_key' => $this->_license
 				);
-							
-				//Send request to EDD_Software_Licensing.php on API server (eg repo.moveplugins.com)
-				$request = wp_remote_post( $this->_args['plugin_api_url'], array( 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-				
+								
+				$request = wp_remote_post( $this->_args['plugin_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+																			
+				// make sure the response was successful
+				if ( is_wp_error( $request ) || 200 != wp_remote_retrieve_response_code( $request ) ) {
+					$failed = true;
+				}
+								
 				//JSON Decode response and store the plugin download link in $this->_args['plugin_download_link']
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
 				

@@ -29,6 +29,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				
 				//Create Option page for updates
 				//add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
+				
 			}
 			
 			//Plugin Update Function	
@@ -81,121 +82,45 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
 
 				//Get license		
-				$license = trim( get_option( $this->plugin_name_slug . '_license_key' ) );
+				$license_key = trim( get_option( $this->plugin_name_slug . '_license_key' ) );	
 				
-				//If License if valud
-				if ( get_option( $this->plugin_name_slug . '_license_status_valid' ) ){
-											
-					//EDD Length: If the length of the key matches the length of normal EDD licenses, do an EDD update
-					if ( strlen( $license ) == 32 ){
-						
-						//Do EDD Update
-						if ( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
-							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/edd/EDD_SL_Plugin_Updater.php' );
-						}
-																
-						//Call the EDD_Plugin Updater Class
-						$edd_updater = new EDD_SL_Plugin_Updater( $this->_args['software_api_url'], $plugin_url, array( 
-								'version' 	=> $plugin_data['Version'], // current version number
-								'license' 	=> $license, 		// license key (used get_option above to retrieve from DB)
-								'item_name' => $this->_args['software_name'], 	// name of this plugin
-								'author' 	=> $plugin_data['Author']  // author of this plugin
-							)
-						);
-						
-					}
-					//Envato Length: If the length of the key matches the length of normal envato licenses, do an envato update
-					elseif ( strlen( $license ) == 36){
-						
-						//Do Envato Update
-						if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
-							// Load our custom theme updater
-							include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
-						}
-													
-						//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
-						$edd_updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 
-								'software_version'  => $plugin_data['Version'],
-								'software_file_url'  => $plugin_url,
-								'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
-								'software_license' 	=> $license, // The license key (used get_option above to retrieve from DB)
-								'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
-							)
-						);
-						
-					}
-				}
 			}
 			//If this software does not require a license, check for update from MP repo
 			else{
 																		
-					//Do Free mp_repo Update
-					if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
-						// Load our custom plugin updater
-						include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
-					}
-																									
-					//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
-					$edd_updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 
-							'software_version'  => $plugin_data['Version'],
-							'software_file_url'  => $plugin_url,
-							'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
-							'software_license' 	=> NULL, // The license key (used get_option above to retrieve from DB)
-							'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
-						)
-					);						
+				$license_key = NULL;		
 			}
+			
+			//Do Update
+			if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ) {
+				// Load our custom theme updater
+				include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
+			}
+										
+			//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
+			$updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 
+					'software_version'  => $plugin_data['Version'],
+					'software_file_url'  => $plugin_url,
+					'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
+					'software_license' 	=> $license_key, // The license key (used get_option above to retrieve from DB)
+					'software_name' 	=> $this->_args['software_name'],	// The slug of this theme
+				)
+			);
+			
 		}
 		
 		/**
 		 * Function which sets the green light variable to let the user know their license is active
 		 */
 		function set_license_green_light(){
-			// listen for our activate button to be clicked
-			if( isset( $_POST[ $this->plugin_name_slug . '_license_key' ] ) ) {
-				
-				//Check nonce
-				if( ! check_admin_referer( $this->plugin_name_slug . '_nonce', $this->plugin_name_slug . '_nonce' ) ) 	
-					return; // get out if we didn't click the Activate button
-				
-				// retrieve the license from the $_POST
-				$license = trim( $_POST[ $this->plugin_name_slug . '_license_key' ] );
-				
-				//Sanitize and update license
-				update_option( $this->plugin_name_slug . '_license_key', wp_kses(htmlentities($license, ENT_QUOTES), '' ) );	 
-								
-				//If the length of the key matches the length of normal EDD licenses, do an EDD update
-				if ( strlen( $license ) == 32 ){
-					
-					//Set args for EDD Licence check function
-					$args = array(
-						'software_api_url' => $this->_args['software_api_url'],
-						'software_name'    => $this->_args['software_name'],
-						'software_license' => $license,
-					);
+			
+			$args = array(
+				'software_name'      => $this->_args['software_name'],
+				'software_api_url'   => $this->_args['software_api_url']
+			);
 						
-					//Check and update EDD Licence. The mp_core_edd_license_check function in in the mp_core
-					update_option( $this->plugin_name_slug . '_license_status_valid', mp_core_edd_license_check($args) );	
-				}
-				
-				//If the length of the key matches the length of normal ENVATO licenses, do an ENVATO update
-				elseif(strlen( $license ) == 36){
-					
-					//Check the response from the repo if this license is valid					
-					$envato_response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug . '/?envato-check&license=' . $license );
-								
-					//Check and Update Envato Licence
-					update_option( $this->plugin_name_slug . '_license_status_valid', $envato_response );	
-					
-				}
-				
-				//This license length doesn't match any we are checking for and therefore, this license is not valid
-				else{
-					update_option( $this->plugin_name_slug . '_license_status_valid', false );
-				}
-					
-			}
+			new MP_CORE_Verify_License( $args );		
+
 		}
 		
 		/**
@@ -243,7 +168,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		function display_license(){
 			
 			//Get and set license and status
-			$license 	= get_option( $this->plugin_name_slug . '_license_key' );
+			$license_key 	= get_option( $this->plugin_name_slug . '_license_key' );
 			$status 	= get_option( $this->plugin_name_slug . '_license_status_valid' );
 			?>
 			<div id="<?php echo $this->plugin_name_slug; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
@@ -252,7 +177,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				
 				<form method="post">
 									
-					<input style="float:left; margin-right:10px;" id="<?php echo $this->plugin_name_slug; ?>_license_key" name="<?php echo $this->plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />						
+					<input style="float:left; margin-right:10px;" id="<?php echo $this->plugin_name_slug; ?>_license_key" name="<?php echo $this->plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
 					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 					
 					<?php wp_nonce_field( $this->plugin_name_slug . '_nonce', $this->plugin_name_slug . '_nonce' ); ?>

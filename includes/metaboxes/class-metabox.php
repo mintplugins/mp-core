@@ -367,7 +367,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* basictext field
 		*/
 		function basictext($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " />';
@@ -378,7 +378,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* textbox field
 		*/
 		function textbox($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -389,7 +389,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* password field
 		*/
 		function password($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -401,7 +401,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		*/
 		function checkbox($field_id, $field_title, $field_description, $value, $classname, $field_select_values, $field_preset_value){
 			$checked = empty($value) ? '' : 'checked';
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -412,7 +412,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* url field
 		*/
 		function url($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -423,7 +423,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* date field
 		*/
 		function date($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -434,7 +434,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* time field
 		*/
 		function time($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -445,7 +445,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* number field
 		*/
 		function number($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -456,7 +456,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* textarea field
 		*/
 		function textarea($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -469,7 +469,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* WordPress editor field
 		*/
 		function wp_editor($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -480,7 +480,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* select field
 		*/
 		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -502,7 +502,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* colorpicker field
 		*/
 		function colorpicker($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -513,7 +513,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* mediaupload field
 		*/
 		function mediaupload($field_id, $field_title, $field_description, $value, $classname){
-			echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';

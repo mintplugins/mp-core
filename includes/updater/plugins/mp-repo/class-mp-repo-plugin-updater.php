@@ -81,9 +81,9 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 	
 			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
 			
-			//Add the license to the package URL if the license passed in is not NULL
-			$api_response->package = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $api_response->package ) : $api_response->package;
-	
+			//Add the license to the package URL if the license passed in is not NULL <--this is now handled by the mp-repo plugin
+			//$api_response->package = $this->_args['software_license'] != NULL ? add_query_arg('license_key', $this->_args['software_license'], $api_response->package ) : $api_response->package;
+			
 			if( false !== $api_response && is_object( $api_response ) ) {
 				if( version_compare( $this->version, $api_response->new_version, '<' ) )
 					$_transient_data->response[$this->name] = $api_response;
@@ -135,10 +135,12 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 			$api_params = array(
 					'api' => 'true',
 					'slug' => $this->slug,
-					'author' => '' //$this->_args['software_version'] - not working for some reason
+					'author' => '', //$this->_args['software_version'] - not working for some reason
+					'license_key' => $this->_args['software_license']
 				);
 								
-			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );							
+			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+									
 			if ( !is_wp_error( $request ) ):
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
 				if( $request )
