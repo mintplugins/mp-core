@@ -3,7 +3,7 @@
 Plugin Name: Move Plugins Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.7.4
+Version: beta1.0.7.5
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -106,14 +106,14 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 require( MP_CORE_PLUGIN_DIR . 'includes/licensing/licensing-functions.php' );
 
 /**
- * Include Plugin Checker Class
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
-
-/**
  * Include Plugin Installer Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.php' );
+
+/**
+ * Include Plugin Checker Class
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
 
 /**
  * Include Plugin Directory Class
@@ -126,9 +126,15 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/class-plugin-directory.
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/mp-core-plugin-directory.php' );
 
 /**
- * Include Theme and Plugin Updater
+ * Include Theme Updater
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/updater/updater.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/updater/themes/class-theme-updater.php' );
+
+/**
+ * Include Plugin Updater
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/updater/plugins/class-plugin-updater.php' );
+
 
 /**
  * Keep mp_core updated

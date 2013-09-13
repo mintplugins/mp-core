@@ -8,9 +8,17 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 	class MP_CORE_Plugin_Updater{
 		
 		public function __construct($args){
-							
-			//Get args
-			$this->_args = $args;
+										
+			//Set defaults for args		
+			$args_defaults = array(
+				'software_name' => NULL,
+				'software_api_url' => NULL,
+				'software_filename' => NULL,
+				'software_licensed' => NULL,
+			);
+			
+			//Get and parse args
+			$this->_args = wp_parse_args( $args, $args_defaults );
 			
 			//Plugin Name Slug
 			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		

@@ -10,8 +10,20 @@ if (!class_exists('MP_CORE_Metabox')){
 		protected $_metabox_items_array = array();
 		
 		public function __construct($args, $items_array){
-								
-			$this->_args = $args;
+											
+			//Set defaults for args		
+			$args_defaults = array(
+				'metabox_id' => NULL, 
+				'metabox_title' => NULL, 
+				'metabox_posttype' => NULL, 
+				'metabox_context' => NULL, 
+				'metabox_priority' => NULL 
+			);
+			
+			//Get and parse args
+			$this->_args = wp_parse_args( $args, $args_defaults );
+			
+			//Get metabox items array
 			$this->_metabox_items_array = $items_array;
 			
 			add_action( 'add_meta_boxes', array( $this, 'mp_core_add_metabox' ) );

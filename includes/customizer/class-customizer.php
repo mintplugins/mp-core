@@ -15,6 +15,8 @@ class MP_CORE_Customizer{
 	protected $_settings_array = array();
 	
 	public function __construct($args){
+		
+		//Get args
 		$this->_args = $args;
 		
 		//Add Customize link to the admin_menu
@@ -88,7 +90,7 @@ class MP_CORE_Customizer{
 	 * @since mp_core 1.0
 	 */
 	function mp_core_customize_preview_js() {
-		wp_enqueue_script( 'mp_core_customizer_js' . $this->_args[0]['section_id'], plugins_url( 'js/customizer.js', dirname(__FILE__)), array( 'jquery' , 'customize-preview' ), NULL, true );
+		wp_enqueue_script( 'mp_core_customizer_js' . $this->_args[0]['section_id'], plugins_url( 'js/core/customizer.js', dirname(__FILE__)), array( 'jquery' , 'customize-preview' ), NULL, true );
 				
 		$mp_core_customizer_js_vars = $this->_args;
 		

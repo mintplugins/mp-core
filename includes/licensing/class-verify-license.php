@@ -7,9 +7,15 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 	class MP_CORE_Verify_License{
 		
 		public function __construct($args){
-						
-			//Get args
-			$this->_args = $args;
+																	
+			//Set defaults for args		
+			$args_defaults = array(
+				'software_name'      => NULL,
+				'software_api_url'   => NULL
+			);
+			
+			//Get and parse args
+			$this->_args = wp_parse_args( $args, $args_defaults );
 			
 			//If the args passed have 'plugin' as the prefix, change that to 'software'
 			$this->_args['software_name'] = isset( $this->_args['plugin_name'] ) ? $this->_args['plugin_name'] : $this->_args['software_name'];

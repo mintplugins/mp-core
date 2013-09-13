@@ -24,8 +24,20 @@ class MP_CORE_Settings{
 	protected $_settings_array = array();
 	
 	public function __construct($args){
-		$this->_args = $args;
+														
+		//Set defaults for args		
+		$args_defaults = array(
+			'parent_slug' => NULL, 
+			'title' => NULL, 
+			'slug' => NULL, 
+			'type' => NULL,
+			'icon' => NULL,
+    		'position' => NULL
+		);
 		
+		//Get and parse args
+		$this->_args = wp_parse_args( $args, $args_defaults );
+			
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'mp_core_add_page')  );
 	}

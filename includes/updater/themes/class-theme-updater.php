@@ -8,10 +8,17 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 	class MP_CORE_Theme_Updater{
 		
 		public function __construct($args){
-				
-			//Get args
-			$this->_args = $args;
+							
+			//Set defaults for args		
+			$args_defaults = array(
+				'software_name' => NULL,
+				'software_api_url' => NULL,
+				'software_licensed' => NULL
+			);
 			
+			//Get and parse args
+			$this->_args = wp_parse_args( $args, $args_defaults );
+					
 			//Theme Name Slug
 			$this->theme_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
 			

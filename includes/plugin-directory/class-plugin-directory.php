@@ -7,9 +7,17 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 	class MP_CORE_Plugin_Directory{
 		
 		public function __construct($args){
+						
+			//Set defaults for args		
+			$defaults = array(
+				'parent_slug' => NULL,
+				'page_title' => NULL,
+				'slug' => NULL,
+				'directory_list_url' => NULL
+			);
 			
-			//Get args
-			$this->_args = $args;
+			//Get and parse args
+			$this->_args = wp_parse_args( $args, $defaults );
 						
 			//Make sure we are on the directory page
 			$this->_page = isset($_GET['page']) ? $_GET['page'] : NULL;
@@ -79,8 +87,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				//If we are on the install page for this plugin
 				if ( $this->_page == 'mp_core_install_plugin_page_' .  $plugin['plugin_slug'] ){
 					
+					$plugin['plugin_license'] = $license;
+					
 					// Create update/install plugin page
-					new MP_CORE_Plugin_Installer( $plugin, $license );
+					new MP_CORE_Plugin_Installer( $plugin );
 					
 				}
 				
@@ -329,7 +339,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					//Nonce							
 					$output .= wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce', true, false );
 					
-					//Separation	
+					//Separation between input field and install button
 					$output .= '<br />';
 					
 					//Show the submit and install button

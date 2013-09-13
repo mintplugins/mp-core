@@ -12,7 +12,17 @@ class MP_CORE_Shortcode_Insert{
 	protected $_settings_array = array();
 	
 	public function __construct($args){
-		$this->_args = $args;
+		
+		//Set defaults for args		
+		$args_defaults = array(
+			'shortcode_id' => NULL,
+			'shortcode_title' => NULL,
+			'shortcode_description' => NULL,
+			'shortcode_options' => array()
+		);
+		
+		//Get and parse args
+		$this->_args = wp_parse_args( $args, $args_defaults );
 		
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
 		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
