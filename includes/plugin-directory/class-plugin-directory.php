@@ -73,7 +73,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			
 			//loop through each plugin
 			foreach ( $this->plugins as $plugin ){
-				
+								
 				//Plugin Name Slug
 				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core	
 							
@@ -85,20 +85,24 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				$license_valid = get_option( $plugin_name_slug . '_license_status_valid' );
 				
 				//If we are on the install page for this plugin
-				if ( $this->_page == 'mp_core_install_plugin_page_' .  $plugin['plugin_slug'] ){
+				if ( $this->_page == 'mp_core_install_plugin_page_' .  $plugin_name_slug ){
 					
+					//Plugin License
 					$plugin['plugin_license'] = $license;
 					
+					//Redirect when complete back to Directory page
+					$plugin['plugin_success_link'] = add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url( $custom_page_extension ) . $this->_args['parent_slug'] );
+									
 					// Create update/install plugin page
 					new MP_CORE_Plugin_Installer( $plugin );
-					
+										
 				}
 				
 				//If the install button for this plugin has been clicked and license entered is valid
 				if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) && $license_valid ) {
 					
 					//Redirect to plugin install page
-					header( 'Location: ' . admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&mp-source=mp-core-directory&action=install-plugin&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
+					header( 'Location: ' . admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin_name_slug . '&mp-source=mp-core-directory&action=install-plugin&plugin=' . $plugin_name_slug  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
 					
 				}
 				//If the install button for this plugin has been clicked and license entered is NOT valid!
@@ -209,12 +213,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						else{
 							
 							// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug  ) ) ) );
+							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
 						}
 											
 					}else{
 						//Otherwise display the WordPress.org Repo Install button
-						$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin_' . $plugin_name_slug ) ) ) );	
+						$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
 					
 					}
 					

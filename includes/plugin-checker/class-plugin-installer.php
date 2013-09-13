@@ -18,7 +18,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 				'plugin_required' => NULL,
 				'plugin_download_link' => NULL,
 				'plugin_group_install' => NULL,
-				'plugin_license' => NULL
+				'plugin_license' => NULL,
+				'plugin_success_link' => NULL
 			);
 						
 			//Get and parse args
@@ -220,6 +221,15 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 									
 			//Activate plugin
 			print_r ( activate_plugin( trailingslashit( $upload_dir ) . $this->plugin_name_slug . '/' . $this->_args['plugin_filename'] ) );
+		
+			if ( !empty( $this->_args['plugin_success_link'] ) ){
+				//Javascript for redirection
+				echo '<script type="text/javascript">';
+					echo "window.location = '" . $this->_args['plugin_success_link'] . "';";
+				echo '</script>';
+				
+				echo '</div>';
+			}
 										
 		}
 			
