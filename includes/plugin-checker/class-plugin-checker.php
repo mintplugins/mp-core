@@ -1,20 +1,59 @@
 <?php
 /**
- * Plugin Checker Class for the mp_core Plugin by Move Plugins
- * http://moveplugins.com/doc/plugin-checker-class/
- * The actual check only happens on the admin side so resources are not being wasted on each view of the website
+ * This file contains the MP_CORE_Plugin_Checker class and its activating function
+ *
+ * @link http://moveplugins.com/doc/plugin-checker-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+/**
+ * Plugin Checker Class for the MP Core Plugin by Move Plugins.
+ * 
+ * This Class is run at init by the 'mp_core_plugin_checker' function. 
+ * It accepts a multidimentional array of plugins to check for existence.
+ * Plugins can either be installed in a group, or singularly (1 at a time). If they are set to be 1 at a time
+ * there will be a notification in the Dashboard that it needs to be installed/Activated. This is configured in the $args array.
+ * Note: The actual check only happens on the admin side so resources are not being wasted on the front end
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/plugin-checker-class/
+ * @since      1.0.0
+ * @return     void
  */
 if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 	class MP_CORE_Plugin_Checker{
 		
-		public function __construct( $args ){
-		}
-	}
-}
-
-if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
-	class MP_CORE_Plugin_Checker_Multi{
-		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_create_pages()
+		 * @see      MP_CORE_Plugin_Checker::mp_core_plugin_check_notice()
+		 * @see      wp_parse_args()
+		 * @param    array $args {
+		 *      This array holds information for multiple plugins. Visit link for details.
+		 *		@type array {
+		 *      	This array could be in here an unlimited number of times and holds Plugin information. Visit link for details.
+		 *			@type string 'plugin_name' Name of plugin.
+		 *			@type string 'plugin_message' Message which shows up in notification for plugin.
+		 *			@type string 'plugin_filename' Name of plugin's main file
+		 *			@type string 'plugin_download_link' Link to URL where this plugin's zip file can be downloaded
+		 *			@type string 'plugin_info_link' Link to URL containing info for this plugin 
+		 * 			@type bool   'plugin_required' Whether or not this plugin is required
+		 *			@type bool   'plugin_group_install' Whether to install this plugin with "the group" or on it's own
+		 *			@type bool   'plugin_wp_repo' Whether to look for this plugin on the WP Repo or not	
+		 * 		}
+		 * }
+		 * @return   void
+		 */
 		public function __construct( $args ){
 				
 			//Set defaults for args		
@@ -24,11 +63,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 					'plugin_name' => NULL,  
 					'plugin_message' => NULL, 
 					'plugin_filename' => NULL,
-					'plugin_required' => NULL,
 					'plugin_download_link' => NULL,
 					'plugin_info_link' => NULL,
-					'plugin_group_install' => NULL,
-					'plugin_wp_repo' => NULL
+					'plugin_required' => false,
+					'plugin_group_install' => true,
+					'plugin_wp_repo' => true
 				);
 				
 				//Get and parse args
@@ -36,18 +75,21 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 				
 			}
 			
-			//List of plugins that actually need to be installed.
-			$this->_plugins_to_install = NULL;
-			
 			//Set up install page/pages
 			$this->mp_core_create_pages();
 																			
-			//Make sure we are not on the "plugin install" page - where this message isn't necessary
+			//Get the "page" URL variable
 			$page = isset($_GET['page']) ? $_GET['page'] : NULL;
+			
+			//Make sure we are not on the "mp_core_install_plugins_page" page - where this message isn't necessary			
 			if ( stripos( $page, 'mp_core_install_plugins_page' ) === false ){
+				
+				//Also ,ake sure we are not on the "mp_core_install_plugin_page" page (singular) - where this message also isn't necessary			
 				if ( stripos( $page, 'mp_core_install_plugin_page' ) === false ){
-					//Check for plugin in question
+					
+					//Check for plugins in question
 					add_action( 'admin_notices', array( $this, 'mp_core_plugin_check_notice') );
+					
 				}
 			}
 						
@@ -56,6 +98,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		/**
 		 * Loop through each passed-in plugin to see if it needs an install page
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_install_plugins_page()
+		 * @see      plugins_api()
+		 * @see      sanitize_title()
+		 * @see      MP_CORE_Plugin_Installer
+	 	 * @return   void
 		 */
 		public function mp_core_create_pages(){
 			
@@ -74,7 +123,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 				if ( $plugin['plugin_wp_repo'] ){
 					
 					/** If plugins_api isn't available, load the file that holds the function */
-					if ( ! function_exists( 'plugins_api' ) ) {
+					if ( !function_exists( 'plugins_api' ) ) {
 						require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
 					}
 	
@@ -105,8 +154,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		}
 		
 		/**
-		 * Create mp_core install plugin page
+		 * Create page where plugins are installed called "mp_core_install_plugins_page"
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_install_check_callback()
+		 * @see      get_plugin_page_hookname()
+	 	 * @return   void
 		 */
 		public function mp_core_install_plugins_page()
 		{
@@ -128,7 +182,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		}
 		
 		/**
-		 * Callback function for the install plugin page above.
+		 * This is the callback function for the "install plugin page" above. This creates the output for the install plugins page
+		 * and uses the mp_core_check_plugins function with the $show_notices set to false. In doing so, it gets an array of each
+		 * plugin that needs tp be installed so that we can run the MP_CORE_Plugin_Installer class for each plugin.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_check_plugins()
+		 * @see      screen_icon()
+		 * @see      MP_CORE_Plugin_Installer
+	 	 * @return   void
 		 */
 		public function mp_core_install_check_callback() {
 								
@@ -162,8 +225,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		}
 		
 		/**
-		 * Check to see a plugin's status and show notice if needed
+		 * This is run on the "admin_notices" WP Hook and calls the mp_core_check_plugins() function 
+		 * with the $show_notices parameter set to true so that it echoes notices in the WP dashboard for installation of necessary plugins.
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_check_plugins()
+	 	 * @return   void
 		 */
 		public function mp_core_plugin_check_notice() {
 			
@@ -173,13 +241,26 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		}
 		
 		/**
-		 * Check to see a plugin's status and put it in an array for later use - or - 
+		 * Check to see each plugin's status and either return them in an array if un-installed/un-activated
+		 * Or output a notice that it needs to be installed/activated. This is dependant on the $show_notices parameter. 
 		 *
-		 * Parameters 
-		 * $plugins array 
-		 * $show_notices boolean
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Checker::mp_core_check_plugins()
+		 * @see      MP_CORE_Plugin_Checker::mp_core_close_message()
+		 * @see      MP_CORE_Plugin_Checker::mp_core_dismiss_message()
+		 * @see      sanitize_title()
+		 * @see      apply_filters()
+		 * @see      get_option()
+		 * @see      wp_nonce_url()
+	 	 * @param    array $plugins This has the same format as the $args plugin in the construct function of this class
+		 * @param    boolean $show_notices If true it will output notices and return nothing. If false it will return an array of plugins
+		 * @return   array $plugins If $show_notices is set to false this will be returned and match the $plugins array 
 		 */
 		public function mp_core_check_plugins( $plugins, $show_notices = false ) {
+			
+			//Set plugins to install to be a blank array
+			$plugins_to_install = array();
 						
 			//Loop through each plugin that is supposed to be installed
 			foreach ( $plugins as $plugin_key => $plugin ){
@@ -187,7 +268,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 				//Set plugin name slug by sanitizing the title. Plugin's title must match title in WP Repo
 				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core
 				
-				//Get array of active plugins
+				//Get array of active plugins - duplicate_hook
 				$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
 				
 				//Set default for $plugin_active
@@ -217,10 +298,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 					//Check to see if the user has ever dismissed this message
 					if (get_option( 'mp_core_plugin_checker_' . $plugin_name_slug ) != "false"){
 												
-						/**
-						 * Take steps to see if the 
-						 * Plugin already exists or not
-						 */	
+						//Take steps to see if the Plugin already exists or not
 						 
 						//Check if the plugin file exists in the plugin root
 						$plugin_root_files = array_filter(glob('../wp-content/plugins/' . '*'), 'is_file');
@@ -309,7 +387,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 							else{
 								
 								//Add this plugin to the list of plugins that need to actually be installed.
-								$this->_plugins_to_install[$plugin_key] = $plugin;
+								$plugins_to_install[$plugin_key] = $plugin;
 								
 							}
 							
@@ -319,8 +397,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 			}//Loop through each plugin passed in
 			
 			//If there are Multiple Plugins to install at once
-			if ( !empty( $this->_plugins_to_install ) ){
+			if ( !empty( $plugins_to_install ) ){
 				
+				//If we should show the notices in the WP Dashboard
 				if ($show_notices){
 					
 					//Show "Install all items" button
@@ -343,7 +422,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 						 echo '<h2>' . __( 'These items will be installed:', 'mp_core' ) . '</h2>';
 							echo '<ol>'; 	
 											 
-							foreach( $this->_plugins_to_install as $plugin_info ){
+							foreach( $plugins_to_install as $plugin_info ){
 								
 								echo '<li>';
 									echo $plugin_info['plugin_name'] . ' - <a href="' . $plugin_info['plugin_info_link'] . '" target="_blank">' . $plugin_info['plugin_info_link'] . '</a>';
@@ -360,9 +439,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 					echo '</div>';
 				
 				}
+				//If we shouldn't show any notices
 				else{
 					
-					return $this->_plugins_to_install;	
+					//Return the array of plugins that need to be installed.
+					return $plugins_to_install;	
 				}
 			
 			}
@@ -370,8 +451,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		}//End Function
 		
 		/**
-		 * Function to display "Dismiss" message
+		 * Function to display "Dismiss" message in notices
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      sanitize_title()
+		 * @see      wp_nonce_field()
+	 	 * @param    array $dismiss_args This array holds Plugin information matching the second array in the construct function
+		 * @return   void
 		 */
 		 public function mp_core_dismiss_button( $dismiss_args ){
 			 
@@ -390,6 +477,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 		/**
 		 * Function to fire if the Close button has been clicked
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      sanitize_title()
+		 * @see      wp_verify_nonce()
+		 * @see      update_option()
+	 	 * @param    array $close_args This array holds Plugin information matching the second array in the construct function
+		 * @return   void
 		 */
 		 public function mp_core_close_message( $close_args ){
 			 
@@ -406,20 +500,56 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker_Multi' ) ){
 	}
 }
 
+/**
+ * Get the Plugin Checker Started
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/plugin-checker-class/
+ * @author   Philip Johnston
+ * @see      MP_CORE_Plugin_Checker
+ * @see      apply_filters()
+ * @see      add_action()
+ * @return   void
+ */
 if ( !function_exists( 'mp_core_plugin_checker' ) ){
 	function mp_core_plugin_checker(){
 		
 		//Set default for $mp_core_plugins_to_check
 		$mp_core_plugins_to_check = array();
 		
-		//Filter Hook for adding plugins to check
+		/**
+		 * Filter Hook for adding plugins to check.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string 'mp_core_check_plugins' The name of this filter hook.
+		 * @param array $mp_core_plugins_to_check {
+		 *      This array holds information for multiple plugins. Visit link for details.
+		 *		@type array {
+		 *      	This array could be in here an unlimited number of times and holds Plugin information. Visit link for details.
+		 *			@type string 'plugin_name' Name of plugin.
+		 *			@type string 'plugin_message' Message which shows up in notification for plugin.
+		 *			@type string 'plugin_filename' Name of plugin's main file
+		 *			@type string 'plugin_download_link' Link to URL where this plugin's zip file can be downloaded
+		 *			@type string 'plugin_info_link' Link to URL containing info for this plugin 
+		 * 			@type bool   'plugin_required' Whether or not this plugin is required
+		 *			@type bool   'plugin_group_install' Whether to install this plugin with "the group" or on it's own
+		 *			@type bool   'plugin_wp_repo' Whether to look for this plugin on the WP Repo or not	
+		 * 		}
+		 * }
+		 */
 		$mp_core_plugins_to_check = apply_filters('mp_core_check_plugins', $mp_core_plugins_to_check );
 			
 		//Remove duplicate plugins
 		$mp_core_plugins_to_check = array_unique($mp_core_plugins_to_check, SORT_REGULAR);
+		
+		//If nothing to install, quit
+		if ( empty( $mp_core_plugins_to_check ) ){
+			return;	
+		}
 
 		//Start checking plugins
-		new MP_CORE_Plugin_Checker_Multi( $mp_core_plugins_to_check );
+		new MP_CORE_Plugin_Checker( $mp_core_plugins_to_check );
 	}
 	add_action( '_admin_menu', 'mp_core_plugin_checker' );
 }

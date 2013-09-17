@@ -1,19 +1,47 @@
 <?php
 /**
- * Customize
+ * This file contains the MP_CORE_Customizer class
  *
- * Theme options are lame! Manage any customizations through the Theme
- * Customizer. Expose the customizer in the Appearance panel for easy access.
+ * @link http://moveplugins.com/doc/customizer-class/
+ * @since 1.0.0
  *
- * @package mp_core
- * @since mp_core 1.0
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
 
+/**
+ * Customizer Class for the MP Core Plugin by Move Plugins.
+ * 
+ * This class uses associative arrays to create new customizer fields. They can auto transport without needing to write extra javascript files.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/customizer-class/
+ * @since      1.0.0
+ * @return     void
+ */
 class MP_CORE_Customizer{
 	
 	protected $_args;
 	protected $_settings_array = array();
 	
+	/**
+	 * Constructor
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @link      http://moveplugins.com/doc/customizer-class/
+	 * @see      MP_CORE_Customizer::mp_core_customize_menu()
+	 * @see      MP_CORE_Customizer::mp_core_customize_preview_js()
+	 * @see      MP_CORE_Customizer::mp_core_customize_register_settings_and_controls()
+	 * @see      MP_CORE_Customizer::mp_core_customize_register_transport()
+	 * @see      MP_CORE_Customizer::mp_core_header_css()
+	 * @param    array $args See link for description and layout
+	 * @return   void
+	 */
 	public function __construct($args){
 		
 		//Get args
@@ -32,14 +60,12 @@ class MP_CORE_Customizer{
 	}
 
 	/**
-	 * Expose a "Customize" link in the main admin menu.
+	 * Show a "Customize" link in the Appearance admin menu.
 	 *
-	 * By default, the only way to access a theme customizer is via
-	 * the themes.php page, which is totally lame.
-	 *
-	 * @since mp_core 1.0
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      add_theme_page()
+	 * @return   void
 	 */
 	function mp_core_customize_menu() {
 		
@@ -54,15 +80,15 @@ class MP_CORE_Customizer{
 		}
 		
 	}
-	
-	/**
-	 * Add postMessage support for all default fields, as well
-	 * as the site title and desceription for the Theme Customizer.
+		 
+	 /**
+	 * Add postMessage support for all passed-in fields
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param WP_Customize_Manager $wp_customize Theme Customizer object.
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      apply_filters()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @return   void
 	 */
 	function mp_core_customize_register_transport( $wp_customize ) {
 		
@@ -85,11 +111,16 @@ class MP_CORE_Customizer{
 	}
 	
 	/**
-	 * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
+	 * Enqueue JS handler to make Theme Customizer preview reload changes asynchronously.
 	 *
-	 * @since mp_core 1.0
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      wp_enqueue_script()
+	 * @see      wp_localize_script()
+	 * @return   void
 	 */
 	function mp_core_customize_preview_js() {
+		
 		wp_enqueue_script( 'mp_core_customizer_js' . $this->_args[0]['section_id'], plugins_url( 'js/core/customizer.js', dirname(__FILE__)), array( 'jquery' , 'customize-preview' ), NULL, true );
 				
 		$mp_core_customizer_js_vars = $this->_args;
@@ -98,12 +129,14 @@ class MP_CORE_Customizer{
 	}
 	
 	/**
-	 * Any CSS customizations we make need to be outputted in the document <head>
-	 * This does that.
+	 * This function will output any CSS customizations that need to be in the document <head>
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      wp_enqueue_script()
+	 * @see      get_theme_mod()
+	 * @see      wp_localize_script()
+	 * @return   void
 	 */
 	function mp_core_header_css() {
 		
@@ -167,10 +200,12 @@ class MP_CORE_Customizer{
 	 * (which are still technically settings). This wrapper provides a way to
 	 * check for an existing mod, or load a default in its place.
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param string $key The key of the theme mod to check. Prefixed with 'mp_core_'
-	 * @return mixed The theme modification setting
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      MP_CORE_Customizer::mp_core_get_theme_mods()
+	 * @see      get_theme_mod()
+	 * @param    string $key The key of the theme mod to check. 
+	 * @return   mixed The theme mod setting
 	 */
 	function mp_core_theme_mod( $key ) {
 		$defaults = $this->mp_core_get_theme_mods();
@@ -180,11 +215,11 @@ class MP_CORE_Customizer{
 	}
 	
 	/**
-	 * Default theme customizations.
+	 * Default theme customizations. Set the defaults to the defaults passed-in the the 'default' key for each.
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @return $options an array of default theme options
+	 * @access   public
+	 * @since    1.0.0
+	 * @return   array $options An array of default theme options
 	 */
 	function mp_core_get_theme_mods() {
 		
@@ -203,12 +238,21 @@ class MP_CORE_Customizer{
 	/**
 	 * Customizations
 	 *
-	 * Register settings and controls 
+	 * Register sections, settings, and controls and add them to the $wp_customize Theme Customizer Object.
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param WP_Customize_Manager $wp_customize Theme Customizer object.
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_section()
+	 * @see      MP_CORE_Customizer::textbox()
+	 * @see      MP_CORE_Customizer::checkbox()
+	 * @see      MP_CORE_Customizer::textarea()
+	 * @see      MP_CORE_Customizer::radio()
+	 * @see      MP_CORE_Customizer::image()
+	 * @see      MP_CORE_Customizer::upload()
+	 * @see      MP_CORE_Customizer::color()
+	 * @see      MP_CORE_Customizer::select()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @return   void
 	 */
 	function mp_core_customize_register_settings_and_controls( $wp_customize ) {
 		
@@ -229,33 +273,27 @@ class MP_CORE_Customizer{
 				//Set default for priority if not filled out
 				 $setting['priority'] = !empty( $setting['priority'] ) ? $setting['priority'] : 10;
 				
-				if ( isset ($setting['choices'] ) ){
-					//Call the function to add the control for this type
-					$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting, $setting['choices'] );
-				}
-				else{
-					//Call the function to add the control for this type
-					$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting );
-				}
+				//Call the function to add the control for this type
+				$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting );
 				
 			}
 	
 		}
-	
-		do_action( 'mp_core_customize_hero', $wp_customize );
-	
+		
 		return $wp_customize;
 	}
 	
 	/**
 	 * Type Text Field. Used to add a control for the text type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function textbox( $wp_customize, $section_id, $setting_id, $setting ){
 		 
@@ -271,12 +309,14 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type checkbox Field. Used to add a control for the text type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function checkbox( $wp_customize, $section_id, $setting_id, $setting ){
 		 
@@ -292,12 +332,15 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type textarea Field. Used to add a control for the textarea type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 8 @see      MP_CORE_Customizer::mp_core_Customize_Textarea_Control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function textarea( $wp_customize, $section_id, $setting_id, $setting ){
 		 $wp_customize->add_control( new mp_core_Customize_Textarea_Control( $wp_customize, $setting_id, array(
@@ -313,12 +356,14 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type radio Field. Used to add a control for the radio type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function radio( $wp_customize, $section_id, $setting_id, $setting ){
 		
@@ -335,12 +380,15 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type image Field. Used to add a control for the image type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @see      WP_Customize_Image_Control
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function image( $wp_customize, $section_id, $setting_id, $setting ){
 		
@@ -356,12 +404,15 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type upload Field. Used to add a control for the upload type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @see      WP_Customize_Upload_Control
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function upload( $wp_customize, $section_id, $setting_id, $setting ){
 		
@@ -377,12 +428,15 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type color Field. Used to add a control for the image type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Color_Control
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
 	 function color( $wp_customize, $section_id, $setting_id, $setting ){
 		
@@ -398,20 +452,22 @@ class MP_CORE_Customizer{
 	 /**
 	 * Type Select Field. Used to add a control for the image type
 	 *
-	 * @since mp_core 1.0
-	 *
-	 * @param $id
-	 * @param $section - array
-	 *
-	 * @return void
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
 	 */
-	 function select( $wp_customize, $section_id, $setting_id, $setting, $choices ){
+	 function select( $wp_customize, $section_id, $setting_id, $setting ){
 		
 		$wp_customize->add_control( $setting_id, array(
 			'label' => $setting['label'],
 			'section' => $section_id,
 			'type' => 'select',
-			'choices' => $choices
+			'choices' => $setting['choices']
 		) );
 	
 	 }	
@@ -425,18 +481,27 @@ class MP_CORE_Customizer{
  * Attach the custom textarea control to the `customize_register` action
  * so the WP_Customize_Control class is initiated.
  *
- * @since mp_core 1.0
- *
- * @param WP_Customize_Manager $wp_customize Theme Customizer object.
- * @return void
+ * @since    1.0.0
+ * @see      WP_Customize_Control
+ * @see      esc_textarea()
+ * @see      esc_html()
+ * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+ * @return   void
  */
 function mp_core_customize_textarea_control($wp_customize) {
+		 
 	/**
-	 * Textarea Control
+	 * Textarea Control Class
+	 * 
+	 * This class extends the WP_Customize_Control class to make a textarea
 	 *
-	 * @since CLoudify 1.0
+	 * @author     Philip Johnston
+	 * @link       http://moveplugins.com/doc/customizer-class/
+	 * @since      1.0.0
+	 * @return     void
 	 */
 	class mp_core_Customize_Textarea_Control extends WP_Customize_Control {
+		
 		public $type = 'textarea';
 
 		public function render_content() {
