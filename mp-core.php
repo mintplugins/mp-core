@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.7.8
+Version: beta1.0.7.7
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
