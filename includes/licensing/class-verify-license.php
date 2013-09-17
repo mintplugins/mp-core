@@ -1,11 +1,42 @@
 <?php
 /**
- * Plugin Directory Class for the mp_core Plugin by Move Plugins
- * http://moveplugins.com/doc/plugin-directory-class/
+ * This file contains the MP_CORE_Verify_License class
+ *
+ * @link http://moveplugins.com/doc/verify-license-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+/**
+ * This class check with an outside API to verify whether it is active/valid. 
+ * It takes the name of the plugin or theme, and the Software API URL it should check for verification.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/verify-license-class/
+ * @since      1.0.0
+ * @return     void
  */
 if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 	class MP_CORE_Verify_License{
 		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @link     http://moveplugins.com/doc/verify-license-class/
+		 * @see      MP_CORE_Verify_License::store_and_verify_license()
+		 * @see      wp_parse_args()
+		 * @see      sanitize_title()
+		 * @param    array $args (required) See link for description.
+		 * @return   void
+		 */	
 		public function __construct($args){
 																	
 			//Set defaults for args		
@@ -31,6 +62,15 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 		
 		/**
 		 * Function which stores and verifies a license using the mp_repo plugin on the software_api_url
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      check_admin_referer()
+		 * @see      get_option()
+		 * @see      update_option()
+		 * @see      wp_remote_post()
+		 * @see      wp_remote_retrieve_body()
+		 * @return   void
 		 */
 		public function store_and_verify_license(){
 						

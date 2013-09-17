@@ -13,7 +13,6 @@
  * @author     Philip Johnston
  */
 
-
 /**
  * Font Class for the MP Core Plugin by Move Plugins.
  * 
