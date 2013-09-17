@@ -1,8 +1,14 @@
 <?php
 /**
- * Get all Pages insto an associative array
+ * Get all Pages into a tidy associative array containing just the page ID as the key and the Page Title as the value
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_pages/
+ * @see      get_pages()
+ * @return   array $output An array of pages containing just the page ID as the key and the Page Title as the value
  */
 function mp_core_get_all_pages() {
+	
 	$output = array();
 	$terms = get_pages(); 
 	
@@ -14,7 +20,15 @@ function mp_core_get_all_pages() {
 }
 
 /**
- * Get all Post Types into an associative array
+ * Get all Post Types into a tidy associative array with just the Post Type ID as the key and the Post Type Name as the value
+ *
+ * Note: Only use this function on or after the 'register_sidebar' hook 
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_post_types/
+ * @see      get_post_types()
+ * @param    array $args (required) See link for description.
+ * @return   array $return_array An array with all the post types structured with the key as the post_type ID and the value as the Post Type Name
  */
 function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' => false ) ) {
 	
@@ -29,32 +43,18 @@ function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' 
 	}
 	return ( $return_array );
 	
-	//Only use this function on or after the 'register_sidebar' hook
-}
-
-/**
- * Get all Post Types that are hierarchical into an associative array
- */
-function mp_core_get_all_hierarchical_post_types($args = array('public' => true, '_builtin' => false, 'hierarchical' => true ) ) {
-	
-	$return_array = array();
-	
-	$output = 'objects'; // names or objects
-	$post_types = get_post_types($args,$output); 
-			
-	foreach ($post_types as $id => $post_type ) {
-		
-		$return_array[$id] = $post_type->labels->name;
-	}
-	return ( $return_array );
-	
-	//Only use this function on or after the 'register_sidebar' hook
 }
 
 /**
  * Get all Post by a certain post type
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_posts_by_type/
+ * @see      get_posts()
+ * @param    string $slug (required) The slug of the Post Type
+ * @return   array $return_array An array with all the posts in the given Post Type structured with the key as the Post ID and the value as the Post Title
  */
-function mp_core_get_all_posts_by_type($slug) {
+function mp_core_get_all_posts_by_type( $slug ) {
 	
 	$return_array = array();
 	
@@ -75,7 +75,40 @@ function mp_core_get_all_posts_by_type($slug) {
 }
 
 /**
+ * Get all Post Types that are hierarchical into an associative array
+ *
+ * Note: Only use this function on or after the 'register_sidebar' hook
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_hierarchical_post_types/
+ * @see      get_post_types()
+ * @param    array $args (required) See link for description.
+ * @return   array $return_array An array with all the  hierarchical post types structured with the key as the post_type ID and the value as the Post Type Name
+ */
+function mp_core_get_all_hierarchical_post_types($args = array('public' => true, '_builtin' => false, 'hierarchical' => true ) ) {
+	
+	$return_array = array();
+	
+	$output = 'objects'; // names or objects
+	$post_types = get_post_types($args,$output); 
+			
+	foreach ($post_types as $id => $post_type ) {
+		
+		$return_array[$id] = $post_type->labels->name;
+	}
+	return ( $return_array );
+
+}
+
+/**
  * Get all Posts by a certain taxonomy
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_terms_by_tax/
+ * @see      taxonomy_exists()
+ * @see      get_terms()
+ * @param    string $slug (required) The slug of the taxonomy
+ * @return   array $return_array An array with all the  terms in a given tax structured with the key as the term ID and the value as the Term Name
  */
 function mp_core_get_all_terms_by_tax($slug) {
 	if (taxonomy_exists($slug)){
@@ -90,7 +123,17 @@ function mp_core_get_all_terms_by_tax($slug) {
 }
 
 /**
- * Get all taxonomiy terms - ALL of them. Yeah...ALL of them
+ * Get all taxonomiy terms for ALL taxonomies. That's right, EVERY taxonomy term in existence on this WordPress.
+ *
+ * This is a sample return array. Do an explode at the * for the key
+ * array( '12*my_category' => 'My Category Term' );
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_tax_terms/
+ * @see      get_taxonomies()
+ * @see       get_terms()
+ * @param    array $exclude_slugs Array containing taxonomy slugs to skip
+ * @return   array $return_array An array with all of the taxonomy terms. Each array key = the ID tax term id + taxonomy slug separated by an *, and the value being the Title. 
  */
 function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
 	
@@ -125,16 +168,37 @@ function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
 	}
 	
 	//sample return array. Do an explode at the *
-	//array( '12*my_category' => 'My Category' );
+	//array( '12*my_category' => 'My Category Term' );
 	
 	return ( $return_array );
 }
 
 /**
- * Get all Posts in a tax term that have a related tax term. Ie all the posts in a "tshirt" category with the tag "red"
+ * Get all tax terms that have a related tax term. For Example: all the posts in a "tshirt" 'category' with the 'tag' "red"
+ *
+ * Get all taxonomy terms (ie 'tags' like 'green', 'blue', or 'red') applied to posts that also have a specific, separate taxonomy's term applied to them.
+ * A simpler way to put it is to get all tags that are in a specific category. However, they could be any taxonomy - not just tags and cats.
+ *
+ * I need to do further testing with this function. - Phil Johnston
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_all_tags_in_cat/
+ * @see      wpdb::get_results()
+ * @see      get_tag_link()
+ * @global   object $wpdb wpdb Object
+ * @param    array $args See link for description
+ * @return   array $return_array An array with all of the tax terms that have a related tax term
  */
-function mp_core_get_all_posts_in_tax_by_tax( $args = array(array('base_archive' => 'true', 'base_taxonomy' => 'category', 'related_taxonomy_items' => 'post_tag')) ){
-	global $wpdb;
+function mp_core_get_all_tags_in_cat( $args ){
+		
+		global $wpdb;
+		
+		$defaults = array(
+			'base_taxonomy_slug' => 'category', 
+			'base_taxonomy_term_id' => NULL,
+			'related_taxonomy_slug' => 'post_tag',
+			'base_archive' => true
+		);
 
 		if (isset($args['base_archive'])){
 			$tags = $wpdb->get_results
@@ -151,8 +215,8 @@ function mp_core_get_all_posts_in_tax_by_tax( $args = array(array('base_archive'
 					LEFT JOIN ". $wpdb->term_taxonomy . "  as t2 ON r2.term_taxonomy_id = t2.term_taxonomy_id
 					LEFT JOIN ". $wpdb->terms . " as terms2 ON t2.term_id = terms2.term_id
 				WHERE
-					t1.taxonomy = '". $args['base_taxonomy'] . "' AND p1.post_status = 'publish' AND
-					t2.taxonomy = '" . $args['related_taxonomy_items'] ."' AND p2.post_status = 'publish'
+					t1.taxonomy = '". $args['base_taxonomy_slug'] . "' AND p1.post_status = 'publish' AND
+					t2.taxonomy = '" . $args['related_taxonomy_slug'] ."' AND p2.post_status = 'publish'
 					AND p1.ID = p2.ID
 				ORDER by tag_name
 			");
@@ -176,8 +240,8 @@ function mp_core_get_all_posts_in_tax_by_tax( $args = array(array('base_archive'
 					LEFT JOIN ". $wpdb->term_taxonomy . " as t2 ON r2.term_taxonomy_id = t2.term_taxonomy_id
 					LEFT JOIN ". $wpdb->terms . " as terms2 ON t2.term_id = terms2.term_id
 				WHERE
-					t1.taxonomy = '". $args['base_taxonomy'] . "' AND p1.post_status = 'publish' AND terms1.term_id IN (".$args['current_taxonomy_item'].") AND
-					t2.taxonomy = '" . $args['related_taxonomy_items'] ."' AND p2.post_status = 'publish'
+					t1.taxonomy = '". $args['base_taxonomy_slug'] . "' AND p1.post_status = 'publish' AND terms1.term_id IN (".$args['base_taxonomy_term_id'].") AND
+					t2.taxonomy = '" . $args['related_taxonomy_slug'] ."' AND p2.post_status = 'publish'
 					AND p1.ID = p2.ID
 				ORDER by tag_name
 			");
