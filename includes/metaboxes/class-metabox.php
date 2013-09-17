@@ -1,7 +1,29 @@
 <?php
 /**
- * Class to create new metaboxes
+ * This file contains the MP_CORE_Metabox class
  *
+ * @link http://moveplugins.com/doc/metabox-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+ 
+/**
+ * This class adds a new metabox with fields of save-able data. 
+ * 
+ * The field can be singular or they can repeat in groups. 
+ * It works by passing an associative array containing the information for the fields to the class
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/verify-license-class/
+ * @since      1.0.0
+ * @return     void
  */
 if (!class_exists('MP_CORE_Metabox')){
 	class MP_CORE_Metabox{
@@ -9,6 +31,22 @@ if (!class_exists('MP_CORE_Metabox')){
 		protected $_args;
 		protected $_metabox_items_array = array();
 		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @link     http://moveplugins.com/doc/metabox-class/
+		 * @author   Philip Johnston
+		 * @see      MP_CORE_Metabox::mp_core_add_metabox()
+		 * @see      MP_CORE_Metabox::mp_core_save_data()
+		 * @see      MP_CORE_Metabox::mp_core_enqueue_scripts()
+		 * @see      wp_parse_args()
+		 * @see      sanitize_title()
+		 * @param    array $args (required) See link for description.
+		 * @param    array $items_array (required) See link for description.
+		 * @return   void
+		 */	
 		public function __construct($args, $items_array){
 											
 			//Set defaults for args		
@@ -32,6 +70,18 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 		}
 		
+		/**
+		 * Enqueue Scripts needed for the MP_CORE_Metabox class
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      get_current_screen()
+		 * @see      wp_enqueue_style()
+		 * @see      wp_enqueue_script()
+		 * @see      wp_enqueue_media()
+		 * @see      do_action()
+		 * @return   void
+		 */
 		public function mp_core_enqueue_scripts(){
 			
 			//Get current page
@@ -54,12 +104,20 @@ if (!class_exists('MP_CORE_Metabox')){
 				//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
 				wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/core/mp-set-sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
-				//do_action
+				
+				//Action hook alllowing for more scripts to be loaded only when this metabox is used
 				do_action('mp_core_' . $this->_args['metabox_id'] . '_metabox_custom_scripts');
 			}
 		}
-		
-		/* Adds a box to the main column on the Post and Page edit screens */	
+				
+		/**
+		 * This function adds a metabox to the Post Type passed-in to the class in the $args array
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      add_meta_box()
+		 * @return   void
+		 */	
 		public function mp_core_add_metabox() {
 			
 			global $post;
@@ -80,7 +138,30 @@ if (!class_exists('MP_CORE_Metabox')){
 			);
 		}
 		
-		/* Prints the box content */	
+		/**
+		 * This function prints the metabox content to the metabox
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_nonce_field()
+		 * @see      has_filter()
+		 * @see      apply_filters()
+		 * @see      plugin_basename()
+		 * @see      get_post_meta()
+		 * @see      MP_CORE_Metabox::basictext()
+		 * @see      MP_CORE_Metabox::textbox()
+		 * @see      MP_CORE_Metabox::textarea()
+		 * @see      MP_CORE_Metabox::colorpicker()
+		 * @see      MP_CORE_Metabox::mediaupload()
+		 * @see      MP_CORE_Metabox::select()
+		 * @see      MP_CORE_Metabox::password()
+		 * @see      MP_CORE_Metabox::checkbox()
+		 * @see      MP_CORE_Metabox::url()
+		 * @see      MP_CORE_Metabox::date()
+		 * @see      MP_CORE_Metabox::time()
+		 * @see      MP_CORE_Metabox::number()		 
+		 * @return   void
+		 */	
 		public function mp_core_metabox_callback() {
 			
 			global $post;
@@ -91,7 +172,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Loop through the pre-set, passed-in array of fields
 			foreach ($this->_metabox_items_array as $field){
 				
-				// Use nonce for verification
+				// Set up nonce for verification
 				wp_nonce_field( plugin_basename( __FILE__ ), $field['field_id'] . '_metabox_nonce' );	
 				
 				// Filter for title of this field
@@ -103,7 +184,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				//This is the first field in a set of repeater
 				if ( isset($field['field_repeater']) && $prev_repeater != $field['field_repeater']){
 					
-					// Use nonce for verification
+					// Set up nonce for verification
 					wp_nonce_field( plugin_basename( __FILE__ ), $field['field_repeater'] . '_metabox_nonce' );	
 					
 					//Make sure a post number has been set
@@ -234,8 +315,21 @@ if (!class_exists('MP_CORE_Metabox')){
 				}
 			}
 		}
-		
-		/* When the post is saved, saves our custom data */	
+				
+		/**
+		 * When the post is saved, this function saves our metabox data
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_verify_nonce()
+		 * @see      plugin_basename()
+		 * @see      current_user_can()
+		 * @see      update_post_meta()
+		 * @see      wp_kses()
+		 * @see      wpautop()
+		 * @see      sanitize_text_field()	 
+		 * @return   void
+		 */	
 		public function mp_core_save_data() {
 			
 			//Check if post type has been set
@@ -376,7 +470,16 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		/**
-		* basictext field
+		 * basictext field. Parameters in this function match all below
+		 *
+		 * @access   public
+		 * @since    1.0.0
+   		 * @param    string $field_id Required. This must be a unique name with no spaces
+		 * @param    string $field_title Required. This is the title of the field that will display to the user
+		 * @param    string $field_description Required. The user will see this description above this field
+		 * @param    string $value Required. The value displayed in this field
+		 * @param    string $classname Required. The name of the  css class for this field
+		 * @return   void
 		*/
 		function basictext($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -386,8 +489,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '</label></div>';
 			echo '</div>'; 
 		}
+		
 		/**
 		* textbox field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function textbox($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -397,8 +505,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* password field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function password($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -408,8 +521,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* checkbox field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function checkbox($field_id, $field_title, $field_description, $value, $classname, $field_select_values, $field_preset_value){
 			$checked = empty($value) ? '' : 'checked';
@@ -420,8 +538,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_id . '" ' . $checked . '/>';
 			echo '</div>'; 
 		}
+		
 		/**
 		* url field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function url($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -431,8 +554,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* date field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function date($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -442,8 +570,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* time field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function time($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -453,8 +586,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="time" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* number field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function number($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -464,8 +602,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="20" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* textarea field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function textarea($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -477,8 +620,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '</textarea>';
 			echo '</div>'; 
 		}
+		
 		/**
 		* WordPress editor field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function wp_editor($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -488,8 +636,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo wp_editor( html_entity_decode($value) , $field_id, $settings = array('textarea_rows' => 15));			
 			echo '</div>'; 
 		}
+		
 		/**
 		* select field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -510,8 +663,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			<?php        
 			echo '</div>'; 
 		}
+		
 		/**
 		* colorpicker field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function colorpicker($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -521,8 +679,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" />';
 			echo '</div>'; 
 		}
+		
 		/**
 		* mediaupload field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function mediaupload($field_id, $field_title, $field_description, $value, $classname){
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
@@ -548,8 +711,13 @@ if (!class_exists('MP_CORE_Metabox')){
 		echo '</div>';   
 	
 		}
+		
 		/**
 		* customfieldtype field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
 		*/
 		function customfieldtype($field_id, $field_title, $field_description, $value, $classname){
 			

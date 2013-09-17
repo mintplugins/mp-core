@@ -103,7 +103,7 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 /**
  * Include License Checking functions
  */
-require( MP_CORE_PLUGIN_DIR . 'includes/licensing/licensing-functions.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/licensing/class-verify-license.php' );
 
 /**
  * Include Plugin Installer Class
