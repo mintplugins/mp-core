@@ -1,10 +1,35 @@
 <?php
 /**
- *Template Tags
+ * This file contains Template Tags
+ *
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Functions
+ *
+ * @link       http://moveplugins.com/doc/move-plugins-core-api/
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
  
+
 /**
- *The_featured_image - returns the featured image of a post
+ * This function returns the featured image url of a post
+ *  
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_the_featured_image/
+ * @see      has_filter()
+ * @see      get_filter()
+ * @see      get_post_thumbnail_id()
+ * @see      wp_get_attachment_image_src()
+ * @see      mp_aq_resize()
+ * @param    string $post_id The ID of the post who's featured image we want
+ * @param    int $width The width of the image we want in pixels. Defaults to 600
+ * @param    int $height The height of the image we want in pixels. Defaults to 600
+ * @param    string $before Optional. A string to output directly before the image URL
+ * @param    string $after Optional. A string to output directly after the image URL
+ * @return   string The featured image's URL with $before and $after before and after respectively.
  */
 function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = NULL, $before = NULL, $after = NULL ){
 	
@@ -31,11 +56,15 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 	}
            
 }
- 
+  
 /**
- * Get just the avatar URL without the wrapper tag
- * Usage: mp_get_avatar_url( get_avatar( $email, 32 ) );
- */ 
+ * This is a simple function which gets just the avatar URL without the wrapper tag
+ *  
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_avatar_url/
+ * @param    string $after The result of the get_avatar( $id_or_email, 32 ); is passed to this function as a string.
+ * @return   string The avatar URL only without the wrapper tag.
+ */
 function mp_core_get_avatar_url( $get_avatar ){
     $matches = explode("src='", $get_avatar);
     $matches = explode("'", $matches[1]);
@@ -43,17 +72,21 @@ function mp_core_get_avatar_url( $get_avatar ){
 }
 
 /**
- * Get avatar tag
+ * Get avatar tag at retina size (2x). This function is exactly the same as the WP default "get_avatar()" but returns image at 2x.
  *
- * Filter mp_core_comments_args
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_get_avatar/
+ * @param    string $comment The id or email of the user who's avatar we want
+ * @param    int $size The size in pixels that this image should be at 1x.
+ * @return   string The avatar URL only without the wrapper tag.
  */
-function mp_core_get_avatar( $comment, $size ){
+function mp_core_get_avatar( $id_or_email, $size ){
 	
 	//Double the size for retina screens
 	$size_doubled = $size * 2;
 	
 	//Get the avatar img tag
-	$avatar_tag = get_avatar( $comment, $size_doubled );
+	$avatar_tag = get_avatar( $id_or_email, $size_doubled );
 		
 	//Explode the img tag
 	$exploded_avatar = explode( "src='", $avatar_tag );	
@@ -65,8 +98,14 @@ function mp_core_get_avatar( $comment, $size ){
 }
 
 /**
- * Get oembed and set it to be 100% width and height matching
- * Usage: mp_get_avatar_url( get_avatar( $email, 32 ) );
+ * Get oembed and set it to be 100% width and height using a 16x9 image undeneath to size it
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_oembed_get/
+ * @param    string $video_url The URL of the Video
+ * @param    int $min_width Optional. The minimum width in pixels this video should ever be.
+ * @param    int $max_width Optional. The maximum width in pixels this video should ever be.
+ * @return   string $html_output An iframe html tag containing the video wrapped in a div set to 100% width over a 16x9 image.
  */ 
 function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 	
@@ -92,5 +131,3 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 	
 	}
 }
- 
-

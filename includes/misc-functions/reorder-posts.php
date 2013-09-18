@@ -1,7 +1,27 @@
 <?php
-//The scripts on this page allow posts to be reordered in the admin area
+/**
+ * This file contains functions which allow hierarchical posts in WordPress Admin to be re-ordered by dragging and dropping
+ *
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
 
-//Admin scripts
+
+/**
+ * Load scripts needed for re-ordering hierarchical posts in WP Admin
+ *
+ * @since    1.0.0
+ * @see      get_current_screen()
+ * @see      wp_enqueue_script()
+ * @see      wp_enqueue_style()
+ * @return   void
+ */
 function mp_core_admin_enqueue_scripts(){
 	
 	//Get current page
@@ -25,10 +45,14 @@ function mp_core_admin_enqueue_scripts(){
 add_action( 'admin_enqueue_scripts', 'mp_core_admin_enqueue_scripts' );
 
 /**
-* Save new menu order for each post
-* When a post is reordered, this function fires to loop through each of the values in the GET variable with the prefix 'mp_order'
-* It then updates the post in the database
-*/
+ * Save new menu order for each post
+ * When a post is reordered, this function fires to loop through each of the values in the GET variable with the prefix 'mp_order'
+ * It then updates the post in the database
+ *
+ * @since    1.0.0
+ * @see      wp_update_post()
+ * @return   void
+ */
 function mp_core_reorder_posts_on_submit(){
 	//Only do this if the mp_submitted_order field has been submitted
 	if ( isset( $_GET['mp_submitted_order'] ) ){
@@ -54,8 +78,11 @@ function mp_core_reorder_posts_on_submit(){
 add_action('admin_init', 'mp_core_reorder_posts_on_submit' );
 
 /**
-* add order column to admin listing screen for header text
-*/
+ * Add order column to admin listing screen for header text
+ *
+ * @since    1.0.0
+ * @return   array This is passed to the manage_posts_columns filter and contains a new column with no title and a draggable area called 'menu_order'
+ */
 function mp_core_add_new_post_column($columns) {
 	
 	$new_column = array('menu_order' => '' );
@@ -65,7 +92,12 @@ function mp_core_add_new_post_column($columns) {
 }
 
 /**
-* show custom order column values
+ * show custom order column values
+ *
+ * @since    1.0.0
+ * @global   array $post The global post variable in WP. Its the whole post object.
+ * @param    array $name An array of column name ⇒ label
+ * @return   void
 */
 function mp_core_show_order_column($name){
   global $post;
@@ -83,7 +115,10 @@ function mp_core_show_order_column($name){
 }
 
 /**
-* Make all hierarchical post types sortable
+ * Make all hierarchical post types sortable
+ *
+ * @since    1.0.0
+ * @return   void
 */
 function mp_core_make_all_hierarchical_posts_sortable(){
 	$hierarchical_post_types = mp_core_get_all_hierarchical_post_types();

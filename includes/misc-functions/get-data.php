@@ -1,5 +1,19 @@
 <?php
 /**
+ * This file contains various functions for getting data.
+ *
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+ 
+/**
  * Get all Pages into a tidy associative array containing just the page ID as the key and the Page Title as the value
  *
  * @since    1.0.0

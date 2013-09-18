@@ -1,13 +1,50 @@
 <?php
 /**
- * Plugin Installer Class for the mp_core Plugin by Move Plugins
- * http://moveplugins.com/doc/plugin-installer-class/
+ * This file contains the MP_CORE_Plugin_Installer class
  *
- * returns true or false
+ * @link http://moveplugins.com/doc/plugin-installer-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+/**
+ * Plugin Installer Class for the mp_core Plugin by Move Plugins
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/plugin-installer-class/
+ * @since      1.0.0
+ * @return     void
  */
 if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 	class MP_CORE_Plugin_Installer{
 		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Installer::mp_core_install_plugin_page()
+		 * @see      MP_CORE_Plugin_Installer::mp_core_install_plugin()
+		 * @see      wp_parse_args()
+		 * @param    array $args {
+		 *      This array holds information the plugin
+		 *		@type string 'plugin_name' Name of plugin.
+		 *		@type string 'plugin_message' Message which shows up in notification for plugin.
+		 *		@type string 'plugin_filename' Name of plugin's main file
+		 * 		@type bool   'plugin_required' Whether or not this plugin is required
+		 *		@type string 'plugin_download_link' Link to URL where this plugin's zip file can be downloaded
+		 *		@type bool   'plugin_group_install' Whether to create the singular install page for this plugin or not
+		 *		@type bool   'plugin_license' The license this plugin requires to be downloaded
+		 *		@type bool   'plugin_success_link' Where to re-direct the user upon a sucessful install. No redirect if NULL
+		 * }
+		 * @return   void
+		 */
 		public function __construct($args){	
 					
 			//Set defaults for args		
@@ -44,6 +81,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 		/**
 		 * Create mp core install plugin page
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      get_plugin_page_hookname()
+		 * @see      add_action()
+	 	 * @return   void
 		 */
 		public function mp_core_install_plugin_page()
 		{
@@ -66,6 +108,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 		
 		/**
 		 * Callback function for the update plugin page above.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      screen_icon()
+		 * @see      MP_CORE_Plugin_Installer::mp_core_install_plugin()
+	 	 * @return   void
 		 */
 		public function mp_core_install_check_callback() {
 			
@@ -84,6 +132,25 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 		
 		/**
 		 * Callback function for the update plugin page above. This page uses the filesystem api to install a plugin
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      get_option()
+		 * @see      wp_remote_post()
+		 * @see      is_wp_error()
+		 * @see      wp_remote_retrieve_response_code()
+		 * @see      wp_remote_retrieve_body()
+		 * @see      current_user_can()
+		 * @see      wp_verify_nonce()
+		 * @see      wp_nonce_url()
+		 * @see      WP_Filesystem
+		 * @see      WP_Filesystem::wp_plugins_dir()
+		 * @see      request_filesystem_credentials()
+		 * @see      trailingslashit()
+		 * @see      unzip_file()
+	 	 * @see      wp_cache_set()
+		 * @see      activate_plugin()
+		 * @return   void
 		 */
 		public function mp_core_install_plugin() {
 			
