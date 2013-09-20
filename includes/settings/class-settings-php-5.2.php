@@ -1,21 +1,31 @@
 <?php
 /**
- * mp_core Settings Class
+ * This file contains the MP_CORE_Settings class 
  *
- * @package mp_core
- * @since mp_core 1.0
+ * @link http://moveplugins.com/doc/settings-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
-
+ 
 /**
  * Class to create new options page
  *
- * This contains a call to register_setting() registers a validation callback, mp_core_settings_validate(),
+ * This contains a call to register_setting(), registers a validation callback, mp_core_settings_validate(),
  * which is used when the option is saved, to ensure that our option values are properly
  * formatted, and safe.
  *
  * It also creates the page for settings and outputs the settings passed-in to the class.
  *
- * @since mp_core 1.0
+ * @author     Philip Johnston
+ * @link http://moveplugins.com/doc/settings-class/
+ * @since      1.0.0
+ * @return     void
  */
  
 class MP_CORE_Settings{
@@ -23,6 +33,27 @@ class MP_CORE_Settings{
 	protected $_args;
 	protected $_settings_array = array();
 	
+	/**
+	 * Constructor
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @link     http://moveplugins.com/doc/settings-class-args/
+	 * @see      MP_CORE_Settings::mp_core_enqueue_scripts()
+	 * @see      MP_CORE_Settings::mp_core_add_page()
+	 * @see      wp_parse_args()
+	 * @see      add_action()
+	 * @param    array $args {
+	 *      This array contains info for creating the directory page
+	 *		@type string 'parent_slug' The slug name for the parent menu (or the file name of a standard WordPress admin page)
+	 *		@type string 'title' This is the title of the page.
+	 *		@type string 'slug' This will identify the page and should be all lowercase with no spaces.
+	 *		@type string 'type' Tells WordPress where this page will sit in the WP menu. See link for details.
+	 *		@type string 'icon' (optional) The url to the icon to be used for this menu
+	 *		@type string 'position' (optional) The position in the menu order this menu should appear
+	 * }
+	 * @return   void
+	 */
 	public function __construct($args){
 														
 		//Set defaults for args		
@@ -42,6 +73,17 @@ class MP_CORE_Settings{
 		add_action( 'admin_menu', array( $this, 'mp_core_add_page')  );
 	}
 	
+	/**
+	 * Enqueue Scripts
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      get_current_screen()
+	 * @see      wp_enqueue_style()
+	 * @see      wp_enqueue_script()
+	 * @see      wp_enqueue_media()
+	 * @return   void
+	 */
 	public function mp_core_enqueue_scripts(){
 		
 		//Get current page
@@ -68,7 +110,10 @@ class MP_CORE_Settings{
 	 *
 	 * This function is attached to the admin_menu action hook.
 	 *
-	 * @since mp_core 1.0
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      add_ TYPE _page() - http://codex.wordpress.org/Administration_Menus
+	 * @return   void
 	 */
 	public function mp_core_add_page() {
 		
@@ -108,7 +153,11 @@ class MP_CORE_Settings{
 	/**
 	 * Renders the Theme Options administration screen.
 	 *
-	 * @since mp_core 1.0
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      add_query_arg()
+	 * @see      get_admin_url()
+	 * @return   void
 	 */
 	public function new_tab( $active_tab, $tab_info ){
 		
@@ -128,7 +177,15 @@ class MP_CORE_Settings{
 	/**
 	 * Renders the Theme Options administration screen.
 	 *
-	 * @since mp_core 1.0
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      do_action()
+	 * @see      current_user_can()
+	 * @see      wp_die()
+	 * @see      settings_fields()
+	 * @see      do_settings_sections()
+	 * @see      submit_button()
+	 * @return   void
 	 */
 	public function mp_core_render_page() {
 		?>
@@ -173,7 +230,13 @@ class MP_CORE_Settings{
 /**
  * Number Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      absint()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_number( $args = array() ) {
 	$defaults = array(
@@ -203,7 +266,13 @@ function mp_core_number( $args = array() ) {
 /**
  * Textarea Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      esc_textarea()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_textarea( $args = array() ) {
 	$defaults = array(
@@ -230,7 +299,13 @@ function mp_core_textarea( $args = array() ) {
 /**
  * Tiny MCE editor Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      wp_editor()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_wp_editor( $args = array() ) {
 	$defaults = array(
@@ -260,7 +335,13 @@ function mp_core_wp_editor( $args = array() ) {
 /**
  * Image Upload Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      wp_get_attachment_url()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_mediaupload( $args = array() ) {
 	$defaults = array(
@@ -304,7 +385,12 @@ function mp_core_mediaupload( $args = array() ) {
 /**
  * Textbox Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_textbox( $args = array() ) {
 	
@@ -331,7 +417,12 @@ function mp_core_textbox( $args = array() ) {
 /**
  * Email Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_email( $args = array() ) {
 	
@@ -359,7 +450,12 @@ function mp_core_email( $args = array() ) {
 /**
  * Checkbox Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_checkbox( $args = array() ) {
 	
@@ -393,7 +489,13 @@ function mp_core_checkbox( $args = array() ) {
 /**
  * Radio Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      checked()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_radio( $args = array() ) {
 	$defaults = array(
@@ -423,7 +525,13 @@ function mp_core_radio( $args = array() ) {
 /**
  * Select Field
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      selected()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_select( $args = array() ) {
 	$defaults = array(
@@ -457,7 +565,12 @@ function mp_core_select( $args = array() ) {
 /**
  * Color Picker
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_colorpicker($args = array() ) {
 	$defaults = array(
@@ -484,7 +597,12 @@ function mp_core_colorpicker($args = array() ) {
 /**
  * Light
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
  */
 function mp_core_true_false_light($args = array() ) {
 	$defaults = array(
@@ -511,7 +629,13 @@ function mp_core_true_false_light($args = array() ) {
  * The $registration variable must match the name of the set of options. It is set in the register_settings function. 
  * If the $key variable is set, it will return just that setting. If not, it will return the entire set of settings as an array.
  *
- * @since mp_core 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    string $registration - The registration slug for this option group
+ * @param    string $key - (Optional) The slug of this actual option
+ * @return   void
  */
 function mp_core_get_option($registration, $key='') {
 	$saved = (array) get_option( $registration );	
@@ -547,10 +671,13 @@ function mp_core_get_option($registration, $key='') {
 /**
  * Sanitize and validate form input. Accepts an array, return a sanitized array.
  *
- * @param array $input Unknown values.
- * @return array Sanitized theme options ready to be stored in the database.
- *
- * @since Lighthouse 1.0
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_kses()
+ * @see      wp_parse_args()
+ * @see      apply_filters()
+ * @param    array $input Unknown values.
+ * @return   array Sanitized theme options ready to be stored in the database.
  */
 function mp_core_settings_validate( $input ) {
 	$output = array();

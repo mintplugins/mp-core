@@ -1,11 +1,49 @@
 <?php
 /**
- * Plugin Directory Class for the mp_core Plugin by Move Plugins
- * http://moveplugins.com/doc/plugin-directory-class/
+ * This file contains the MP_CORE_Plugin_Directory class 
+ *
+ * @link http://moveplugins.com/doc/plugin-directory-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+  
+ /**
+ * Plugin Directory Class for the MP Core Plugin by Move Plugins.
+ * 
+ * This class facilitates the creation of directory pages in WordPress containing plugins to install.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/plugin-directory-class/
+ * @since      1.0.0
+ * @return     void
  */
 if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 	class MP_CORE_Plugin_Directory{
 		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Directory::enqueue_scripts()
+		 * @see      MP_CORE_Plugin_Directory::add_submenu_page()
+		 * @see      wp_parse_args()
+		 * @see      add_action()
+		 * @param    array $args {
+		 *      This array contains info for creating the directory page
+		 *		@type string 'parent_slug' The slug name for the parent menu (or the file name of a standard WordPress admin page)
+		 *		@type string 'page_title' The title of the directory page.
+		 *		@type string 'slug' The slug for this directory. Make this an original, unspaced string.
+		 *		@type string 'directory_list_url' Link to URL where the API is set to to handle the directory. See MP Repo Plugin.
+		 * }
+		 * @return   void
+		 */
 		public function __construct($args){
 						
 			//Set defaults for args		
@@ -41,6 +79,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		/**
 		 * Enqueue Scripts
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_enqueue_style()
+		 * @see      wp_enqueue_script()
+	 	 * @return   void
 		 */
 		public function enqueue_scripts(){
 			
@@ -55,6 +98,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		/**
 		 * Create Plugins Submenu Page in WordPress menu
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      add_submenu_page()
+	 	 * @return   void
 		 */
 		public function add_submenu_page(){
 			add_submenu_page( $this->_args['parent_slug'], $this->_args['page_title'], $this->_args['page_title'], 'activate_plugins', $this->_args['slug'], array( &$this, 'plugin_directory_page' ) );	
@@ -63,6 +110,17 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		/**
 		 * Create install pages
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_remote_post()
+		 * @see      sanitize_title()
+		 * @see      MP_CORE_Verify_License
+	 	 * @see      get_option()
+		 * @see      MP_CORE_Plugin_Installer
+		 * @see      admin_url()
+	 	 * @see      wp_create_nonce()
+		 * @see      add_action()
+		 * @return   void
 		 */
 		public function create_install_pages(){
 			
@@ -117,6 +175,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		/**
 		 * Show License Not Valid Message
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @return   void
 		 */
 		public function license_not_valid(){
 			
@@ -128,6 +189,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		/**
 		 * Show Plugins on Page
 		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      screen_icon()
+		 * @see      sanitize_title()
+		 * @see      MP_CORE_Plugin_Directory::check_if_plugin_is_on_this_server()
+		 * @see      MP_CORE_Plugin_Directory::display_license()
+		 * @see      wp_nonce_url()
+		 * @see      plugins_api()
+		 * @see      wp_create_nonce()
+		 * @return   void
 		 */
 		public function plugin_directory_page() {
 			
@@ -258,9 +329,15 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 * Display the license on the plugins page
 		 *
 		 * @param $plugin_name_slug string
-		 * @param $check_plugin array( 'plugin_active' => false, 'plugin_exists' => false, 'plugin_directory' => $plugin_directory )
+		 * @param $check_plugin array( 
+		 *			@type bool 'plugin_active' Whether this plugin is active or not
+		 *          @type bool 'plugin_exists' Whether this plugin is exists or not
+		 *          @type string 'plugin_directory' The location where plugins are installed on this server
+		 * )
+		 * @param $buy_url string The URL to where this plugin license can be purchased
+		 * @param $price string The price of this plugin
 		 *
-		 * return $output - HTML output for the license button
+		 * @return $output - HTML output for the license button
 		 */
 		public function display_license( $plugin_name_slug, $check_plugin, $buy_url, $price ){
 			
@@ -362,7 +439,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 	
 		/**
 		 * This function checks if a plugin is installed or not
-		 * Returns array: array( 'plugin_active' => true, 'plugin_exists' => true, 'plugin_directory' => NULL );
+		 *
+		 * @param $args array For information see link.
+		 * @return array array( 'plugin_active' => true, 'plugin_exists' => true, 'plugin_directory' => NULL )
 		 */	
 		function check_if_plugin_is_on_this_server( $args ){
 			
