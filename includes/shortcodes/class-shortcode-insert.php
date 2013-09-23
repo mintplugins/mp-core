@@ -1,9 +1,25 @@
 <?php
 /**
- * mp_core Shortcode Class
+ * This file contains the MP_CORE_Shortcode_Insert class 
  *
- * @package mp_core
- * @since mp_core 1.0
+ * @link http://moveplugins.com/doc/shortcode-insert-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+/**
+ * This class is used to easily create “shortcode builders” which assemble the pieces of a shortcode for the user and insert it into the content area.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/shortcode-insert-class/
+ * @since      1.0.0
+ * @return     void
  */
 
 class MP_CORE_Shortcode_Insert{
@@ -11,6 +27,27 @@ class MP_CORE_Shortcode_Insert{
 	protected $_args;
 	protected $_settings_array = array();
 	
+	/**
+	 * Constructor
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      MP_CORE_Shortcode_Insert::mp_core_enqueue_scripts()
+	 * @see      MP_CORE_Shortcode_Insert::mp_core_shortcode_button()
+	 * @see      MP_CORE_Shortcode_Insert::mp_core_shortcode_admin_footer_for_thickbox()
+	 * @see      MP_CORE_Shortcode_Insert::mp_core_enqueue_scripts()
+	 * @see      wp_parse_args()
+	 * @see      add_action()
+	 * @see      add_filter()
+	 * @param    array $args {
+	 *      This array contains info for creating the shortcode builder
+	 *		@type string 'shortcode_id' The unique id for this shortcode.
+	 *		@type string 'shortcode_title' What to display for the title on the shortcode-insert media button in WP.
+	 *		@type string 'shortcode_description' The description of this shortcode.
+	 *		@type array 'shortcode_options' See link for details.
+	 * }
+	 * @return   void
+	 */
 	public function __construct($args){
 		
 		//Set defaults for args		
@@ -24,39 +61,83 @@ class MP_CORE_Shortcode_Insert{
 		//Get and parse args
 		$this->_args = wp_parse_args( $args, $args_defaults );
 		
-		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
 		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
 		add_action( 'admin_footer', array( $this, 'mp_core_shortcode_admin_footer_for_thickbox' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
 	}
 	
+	/**
+	 * Enqueue Scripts
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      get_current_screen()
+	 * @see      wp_enqueue_style()
+	 * @see      wp_enqueue_script()
+	 * @see      wp_enqueue_media()
+	 * @return   void
+	 */
 	public function mp_core_enqueue_scripts(){
 		
+		//Get current page
+		$current_page = get_current_screen();
+		
+		//Only load if we are not on the nav menu page - where some of our scripts seem to be conflicting
+		if ( $current_page->base != 'nav-menus' ){
+			
+			//color picker scripts
+			wp_enqueue_style( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker' );
+			wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker' ) );
+			
+			//media upload scripts
+			wp_enqueue_media();
+			
+			//image uploader script
+			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			
+		}
 	}
 	
 	/**
 	 * Media Button
 	 *
-	 * Returns the Insert Shortcode TinyMCE button.
+	 * Returns the "Insert Shortcode" TinyMCE button.
 	 *
-	 * @access      private
-	 * @since       1.0
-	 * @return      string
+	 * @access     public
+	 * @since      1.0.0
+	 * @global     $pagenow
+	 * @global     $typenow
+	 * @global     $wp_version
+	 * @param      string $context The string of buttons that already exist
+	 * @return     string The HTML output for the media buttons
 	*/
 	
 	function mp_core_shortcode_button( $context ) {
+		
 		global $pagenow, $typenow, $wp_version;
+		
 		$output = '';
 	
 		/** Only run in post/page creation and edit screens */
 		if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
-			/* check current WP version */
+			
+			//Check current WP version - If we are on an older version than 3.5
 			if ( version_compare( $wp_version, '3.5', '<' ) ) {
+				
+				//Output old style button
 				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox" title="' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
+				
+			//If we are on a newer than 3.5 WordPress	
 			} else {
+				
+				//Output new style button
 				$img = '<span class="wp-media-buttons-icon" id="mp-core-' . $this->_args['shortcode_id'] . '"></span>';
 				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button" title="' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '">' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
 			}
 		}
+		
+		//Add new button to list of buttons to output
 		return $context . $output;
 	}
 	
@@ -64,11 +145,11 @@ class MP_CORE_Shortcode_Insert{
 	 * Admin Footer For Thickbox
 	 *
 	 * Prints the footer code needed for the Insert Shortcode
-	 * TinyMCE button.
+	 * which will exist in the Thickbox popup. Also contains the javascript used to process the form and insert into body area.
 	 *
-	 * @access      private
-	 * @since       1.0
-	 * @return      void
+	 * @access     public
+	 * @since      1.0.0
+	 * @return     void
 	*/
 	
 	function mp_core_shortcode_admin_footer_for_thickbox() {
@@ -167,6 +248,14 @@ class MP_CORE_Shortcode_Insert{
 	
 	/**
 	* basictext field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
+	* @return     void
 	*/
 	function basictext($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -178,6 +267,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* textbox field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function textbox($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -189,6 +285,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* password field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function password($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -200,6 +303,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* checkbox field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function checkbox($field_id, $field_title, $field_description, $value){
 		$checked = empty($value) ? '' : 'checked';
@@ -212,6 +322,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* url field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function url($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -223,6 +340,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* date field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function date($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -234,6 +358,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* number field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function number($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -245,6 +376,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* textarea field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function textarea($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -258,6 +396,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* select field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function select($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -279,6 +424,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* colorpicker field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function colorpicker($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
@@ -290,6 +442,13 @@ class MP_CORE_Shortcode_Insert{
 	}
 	/**
 	* mediaupload field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
 	*/
 	function mediaupload($field_id, $field_title, $field_description, $value){
 		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
