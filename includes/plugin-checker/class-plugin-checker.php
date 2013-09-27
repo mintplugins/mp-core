@@ -542,12 +542,13 @@ if ( !function_exists( 'mp_core_plugin_checker' ) ){
 			
 		//Remove duplicate plugins
 		$mp_core_plugins_to_check = array_unique($mp_core_plugins_to_check, SORT_REGULAR);
-		
+				
 		//If nothing to install, quit
 		if ( empty( $mp_core_plugins_to_check ) ){
+						
 			return;	
 		}
-
+		
 		//Start checking plugins
 		new MP_CORE_Plugin_Checker( $mp_core_plugins_to_check );
 	}

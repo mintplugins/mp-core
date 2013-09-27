@@ -121,12 +121,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					
 					//Store the plugin's directory and name. IE: mp_core/mp_core.php
 					$plugin_dir_and_name = $active_plugin;
-					
+										
 					//Stop looping
 					break;
 				}
 			}
-			
+						
 			//Complete plugin url
 			$plugin_url = $all_plugins_dir[0] . 'wp-content/plugins/' . $plugin_dir_and_name; 
 			$this->_plugin_url = $plugin_url;
