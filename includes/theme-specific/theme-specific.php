@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file contains the function which includes theme specific functions included in the MP Core Plugin.
  *

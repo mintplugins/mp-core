@@ -1,12 +1,46 @@
 <?php
 /**
- * Plugin Checker Class for the wp_core Plugin by Move Plugins
- * http://moveplugins.com/plugin-checker-class/
+ * This file contains the MP_CORE_Plugin_Updater class which plugins can use to keep themselves up to date
+ *
+ * @link       http://moveplugins.com/doc/plugin-updater-class/
+ * @since      1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
-		
+
+/**
+ * Plugin Updater Class which plugins can use to keep themselves up to date. 
+ * This class will work in conjunction with the MP Repo plugin as a custom repo.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/plugin-updater-class/
+ * @since      1.0.0
+ * @return     void
+ */	
 if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 	class MP_CORE_Plugin_Updater{
 		
+		/**
+		 * Constructor
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @link     http://moveplugins.com/doc/plugin-updater-class/
+		 * @author   Philip Johnston
+		 * @see      MP_CORE_Plugin_Updater::set_license_green_light()
+		 * @see      MP_CORE_Plugin_Updater::plugins_page()
+		 * @see      MP_CORE_Plugin_Updater::enqueue_scripts()
+		 * @see      MP_CORE_Plugin_Updater::mp_core_update_plugin()
+		 * @see      wp_parse_args()
+		 * @see      sanitize_title()
+		 * @param    array $args (required) See link for description.
+		 * @return   void
+		 */	
 		public function __construct($args){
 										
 			//Set defaults for args		
@@ -15,6 +49,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				'software_api_url' => NULL,
 				'software_filename' => NULL,
 				'software_licensed' => NULL,
+				'software_wp_repo_ignore' => false,
 			);
 			
 			//Get and parse args
@@ -45,6 +80,15 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 									
 		}
 		
+		/**
+		 * Enqueue Scripts needed for the MP_CORE_Plugin_Updater class
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_enqueue_style()
+		 * @see      plugins_url()
+		 * @return   void
+		 */
 		function enqueue_scripts(){
 			
 			//Enqueue style for this license message
@@ -52,9 +96,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 		}
 					
-		/***********************************************
-		* This is our updater
-		***********************************************/
+		/**
+		 * Function gets the current version of the plugin passed-in and calls the  class which actually checks for the update
+		 * This will be changes shortly to be all inlucded in 1 class.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      wp_enqueue_style()
+		 * @see      plugins_url()
+		 * @return   void
+		 */
 		function mp_core_update_plugin(){
 			
 			//Get Plugins directory
@@ -65,7 +116,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Loop through each active plugin's string EG: (subdirectory/filename.php)
 			foreach ($active_plugins as $active_plugin){
-				//Check if the filename of the plugin in question exists in any of the plugin strings
+				//Check if the filename of the plugin passed-in exists in any of the plugin strings
 				if (strpos($active_plugin, $this->_args['software_filename'])){	
 					
 					//Store the plugin's directory and name. IE: mp_core/mp_core.php
@@ -82,6 +133,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Get plugin data
 			$plugin_data = get_plugin_data( $plugin_url, $markup = true, $translate = true );
+			
+			//If we should ignore the WP repo
+			if ( $this->_args['software_wp_repo_ignore'] ){
+			
+				//Disable check on WP.org repo for this plugin
+				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
+				
+			}
 			
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licensed'] ){

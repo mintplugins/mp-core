@@ -1,17 +1,41 @@
 <?php
 /**
- * Widget Class for the Foundation Theme by Move Plugins
- * http://moveplugins.com/widget-class/
+ * This file contains the MP_CORE_Widget class
+ *
+ * @link http://moveplugins.com/doc/widget-class/
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Classes
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
 
 /**
- * Extends WP_Widget include saving settings and displaying them to the user. 
- * This class is meant to be extended with a custom construct function. See http://moveplugins.com/widget-class/ for more
+ * This class extends WP_Widget include saving settings and displaying them to the user. 
+ * This class is meant to be extended with a custom construct function. See link for more.
+ *
+ * @author     Philip Johnston
+ * @link       http://moveplugins.com/doc/widget-class/
+ * @since      1.0.0
+ * @return     void
  */
 class MP_CORE_Widget extends WP_Widget {
-		
+	
+	/**
+	 * Enqueue Scripts needed for the MP_CORE_Metabox class
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      get_current_screen()
+	 * @see      wp_enqueue_style()
+	 * @see      wp_enqueue_script()
+	 * @see      wp_enqueue_media()
+	 * @return   void
+	 */
 	public function mp_widget_enqueue_scripts(){
-		
 		
 		//Get current page
 		$current_page = get_current_screen();
@@ -27,16 +51,16 @@ class MP_CORE_Widget extends WP_Widget {
 			wp_enqueue_media();
 			//image uploader script
 			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			
 		}
 	}
+	
 	/**
 	 * Sanitize widget form values as they are saved.
 	 *
 	 * @see WP_Widget::update()
-	 *
 	 * @param array $new_instance Values just sent to be saved.
 	 * @param array $old_instance Previously saved values from database.
-	 *
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {

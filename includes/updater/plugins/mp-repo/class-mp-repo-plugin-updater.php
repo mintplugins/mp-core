@@ -1,6 +1,6 @@
 <?php
 /**
- * Sends for a theme update from the mp_repo plugin instaled on the API site
+ * Sends for a plugin update from the mp_repo plugin instaled on the API site
  * http://moveplugins.com/MP_CORE_MP_REPO_Plugin_Updater/
  */
 if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){

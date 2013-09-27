@@ -13,7 +13,6 @@
  * @author     Philip Johnston
  */
  
- 
 /**
  * This class adds a new metabox with fields of save-able data. 
  * 
