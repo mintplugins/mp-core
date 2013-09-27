@@ -1,19 +1,33 @@
 <?php
 /**
- * Customize
+ * This page contains the functions used in managing a logo for a website.
+ * 
+ * @link http://moveplugins.com/doc/move-plugins-core-api/
  *
- * Theme options are lame! Manage any customizations through the Theme
- * Customizer. Expose the customizer in the Appearance panel for easy access.
+ * @since 1.0.0
  *
- * @package mp_core
- * @since mp_core 1.0
+ * @package    MP Core
+ * @subpackage Theme Specific Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
-function mp_core_header_customizer(){
-	
-	$theme = wp_get_theme();
-	
+ 
+/**
+ * Add a logo image to the customizer which can be used in themes.
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_logo_customizer/
+ * @see      has_filter()
+ * @see      apply_filters() 
+ * @see      MP_CORE_Customizer
+ * @return   void
+ */
+function mp_core_logo_customizer(){
+		
 	$args = array(
-		array( 'section_id' => 'mp_cope_header_image', 'section_title' => sprintf( __( '%s Options', 'mp_core' ), "Logo" ), 'section_priority' => 1,
+		array( 'section_id' => 'mp_cope_logo_image', 'section_title' => sprintf( __( '%s Options', 'mp_core' ), "Logo" ), 'section_priority' => 1,
 			'settings' => array(
 				'mp_core_logo' => array(
 					'label'      => __( 'Logo', 'mp_core' ),
@@ -50,18 +64,26 @@ function mp_core_header_customizer(){
 	
 	new MP_CORE_Customizer($args);
 }
+add_action ('init', 'mp_core_logo_customizer');
 
-add_action ('init', 'mp_core_header_customizer');
-
-
- 
 /**
-  * Display logo image
-  *
-  * @since mp_core 1.0
-  */
+ * Template tag which displays the logo image.
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_logo_image/
+ * @see      get_theme_mod()
+ * @see      esc_url()
+ * @see      home_url()
+ * @see      esc_attr()
+ * @see      get_bloginfo()
+ * @see      admin_url()
+ * @see      is_ssl()
+ * @param    int $default_width Optional. This size in pixels to use for the width if the user hasn't selected a width
+ * @param    int $default_height Optional. This size in pixels to use for the height if the user hasn't selected a height
+ * @return   void
+ */
 if ( ! function_exists( 'mp_core_logo_image' ) ) {
-	function mp_core_logo_image(){
+	function mp_core_logo_image( $default_width = NULL, $default_height = NULL ){
 		
 		//Variables
 		$logo_image = get_theme_mod( 'mp_core_logo' );
@@ -79,11 +101,11 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 			//If the customizer's logo width hasn't ben set
 			if ( empty($image_width) ){
 				
-				//If there are theme filters for the width of the logo, apply it
-				if ( has_filter('mp_core_logo_width') ) { 
-					$image_width = apply_filters('mp_core_logo_width', 0);
+				//If there is a default width passed-in for the width of the logo, apply it
+				if ( !empty( $default_width ) ) { 
+					$image_width = $default_width;
 				}
-				//If there are no filters, use the actual size of the uploaded image
+				//If there is no default width, use the actual size of the uploaded image
 				else{
 					//Image width
 					$image_size = getimagesize($logo_image);
@@ -95,11 +117,11 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 			//If the customizer's logo height hasn't ben set
 			if ( empty($image_height) ){
 				
-				//If there are theme filters for the height of the logo, apply it
-				if ( has_filter('mp_core_logo_height') ) { 
-					$image_height = apply_filters('mp_core_logo_height', 0);
+				//If there is a default height passed-in for the width of the logo, apply it
+				if ( !empty( $default_height ) ){ 
+					$image_height = $default_height;
 				}
-				//If there are no filters, use the actual size of the uploaded image
+				//If there is no default height, use the actual size of the uploaded image
 				else{
 					//Image height
 					$image_height = $image_size[1];

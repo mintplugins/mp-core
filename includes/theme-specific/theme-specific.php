@@ -1,10 +1,25 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| THEME SPECIFIC INCLUDES
-|--------------------------------------------------------------------------
-*/
+/**
+ * This file contains the function which includes theme specific functions included in the MP Core Plugin.
+ *
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Theme Specific Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+
+/**
+ * Theme Specific Scripts
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
 function mp_core_theme_specific_scripts(){
 	
 	/**

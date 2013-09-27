@@ -1,8 +1,43 @@
-<?php
+<?php 
+/**
+ * Custom template tag functions specifically used in themes.
+ * 
+ * @link http://moveplugins.com/doc/move-plugins-core-api/
+ *
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Theme Specific Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
 /**
  * Template tag which displays comments in theme
  *
- * mp_core_comments_template
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comments_template/
+ * @see      comments_open()
+ * @see      get_comments_number()
+ * @see      post_password_required()
+ * @see      have_comments()
+ * @see      get_comments_number()
+ * @see      number_format_i18n()
+ * @see      get_the_title()
+ * @see      get_comment_pages_count()
+ * @see      get_option()
+ * @see      _e()
+ * @see      previous_comments_link()
+ * @see      next_comments_link()
+ * @see      wp_list_comments()
+ * @see      mp_core_comment()
+ * @see      comments_open()
+ * @see      post_type_supports()
+ * @see      get_post_type()
+ * @see      mp_core_comment_form() 
+ * @return   void
  */
 if ( ! function_exists( 'mp_core_comments_template' ) ) {
 	function mp_core_comments_template() {
@@ -81,6 +116,29 @@ if ( ! function_exists( 'mp_core_comments_template' ) ) {
  * Template for comments and pingbacks.
  *
  * Used as a callback by wp_list_comments() for displaying the comments.
+ * 
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comment/
+ * @see      comment_author_link()
+ * @see      edit_comment_link()
+ * @see      comment_class()
+ * @see      comment_ID()
+ * @see      has_filter()
+ * @see      apply_filters()
+ * @see      mp_core_get_avatar()
+ * @see      get_comment_author_link()
+ * @see      esc_url()
+ * @see      get_comment_link()
+ * @see      comment_time()
+ * @see      get_comment_date()
+ * @see      get_comment_time()
+ * @see      comment_text()
+ * @see      comment_reply_link()
+ * @see      edit_comment_link()
+ * @param    object $comment Comment data object.
+ * @param    array $args
+ * @param    int $depth The number of replies deep this comment is.
+ * @return   void
  */
 if ( ! function_exists( 'mp_core_comment' ) ) {
 	function mp_core_comment( $comment, $args, $depth ) {
@@ -137,6 +195,25 @@ if ( ! function_exists( 'mp_core_comment' ) ) {
  * Displays and allows customization of the comment form
  *
  * Filter mp_core_comments_args
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @see      wp_get_current_commenter()
+ * @see      get_option()
+ * @see      wp_login_url()
+ * @see      has_filter()
+ * @see      apply_filters()
+ * @see      get_permalink()
+ * @see      admin_url()
+ * @see      wp_logout_url()
+ * @see      allowed_tags()
+ * @see      esc_attr()
+ * @see      comment_form()
+ * @see      paginate_comments_links()
+ * @param    object $comment Comment data object.
+ * @param    array $args
+ * @param    int $depth The number of replies deep this comment is.
+ * @return   void
  */
 function mp_core_comment_form(){
 	

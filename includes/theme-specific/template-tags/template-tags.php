@@ -1,17 +1,38 @@
 <?php
 /**
- * Custom template tags for this theme.
+ * This page contains template tag functions usable by themes
+ * 
+ * @link http://moveplugins.com/doc/move-plugins-core-api/
  *
- * Eventually, some of the functionality here could be replaced by core features
+ * @since 1.0.0
  *
- * @package mp_core
- * @since mp_core 1.0
+ * @package    MP Core
+ * @subpackage Theme Specific Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
  */
  
 /**
- * Display navigation to next/previous pages when applicable
+ * Display navigation to next/previous pages when applicable (like in a single.php template)
  *
- * @since mp_core 1.0
+ * @link     http://moveplugins.com/doc/mp_core_content_nav/
+ * @see      is_single()
+ * @see      is_attachment()
+ * @see      get_post()  
+ * @see      get_adjacent_post()
+ * @see      is_home()
+ * @see      is_archive()
+ * @see      is_search()
+ * @see      previous_post_link()
+ * @see      next_post_link()
+ * @see      get_next_posts_link()
+ * @see      previous_posts_link()
+ * @global   object $wp_query WP Query object.
+ * @global   object $post WP Post object.
+ * @param    string $nav_id The HTML ID to use for this div upon output
+ * @return   void
  */
 if ( ! function_exists( 'mp_core_content_nav' ) ) :
 function mp_core_content_nav( $nav_id ) {
@@ -60,70 +81,64 @@ function mp_core_content_nav( $nav_id ) {
 }
 endif; // mp_core_content_nav
 
-if ( ! function_exists( 'mp_core_posted_on' ) ) :
 /**
  * Prints HTML with meta information for the current post-date/time and author.
  *
- * @since mp_core 1.0
+ * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @see      esc_url()
+ * @see      get_permalink()
+ * @see      esc_attr()  
+ * @see      get_the_time()
+ * @see      get_the_date()
+ * @see      get_author_posts_url()
+ * @see      get_the_author_meta()
+ * @see      get_the_author()
+ * @return   void
  */
-function mp_core_posted_on() {
-	printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'mp_core' ),
-		esc_url( get_permalink() ),
-		esc_attr( get_the_time() ),
-		esc_attr( get_the_date( 'c' ) ),
-		esc_html( get_the_date() ),
-		esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-		esc_attr( sprintf( __( 'View all posts by %s', 'mp_core' ), get_the_author() ) ),
-		get_the_author()
-	);
-}
+if ( ! function_exists( 'mp_core_posted_on' ) ) :
+	function mp_core_posted_on() {
+		printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'mp_core' ),
+			esc_url( get_permalink() ),
+			esc_attr( get_the_time() ),
+			esc_attr( get_the_date( 'c' ) ),
+			esc_html( get_the_date() ),
+			esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+			esc_attr( sprintf( __( 'View all posts by %s', 'mp_core' ), get_the_author() ) ),
+			get_the_author()
+		);
+	}
 endif;
 
 /**
- * Returns true if a blog has more than 1 category
+ * This template tag displays the title of the page whether it is an archive, category, tag, page, post, custom post type, search page, or anything.
  *
- * @since mp_core 1.0
+ * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @see      is_category()
+ * @see      single_cat_title()
+ * @see      is_tag()  
+ * @see      is_author()
+ * @see      the_post()
+ * @see      get_author_posts_url()
+ * @see      get_the_author_meta()
+ * @see      get_the_author()
+ * @see      rewind_posts()
+ * @see      get_post_type()
+ * @see      single_tag_title()
+ * @see      post_type_archive_title()
+ * @see      is_tax()
+ * @see      is_single()
+ * @see      the_title()
+ * @see      is_page()
+ * @see      single_tag_title()
+ * @see      is_search()
+ * @see      get_search_query()
+ * @see      is_day()
+ * @see      is_month()
+ * @see      is_year()
+ * @see      get_the_date()
+ * @return   void
  */
-function mp_core_categorized_blog() {
-	if ( false === ( $all_the_cool_cats = get_transient( 'all_the_cool_cats' ) ) ) {
-		// Create an array of all the categories that are attached to posts
-		$all_the_cool_cats = get_categories( array(
-			'hide_empty' => 1,
-		) );
-
-		// Count the number of categories that are attached to the posts
-		$all_the_cool_cats = count( $all_the_cool_cats );
-
-		set_transient( 'all_the_cool_cats', $all_the_cool_cats );
-	}
-
-	if ( '1' != $all_the_cool_cats ) {
-		// This blog has more than 1 category so mp_core_categorized_blog should return true
-		return true;
-	} else {
-		// This blog has only 1 category so mp_core_categorized_blog should return false
-		return false;
-	}
-}
-
-/**
- * Flush out the transients used in mp_core_categorized_blog
- *
- * @since mp_core 1.0
- */
-function mp_core_category_transient_flusher() {
-	// Like, beat it. Dig?
-	delete_transient( 'all_the_cool_cats' );
-}
-add_action( 'edit_category', 'mp_core_category_transient_flusher' );
-add_action( 'save_post', 'mp_core_category_transient_flusher' );
-
-/**
- * Archive page Title
- *
- * @since mp_core 1.0
- */
-function mp_core_archive_page_title(){
+function mp_core_page_title(){
 
 	if ( is_category() ) {
 		printf( '<span>' . single_cat_title( '', false ) . '</span>' );

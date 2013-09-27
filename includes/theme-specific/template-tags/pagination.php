@@ -1,9 +1,35 @@
 <?php
-
 /**
- * Paginate Links
+ * This page contains template tag function used to display pagination.
+ * 
+ * @link http://moveplugins.com/doc/move-plugins-core-api/
  *
- * @since mp_core 1.0
+ * @since 1.0.0
+ *
+ * @package    MP Core
+ * @subpackage Theme Specific Functions
+ *
+ * @copyright  Copyright (c) 2013, Move Plugins
+ * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @author     Philip Johnston
+ */
+ 
+/**
+ * This template tag outputs pagination if needed. This function sets better defaults than just using paginate_links()
+ *
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_paginate_links/
+ * @see      has_filter()
+ * @see      apply_filters()
+ * @see      get_option()  
+ * @see      get_query_var()
+ * @see      remove_query_arg()
+ * @see      wp_parse_args()
+ * @see      paginate_links()
+ * @global   object $wp_query WP Query object.
+ * @param    array $args See link for details.
+ * @return   void
  */
 if ( ! function_exists( 'mp_core_paginate_links' ) ) :
 	function mp_core_paginate_links( $args = array() ) {
@@ -43,7 +69,7 @@ if ( ! function_exists( 'mp_core_paginate_links' ) ) :
 		
 		$args = wp_parse_args( $args, $defaults );
 		
-		echo ('<nav id="posts-navigation" class="row pagination mp-core-navigation">');
+		echo ('<nav id="posts-navigation" class="row pagination mp-core-pagination">');
 	
 		echo paginate_links( apply_filters( 'mp_core_pagination', $args ) );
 		
