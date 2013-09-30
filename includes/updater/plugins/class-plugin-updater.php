@@ -163,6 +163,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				// Load our custom theme updater
 				include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-plugin-updater.php' );
 			}
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$this->_args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $this->_args['software_api_url'] ) : $this->_args['software_api_url'];
 										
 			//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
 			$updater = new MP_CORE_MP_REPO_Plugin_Updater( array( 

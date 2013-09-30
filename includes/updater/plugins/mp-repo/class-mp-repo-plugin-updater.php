@@ -83,7 +83,7 @@ if ( !class_exists( 'MP_CORE_MP_REPO_Plugin_Updater' ) ){
 			
 			//Add the license to the package URL if the license passed in is not NULL <--this is now handled by the mp-repo plugin
 			//$api_response->package = $this->_args['software_license'] != NULL ? add_query_arg('license_key', $this->_args['software_license'], $api_response->package ) : $api_response->package;
-			
+					
 			if( false !== $api_response && is_object( $api_response ) ) {
 				if( version_compare( $this->version, $api_response->new_version, '<' ) )
 					$_transient_data->response[$this->name] = $api_response;

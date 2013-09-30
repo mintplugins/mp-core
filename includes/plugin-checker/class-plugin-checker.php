@@ -75,8 +75,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 				
 			}
 			
-			//Set up install page/pages
-			$this->mp_core_create_pages();
+			//Make sure we are not on the "plugin-install.php" page because there is a conflict with the plugins_api on this page		
+			if ( stripos( basename( $_SERVER['PHP_SELF'] ), 'plugin-install.php' ) === false ){
+				//Set up install page/pages
+				$this->mp_core_create_pages();
+	
+			}
 																			
 			//Get the "page" URL variable
 			$page = isset($_GET['page']) ? $_GET['page'] : NULL;
@@ -84,12 +88,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			//Make sure we are not on the "mp_core_install_plugins_page" page - where this message isn't necessary			
 			if ( stripos( $page, 'mp_core_install_plugins_page' ) === false ){
 				
-				//Also ,ake sure we are not on the "mp_core_install_plugin_page" page (singular) - where this message also isn't necessary			
+				//Also, make sure we are not on the "mp_core_install_plugin_page" page (singular) - where this message also isn't necessary			
 				if ( stripos( $page, 'mp_core_install_plugin_page' ) === false ){
 					
-					//Check for plugins in question
+					//Check for plugins in questionno them first
 					add_action( 'admin_notices', array( $this, 'mp_core_plugin_check_notice') );
-					
+											
 				}
 			}
 						
