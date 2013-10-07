@@ -543,15 +543,14 @@ if ( !function_exists( 'mp_core_plugin_checker' ) ){
 		 * }
 		 */
 		$mp_core_plugins_to_check = apply_filters('mp_core_check_plugins', $mp_core_plugins_to_check );
-			
-		//Remove duplicate plugins
-		$mp_core_plugins_to_check = array_unique($mp_core_plugins_to_check, SORT_REGULAR);
-				
+					
 		//If nothing to install, quit
 		if ( empty( $mp_core_plugins_to_check ) ){
-						
 			return;	
 		}
+		
+		//Remove duplicate plugins
+		$mp_core_plugins_to_check = array_unique($mp_core_plugins_to_check, SORT_REGULAR);
 		
 		//Start checking plugins
 		new MP_CORE_Plugin_Checker( $mp_core_plugins_to_check );
