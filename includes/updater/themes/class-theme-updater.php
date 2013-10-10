@@ -51,9 +51,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Get and parse args
 			$this->_args = wp_parse_args( $args, $args_defaults );
-					
-			//Theme Name Slug
-			$this->theme_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core
 			
 			//If this software is licensed, show license field on plugins page
 			if ( $this->_args['software_licensed'] ){
@@ -64,33 +61,116 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				//Show Option Page on Themes page as well
 				add_action( 'load-themes.php', array( $this, 'themes_page') );  
 			
-			}
+			}	
+			
+			//Theme Data
+			$this->theme_slug = sanitize_title ( get_template() ); //EG knapstack (directory name)
+			$this->theme_name_slug = sanitize_title ( $this->_args['software_name']  ); //EG knapstack-theme (Name of theme in style.css)
+			$theme = wp_get_theme( $this->theme_slug );
+			$this->version = ! empty( $version ) ? $version : $theme->get( 'Version' );
+			
+			//Response Key
+			$this->response_key = $this->theme_slug . '-update-response';			
+						
+			//Hook to transient update themes to check for new updates
+			add_filter( 'site_transient_update_themes', array( &$this, 'theme_update_transient' ) );
+			
+			//Hooks which delete the theme transient
+			add_filter( 'delete_site_transient_update_themes', array( &$this, 'delete_theme_update_transient' ) );
+			add_action( 'load-update-core.php', array( &$this, 'delete_theme_update_transient' ) );
+			add_action( 'load-themes.php', array( &$this, 'delete_theme_update_transient' ) );	
+			
+			//Update Nag on Themes Screen
+			add_action( 'load-themes.php', array( &$this, 'load_themes_screen' ) );	
 			
 			//Theme Update Function	
-			add_action( 'admin_init', array( &$this, 'mp_core_update_theme' ) ); 	
+			//add_action( 'admin_init', array( &$this, 'mp_core_update_theme' ) ); 	
 						
 						
 		}
-					
-		/***********************************************
-		* This is our updater
-		***********************************************/
-		function mp_core_update_theme(){
+		
+			/**
+		 * Load thickbox on themes screen and call update nag
+		 *
+		 */
+		function load_themes_screen() {
+			add_thickbox();
+			add_action( 'admin_notices', array( &$this, 'update_nag' ) );
+		}
+		
+		/**
+		 * Update notice on Themes screen
+		 *
+		 */
+		function update_nag() {
+			$theme = wp_get_theme( $this->theme_slug );
+	
+			$api_response = get_transient( $this->response_key );
+						
+			if( false === $api_response )
+				return;
+	
+			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $this->theme_slug ), 'upgrade-theme_' . $this->theme_slug );
+			$update_onclick = ' onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update." ) ) . '\') ) {return true;}return false;"';
 			
+			if ( version_compare( $this->version, $api_response->new_version, '<' ) ) {
+	
+				echo '<div id="update-nag">';
+					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
+						$theme->get( 'Name' ),
+						$api_response->new_version,
+						'#TB_inline?width=640&amp;inlineId=' . $this->theme_slug . '_changelog',
+						$theme->get( 'Name' ),
+						$update_url,
+						$update_onclick
+					);
+				echo '</div>';
+				echo '<div id="' . $this->theme_slug . '_' . 'changelog" style="display:none;">';
+					echo wpautop( $api_response->sections['changelog'] );
+				echo '</div>';
+			}
+		}
+				
+		/**
+		 * Delete the transient for this theme
+		 *
+		 */
+		function delete_theme_update_transient() {
+			delete_transient( $this->response_key );
+		}
+		
+		/**
+		 * Update the transient for this theme
+		 *
+		 */
+		function theme_update_transient($value) {
+			
+			$update_data = $this->check_for_update();
+			
+			//Add the license to the package URL if the license passed in is not NULL - this is now done in the mp_repo plugin
+			//$update_data['package'] = $this->_args['software_license'] != NULL ? add_query_arg('license', $this->_args['software_license'], $update_data['package'] ) : $update_data['package'];
+					
+			if ( $update_data ) {
+				$value->response[ $this->theme_slug ] = $update_data;
+			}
+			
+			return $value;
+		}
+		
+		/**
+		 * Check for Update for this theme
+		 *
+		 */
+		function check_for_update() {
 			
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licensed'] ){
 				
-				//Get theme info
-				$theme = wp_get_theme($this->theme_name_slug); // $theme->Name
-												
-				//Get current theme version
-				$theme_current_version = $theme->Version;
-								
 				//Get license		
 				$license_key = trim( get_option( $this->theme_name_slug . '_license_key' ) );
 															
 			}
+			
 			//This isn't a licensed theme
 			else{
 					
@@ -98,24 +178,62 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				
 			}
 			
-			//Do Update Check
-			if ( !class_exists( 'MP_CORE_MP_REPO_Theme_Updater' ) ) {
-				// Load our custom theme updater
-				include( dirname( __FILE__ ) . '/mp-repo/class-mp-repo-theme-updater.php' );
-			}
-			
-			
 			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
 			$this->_args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $this->_args['software_api_url'] ) : $this->_args['software_api_url'];
 										
-			//Call the MP_CORE_MP_REPO_Plugin_Updater Updater Class
-			$updater = new MP_CORE_MP_REPO_Theme_Updater( array( 
-					'software_api_url' 	=> $this->_args['software_api_url'], 	// Our store URL that is running EDD
-					'software_license' 	=> $license_key,
-					'software_name_slug' 	=> $this->theme_name_slug,	// The slug of this theme
-				)
-			);
-
+			$theme = wp_get_theme( $this->theme_slug );
+								
+			$update_data = get_transient( $this->response_key ); //malachi-update-response
+				
+			if ( false == $update_data ) {
+				
+				$failed = false;
+	
+				$api_params = array(
+					'api' => 'true',
+					'slug' => $this->theme_name_slug,
+					'theme' => true,
+					'license_key' => $license_key
+				);
+								
+				$response = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->theme_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+																			
+				// make sure the response was successful
+				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+					$failed = true;
+				}
+				
+				$update_data = json_decode( wp_remote_retrieve_body( $response ) );
+											
+				//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
+				$update_data->url =  $update_data->homepage;
+								
+				if ( ! is_object( $update_data ) ) {
+					$failed = true;
+				}
+	
+				// if the response failed, try again in 30 minutes
+				if ( $failed ) {
+					$data = new stdClass;
+					$data->new_version = $this->version;
+					set_transient( $this->response_key, $data, strtotime( '+30 minutes' ) );
+					return false;
+				}
+	
+				// if the status is 'ok', return the update arguments
+				if ( ! $failed ) {
+					$update_data->sections = maybe_unserialize( $update_data->sections );
+					set_transient( $this->response_key, $update_data, strtotime( '+12 hours' ) );
+				}
+	
+			}
+	
+			if ( version_compare( $this->version, $update_data->new_version, '>=' ) ) {
+				return false;
+			}
+			
+			return (array) $update_data;
+			
 		}
 		
 		/**
@@ -157,8 +275,23 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 * Display the license on the themes page
 		 */
 		function display_license(){
-			$license_key 	= get_option( $this->theme_name_slug . '_license_key' );
-			$status 	= get_option( $this->theme_name_slug . '_license_status_valid' );
+			
+			//Get license
+			$license_key = get_option( $this->theme_name_slug . '_license_key' );
+			
+			//Set args to Verfiy the License
+			$verify_license_args = array(
+				'software_name'      => $this->_args['software_name'],
+				'software_api_url'   => $this->_args['software_api_url'],
+				'software_license_key'   => $license_key
+			);
+			
+			//Double check license. Use the Verfiy License class to verify whether this license is valid or not
+			new MP_CORE_Verify_License( $verify_license_args );	
+			
+			//Get license status (set in verify license class)
+			$status = get_option( $this->theme_name_slug . '_license_status_valid' );
+			
 			?>
 			<div id="mp-core-theme-license-wrap" class="wrap">
 				

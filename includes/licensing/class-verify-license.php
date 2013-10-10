@@ -42,7 +42,8 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 			//Set defaults for args		
 			$args_defaults = array(
 				'software_name'      => NULL,
-				'software_api_url'   => NULL
+				'software_api_url'   => NULL,
+				'software_license_key'   => NULL
 			);
 			
 			//Get and parse args
@@ -74,15 +75,29 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 		 */
 		public function store_and_verify_license(){
 						
-			// listen for our activate button to be clicked
+			//Listen for our activate button to be clicked
 			if( isset( $_POST[ $this->software_name_slug . '_license_key' ] ) ) {
+				
+				//If it has, store it in the license_key variable 
+				$license_key = $_POST[ $this->software_name_slug . '_license_key' ];
 				
 				//Check nonce
 				if( ! check_admin_referer( $this->software_name_slug . '_nonce', $this->software_name_slug . '_nonce' ) ) 	
 					return; // get out if we didn't click the Activate button
 				
+			}
+			//If it isn't clicked, get it from the passed-in value
+			else{
+				
+				$license_key = $this->_args['software_license_key'];
+				
+			}
+			
+			//If there is a license key either in the POST or passed-in,
+			if ( !empty( $license_key ) ){
+				
 				//Retrieve the license from the $_POST
-				$license_key = trim( $_POST[ $this->software_name_slug . '_license_key' ] );
+				$license_key = trim( $license_key );
 				
 				//Old License Key
 				$old_license_key = get_option( $this->software_name_slug . '_license_key' );	 
@@ -95,11 +110,12 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 															
 				//Retreive the body from the response - which should only have a 1 or a 0
 				$mp_repo_response_boolean = ( json_decode( wp_remote_retrieve_body( $mp_repo_response ) ) );
-				
+								
 				//Check and Update Licence
 				update_option( $this->software_name_slug . '_license_status_valid', $mp_repo_response_boolean );	
-					
+			
 			}
+			
 		}
 	}
 }
