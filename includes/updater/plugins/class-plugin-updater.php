@@ -140,20 +140,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @return array Modified update array with custom plugin data.
 		 */
 		function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
-			
-			//Check if this class has already been created for this plugin. WordPress calls the same thing multiple times which is a waste of time.
-			//See: http://core.trac.wordpress.org/ticket/25542
-			global ${$this->plugin_name_slug};
-			
-			//If the global variable is true, we've already done this so return.
-			if ( ${$this->plugin_name_slug} ){
-				return;
-			}
-			//If the global variable is not true, set it to be true and keep going.
-			else{
-				${$this->plugin_name_slug} = true;
-			}
-			
+						
 			//We need to find the directory name, or 'slug', of this plugin. So get Plugins directory
 			$all_plugins_dir = explode( 'wp-content/plugins/', __FILE__ );
 			
@@ -217,7 +204,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Check the API for a new version and return the info object
 			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
-			
+					
 			//If the response exists
 			if( false !== $api_response && is_object( $api_response ) ) {
 			
@@ -227,7 +214,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				}
 								
 			}
-								
+			
 			return $_transient_data;
 		
 		}
@@ -282,7 +269,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'author' => '', //$this->version - not working for some reason
 					'license_key' => $this->software_license
 				);
-								
+							
 			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
 									
 			if ( !is_wp_error( $request ) ):

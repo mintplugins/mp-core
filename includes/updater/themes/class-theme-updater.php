@@ -165,19 +165,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 */
 		function check_for_update() {
 			
-			//Check if this class has already been created for this theme. WordPress calls the same thing multiple times which is a waste of time.
-			//See: http://core.trac.wordpress.org/ticket/25542
-			global ${$this->theme_name_slug};
-			
-			//If the global variable is true, we've already done this so return.
-			if ( ${$this->theme_name_slug} ){
-				return;
-			}
-			//If the global variable is not true, set it to be true and keep going.
-			else{
-				${$this->theme_name_slug} = true;
-			}
-			
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licensed'] ){
 				
