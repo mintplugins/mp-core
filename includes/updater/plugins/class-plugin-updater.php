@@ -57,6 +57,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Plugin Name Slug
 			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		
+						
+			//Check if this class has already been created for this plugin. WordPress calls the same thing multiple times which is a waste of time.
+			//See: http://core.trac.wordpress.org/ticket/25542
+			global ${$this->plugin_name_slug};
+			
+			//If the global variable is true, we've already done this so return.
+			if ( ${$this->plugin_name_slug} ){
+				return;
+			}
+			//If the global variable is not true, set it to be true and keep going.
+			else{
+				${$this->plugin_name_slug} = true;
+			}
 			
 			//If this software is licensed, show license field on plugins page
 			if ( $this->_args['software_licensed'] ){

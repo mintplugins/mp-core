@@ -41,7 +41,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 * @return   void
 		 */	
 		public function __construct($args){
-							
+										
 			//Set defaults for args		
 			$args_defaults = array(
 				'software_name' => NULL,
@@ -51,6 +51,25 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Get and parse args
 			$this->_args = wp_parse_args( $args, $args_defaults );
+			
+			//Theme Data
+			$this->theme_slug = sanitize_title ( get_template() ); //EG knapstack (directory name)
+			$this->theme_name_slug = sanitize_title ( $this->_args['software_name']  ); //EG knapstack-theme (Name of theme in style.css)
+			$theme = wp_get_theme( $this->theme_slug );
+			$this->version = ! empty( $version ) ? $version : $theme->get( 'Version' );
+			
+			//Check if this class has already been created for this theme. WordPress calls the same thing multiple times which is a waste of time.
+			//See: http://core.trac.wordpress.org/ticket/25542
+			global ${$this->theme_name_slug};
+			
+			//If the global variable is true, we've already done this so return.
+			if ( ${$this->theme_name_slug} ){
+				return;
+			}
+			//If the global variable is not true, set it to be true and keep going.
+			else{
+				${$this->theme_name_slug} = true;
+			}
 			
 			//If this software is licensed, show license field on plugins page
 			if ( $this->_args['software_licensed'] ){
@@ -62,12 +81,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				add_action( 'load-themes.php', array( $this, 'themes_page') );  
 			
 			}	
-			
-			//Theme Data
-			$this->theme_slug = sanitize_title ( get_template() ); //EG knapstack (directory name)
-			$this->theme_name_slug = sanitize_title ( $this->_args['software_name']  ); //EG knapstack-theme (Name of theme in style.css)
-			$theme = wp_get_theme( $this->theme_slug );
-			$this->version = ! empty( $version ) ? $version : $theme->get( 'Version' );
 			
 			//Response Key
 			$this->response_key = $this->theme_slug . '-update-response';			
@@ -115,7 +128,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			
 			//We could use version_compare here but it doesn't account for beta mode: if ( version_compare( $this->version, $api_response->new_version, '<' ) ) {	
-			if( $this->version < $update_data->new_version ){	
+			if( $this->version < $api_response->new_version ){	
 	
 				echo '<div id="update-nag">';
 					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
