@@ -57,19 +57,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Plugin Name Slug
 			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		
-						
-			//Check if this class has already been created for this plugin. WordPress calls the same thing multiple times which is a waste of time.
-			//See: http://core.trac.wordpress.org/ticket/25542
-			global ${$this->plugin_name_slug};
 			
-			//If the global variable is true, we've already done this so return.
-			if ( ${$this->plugin_name_slug} ){
-				return;
-			}
-			//If the global variable is not true, set it to be true and keep going.
-			else{
-				${$this->plugin_name_slug} = true;
-			}
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$this->_args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $this->_args['software_api_url'] ) : $this->_args['software_api_url'];
 			
 			//If this software is licensed, show license field on plugins page
 			if ( $this->_args['software_licensed'] ){
@@ -151,6 +141,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 			
+			//Check if this class has already been created for this plugin. WordPress calls the same thing multiple times which is a waste of time.
+			//See: http://core.trac.wordpress.org/ticket/25542
+			global ${$this->plugin_name_slug};
+			
+			//If the global variable is true, we've already done this so return.
+			if ( ${$this->plugin_name_slug} ){
+				return;
+			}
+			//If the global variable is not true, set it to be true and keep going.
+			else{
+				${$this->plugin_name_slug} = true;
+			}
+			
 			//We need to find the directory name, or 'slug', of this plugin. So get Plugins directory
 			$all_plugins_dir = explode( 'wp-content/plugins/', __FILE__ );
 			
@@ -200,10 +203,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 																		
 				$license_key = NULL;		
 			}
-			
-			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-			$this->_args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $this->_args['software_api_url'] ) : $this->_args['software_api_url'];
-			
+					
 			//Set variables
 			$this->name     = plugin_basename( $plugin_url ); //EG: mp-core/mp-core.php
 			$this->slug     = basename( $plugin_url, '.php'); //EG: mp-core
