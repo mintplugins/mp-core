@@ -42,7 +42,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @return   void
 		 */	
 		public function __construct($args){
-										
+													
 			//Set defaults for args		
 			$args_defaults = array(
 				'software_name' => NULL,
@@ -174,7 +174,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//If this software is licensed, do checks for updates using the license
 			if ( $this->_args['software_licensed'] ){
-				
+											
 				//Get license		
 				$license_key = trim( get_option( $this->plugin_name_slug . '_license_key' ) );	
 				
@@ -208,12 +208,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//If the response exists
 			if( false !== $api_response && is_object( $api_response ) ) {
 			
-				if( version_compare( $this->version, $api_response->new_version, '<' ) ){
-								
+				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
+				if( $this->version != $api_response->new_version ){				
 					$_transient_data->response[$this->name] = $api_response;
 				}
+								
 			}
-			
+								
 			return $_transient_data;
 		
 		}
