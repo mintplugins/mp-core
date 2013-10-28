@@ -135,12 +135,76 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * See: http://core.trac.wordpress.org/ticket/25542
 		 *
 		 * @see api_request()
+		 * @see MP_CORE_Plugin_Updater::set_plugin_vars()
 		 *
 		 * @param array $_transient_data Update array build by Wordpress.
 		 * @return array Modified update array with custom plugin data.
 		 */
 		function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
-						
+			
+			//Set plugin vars			
+			$this->set_plugin_vars();
+			
+			if( empty( $_transient_data ) ) return $_transient_data;
+			
+			//Add the slug to the info to send to the API
+			$to_send = array( 'slug' => $this->slug );
+			
+			//Check the API for a new version and return the info object
+			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+					
+			//If the response exists
+			if( false !== $api_response && is_object( $api_response ) ) {
+			
+				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
+				if( $this->version != $api_response->new_version ){				
+					$_transient_data->response[$this->name] = $api_response;
+				}
+								
+			}
+			
+			return $_transient_data;
+		
+		}
+									
+		/**
+		 * Updates information on the "View version x.x details" page with custom data.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see MP_CORE_Plugin_Updater::api_request()
+		 * @see MP_CORE_Plugin_Updater::set_plugin_vars()
+		 * @param mixed $_data
+		 * @param string $_action
+		 * @param object $_args
+		 * @return object $_data
+		 */
+		function plugins_api_filter( $_data, $_action = '', $_args = null ){
+			
+			//Set plugin vars			
+			$this->set_plugin_vars();
+			
+			if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
+	
+			$to_send = array( 'slug' => $this->slug );
+	
+			$api_response = $this->api_request( 'plugin_information', $to_send );
+			if ( false !== $api_response ) $_data = $api_response;
+			
+			return $_data;
+			
+		}
+		
+		/**
+		 * Sets class variables used by filter functions 
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see get_plugin_data()
+		 * @return false||object
+		 */
+		function set_plugin_vars(){
+			
 			//We need to find the directory name, or 'slug', of this plugin. So get Plugins directory
 			$all_plugins_dir = explode( 'wp-content/plugins/', __FILE__ );
 			
@@ -196,50 +260,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$this->slug     = basename( $plugin_url, '.php'); //EG: mp-core
 			$this->software_license  = $license_key;
 			$this->version  = $plugin_data['Version'];
-			
-			if( empty( $_transient_data ) ) return $_transient_data;
-			
-			//Add the slug to the info to send to the API
-			$to_send = array( 'slug' => $this->slug );
-			
-			//Check the API for a new version and return the info object
-			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
-					
-			//If the response exists
-			if( false !== $api_response && is_object( $api_response ) ) {
-			
-				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
-				if( $this->version != $api_response->new_version ){				
-					$_transient_data->response[$this->name] = $api_response;
-				}
-								
-			}
-			
-			return $_transient_data;
-		
-		}
-									
-		/**
-		 * Updates information on the "View version x.x details" page with custom data.
-		 *
-		 * @access   public
-		 * @since    1.0.0
-		 * @see MP_CORE_Plugin_Updater::api_request()
-		 * @param mixed $_data
-		 * @param string $_action
-		 * @param object $_args
-		 * @return object $_data
-		 */
-		function plugins_api_filter( $_data, $_action = '', $_args = null ){
-			
-			if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
-	
-			$to_send = array( 'slug' => $this->slug );
-	
-			$api_response = $this->api_request( 'plugin_information', $to_send );
-			if ( false !== $api_response ) $_data = $api_response;
-			
-			return $_data;
 			
 		}
 		

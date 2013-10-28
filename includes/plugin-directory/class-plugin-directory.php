@@ -298,7 +298,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				//Show this plugin on the page
 				echo '<div class="available-theme">
 						<a href="" class="screenshot">
-							<img src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '">
+							<img a href="' . $plugin['plugin_buy_url'] . '" src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '">
 						</a>
 						
 						<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>

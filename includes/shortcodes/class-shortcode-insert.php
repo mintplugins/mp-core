@@ -55,6 +55,7 @@ class MP_CORE_Shortcode_Insert{
 			'shortcode_id' => NULL,
 			'shortcode_title' => NULL,
 			'shortcode_description' => NULL,
+			'shortcode_plugin_dir_url' => NULL,
 			'shortcode_options' => array()
 		);
 		
@@ -64,6 +65,7 @@ class MP_CORE_Shortcode_Insert{
 		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
 		add_action( 'admin_footer', array( $this, 'mp_core_shortcode_admin_footer_for_thickbox' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
+		add_action( 'admin_head', array( $this, 'admin_downloads_icon' ) );
 	}
 	
 	/**
@@ -126,14 +128,19 @@ class MP_CORE_Shortcode_Insert{
 			if ( version_compare( $wp_version, '3.5', '<' ) ) {
 				
 				//Output old style button
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox" title="' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
+				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
 				
 			//If we are on a newer than 3.5 WordPress	
 			} else {
 				
 				//Output new style button
-				$img = '<span class="wp-media-buttons-icon" id="mp-core-' . $this->_args['shortcode_id'] . '"></span>';
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button" title="' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '">' . __('Insert ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
+				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+				
+				//If we passed the plugin location, there is most likely an image so show it
+				$output .= !empty( $this->_args['shortcode_plugin_dir_url'] ) ? '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>' : '';
+				
+				//Finish the output
+				$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
 			}
 		}
 		
@@ -247,6 +254,48 @@ class MP_CORE_Shortcode_Insert{
 	}
 	
 	/**
+	 * Admin Downloads Icon
+	 *
+	 * Echoes the CSS for the shortcode insert icon.
+	 *
+	 * @since 1.0.0
+	 * @global $post_type
+	 * @return void
+	*/
+	function admin_downloads_icon() {
+		
+		if ( !empty( $this->_args['shortcode_plugin_dir_url'] ) ){
+			global $post_type;	
+			
+			$this_plugin_url = $this->_args['shortcode_id'] . '_PLUGINS_URL';
+			
+			$images_url  = $this->_args['shortcode_plugin_dir_url'] . 'assets/images/';
+			$icon_url    = $images_url . $this->_args['shortcode_id'] .'-icon.png';
+			$icon_2x_url = $images_url . $this->_args['shortcode_id'] . '-icon-2x.png';
+			
+			?>
+			<style type="text/css" media="screen">
+				#<?php echo $this->_args['shortcode_id']; ?>-media-button {
+					background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
+					background-size: 12px 30px;
+				}
+				@media
+				only screen and (-webkit-min-device-pixel-ratio: 1.5),
+				only screen and (   min--moz-device-pixel-ratio: 1.5),
+				only screen and (     -o-min-device-pixel-ratio: 3/2),
+				only screen and (        min-device-pixel-ratio: 1.5),
+				only screen and (        		 min-resolution: 1.5dppx) {
+					#<?php echo $this->_args['shortcode_id']; ?>-media-button {
+						background-image: url(<?php echo $icon_2x_url; ?>);
+						background-position: 0 -17px;
+					}
+				}
+			</style>
+			<?php
+		}
+	}
+		
+	/**
 	* basictext field
 	*
 	* @access     public
@@ -318,6 +367,24 @@ class MP_CORE_Shortcode_Insert{
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
 		echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_id . '" value="' . $field_id . '" ' . $checked . '/>';
+		echo '</div>'; 
+	}
+	/**
+	* input range field
+	*
+	* @access     public
+	* @since      1.0.0
+	* @param      string $field_id The string to use for the HTML ID of this field
+	* @param      string $field_title The string to use for the title above this field
+	* @param      string $field_description The string to use for the description above this field
+	* @param      string $value The current value to use for this field.
+	*/
+	function inout_range($field_id, $field_title, $field_description, $value){
+		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<strong>' .  $field_title . '</strong>';
+		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+		echo '</label></div>';
+		echo '<input type="range" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_id . '" value="' . $field_id . '" min="1" max="100" />';
 		echo '</div>'; 
 	}
 	/**

@@ -195,6 +195,18 @@ class MP_CORE_Widget extends WP_Widget {
 	}
 	
 	/**
+	* input range field
+	*/
+	function input_range($field_id, $field_title, $field_description, $value){
+		?>
+        <p>
+            <label for="<?php echo esc_attr( $field_id ); ?>"><?php echo $field_title ?> <?php echo $field_description != "" ? ' - ' . $field_description : ''; ?> </label>
+            <input type="range" id="<?php echo esc_attr( $this->get_field_id( $field_id ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( $field_id ) ); ?>" min="1" max="100" value ="<?php echo $value; ?>">
+        </p>
+        <?php		
+	}
+	
+	/**
 	* textarea field
 	*/
 	function textarea($field_id, $field_title, $field_description, $value){

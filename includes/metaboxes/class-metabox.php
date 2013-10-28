@@ -664,6 +664,24 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		/**
+		* range field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function input_range($field_id, $field_title, $field_description, $value, $classname){
+			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+			?>
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>" min="1" max="100" value ="<?php echo $value; ?>">
+			<?php        
+			echo '</div>'; 
+		}
+		
+		/**
 		* colorpicker field
 		*
 		* @access   public

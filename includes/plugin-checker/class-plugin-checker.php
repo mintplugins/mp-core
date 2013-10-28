@@ -136,7 +136,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 					$api = plugins_api( 'plugin_information', $args );					
 					
 					//If it does exist in the WP Repo
-					if (!isset($api->errors)){ 
+					if ( !empty( $api->download_link ) ){ 
 					
 						//Set the plugin's download link to be the one from the WP Repo
 						$this->_args[$plugin_key]['plugin_download_link'] = $api->download_link;

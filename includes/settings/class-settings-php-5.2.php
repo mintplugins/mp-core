@@ -523,6 +523,42 @@ function mp_core_radio( $args = array() ) {
 }
 
 /**
+ * Input Range Field
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      checked()
+ * @param    array $args
+ * @return   void
+ */
+function mp_core_input_range( $args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'options'     => array(),
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<?php foreach ( $options as $option_id => $option_label ) : ?>
+	<label title="<?php echo esc_attr( $option_label ); ?>">
+		<input type="range" name="<?php echo $name; ?>" value="<?php echo $option_id; ?>" min="1" max="100">
+		<?php echo esc_attr( $option_label ); ?>
+	</label>
+		<br />
+	<?php endforeach; ?>
+<?php
+}
+
+/**
  * Select Field
  *
  * @access   public
