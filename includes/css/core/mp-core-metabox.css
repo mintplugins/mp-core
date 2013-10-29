@@ -15,9 +15,6 @@
 .mp_field > label{
 	margin:0px 0px 5px 0px!important;	
 }
-.mp_field > input{
-	width:60%;
-}
 .mp_field > input[type=number]{
 	width:60px;
 }
@@ -43,4 +40,7 @@
 	padding-bottom:10px;
 	border-bottom: solid 1px #999;
 	width:220px;
+}
+.postbox .mp_required{
+	background-color:#FFC8C8;	
 }

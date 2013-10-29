@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.0.8.9
+Version: beta1.0.9.0
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -135,11 +135,15 @@ require( MP_CORE_PLUGIN_DIR . 'includes/updater/themes/class-theme-updater.php' 
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/updater/plugins/class-plugin-updater.php' );
 
-
 /**
- * Keep mp_core updated
+ * Keep MP Core updated
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/updater/mp-core-update.php' );
+
+/**
+ * Include Tracking Class
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/tracking/class-tracking.php' );
 
 /**
  * Include Settings Class

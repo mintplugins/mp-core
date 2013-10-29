@@ -47,8 +47,6 @@ class MP_CORE_Customizer{
 		//Get args
 		$this->_args = $args;
 		
-		//Add Customize link to the admin_menu
-		add_action ( 'admin_menu', array( $this, 'mp_core_customize_menu' ) );
 		//Enqueue the preview js script
 		add_action( 'customize_preview_init', array( $this, 'mp_core_customize_preview_js' ) );
 		//Register settings and controls
@@ -58,29 +56,7 @@ class MP_CORE_Customizer{
 		//Output custom css to header
 		add_action( 'wp_head', array( $this, 'mp_core_header_css' ) );
 	}
-
-	/**
-	 * Show a "Customize" link in the Appearance admin menu.
-	 *
-	 * @access   public
-	 * @since    1.0.0
-	 * @see      add_theme_page()
-	 * @return   void
-	 */
-	function mp_core_customize_menu() {
-		
-		global $mp_core_customize_page_created;
-		
-		//If this menu item has not already been added
-		if ($mp_core_customize_page_created == false){
-			add_theme_page( __( 'Customize', 'mp_core' ), __( 'Customize', 'mp_core' ), 'edit_theme_options', 'customize.php' );
-			
-			//Let the global variable know we've added this menu page so that we don't add it twice
-			$mp_core_customize_page_created = true;
-		}
-		
-	}
-		 
+			 
 	 /**
 	 * Add postMessage support for all passed-in fields
 	 *

@@ -20,7 +20,7 @@
  * It works by passing an associative array containing the information for the fields to the class
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/verify-license-class/
+ * @link       http://moveplugins.com/doc/metabox-class/
  * @since      1.0.0
  * @return     void
  */
@@ -100,6 +100,8 @@ if (!class_exists('MP_CORE_Metabox')){
 				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
 				//duplicator script
 				wp_enqueue_script( 'field-duplicator', plugins_url( 'js/core/field-duplicator.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+				//required fields script
+				wp_enqueue_script( 'required-metabox', plugins_url( 'js/core/required-metabox.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
 				wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/core/mp-set-sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
@@ -210,12 +212,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
 										//formula to match all field in the rows they were saved to the rows they are displayed in  = $field_position_in_repeater*$number_of_repeats+$i
-										
-										//set variables for new callback field
-										$field_id           = $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']';
-										$field_title        = $thefield['field_title'];
-										$field_description  = $thefield['field_description'];
-										
+																				
 										//If a value has been saved
 										if (isset($repeater_set[$thefield['field_id']])){
 											//If this is an empty checkbox, set the field value to be empty
@@ -232,12 +229,24 @@ if (!class_exists('MP_CORE_Metabox')){
 											 $field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
 										}
 										
-										$field_class        = 'mp_repeater';
-										$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
-										$field_preset_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
+										//$field_class        = 'mp_repeater';
+										//$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
+										//$field_preset_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
+										
+										//Make array to pass to callback function
+										$callback_args = array(
+											'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
+											'field_title' =>  $thefield['field_title'], 
+											'field_description' => $thefield['field_description'], 
+											'field_value' => $field_value, 
+											'field_class' => 'mp_repeater', 
+											'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
+											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
+											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false
+										);
 										
 										//call function for field type (callback function name stored in $this->$field['field_type']
-										$this->$thefield['field_type']( $field_id, $field_title, $field_description, $field_value, $field_class, $field_select_values, $field_preset_value);	
+										$this->$thefield['field_type']( $callback_args );	
 														
 									}	
 								}
@@ -268,9 +277,22 @@ if (!class_exists('MP_CORE_Metabox')){
 									$field_class        = 'mp_repeater';
 									$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
 									$field_preset_value =  isset($thefield['field_value']) ? $thefield['field_value'] : '';
+									$field_required     = isset( $thefield['field_required'] ) ? $thefield['field_required'] : false;
+									
+									//Make array to pass to callback function
+									$callback_args = array(
+										'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
+										'field_title' => $thefield['field_title'], 
+										'field_description' => $thefield['field_description'], 
+										'field_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
+										'field_class' => 'mp_repeater', 
+										'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
+										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
+										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false
+									);
 									
 									//call function for field type (callback function name stored in $this->$field['field_type']
-									$this->$thefield['field_type']( $field_id, $field_title, $field_description, $field_value, $field_class, $field_select_values, $field_preset_value);	
+									$this->$thefield['field_type']( $callback_args );	
 													
 								}	
 							}
@@ -303,13 +325,27 @@ if (!class_exists('MP_CORE_Metabox')){
 						}else{
 							$value = isset($field['field_value']) ? $field['field_value'] : '';
 						}
+						//If field required hasn't been set, set it to be false
+						$field_required = isset( $field['field_required'] ) ? $field['field_required'] : false;
 						//if $field_select_values hasn't been set, set it to be NULL
 						$field_select_values = isset($field['field_select_values']) ? $field['field_select_values'] : NULL;
 						//set the preset value to the passed in value
 						$preset_value = isset($field['field_value']) ? $field['field_value'] : '';
 						
+						//Make array to pass to callback function
+						$callback_args = array(
+							'field_id' => $field['field_id'], 
+							'field_title' => $field['field_title'], 
+							'field_description' => $field['field_description'], 
+							'field_value' => $value, 
+							'field_class' => $field['field_id'], 
+							'field_select_values' => $field_select_values, 
+							'field_preset_value' => $preset_value, 
+							'field_required' => $field_required
+						);
+						
 						//call function for field type (function name stored in $this->$field['field_type']
-						$this->$field['field_type']( $field['field_id'], $field['field_title'], $field['field_description'], $value, $field['field_id'], $field_select_values, $preset_value);
+						$this->$field['field_type']( $callback_args );
 					}
 				}
 			}
@@ -480,11 +516,30 @@ if (!class_exists('MP_CORE_Metabox')){
 		 * @param    string $classname Required. The name of the  css class for this field
 		 * @return   void
 		*/
-		function basictext($field_id, $field_title, $field_description, $value, $classname){
+		function basictext( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value=" " />';
+			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -496,12 +551,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function textbox($field_id, $field_title, $field_description, $value, $classname){
+		function textbox( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
+			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -512,12 +592,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function password($field_id, $field_title, $field_description, $value, $classname){
+		function password( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
+			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -528,13 +633,32 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function checkbox($field_id, $field_title, $field_description, $value, $classname, $field_select_values, $field_preset_value){
-			$checked = empty($value) ? '' : 'checked';
+		function checkbox( $args ){
+						
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+						
+			$checked = empty($field_value) ? '' : 'checked';
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $field_id . '" ' . $checked . '/>';
+			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_id . '" ' . $checked . ' />';
 			echo '</div>'; 
 		}
 		
@@ -545,12 +669,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function url($field_id, $field_title, $field_description, $value, $classname){
+		function url( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" />';
+			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -561,12 +710,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function date($field_id, $field_title, $field_description, $value, $classname){
+		function date( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
+			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -577,12 +751,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function time($field_id, $field_title, $field_description, $value, $classname){
+		function time( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="time" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="50" />';
+			echo '<input type="time" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -593,12 +792,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function number($field_id, $field_title, $field_description, $value, $classname){
+		function number( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" value="' . $value . '" size="20" />';
+			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -609,13 +833,38 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function textarea($field_id, $field_title, $field_description, $value, $classname){
+		function textarea( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<textarea id="' . $field_id . '" name="' . $field_id . '" class="' . $classname . '" rows="4" cols="50">';
-			echo $value;
+			echo '<textarea id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" rows="4" cols="50" '. $field_required_output . '>';
+			echo $field_value;
 			echo '</textarea>';
 			echo '</div>'; 
 		}
@@ -627,12 +876,31 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function wp_editor($field_id, $field_title, $field_description, $value, $classname){
+		function wp_editor( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+						
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo wp_editor( html_entity_decode($value) , $field_id, $settings = array('textarea_rows' => 15));			
+			echo wp_editor( html_entity_decode($field_value) , $field_id, $settings = array('textarea_rows' => 15));			
 			echo '</div>'; 
 		}
 		
@@ -643,17 +911,42 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function select($field_id, $field_title, $field_description, $value, $classname, $select_values){
+		function select( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
 			<label for="<?php echo $field_id; ?>">
-				<select name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>">
+				<select name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" <?php echo $field_required_output; ?> >
                 	<option value=""></option>
-					<?php foreach ( $select_values as $select_value => $select_text) : ?>
-					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $value ); ?>>
+					<?php foreach ( $field_select_values as $select_value => $select_text) : ?>
+					<option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $field_value ); ?>>
 						<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>
 					</option>
 					<?php endforeach; ?>
@@ -670,13 +963,38 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function input_range($field_id, $field_title, $field_description, $value, $classname){
+		function input_range( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $classname; ?>" min="1" max="100" value ="<?php echo $value; ?>">
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" min="1" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
 			<?php        
 			echo '</div>'; 
 		}
@@ -688,12 +1006,37 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function colorpicker($field_id, $field_title, $field_description, $value, $classname){
+		function colorpicker( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $classname . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $value . '" />';
+			echo '<input type="text" class="of-color ' . $field_class . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -704,7 +1047,32 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function mediaupload($field_id, $field_title, $field_description, $value, $classname){
+		function mediaupload( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
 			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
@@ -712,17 +1080,17 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>       
 			<!-- Upload button and text field -->
             <div class="mp_media_upload">
-                <input class="custom_media_url <?php echo $classname; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $value ); ?>">
+                <input class="custom_media_url <?php echo $field_class; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
                 <a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 			</div>
 			<?php
 			//Image thumbnail
-			if ( isset($value) ){
-				$ext = pathinfo($value, PATHINFO_EXTENSION);
+			if ( isset($field_value) ){
+				$ext = pathinfo($field_value, PATHINFO_EXTENSION);
 				if ($ext == 'png' || $ext == 'jpg'){
-					?><img class="custom_media_image" src="<?php echo $value; ?>" style="display:inline-block;" /><?php
+					?><img class="custom_media_image" src="<?php echo $field_value; ?>" style="display:inline-block;" /><?php
 				}else{
-					?><img class="custom_media_image" src="<?php echo $value; ?>" style="display: none;" /><?php
+					?><img class="custom_media_image" src="<?php echo $field_value; ?>" style="display: none;" /><?php
 				}
 			}
 		echo '</div>';   
@@ -736,10 +1104,25 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @since    1.0.0
 		* @return   void
 		*/
-		function customfieldtype($field_id, $field_title, $field_description, $value, $classname){
+		function customfieldtype( $args ){
 			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+						
 			//Use this hook to pass in your inpur field and whatever else you want this custom field to look like.
-			do_action('mp_core_' . $this->_args['metabox_id'] . '_customfieldtype', $field_id, $field_title, $field_description, $value, $classname);
+			do_action('mp_core_' . $this->_args['metabox_id'] . '_customfieldtype', $args);
 		}
 		
 	}
