@@ -77,7 +77,7 @@ if ( !class_exists( 'MP_CORE_Verify_License' ) ){
 						
 			//Listen for our activate button to be clicked
 			if( isset( $_POST[ $this->software_name_slug . '_license_key' ] ) ) {
-				
+								
 				//If it has, store it in the license_key variable 
 				$license_key = $_POST[ $this->software_name_slug . '_license_key' ];
 				

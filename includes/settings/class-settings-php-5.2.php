@@ -151,7 +151,7 @@ class MP_CORE_Settings{
 	}
 	
 	/**
-	 * Renders the Theme Options administration screen.
+	 * Renders a new tab on the settings page. This is called by the settings page.
 	 *
 	 * @access   public
 	 * @since    1.0.0

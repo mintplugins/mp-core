@@ -9,19 +9,19 @@
 -------------------------------------------------------------- */
 
 .entry-content img, .page-content img {
-	margin: 0 0 1.5em 0;
+	margin: 0 0 1.5rem 0;
 }
 .alignleft,
 img.alignleft {
 	display: inline;
 	float: left;
-  	margin-right: 1.5em;
+  	margin-right: 1.5rem;
 }
 .alignright,
 img.alignright {
 	display: inline;
 	float: right;
- 	margin-left: 1.5em;
+ 	margin-left: 1.5rem;
 }
 .aligncenter,
 img.aligncenter {
@@ -32,7 +32,7 @@ img.aligncenter {
 }
 .wp-caption {
 	text-align: center;
-	margin-bottom: 1.5em;
+	margin-bottom: 1.5rem;
 }
 .wp-caption img {
 	border: 0 none;
@@ -43,14 +43,14 @@ img.aligncenter {
 	margin: 0;
 }
 .wp-smiley { 
-	max-height: 1em;
+	max-height: 1rem;
 	margin:0 !important;
 }
 .gallery dl {
 	margin: 0;
 }
 .gallery-caption {
-	margin:-1.5em 0 0 0;
+	margin:-1.5rem 0 0 0;
 }
 
 
@@ -60,13 +60,13 @@ img.aligncenter {
 blockquote.left {
 	float: left;
 	margin-left: 0;
-	margin-right: 20px;
+	margin-right: 1.5rem;
 	text-align: right;
 	width: 33%;
 }
 blockquote.right {
 	float: right;
-	margin-left: 20px;
+	margin-left: 1.5rem;
 	margin-right: 0;
 	text-align: left;
 	width: 33%;
@@ -93,5 +93,5 @@ em{
 /* P tags
 -------------------------------------------------------------- */
 .entry-content p, .page-content p{
-	margin-bottom: 20px;
+	margin-bottom: 1.5rem;
 }

@@ -42,7 +42,26 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @return   void
 		 */	
 		public function __construct($args){
-													
+			
+			//Get args
+			$this->_args = $args;					
+									
+			//Set up hooks.
+			$this->hook();
+										
+		}
+		
+		/**
+		 * Parse the args used in this class to make sure the defaults are set
+		 *
+		 * @since 1.0
+		 * @see wp_parse_args()
+		 * @see sanitize_title()
+		 * @param $args Array
+		 * @return void
+		 */
+		public function parse_the_args($args){
+			
 			//Set defaults for args		
 			$args_defaults = array(
 				'software_name' => NULL,
@@ -53,52 +72,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			);
 			
 			//Get and parse args
-			$this->_args = wp_parse_args( $args, $args_defaults );
+			$args = wp_parse_args( $args, $args_defaults );
 			
 			//Plugin Name Slug
-			$this->plugin_name_slug = sanitize_title ( $this->_args['software_name'] ); //EG move-plugins-core		
+			$args['software_name_slug'] = sanitize_title ( $args['software_name'] ); //EG move-plugins-core		
 			
-			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-			$this->_args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $this->_args['software_api_url'] ) : $this->_args['software_api_url'];
-			
-			//If this software is licensed, show license field on plugins page
-			if ( $this->_args['software_licensed'] ){
-				
-				//Set the "Green Light" Notification option for this license		
-				add_action( 'admin_init', array( &$this, 'set_license_green_light' ) ); 
-			
-				//Show Option Page on Plugins page as well
-				add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 
-				
-				//Enqueue style for license
-				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') ); 
-				
-				//Create Option page for updates
-				//add_action( 'admin_menu', array( &$this, 'updates_menu' ) );
-				
-			}
-					
-			// Set up hooks.
-			$this->hook();
-										
+			return $args;	
 		}
-		
-		/**
-		 * Enqueue Scripts needed for the MP_CORE_Plugin_Updater class
-		 *
-		 * @access   public
-		 * @since    1.0.0
-		 * @see      wp_enqueue_style()
-		 * @see      plugins_url()
-		 * @return   void
-		 */
-		function enqueue_scripts(){
-			
-			//Enqueue style for this license message
-			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );	
-			
-		}
-		
+				
 		/**
 		 * Delete transients (runs when WP_DEBUG is on)
 		 * For testing purposes the site transient will be reset on each page load
@@ -117,7 +98,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 *
 		 * @return void
 		 */
-		private function hook() {		
+		private function hook() {
+			
+			//Show Option Page on Plugins page as well
+			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 			
+					
 			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
@@ -201,9 +186,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @access   public
 		 * @since    1.0.0
 		 * @see get_plugin_data()
+		 * @see MP_CORE_Plugin_Updater::parse_the_args()
 		 * @return false||object
 		 */
 		function set_plugin_vars(){
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
 			
 			//We need to find the directory name, or 'slug', of this plugin. So get Plugins directory
 			$all_plugins_dir = explode( 'wp-content/plugins/', __FILE__ );
@@ -214,7 +203,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Loop through each active plugin's string EG: (subdirectory/filename.php)
 			foreach ($active_plugins as $active_plugin){
 				//Check if the filename of the plugin passed-in exists in any of the plugin strings
-				if (strpos($active_plugin, $this->_args['software_filename'])){	
+				if (strpos($active_plugin, $args['software_filename'])){	
 					
 					//Store the plugin's directory and name. IE: mp_core/mp_core.php
 					$plugin_dir_and_name = $active_plugin;
@@ -232,7 +221,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$plugin_data = get_plugin_data( $plugin_url, $markup = true, $translate = true );
 			
 			//If we should ignore the WP repo
-			if ( $this->_args['software_wp_repo_ignore'] ){
+			if ( $args['software_wp_repo_ignore'] ){
 			
 				//Disable check on WP.org repo for this plugin
 				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
@@ -240,10 +229,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			}
 			
 			//If this software is licensed, do checks for updates using the license
-			if ( $this->_args['software_licensed'] ){
+			if ( $args['software_licensed'] ){
 											
 				//Get license		
-				$license_key = trim( get_option( $this->plugin_name_slug . '_license_key' ) );	
+				$license_key = trim( get_option( $args['software_name_slug'] . '_license_key' ) );	
 				
 				//Disable check on WP.org repo for this plugin
 				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
@@ -268,6 +257,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 *
 		 * @access   public
 		 * @since    1.0.0
+		 * @see MP_CORE_Plugin_Updater::parse_the_args()
 		 * @see get_bloginfo()
 		 * @see wp_remote_post()
 		 * @see is_wp_error()
@@ -278,7 +268,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		private function api_request( $_action, $_data ) {
 			
 			global $wp_version;
-	
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
 			
 			if( $_data['slug'] != $this->slug )
 				return;
@@ -290,7 +285,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'license_key' => $this->software_license
 				);
 							
-			$request = wp_remote_post( $this->_args['software_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
 									
 			if ( !is_wp_error( $request ) ):
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
@@ -303,70 +298,92 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		}
 		
 		/**
-		 * Function calls the MP_CORE_Verify_License class which listens for a license, 
-		 * verifies it, and sets the green light variable to let the user know their license is active
-		 *
-		 * @access   public
-		 * @since    1.0.0
-		 * @see      MP_CORE_Verify_License
-		 * @return   void
-		 */
-		function set_license_green_light(){
-			
-			$args = array(
-				'software_name'      => $this->_args['software_name'],
-				'software_api_url'   => $this->_args['software_api_url']
-			);
-						
-			new MP_CORE_Verify_License( $args );		
-
-		}
-		
-		/**
 		 * This function is called on the plugins page only
 		 *
 		 * @access   public
 		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Updater::parse_the_args()
 		 * @see      add_action()
 		 * @return   void
 		 */
 		function plugins_page() {
 			
-			$plugin_status = isset( $_GET['plugin_status'] ) ? $_GET['plugin_status'] : NULL;
-			$action = isset( $_GET['action'] ) ? $_GET['action'] : NULL;
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//If this software is licensed, show license field on plugins page
+			if ( $args['software_licensed'] ){
+								
+				//Set the "Green Light" Notification option for this license		
+				$this->set_license_green_light(); 
 				
-			//Enqueue scripts for plugins page			
-			add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
-			
-			//Show license on plugin page
-			add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
-			
+				//Enqueue scripts for plugins page			
+				add_action( 'admin_enqueue_scripts', array( &$this, 'enqueue_license_script' ) );
+				
+				//Show license on plugin page
+				add_action( 'admin_notices', array( &$this, 'display_license' ) ); 
+				
+			}
 			
 		}
 		
+		/**
+		 * Function calls the MP_CORE_Verify_License class which listens for a license, 
+		 * verifies it, and sets the green light variable to let the user know their license is active
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Updater::parse_the_args()
+		 * @see      MP_CORE_Verify_License
+		 * @return   void
+		 */
+		function set_license_green_light(){
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			
+			$args = array(
+				'software_name'      => $args['software_name'],
+				'software_api_url'   => $args['software_api_url']
+			);
+						
+			new MP_CORE_Verify_License( $args );		
+
+		}
+				
 		/**
 		 * Enqueue Jquery on Plugin page to place license in correct spot
 		 *
 		 * @access   public
 		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Updater::parse_the_args()
 		 * @see      wp_enqueue_script()
 		 * @see      wp_localize_script()
 		 * @return   void
 		 */
 		function enqueue_license_script () {
 			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
 			//Globalize the $global_plugin_update_num variable. It stores the number of times we've localized a plugin updater script
 			global $global_plugin_update_num;
 			
 			//Add 1 to the global_plugin_update_num - This variable is used during registering javascrits
 			$global_plugin_update_num = $global_plugin_update_num + 1;
+			
+			//Enqueue style for this license message
+			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );	
 				
 			//Enqueue script for this plugin
-			wp_enqueue_script( $this->plugin_name_slug. '-plugins-placement', plugins_url( 'js/plugins-page.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			wp_enqueue_script( $args['software_name_slug'] . '-plugins-placement', plugins_url( 'js/plugins-page.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 			
 			//Pass slug variable to the js
-			wp_localize_script( $this->plugin_name_slug. '-plugins-placement', 'mp_core_update_plugin_vars' . $global_plugin_update_num , array(
-					'name_slug' => $this->plugin_name_slug
+			wp_localize_script( $args['software_name_slug'] . '-plugins-placement', 'mp_core_update_plugin_vars' . $global_plugin_update_num , array(
+					'name_slug' => $args['software_name_slug']
 				)
 			);		
 								
@@ -377,6 +394,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 *
 		 * @access   public
 		 * @since    1.0.0
+		 * @see      MP_CORE_Plugin_Updater::parse_the_args()
 		 * @see      get_option()
 		 * @see      wp_nonce_field()
 		 * @see      submit_button()
@@ -384,13 +402,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		function display_license(){
 			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			
 			//Get license
-			$license_key = get_option( $this->plugin_name_slug . '_license_key' );
+			$license_key = get_option( $args['software_name_slug'] . '_license_key' );
 			
 			//Set args to Verfiy the License
 			$verify_license_args = array(
-				'software_name'      => $this->_args['software_name'],
-				'software_api_url'   => $this->_args['software_api_url'],
+				'software_name'      => $args['software_name'],
+				'software_api_url'   => $args['software_api_url'],
 				'software_license'   => $license_key
 			);
 			
@@ -398,19 +422,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			new MP_CORE_Verify_License( $verify_license_args );	
 			
 			//Get license status (set in verify license class)
-			$status = get_option( $this->plugin_name_slug . '_license_status_valid' );
+			$status = get_option( $args['software_name_slug'] . '_license_status_valid' );
 			
 			?>
-			<div id="<?php echo $this->plugin_name_slug; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
+			<div id="<?php echo $args['software_name_slug']; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
 				
 				<p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
 				
 				<form method="post">
 									
-					<input style="float:left; margin-right:10px;" id="<?php echo $this->plugin_name_slug; ?>_license_key" name="<?php echo $this->plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
+					<input style="float:left; margin-right:10px;" id="<?php echo $args['software_name_slug']; ?>_license_key" name="<?php echo $args['software_name_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
 					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
 					
-					<?php wp_nonce_field( $this->plugin_name_slug . '_nonce', $this->plugin_name_slug . '_nonce' ); ?>
+					<?php wp_nonce_field( $args['software_name_slug'] . '_nonce', $args['software_name_slug'] . '_nonce' ); ?>
 							
 					<br />
 						
@@ -427,11 +451,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 *
 		 * @access   public
 		 * @since    1.0.0
-		 * @see      get_option()
-		 * @see      wp_nonce_field()
-		 * @see      submit_button()
-		 * @param    submit_button()
-		 * @param    submit_button()
+		 * @see      plugin_basename()
+		 * @see      unserialize()
+		 * @see      serialize()
 		 * @return   void
 		 */
 		function disable_plugin_check_from_wp( $r, $url ) {

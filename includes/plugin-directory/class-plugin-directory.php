@@ -123,7 +123,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 * @return   void
 		 */
 		public function create_install_pages(){
-			
+						
 			//Get list of plugins that should be shown
 			$plugins = wp_remote_post( $this->_args['directory_list_url'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => array( 'directory' => 'true' ) ) );							 			
 			//Json decode plugins array
@@ -134,7 +134,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 								
 				//Plugin Name Slug
 				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core	
-							
+		
 				//Store, Verify, and Set the "Green Light" Notification option for this license
 				new MP_CORE_Verify_License( $plugin );		
 				
@@ -149,7 +149,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					$plugin['plugin_license'] = $license;
 					
 					//Redirect when complete back to Directory page
-					$plugin['plugin_success_link'] = add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url( $custom_page_extension ) . $this->_args['parent_slug'] );
+					$plugin['plugin_success_link'] = add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url() . $this->_args['parent_slug'] );
 									
 					// Create update/install plugin page
 					new MP_CORE_Plugin_Installer( $plugin );
