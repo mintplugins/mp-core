@@ -44,7 +44,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		public function __construct($args){
 			
 			//Get args
-			$this->_args = $args;					
+			$this->_args = $args;		
 									
 			//Set up hooks.
 			$this->hook();
@@ -103,7 +103,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Show Option Page on Plugins page as well
 			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 			
 					
-			add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'pre_set_site_transient_update_plugins_filter' ) );
+			add_filter( 'mp_core_custom_plugins', array( $this, 'add_custom_plugin' ) );
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
 		}
@@ -111,13 +111,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		/**
 		 * Check for Updates at the defined API endpoint and modify the update array.
 		 *
-		 * This function dives into the update api just when Wordpress creates its update array,
-		 * then adds a custom API call and injects the custom plugin data retrieved from the API.
+		 * This function is run when the 'mp_core_custom_plugins' filter is run. It injects the custom plugin data retrieved from the API.
 		 * It is reassembled from parts of the native Wordpress plugin update code.
 		 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
-		 *
-		 * This filter (pre_set_site_transient_update_plugins) currently is called twice for each plugin by WP. <br />
-		 * See: http://core.trac.wordpress.org/ticket/25542
 		 *
 		 * @see api_request()
 		 * @see MP_CORE_Plugin_Updater::set_plugin_vars()
@@ -125,12 +121,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @param array $_transient_data Update array build by Wordpress.
 		 * @return array Modified update array with custom plugin data.
 		 */
-		function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
+		function add_custom_plugin( $custom_api_plugins ) {
 			
 			//Set plugin vars			
 			$this->set_plugin_vars();
 			
-			if( empty( $_transient_data ) ) return $_transient_data;
+			if( empty( $custom_api_plugins ) ) return $custom_api_plugins;
 			
 			//Add the slug to the info to send to the API
 			$to_send = array( 'slug' => $this->slug );
@@ -143,12 +139,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
 				if( $this->version != $api_response->new_version ){				
-					$_transient_data->response[$this->name] = $api_response;
+					$custom_api_plugins->response[$this->name] = $api_response;
 				}
 								
 			}
 			
-			return $_transient_data;
+			return $custom_api_plugins;
 		
 		}
 									
@@ -284,7 +280,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'author' => '', //$this->version - not working for some reason
 					'license_key' => $this->software_license
 				);
-							
 			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
 									
 			if ( !is_wp_error( $request ) ):
@@ -469,8 +464,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 	}
 }
 
-
-
 /**
  * This function calls a function which enqueues a js file 
  * which is used to count how many plugin licenses have been displayed
@@ -495,3 +488,48 @@ function mp_core_update_plugin_global_var() {
 					
 };
 add_action( 'load-plugins.php', 'mp_core_update_plugin_global_var' );
+
+/**
+ * This function is hooked to the pre_set_site_transient_update_plugins filter
+ *
+ * This filter (pre_set_site_transient_update_plugins) currently is called twice for each plugin by WP. <br />
+ * See: http://core.trac.wordpress.org/ticket/25542<br />
+ * For this reason, to prevent multiple unncecessary API calls, we set up a transient which lasts for 10 seconds and stores the API data.
+ * We then pass that to the pre_set_site_transient_update_plugins filter.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      get_site_transient()
+ * @see      set_site_transient()
+ * @see      apply_filters()
+ * @return   void
+ */
+function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
+		
+	if( empty( $_transient_data ) ) return $_transient_data;
+	
+	$custom_api_plugins = get_site_transient( 'my_custom_plugins' ); 
+	
+	//If this transient is expired and/or empty
+	if ( false === $custom_api_plugins ){
+			
+		$custom_api_plugins = new stdClass();
+		
+		//My wp_remote_post to my custom api is in a function which hooks to this filter:
+		$custom_api_plugins = apply_filters( 'mp_core_custom_plugins', $custom_api_plugins );
+		set_site_transient( 'my_custom_plugins', $custom_api_plugins, 10);
+		
+	}
+	
+	//Loop through each custom plugin in the custom transient object
+	foreach ( $custom_api_plugins->response as $plugin_name => $api_response ){
+		
+		//Add each custom plugin to the pre_set_site_transient_update_plugins value
+		$_transient_data->response[$plugin_name] = $api_response;
+	}
+	
+	//Return the new array which includes all custom plugins and WP.org plugins
+	return $_transient_data;
+
+}
+add_filter( 'pre_set_site_transient_update_plugins', 'pre_set_site_transient_update_plugins_filter' );
