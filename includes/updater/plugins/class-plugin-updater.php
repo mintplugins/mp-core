@@ -284,6 +284,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 									
 			if ( !is_wp_error( $request ) ):
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
+				set_site_transient( $args['software_name_slug'],  $request );
 				if( $request )
 					$request->sections = maybe_unserialize( $request->sections );
 				return $request;
@@ -402,6 +403,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
 			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			//API response
+			$api_response = get_site_transient( $args['software_name_slug'] );
 			
 			//Get license
 			$license_key = get_option( $args['software_name_slug'] . '_license_key' );
@@ -419,15 +422,18 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Get license status (set in verify license class)
 			$status = get_option( $args['software_name_slug'] . '_license_status_valid' );
 			
+			//Get license link:
+			$get_license_link = !empty( $api_response->get_license ) ? '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL;
+			
 			?>
 			<div id="<?php echo $args['software_name_slug']; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
 				
-				<p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates', 'mp_core'); ?></p>
+				<p class="plugin-description"><?php echo __('Enter your license key to enable automatic updates.', 'mp_core'); ?></p>
 				
 				<form method="post">
 									
 					<input style="float:left; margin-right:10px;" id="<?php echo $args['software_name_slug']; ?>_license_key" name="<?php echo $args['software_name_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
-					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
+					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $get_license_link ) ); ?>
 					
 					<?php wp_nonce_field( $args['software_name_slug'] . '_nonce', $args['software_name_slug'] . '_nonce' ); ?>
 							
@@ -507,25 +513,31 @@ add_action( 'load-plugins.php', 'mp_core_update_plugin_global_var' );
 function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 		
 	if( empty( $_transient_data ) ) return $_transient_data;
+		
+	global $mp_core_update_plugins_flag;
 	
-	$custom_api_plugins = get_site_transient( 'my_custom_plugins' ); 
-	
-	//If this transient is expired and/or empty
-	if ( false === $custom_api_plugins ){
+	//If flag is true, this is our second go around with pre_set_site_transient_update_plugins
+	if ( $mp_core_update_plugins_flag ){
 			
 		$custom_api_plugins = new stdClass();
 		
 		//My wp_remote_post to my custom api is in a function which hooks to this filter:
 		$custom_api_plugins = apply_filters( 'mp_core_custom_plugins', $custom_api_plugins );
-		set_site_transient( 'my_custom_plugins', $custom_api_plugins, 10);
 		
-	}
+		//Loop through each custom plugin in the custom transient object
+		foreach ( $custom_api_plugins->response as $plugin_name => $api_response ){
+			
+			//Add each custom plugin to the pre_set_site_transient_update_plugins value
+			$_transient_data->response[$plugin_name] = $api_response;
+		}
 	
-	//Loop through each custom plugin in the custom transient object
-	foreach ( $custom_api_plugins->response as $plugin_name => $api_response ){
-		
-		//Add each custom plugin to the pre_set_site_transient_update_plugins value
-		$_transient_data->response[$plugin_name] = $api_response;
+		$mp_core_update_plugins_flag = false;
+	
+	//If the flag is empty for false
+	}else{
+	
+		$mp_core_update_plugins_flag = true;
+			
 	}
 	
 	//Return the new array which includes all custom plugins and WP.org plugins

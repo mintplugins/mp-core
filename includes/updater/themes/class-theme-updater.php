@@ -308,6 +308,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Get license
 			$license_key = get_option( $args['theme_name_slug'] . '_license_key' );
 			
+			//Api Response
+			$api_response = get_transient( $args['response_key'] );
+			
 			//Set args to Verfiy the License
 			$verify_license_args = array(
 				'software_name'      => $args['software_name'],
@@ -325,12 +328,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			<div id="mp-core-theme-license-wrap" class="wrap">
 				
 				<strong><?php echo __('Updates', 'mp_core'); ?></strong><br />
-				<p class="theme-description"><?php echo __('Enter your license key to enable automatic updates'); ?></p>
+				<p class="theme-description"><?php echo __('Enter your license key to enable auto-updates.'); ?></p>
 				
 				<form method="post">
 									
 					<input style="float:left; margin-right:10px;" id="<?php echo $args['theme_name_slug']; ?>_license_key" name="<?php echo $args['theme_name_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
-					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('License is valid', 'mp_core') : __('This license is not valid!', 'mp_core') ) ); ?>
+					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' ) ); ?>
 					
 					<?php wp_nonce_field( $args['theme_name_slug'] . '_nonce', $args['theme_name_slug'] . '_nonce' ); ?>
 								

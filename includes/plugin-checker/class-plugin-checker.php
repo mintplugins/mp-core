@@ -216,12 +216,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 				
 			}
 			
-			//Redirect when complete
-			$custom_page_extension = NULL; //'about.php?updated'; Evenutally this will redirect to a page of some kind. For now it goes to the dashboard
+			//Redirect to referring page when complete
+			$custom_page_extension = "http" . (($_SERVER['SERVER_PORT']==443) ? "s://" : "://") . $_SERVER['HTTP_HOST'] . $_SERVER['HTTP_REFERER'];
 			
 			//Javascript for redirection
 			echo '<script type="text/javascript">';
-				echo "window.location = '" . self_admin_url( $custom_page_extension ) . "';";
+				echo "window.location = '" . $custom_page_extension . "';";
 			echo '</script>';
 			
 			echo '</div>';
