@@ -49,6 +49,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 									
 			//Hook to transient update themes to check for new updates
 			add_filter( 'site_transient_update_themes', array( &$this, 'theme_update_transient' ) );
+			add_action( 'after_switch_theme', array( &$this, 'check_for_update' ) );
 			
 			//Hooks which delete the theme transient
 			add_filter( 'delete_site_transient_update_themes', array( &$this, 'delete_theme_update_transient' ) );
@@ -103,7 +104,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 				
-			$api_response = get_transient( $args['response_key'] );
+			$api_response = get_site_transient( $args['response_key'] );
 						
 			if( false === $api_response )
 				return;
@@ -140,7 +141,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
-			delete_transient( $args['response_key'] );
+			delete_site_transient( $args['response_key'] );
 		}
 		
 		/**
@@ -169,7 +170,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 *
 		 */
 		function check_for_update() {
-			
+						
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
@@ -187,11 +188,11 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				$license_key = NULL;
 				
 			}
-			
+						
 			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
 			$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
 																		
-			$update_data = get_transient( $args['response_key'] ); //malachi-update-response
+			$update_data = get_site_transient( $args['response_key'] ); //malachi-update-response
 				
 			if ( false == $update_data ) {
 				
@@ -205,7 +206,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				);
 								
 				$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-																			
+																					
 				// make sure the response was successful
 				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 					$failed = true;
@@ -224,14 +225,14 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				if ( $failed ) {
 					$data = new stdClass;
 					$data->new_version = $args['theme_version'];
-					set_transient( $args['response_key'], $data, strtotime( '+30 minutes' ) );
+					set_site_transient( $args['response_key'], $data, strtotime( '+30 minutes' ) );
 					return false;
 				}
 	
 				// if the status is 'ok', return the update arguments
 				if ( ! $failed ) {
 					$update_data->sections = maybe_unserialize( $update_data->sections );
-					set_transient( $args['response_key'], $update_data, strtotime( '+12 hours' ) );
+					set_site_transient( $args['response_key'], $update_data, strtotime( '+12 hours' ) );
 				}
 	
 			}
@@ -309,7 +310,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$license_key = get_option( $args['theme_name_slug'] . '_license_key' );
 			
 			//Api Response
-			$api_response = get_transient( $args['response_key'] );
+			$api_response = get_site_transient( $args['response_key'] );
 			
 			//Set args to Verfiy the License
 			$verify_license_args = array(
@@ -324,6 +325,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Get license status (set in verify license class)
 			$status = get_option( $args['theme_name_slug'] . '_license_status_valid' );
 			
+			//Get license link:
+			$get_license_link = !empty( $api_response->get_license ) ? '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL;
+			
 			?>
 			<div id="mp-core-theme-license-wrap" class="wrap">
 				
@@ -333,7 +337,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				<form method="post">
 									
 					<input style="float:left; margin-right:10px;" id="<?php echo $args['theme_name_slug']; ?>_license_key" name="<?php echo $args['theme_name_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
-					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' ) ); ?>
+					<?php mp_core_true_false_light( array( 'value' => $status, 'description' => $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $get_license_link ) ); ?>
 					
 					<?php wp_nonce_field( $args['theme_name_slug'] . '_nonce', $args['theme_name_slug'] . '_nonce' ); ?>
 								
