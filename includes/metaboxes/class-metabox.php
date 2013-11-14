@@ -207,7 +207,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							foreach ($current_stored_repeater as $repeater_set) {
 						
 								//Create start of div for this repeat 
-								echo '<li class="' . $field['field_repeater'] . '_repeater">';
+								echo '<li class="' . $field['field_repeater'] . '_repeater"> <div class="mp_repeater_handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 								
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -252,7 +252,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								}
 								
 								//This is the last one in a set of repeatable fields
-								echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a></div>';
+								echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a></div>';
 								echo '</li>';
 								
 								//bump the repeat_counter to the next number of the array
@@ -263,7 +263,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This repeater has never been saved
 						else{
 							//Create start of div for this repeat 
-							echo '<li class="' . $field['field_repeater'] . '_repeater">';
+							echo '<li class="' . $field['field_repeater'] . '_repeater"> <div class="mp_repeater_handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 							
 							foreach ($this->_metabox_items_array as $thefield){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -900,7 +900,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo wp_editor( html_entity_decode($field_value) , $field_id, $settings = array('textarea_rows' => 15));			
+			echo wp_editor( html_entity_decode($field_value) , $field_id, $settings = array('textarea_rows' => 6));			
 			echo '</div>'; 
 		}
 		
