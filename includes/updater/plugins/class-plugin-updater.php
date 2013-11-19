@@ -523,12 +523,15 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 		
 		//My wp_remote_post to my custom api is in a function which hooks to this filter:
 		$custom_api_plugins = apply_filters( 'mp_core_custom_plugins', $custom_api_plugins );
-		
-		//Loop through each custom plugin in the custom transient object
-		foreach ( $custom_api_plugins->response as $plugin_name => $api_response ){
-			
-			//Add each custom plugin to the pre_set_site_transient_update_plugins value
-			$_transient_data->response[$plugin_name] = $api_response;
+				
+		//If there are plugins passed into this filter
+		if ( is_object($custom_api_plugins) && (count(get_object_vars($custom_api_plugins)) > 0) ){
+			//Loop through each custom plugin in the custom transient object
+			foreach ( $custom_api_plugins->response as $plugin_name => $api_response ){
+				
+				//Add each custom plugin to the pre_set_site_transient_update_plugins value
+				$_transient_data->response[$plugin_name] = $api_response;
+			}
 		}
 	
 		$mp_core_update_plugins_flag = false;

@@ -98,14 +98,10 @@ if (!class_exists('MP_CORE_Metabox')){
 				wp_enqueue_media();
 				//image uploader script
 				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
-				//duplicator script
-				wp_enqueue_script( 'field-duplicator', plugins_url( 'js/core/field-duplicator.js', dirname(__FILE__) ),  array( 'jquery' ) );	
-				//required fields script
-				wp_enqueue_script( 'required-metabox', plugins_url( 'js/core/required-metabox.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
 				wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
-				wp_enqueue_script( 'mp_set_sortables', plugins_url( 'js/core/mp-set-sortables.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	
-				
+				//Metabox scripts for duplicating fields etc
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );									
 				//Action hook alllowing for more scripts to be loaded only when this metabox is used
 				do_action('mp_core_' . $this->_args['metabox_id'] . '_metabox_custom_scripts');
 			}
@@ -319,7 +315,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							$value = get_post_meta( $this->_post_id, $key = $field['field_id'], $single = true );
 							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
 							if ($field['field_type'] != "checkbox"){
-								$value = !empty($value) ? $value : $field['field_value'];
+								$value = isset($value) ? $value : $field['field_value'];
 							}
 						//If this post has never been saved before, set value to the passed-in value - unless there hasn't been a value passed in. In that case make it empty
 						}else{
@@ -536,10 +532,10 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
+			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -577,11 +573,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . '/>';
+			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -618,11 +614,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="password" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -654,11 +650,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			extract( $args, EXTR_SKIP );
 						
 			$checked = empty($field_value) ? '' : 'checked';
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="checkbox" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_id . '" ' . $checked . ' />';
+			echo '<input type="checkbox" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_id . '" ' . $checked . ' />';
 			echo '</div>'; 
 		}
 		
@@ -695,11 +691,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -736,11 +732,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="date" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="30" '. $field_required_output . ' />';
+			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -777,11 +773,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="time" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="50" '. $field_required_output . ' />';
+			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -818,11 +814,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="number" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="20" '. $field_required_output . ' />';
+			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -859,11 +855,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<textarea id="' . $field_id . '" name="' . $field_id . '" class="' . $field_class . '" rows="4" cols="50" '. $field_required_output . '>';
+			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" rows="4" cols="50" '. $field_required_output . '>';
 			echo $field_value;
 			echo '</textarea>';
 			echo '</div>'; 
@@ -896,11 +892,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 						
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo wp_editor( html_entity_decode($field_value) , $field_id, $settings = array('textarea_rows' => 6));			
+			echo wp_editor( html_entity_decode($field_value) , str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
 			echo '</div>'; 
 		}
 		
@@ -937,7 +933,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -989,7 +985,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -1032,11 +1028,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $field_class . '" id="' . $field_id . '" name="' . $field_id . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="text" class="of-color ' . $field_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" value="' . $field_value . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1073,14 +1069,14 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . $field_id . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			?>       
 			<!-- Upload button and text field -->
             <div class="mp_media_upload">
-                <input class="custom_media_url <?php echo $field_class; ?>" id="<?php echo $field_id; ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
+                <input class="custom_media_url <?php echo $field_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
                 <a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 			</div>
 			<?php
@@ -1094,6 +1090,90 @@ if (!class_exists('MP_CORE_Metabox')){
 				}
 			}
 		echo '</div>';   
+	
+		}
+		
+		/**
+		* iconfontpicker field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function iconfontpicker( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
+			
+			//Font thumbnail
+			echo '<div class="mp_font_icon_thumbnail">';
+				echo '<div class="' . $field_value . '">';
+					echo '<div class="mp-iconfontpicker-title" >' . $field_value . '</div>';
+				echo '</div>';
+			echo '</div>';
+			
+			?>       
+			<!-- Upload button and text field -->
+            <div class="mp-icon-font-select">
+                <input class="custom_media_url <?php echo $field_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" type="hidden" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
+                <a href="#TB_inline?width=750&inlineId=mp-thickbox-<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" class="thickbox button"><?php _e('Select', 'mp_core'); ?></a>
+			</div>
+            
+			<?php
+		echo '</div>';   
+		
+		?>
+		
+		<!--Create the hidden div which will display in the Thickbox -->	
+        <div id="mp-thickbox-<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" style="display: none;">
+            <div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+            	<div class="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>">
+					<?php
+                    foreach( $field_select_values as $select_value ){
+                        
+                        echo '<a href="#" class="mp_iconfontpicker_item">';
+						
+							echo '<div class="' . $select_value . '">';
+								
+								echo '<div class="mp-iconfontpicker-title" >' . $select_value . '</div>';
+							
+							echo '</div>';
+						
+						echo '</a>';
+                             
+                    } 
+                    ?>
+                </div>   
+            </div>
+        </div>
+        
+        <?php
 	
 		}
 		

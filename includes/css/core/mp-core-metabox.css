@@ -60,3 +60,23 @@
 .repeater_container li:hover .mp_repeater_handlediv{
 	background: transparent url(../../../../../../wp-admin/images/arrows.png) no-repeat 6px 7px;
 }
+.mp_iconfontpicker_item{
+	float:left;
+	display:inline-block;
+	padding:15px;	
+}
+.mp-iconfontpicker-title{
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;	
+}
+.mp_font_icon_thumbnail{
+	display: inline-block;
+	float: left;
+	margin-right: 10px;
+}

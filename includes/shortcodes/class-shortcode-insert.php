@@ -65,7 +65,7 @@ class MP_CORE_Shortcode_Insert{
 		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
 		add_action( 'admin_footer', array( $this, 'mp_core_shortcode_admin_footer_for_thickbox' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
-		add_action( 'admin_head', array( $this, 'admin_downloads_icon' ) );
+		add_action( 'admin_head', array( $this, 'admin_shortcode_icon' ) );
 	}
 	
 	/**
@@ -168,40 +168,40 @@ class MP_CORE_Shortcode_Insert{
 			?>
 			<script type="text/javascript">
 	
-			jQuery(document).ready(function(){
-				//Loop through all options in this shortcode
-				<?php foreach ($this->_args['shortcode_options'] as $option){
-					
-					//Only create functions for checkbox types
-					if ($option['option_type'] == "checkbox"){
+				jQuery(document).ready(function(){
+					//Loop through all options in this shortcode
+					<?php foreach ($this->_args['shortcode_options'] as $option){
 						
-						//Set default value for the checkbox id javascript variable
-						echo $option['option_id']; ?> = "false";
-						
-						//*
-						//Create a function which, when the checkbox is clicked, checks if this checkbox is checked or not 
-						//and stores the corresponding "true" or "false" in a variable named after the option_id
-						//*
-						jQuery( "#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>" ).change(function() {
+						//Only create functions for checkbox types
+						if ($option['option_type'] == "checkbox"){
 							
-						  //Check if the checked attribute exists
-						  var checked = jQuery(this).attr('checked');
-						  
-						  //If the checked attribute does exist
-						  if (typeof checked !== 'undefined' && checked !== false) {
-							//Change the value of the option_id variable to true
-							<?php echo $option['option_id']; ?> = "true";
-						  }
-						  //If the checked attribute doesn't exist
-						  else{
-							//Change the value of the option_id variable to false
-							<?php echo $option['option_id']; ?> = "false";
-						  }
-						});
-						
-					<?php }
-				} ?>
-			});
+							//Set default value for the checkbox id javascript variable
+							echo $option['option_id']; ?> = "false";
+							
+							//*
+							//Create a function which, when the checkbox is clicked, checks if this checkbox is checked or not 
+							//and stores the corresponding "true" or "false" in a variable named after the option_id
+							//*
+							jQuery( "#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>" ).change(function() {
+								
+							  //Check if the checked attribute exists
+							  var checked = jQuery(this).attr('checked');
+							  
+							  //If the checked attribute does exist
+							  if (typeof checked !== 'undefined' && checked !== false) {
+								//Change the value of the option_id variable to true
+								<?php echo $option['option_id']; ?> = "true";
+							  }
+							  //If the checked attribute doesn't exist
+							  else{
+								//Change the value of the option_id variable to false
+								<?php echo $option['option_id']; ?> = "false";
+							  }
+							});
+							
+						<?php }
+					} ?>
+				});
 				function insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode() {
 	
 					// Send the shortcode to the editor
@@ -221,6 +221,7 @@ class MP_CORE_Shortcode_Insert{
 					
 					?>]');
 				}
+				
 			</script>
 			
             <!--Create the hidden div which will display in the Thickbox -->	
@@ -262,7 +263,7 @@ class MP_CORE_Shortcode_Insert{
 	 * @global $post_type
 	 * @return void
 	*/
-	function admin_downloads_icon() {
+	function admin_shortcode_icon() {
 		
 		if ( !empty( $this->_args['shortcode_plugin_dir_url'] ) ){
 			global $post_type;	
