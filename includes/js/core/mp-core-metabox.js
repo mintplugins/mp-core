@@ -6,15 +6,27 @@ jQuery(document).ready(function($){
 	 
 	//When we click the "Add New" button
 	$(document).on("click", ".mp_duplicate", function(){ 
-	
+		
+		//Store original div in variable
 		var theoriginal = $(this).parent().parent();
+		
+		//TinyMCE fix - temporarily removes it
+		theoriginal.find('.wp-editor-area').each(function(){
+			tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+		});
+		
+		//Create clone of original
 		var theclone = theoriginal.clone();
+		
+		//Re-add TinyMCE control to original div
+		theoriginal.find('.wp-editor-area').each(function(){
+			tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+		});
+		
+		//Other variables
 		var metabox_container = theoriginal.parent();
 		var therepeaterclass = '.'+theoriginal.attr('class');
 		var name_number = 0;
-				
-		//Add the clone after the original
-		$(theoriginal).after(theclone);
 		
 		//Set any of the clone's textbox values to be empty
 		theclone.find('.mp_repeater').each(function() {
@@ -38,7 +50,10 @@ jQuery(document).ready(function($){
 			$(this).parent().parent().remove();
 			clonecolor.wpColorPicker()
 		});
-
+		
+		//Add the clone after the original
+		$(theoriginal).after(theclone);
+	
 		//Reset the names, classes, hrefs, and ids for all fields		
 		metabox_container.find(therepeaterclass).each(function(){
 			if (name_number != 0){
@@ -62,6 +77,13 @@ jQuery(document).ready(function($){
 			name_number = name_number + 1;
 		});
 		
+		//TinyMCE fix - add it to the clone
+		theclone.find('.wp-editor-area').each(function(){
+			$(this).html('');
+			tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+			tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+		});
+		
 		name_repeaters();
 		
 		return false;   
@@ -71,13 +93,19 @@ jQuery(document).ready(function($){
 	//When we click the remove button
 	$(document).on("click", ".mp_duplicate_remove", function(){ 
 	
-		var theoriginal = $(this).parent().parent();
+		var theoriginal = $(this).parent().parent();		
 		var metabox_container = theoriginal.parent();
 		var therepeaterclass = '.'+theoriginal.attr('class');
 		var name_number = 0;
 		
+		//Remove this repeater if it isn't the only one on the page
 		if ($(therepeaterclass).length > 1){
-			//Remove this repeater if it isn't the only one on the page
+			
+			//TinyMCE fix - temporarily removes it
+			theoriginal.find('.wp-editor-area').each(function(){
+				tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+			});
+		
 			$(theoriginal).remove();
 		}
 		
@@ -85,8 +113,18 @@ jQuery(document).ready(function($){
 		metabox_container.find(therepeaterclass).each(function(){
 			if (name_number == 0){
 				$(this).find('.mp_repeater').each(function() {
-					this.name= this.name.replace('[1]', '[0]');
-					this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
+					if ( this.name ){
+						this.name = this.name.replace('[1]', '[0]');
+					}
+					if ( this.id ){
+						this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
+					}
+					if ( this.className ){
+						this.className = this.className.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
+					}
+					if ( this.href ){
+						this.href = this.href.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
+					}
 				});	
 			}else{
 				$(this).find('*').each(function() {
@@ -106,7 +144,7 @@ jQuery(document).ready(function($){
 			}
 			name_number = name_number + 1;
 		});
-		
+				
 		return false;   
 		    
 	});
@@ -194,23 +232,29 @@ jQuery(document).ready(function($){
 	name_repeaters();
 	
 	//Apply names of repeater metaboxes when typing in the first field	
-	$('.repeater_container li > .mp_field input').on('keyup click blur focus change paste', function() {
+	$( document ).on('keyup click blur focus change paste', '.repeater_container li > .mp_field input', function() {
 		name_repeaters();
 	});
 	
 	//Handle dragging and dropping of repeaters to re-order them. Uses the "sortable" jquery plugin
 	$('.repeater_container').sortable({
 		handle: '.mp_drag.hndle',
+		axis: 'y',
+		opacity: 0.5,
 		
 		start: function(e, ui){
-			$(this).find('.tinyMCE').each(function(){
-				tinyMCE.execCommand( 'mceRemoveControl', false, $(this).attr('id') );
+			
+			//Remove control for Tiny MCE
+			$(this).find('.wp-editor-area').each(function(){
+				tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
 			});
+			
 		},
-		stop: function(e,ui) {
-			$(this).find('.tinyMCE').each(function(){
+		update: function(e,ui) {
+			
+			//Re-add control for TinyMCE
+			$(this).find('.wp-editor-area').each(function(){
 				tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
-				$(this).sortable("refresh");
 			});
 		}
 	});

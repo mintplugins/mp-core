@@ -72,7 +72,7 @@ class MP_CORE_Font{
 		
 		$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
 		
-		if ( !stripos( $google_font_face['body'], 'Error' )){
+		if ( !is_wp_error( $google_font_face ) ){
 			$google_font_face = str_replace("font-family: '" . $this->_font_family . "';", "font-family: '" . $this->_css_font_family . "';", $google_font_face['body'] );
 			echo '<style> ' . $google_font_face . '</style>';
 		}

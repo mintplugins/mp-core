@@ -896,7 +896,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo wp_editor( html_entity_decode($field_value) , str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
+			echo wp_editor( html_entity_decode($field_value) , 'mp_core_wp_editor_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
 			echo '</div>'; 
 		}
 		
