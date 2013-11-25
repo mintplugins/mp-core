@@ -10,23 +10,18 @@ jQuery(document).ready(function($){
 		//Store original div in variable
 		var theoriginal = $(this).parent().parent();
 		
-		//TinyMCE fix - temporarily removes it
-		theoriginal.find('.wp-editor-area').each(function(){
+		//Other variables
+		var metabox_container = theoriginal.parent();
+		var therepeaterclass = '.'+theoriginal.attr('class');
+		var name_number = 0;
+		
+		//TinyMCE fix - temporarily removes it from each TinyMCE area in this repeater
+		metabox_container.find('.wp-editor-area').each(function(){
 			tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
 		});
 		
 		//Create clone of original
 		var theclone = theoriginal.clone();
-		
-		//Re-add TinyMCE control to original div
-		theoriginal.find('.wp-editor-area').each(function(){
-			tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
-		});
-		
-		//Other variables
-		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class');
-		var name_number = 0;
 		
 		//Set any of the clone's textbox values to be empty
 		theclone.find('.mp_repeater').each(function() {
@@ -56,32 +51,44 @@ jQuery(document).ready(function($){
 	
 		//Reset the names, classes, hrefs, and ids for all fields		
 		metabox_container.find(therepeaterclass).each(function(){
-			if (name_number != 0){
+			if (name_number == 0){
+				
+				//Loop through all elements in this repeater and rename
+				$(this).find('*').each(function() {
+					//Re-initialize tinymce for each TInyMCE area in this repeater
+					if ( this.className == 'wp-editor-area') {
+						tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
+						tinyMCE.execCommand( 'mceAddControl', true, this.id );
+					}
+				});	
+			}
+			else{
 				
 				//Loop through all elements in this repeater and rename
 				$(this).find('*').each(function() {
 					if ( this.name ){
 						this.name = this.name.replace('['+ (name_number-1) +']', '[' + (name_number) +']');
 					}
+					
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
+					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
+					
+					//Re-initialize tinymce for each TInyMCE area in this repeater
+					if ( this.className == 'wp-editor-area') {
+						tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
+						tinyMCE.execCommand( 'mceAddControl', true, this.id );
+					}
 				});	
 			}
 			name_number = name_number + 1;
-		});
-		
-		//TinyMCE fix - add it to the clone
-		theclone.find('.wp-editor-area').each(function(){
-			$(this).html('');
-			tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
-			tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
 		});
 		
 		name_repeaters();
@@ -100,40 +107,43 @@ jQuery(document).ready(function($){
 		
 		//Remove this repeater if it isn't the only one on the page
 		if ($(therepeaterclass).length > 1){
-			
-			//TinyMCE fix - temporarily removes it
-			theoriginal.find('.wp-editor-area').each(function(){
-				tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
-			});
-		
 			$(theoriginal).remove();
 		}
 		
 		//Reset the names and ids for all fields		
 		metabox_container.find(therepeaterclass).each(function(){
 			if (name_number == 0){
-				$(this).find('.mp_repeater').each(function() {
+				$(this).find('*').each(function() {
 					if ( this.name ){
 						this.name = this.name.replace('[1]', '[0]');
 					}
+					
+					//tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
+					tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
+					tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
 				});	
 			}else{
 				$(this).find('*').each(function() {
 					if ( this.name ){
 						this.name = this.name.replace('['+ (name_number+1) +']', '[' + (name_number) +']');
 					}
+					
+					//tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
+					tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
@@ -165,7 +175,6 @@ jQuery(document).ready(function($){
 		else{
 			$(this).html('Can\'t Remove' );	
 		}
-		
 		
 		return false;   
 		    
@@ -252,10 +261,41 @@ jQuery(document).ready(function($){
 		},
 		update: function(e,ui) {
 			
-			//Re-add control for TinyMCE
-			$(this).find('.wp-editor-area').each(function(){
-				tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
-			});
+			name_number = 0;
+						
+			//Loop through all elements in this repeater and rename
+			$(this).children().each(function() {
+										
+				$(this).find('*').each(function() {
+									
+						if ( this.name ){
+							this.name = this.name.replace(/\[[0-9]\]/g, '[' + (name_number) +']');
+						}
+						
+						if ( this.id ){
+							this.id= this.id.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
+						}
+						
+						if ( this.className ){
+							this.className = this.className.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
+						}
+						if ( this.href ){
+							this.href = this.href.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
+						}
+						
+						//Re-initialize tinymce for each TInyMCE area in this repeater
+						if ( this.className == 'wp-editor-area') {
+							tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
+							tinyMCE.execCommand( 'mceAddControl', true, this.id );
+						}
+				
+				});
+				name_number = name_number + 1;		
+			});	
+			
+			
+			//Submit the form
+		  	//$('#post').submit();
 		}
 	});
 	
