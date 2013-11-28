@@ -55,6 +55,8 @@ class MP_CORE_Customizer{
 		add_action( 'customize_register', array( $this, 'mp_core_customize_register_transport' ) );
 		//Output custom css to header
 		add_action( 'wp_head', array( $this, 'mp_core_header_css' ) );
+		//Output custom css to TinyMCE css file
+		add_action( 'mp_core_tinymce_css', array( $this, 'mp_core_header_css' ) );
 	}
 			 
 	 /**
@@ -115,8 +117,10 @@ class MP_CORE_Customizer{
 	 * @return   void
 	 */
 	function mp_core_header_css() {
-		
-		echo '<style>';
+				
+		if ( current_filter() != 'mp_core_tinymce_css'){
+			echo '<style>';
+		}
 		
 		
 		foreach ( $this->_args as $section ){
@@ -166,7 +170,9 @@ class MP_CORE_Customizer{
 			}
 		}
 		
-		echo '</style>';
+		if ( current_filter() != 'mp_core_tinymce_css'){
+			echo '</style>';
+		}
 	}
 	
 	/**

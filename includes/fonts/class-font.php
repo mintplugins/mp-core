@@ -57,7 +57,9 @@ class MP_CORE_Font{
 		$this->_font_family_slug = str_replace( " ", "+", $this->_font_family );
 		
 		add_action( 'wp_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
-	
+		
+		add_action( 'mp_core_tinymce_css', array( $this, 'mp_core_enqueue_scripts' ) );
+			
 	}
 	
 	/**
@@ -69,12 +71,18 @@ class MP_CORE_Font{
 	* @return   void
  	*/
 	function mp_core_enqueue_scripts() {
-		
+					
 		$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
 		
 		if ( !is_wp_error( $google_font_face ) ){
 			$google_font_face = str_replace("font-family: '" . $this->_font_family . "';", "font-family: '" . $this->_css_font_family . "';", $google_font_face['body'] );
-			echo '<style> ' . $google_font_face . '</style>';
+			
+			if ( current_filter() == 'mp_core_tinymce_css'){
+				echo $google_font_face;
+			}
+			else{
+				echo '<style> ' . $google_font_face . '</style>';
+			}
 		}
 		
 	}

@@ -1126,6 +1126,10 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//Get the non-repeater field ID and use it as a class for the icon
+			$icon_class = explode( '[', $field_id );
+			$icon_class = explode( ']', $icon_class[2] );
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
@@ -1133,7 +1137,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Font thumbnail
 			echo '<div class="mp_font_icon_thumbnail">';
-				echo '<div class="' . $field_value . '">';
+				echo '<div class="' . $field_value . ' ' . $icon_class[0] . '">';
 					echo '<div class="mp-iconfontpicker-title" >' . $field_value . '</div>';
 				echo '</div>';
 			echo '</div>';
@@ -1158,8 +1162,8 @@ if (!class_exists('MP_CORE_Metabox')){
                     foreach( $field_select_values as $select_value ){
                         
                         echo '<a href="#" class="mp_iconfontpicker_item">';
-						
-							echo '<div class="' . $select_value . '">';
+													
+							echo '<div class="' . $select_value . ' ' . $icon_class[0] . '">';
 								
 								echo '<div class="mp-iconfontpicker-title" >' . $select_value . '</div>';
 							

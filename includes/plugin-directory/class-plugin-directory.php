@@ -123,6 +123,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 * @return   void
 		 */
 		public function create_install_pages(){
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['directory_list_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['directory_list_url'] ) : $args['directory_list_url'];
 						
 			//Get list of plugins that should be shown
 			$plugins = wp_remote_post( $this->_args['directory_list_url'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => array( 'directory' => 'true' ) ) );							 			
