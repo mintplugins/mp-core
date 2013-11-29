@@ -280,6 +280,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			
 			$verify_license_args = array(
 				'software_name'      => $args['software_name'],
 				'software_api_url'   => $args['software_api_url']
@@ -305,6 +308,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
 			
 			//Get license
 			$license_key = get_option( $args['theme_name_slug'] . '_license_key' );
