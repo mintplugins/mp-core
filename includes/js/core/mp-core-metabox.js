@@ -45,7 +45,7 @@ jQuery(document).ready(function($){
 			$(this).parent().parent().remove();
 			clonecolor.wpColorPicker()
 		});
-		
+				
 		//Add the clone after the original
 		$(theoriginal).after(theclone);
 	
@@ -86,9 +86,20 @@ jQuery(document).ready(function($){
 						tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
 						tinyMCE.execCommand( 'mceAddControl', true, this.id );
 					}
+					
 				});	
 			}
 			name_number = name_number + 1;
+		});
+		
+		//Reset the textarea for each wp_editor/tinymce field in this repeater
+		theclone.find('.wp-editor-area').each(function() {
+			$(this).html("");
+		});
+		
+		//Reset the body in the iframe for each wp_editor/tinymce field in this repeater
+		theclone.find('.mceIframeContainer > iframe').contents().find('body').each(function() {
+			$(this).html("");
 		});
 		
 		name_repeaters();

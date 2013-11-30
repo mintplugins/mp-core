@@ -990,7 +990,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" min="1" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" min="0" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
 			<?php        
 			echo '</div>'; 
 		}
