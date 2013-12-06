@@ -160,13 +160,21 @@ function mp_core_page_title(){
 	} elseif ( get_post_type() ) {
 		
 		//If taxonomy
-		is_tax() ? printf( '<span>' . single_tag_title( '', false ) . '</span>' ) : post_type_archive_title();
-		
+		if ( is_tax() ){
+			 printf( '<span>' . single_tag_title( '', false ) . '</span>' );
+		}
 		//If page or single
-		is_page() || is_single() ? the_title( ) : NULL;
-		
-		//If search 
-		is_search() ? printf( __( 'Search Results for: %s', 'mp_core' ), '<span>' . get_search_query() . '</span>' ) : NULL;
+		else if( is_page() || is_single() || is_singular( get_post_type() ) ) {
+			the_title( );
+		}
+		//If Search
+		else if ( is_search() ){
+			printf( __( 'Search Results for: %s', 'mp_core' ), '<span>' . get_search_query() . '</span>' );
+		}
+		//If Custom Post Type
+		else{
+			post_type_archive_title();
+		}
 		
 	} elseif ( is_day() ) {
 		printf( __( 'Daily Archives: %s', 'mp_core' ), '<span>' . get_the_date() . '</span>' );

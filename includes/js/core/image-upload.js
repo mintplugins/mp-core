@@ -2,31 +2,48 @@ jQuery(document).ready(function($){
   
 	$(document).on("click", ".custom_media_upload", function(){ 
 	
-		var send_attachment_bkp = wp.media.editor.send.attachment;
 		var button = $(this);
-	
-		wp.media.editor.send.attachment = function(props, attachment) {
+		
+		// create and open new file frame
+		mp_core_file_frame = wp.media({
+			//Title of media manager frame
+			title: 'Select an item',
+			button: {
+				//Button text
+				text: 'Use Item'
+			},
+			//Do not allow multiple files, if you want multiple, set true
+			multiple: false,
+		});
+		
+		//callback for selected image
+		mp_core_file_frame.on('select', function() {
 			
-			//if this is an image, display the thumbnail above the upload button
-			var ext = attachment.url.split('.').pop();
-			if (ext == 'png' || ext == 'jpg'){
-				$(button).parent().next().attr('src', attachment.url);
-				$(button).parent().next().css('display', 'inline-block');
-			}else{
-				$(button).next().next().css('display', 'none');
-			}
+			var selection = mp_core_file_frame.state().get('selection');
 			
-			//put the url of the file in the field just above the button
-			$(button).prev().val(attachment.url);
+			selection.map(function(attachment) {
+				
+				attachment = attachment.toJSON();
+				
+				//if this is an image, display the thumbnail above the upload button
+				var ext = attachment.url.split('.').pop();
+				if (ext == 'png' || ext == 'jpg'){
+					$(button).parent().next().attr('src', attachment.url);
+					$(button).parent().next().css('display', 'inline-block');
+				}else{
+					$(button).next().next().css('display', 'none');
+				}
+				
+				//put the url of the file in the field just above the button
+				$(button).prev().val(attachment.url);
+			 
+			});
+	 
+		});
+	 
+		// open file frame
+		mp_core_file_frame.open();
 	
-			//Send the attachment
-			wp.media.editor.send.attachment = send_attachment_bkp;
-		}
-	
-		//Open the media editor
-		wp.media.editor.open(button);
-	
-		return false;       
 	});
 	
 });
