@@ -203,7 +203,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							foreach ($current_stored_repeater as $repeater_set) {
 						
 								//Create start of div for this repeat 
-								echo '<li class="' . $field['field_repeater'] . '_repeater"> <div class="mp_repeater_handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+								echo '<li class="' . $field['field_repeater'] . '_repeater postbox closed"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 								
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -259,7 +259,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This repeater has never been saved
 						else{
 							//Create start of div for this repeat 
-							echo '<li class="' . $field['field_repeater'] . '_repeater"> <div class="mp_repeater_handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+							echo '<li class="' . $field['field_repeater'] . '_repeater postbox closed"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 							
 							foreach ($this->_metabox_items_array as $thefield){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -577,7 +577,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . '/>';
+			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -618,7 +618,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -695,7 +695,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -736,7 +736,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="30" '. $field_required_output . ' />';
+			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -777,7 +777,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="50" '. $field_required_output . ' />';
+			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -818,7 +818,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . $field_value . '" size="20" '. $field_required_output . ' />';
+			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1032,7 +1032,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $field_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" value="' . $field_value . '" '. $field_required_output . ' />';
+			echo '<input type="text" class="of-color ' . $field_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		

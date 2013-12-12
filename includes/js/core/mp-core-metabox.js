@@ -212,15 +212,15 @@ jQuery(document).ready(function($){
 	});
 	
 	//When we click on the toggle for this repeater - hide or show this repeater
-	$(document).on("click", '.mp_repeater_handlediv', function(){
+	$(document).on("click", '.repeater_container .handlediv', function(){
 		
 		var theoriginal = $(this).parent();
 		
 		var height = $(theoriginal).css('height');
 		
 		//Hide
-		if ( height != '29px' ){
-			$(theoriginal).css( 'height', '29px');
+		if ( height != '35px' ){
+			$(theoriginal).css( 'height', '35px');
 		}
 		//Show
 		else{

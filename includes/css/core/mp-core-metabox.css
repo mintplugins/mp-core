@@ -9,8 +9,8 @@
 
 .mp_field{
 	border-bottom: solid 1px #dfdfdf;
-	padding-bottom:10px;
-	margin:10px 0px 0px 0px; 
+	padding-bottom: 12px;
+	margin:12px 0px 0px 0px;
 }
 .mp_field > label{
 	margin:0px 0px 5px 0px!important;	
@@ -30,19 +30,17 @@
 }
 .repeater_container{
 	padding:0;
-	margin:0;
+	margin:10px 0px 0px 0px;
 }
 .repeater_container li{
 	border-color: #dfdfdf;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
 	border-width: 1px;
 	border-style: solid;
 	overflow: hidden;
-	height:29px;
+	height:35px;
 }
 .repeater_container li .mp_field{
-	padding:5px 5px 10px 5px;	
+	padding: 0px 12px 12px;
 }
 .mp_duplicate_buttons{
 	padding:5px 5px 10px 5px;	
@@ -51,14 +49,11 @@
 .postbox .mp_required{
 	background-color:#FFC8C8;	
 }
-.mp_repeater_handlediv{
-	cursor: pointer;
-	float: right;
-	width: 27px;
-	height: 30px;	
+.repeater_container .handlediv{
+	margin:0px!important;
 }
-.repeater_container li:hover .mp_repeater_handlediv{
-	background: transparent url(../../../../../../wp-admin/images/arrows.png) no-repeat 6px 7px;
+.mp_drag.hndle{
+	padding:8px 12px!important;	
 }
 .mp_iconfontpicker_item{
 	float:left;
