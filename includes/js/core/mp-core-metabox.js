@@ -12,7 +12,7 @@ jQuery(document).ready(function($){
 		
 		//Other variables
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class');
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
 		var name_number = 0;
 		
 		//TinyMCE fix - temporarily removes it from each TinyMCE area in this repeater
@@ -113,7 +113,7 @@ jQuery(document).ready(function($){
 	
 		var theoriginal = $(this).parent().parent();		
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class');
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
 		var name_number = 0;
 		
 		//Remove this repeater if it isn't the only one on the page
@@ -175,7 +175,7 @@ jQuery(document).ready(function($){
 	
 		var theoriginal = $(this).parent().parent();
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class');
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
 		var name_number = 0;
 		
 		if ($(therepeaterclass).length > 1){
@@ -196,7 +196,7 @@ jQuery(document).ready(function($){
 	
 		var theoriginal = $(this).parent().parent();
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class');
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
 		var name_number = 0;
 		
 		if ($(therepeaterclass).length > 1){
