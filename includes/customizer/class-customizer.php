@@ -128,7 +128,7 @@ class MP_CORE_Customizer{
 				
 				$theme_mod_id = get_theme_mod( $id );
 				
-				if  ( !empty( $setting['arg'] ) && $setting['arg'] != "responsive" ){
+				if  ( !empty( $setting['arg'] ) && $setting['arg'] != "responsive" && $setting['arg'] != "src" ){
 					echo $setting['element'] . '{';
 						
 						//Background Image
