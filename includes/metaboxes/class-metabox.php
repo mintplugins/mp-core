@@ -582,6 +582,47 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		/**
+		* hidden field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function hidden( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_class = $field_required == true ? $field_class . ' mp_required' : $field_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '</div>'; 
+		}
+		
+		/**
 		* password field
 		*
 		* @access   public
