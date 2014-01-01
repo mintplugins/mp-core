@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.1.0.7
+Version: beta1.1.0.8
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -206,14 +206,3 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/reorder-posts.php' );
  * Theme Specific scripts
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/theme-specific.php' );
-
-function runinfoot(){
-	$vari = "test++test";
-	do_action('hfhgf', $vari);
-}
-add_action('wp_footer', 'runinfoot');
-
-function testtest($vari){
-	echo $vari;
-}
-add_action('hfhgf', "testtest");
