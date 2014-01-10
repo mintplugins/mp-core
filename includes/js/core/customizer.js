@@ -12,68 +12,100 @@
 	 */
 	$.each(mp_core_customizer_vars, function( section, section_values ) {
 		$.each(section_values['settings'], function( setting_id, setting_values ) {
-			
-			//Set the element variable
-			element = setting_values['element'];//'#site-title a';
-	
-			//Update the element in real time...
-			wp.customize( setting_id, function( value ) {
-				value.bind( function( newval ) {
-					
-					//If there is an arg
-					if (typeof(setting_values['arg']) != "undefined" && setting_values['arg'] !== null){
 						
-						//Background Image
-						if (setting_values['arg'] == 'background-image'){
-							if (newval == null || newval == '' || newval == false){
-								//No background image
-								eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + setting_values['arg'] + '\', \'\' );');
-							}else{
-								eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + setting_values['arg'] + '\', \'url(' + newval + ')\' );');
-							}
-						}
-						//Background Enabled
-						else if (setting_values['arg'] == 'background-disabled'){
-
-							if (newval == null || newval == '' || newval == false){
-								
-								//Inherit background image
-								eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + 'background-image' + '\', \'\' );');
-								
-							}
-							else{
-								
-								
-								
-								//No background image
-								eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + 'background-image' + '\', \'none\' );');
-		
-							}
-						}
-						//Display
-						else if (setting_values['arg'] == 'display'){
-							if (newval == false){
-								newval = 'none';	
-							}else{
-								newval = 'block';	
-							}
-							eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + setting_values['arg'] + '\', \'' + newval + '\' );');
-						}
-						//Other
-						else{
-							if (newval == null || newval == '' || newval == false){
-								newval = 'inherit';	
-							}
-							eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + setting_values['arg'] + '\', \'' + newval + '\' );');
-						}
-					//If there is no arg
-					}else{
-						eval('$( \'' + setting_values['element'] + '\' ).' + setting_values['jquery_function_name'] + '( \'' + newval + '\' );');
-					}
-				} );
-			} );
+			//If the element variable is an array, we need to loop through each element and process the css for each
+			if ($.isArray(setting_values['element'])){
+				
+				//Set Counter
+				var counter = 0;
+					
+				//Loop through each element in the array
+				$.each(setting_values['element'], function( key, element_id ) {
+						
+						//Set up event listener to change this element on the fly
+						mp_core_element_css( element_id, setting_values['arg'][counter], setting_values['jquery_function_name'], setting_id );
+						
+						//Increment counter
+						counter++;
+						
+				});
+			}
+			//If the element variable is not an array, we need to process the css for just this element
+			else{
+					
+					//Set up event listener to change this element on the fly
+					mp_core_element_css( setting_values['element'], setting_values['arg'], setting_values['jquery_function_name'], setting_id );
+				
+			}
 			
 		});
 	});
+	
+	/**
+	 * Event Listener which Processes CSS Output for elements passed-in to this function
+	 *
+	 * @since    1.0.0
+	 * @param    string $element_id The CSS selector. 
+	 * @param    string $css_arg The CSS arg name. 
+	 * @param    string $theme_mod_id The CSS value. 
+	 * @return   void 
+	 */
+	function mp_core_element_css( element_id, element_css_arg, jquery_function_name, setting_id ){
+		
+		//Update the element in real time...
+		wp.customize( setting_id, function( value ) {
+			value.bind( function( newval ) {
+								
+				//If there is an arg
+				if (typeof(element_css_arg) != "undefined" && element_css_arg !== null){
+					
+					//Background Image
+					if (element_css_arg == 'background-image'){
+						if (newval == null || newval == '' || newval == false){
+							//No background image
+							eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'\' );');
+						}else{
+							eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'url(' + newval + ')\' );');
+						}
+					}
+					//Background Enabled
+					else if (element_css_arg == 'background-disabled'){
+	
+						if (newval == null || newval == '' || newval == false){
+							
+							//Inherit background image
+							eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + 'background-image' + '\', \'\' );');
+							
+						}
+						else{
+	
+							//No background image
+							eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + 'background-image' + '\', \'none\' );');
+	
+						}
+					}
+					//Display
+					else if (element_css_arg == 'display'){
+						if (newval == false){
+							newval = 'none';	
+						}else{
+							newval = 'block';	
+						}
+						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + '\' );');
+					}
+					//Other
+					else{
+						if (newval == null || newval == '' || newval == false){
+							newval = 'inherit';	
+						}
+						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + '\' );');
+					}
+				//If there is no arg
+				}else{
+					eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + newval + '\' );');
+				}
+			});
+		});
+	}
 		
 } )( jQuery );

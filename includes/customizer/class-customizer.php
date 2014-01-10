@@ -129,43 +129,25 @@ class MP_CORE_Customizer{
 				$theme_mod_id = get_theme_mod( $id );
 				
 				if  ( !empty( $setting['arg'] ) && $setting['arg'] != "responsive" && $setting['arg'] != "src" ){
-					echo $setting['element'] . '{';
-						
-						//Background Image
-						if ( $setting['arg'] == "background-image" ){
-							if (!empty ($theme_mod_id) || $theme_mod_id != false){
-								echo $setting['arg'] . ': url(\'' . $theme_mod_id . '\');';
-							}
-							
-						}
-						
-						//Background Disabled
-						if ( $setting['arg'] == "background-disabled" ){
-							if ( !empty( $theme_mod_id ) ){ //<--checked
-								echo 'background-image: none;';
-							}
-							
-						}
-						
-						//Display
-						elseif( $setting['arg'] == "display" ){
-							
-							$display_val = $theme_mod_id == false ? 'none' : 'block';
-							
-							echo $setting['arg'] . ':' . $display_val . ';';
-							
-						}
-						
-						//Other
-						else{
-							
-							//Make sure it's not empty
-							if ( !empty( $theme_mod_id ) || $theme_mod_id != false ){
-								echo $setting['arg'] . ':' . $theme_mod_id . ';';
-							}
-						}
 					
-					echo '}';
+					//If the element variable passed-in is an array, loop through each element
+					if ( is_array( $setting['element'] ) ){
+						
+						//Loop through each element and arg for that element							
+						for( $x=0; $x < sizeof( $setting['element'] ); $x++ ){
+							
+							//Outout CSS for this element/arg
+							$this->mp_core_element_css( $setting['element'][$x], $setting['arg'][$x], $theme_mod_id );
+	
+						}
+					}
+					//If the element variable passed-in is not an array, it will be a single page element (css class, id, etc)
+					else{
+						
+						 //Outout CSS for this element/arg
+						 $this->mp_core_element_css( $setting['element'], $setting['arg'], $theme_mod_id );
+						
+					}
 				}
 			}
 		}
@@ -173,6 +155,58 @@ class MP_CORE_Customizer{
 		if ( current_filter() != 'mp_core_tinymce_css'){
 			echo '</style>';
 		}
+	}
+	
+	/**
+	 * Outputs CSS Output for elements passed-in to this function
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @param    string $element_id The CSS selector. 
+	 * @param    string $css_arg The CSS arg name. 
+	 * @param    string $theme_mod_id The CSS value. 
+	 * @return   void
+	 */
+	function mp_core_element_css( $element_id, $css_arg, $theme_mod_id ) {
+		
+		echo $element_id . '{';
+								
+		//Background Image
+		if ( $css_arg == "background-image" ){
+			if (!empty ($theme_mod_id) || $theme_mod_id != false){
+				echo $css_arg . ': url(\'' . $theme_mod_id . '\');';
+			}
+			
+		}
+		
+		//Background Disabled
+		if ( $css_arg == "background-disabled" ){
+			if ( !empty( $theme_mod_id ) ){ //<--checked
+				echo 'background-image: none;';
+			}
+			
+		}
+		
+		//Display
+		elseif( $css_arg == "display" ){
+			
+			$display_val = $theme_mod_id == false ? 'none' : 'block';
+			
+			echo $css_arg . ':' . $display_val . ';';
+			
+		}
+		
+		//Other
+		else{
+			
+			//Make sure it's not empty
+			if ( !empty( $theme_mod_id ) || $theme_mod_id != false ){
+				echo $css_arg . ':' . $theme_mod_id . ';';
+			}
+		}
+	
+		echo '}';
+	
 	}
 	
 	/**
