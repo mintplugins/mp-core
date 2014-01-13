@@ -298,7 +298,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		function enqueue_themes_scripts() {
 			//Enqueue style for this license message
 			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );			
-			wp_enqueue_script( 'mp-core-themes-placement', plugins_url( 'js/themes-page.js', dirname(__FILE__) ),  array( 'jquery' ) );		
 		}	
 		
 		/**
@@ -337,7 +336,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			?>
 			<div id="mp-core-theme-license-wrap" class="wrap">
 				
-				<strong><?php echo __('Updates', 'mp_core'); ?></strong><br />
+				<div class="title"><?php echo $args['software_name'] . ' ' . __('Updates', 'mp_core'); ?></div>
 				<p class="theme-description"><?php echo __('Enter your license key to enable auto-updates.'); ?></p>
 				
 				<form method="post">

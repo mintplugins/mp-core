@@ -51,11 +51,6 @@ function mp_core_theme_specific_scripts(){
 	 */
 	require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/misc-functions/extras.php' );
 	
-	/**
-	 * Enqueue Default CSS
-	 */
-	require( MP_CORE_PLUGIN_DIR . 'includes/theme-specific/css/enqueue-css.php' );
-	
 }
 
 //To include these scripts in your theme, use the following line of code:

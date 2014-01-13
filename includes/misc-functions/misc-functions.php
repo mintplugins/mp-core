@@ -35,9 +35,6 @@ function mp_core_addTinyMCELinkClasses( $wp ) {
 	//Themes and plugins will hook to this to add styles to the editor
 	do_action('mp_core_editor_styles');
 	
-	//Default styles for tinymce
-	add_editor_style( plugins_url( '/theme-specific/css/the-content.css', dirname( __FILE__ ) ) );
-	
 	//All inline styles including the customizer
 	add_editor_style( plugins_url('/css/core/tinymce-css.php', dirname( __FILE__ ) ) );
 }

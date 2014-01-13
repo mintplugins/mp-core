@@ -97,11 +97,28 @@ endif; // mp_core_content_nav
  */
 if ( ! function_exists( 'mp_core_posted_on' ) ) :
 	function mp_core_posted_on() {
-		printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="byline"> by <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'mp_core' ),
+		printf( __( '<a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a>', 'mp_core' ),
 			esc_url( get_permalink() ),
 			esc_attr( get_the_time() ),
 			esc_attr( get_the_date( 'c' ) ),
-			esc_html( get_the_date() ),
+			esc_html( get_the_date() )
+		);
+	}
+endif;
+
+/**
+ * Prints HTML with meta information for the current post-date/time and author.
+ *
+ * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @see      esc_url()
+ * @see      get_author_posts_url()
+ * @see      get_the_author_meta()
+ * @see      get_the_author()
+ * @return   void
+ */
+if ( ! function_exists( 'mp_core_author' ) ) :
+	function mp_core_author( $author_id = NULL, $added_output = NULL ) {
+		printf( __( '<span class="author vcard"><a class="url fn n" href="%1$s" title="%2$s" rel="author">%3$s</a></span>', 'mp_core' ),
 			esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
 			esc_attr( sprintf( __( 'View all posts by %s', 'mp_core' ), get_the_author() ) ),
 			get_the_author()
