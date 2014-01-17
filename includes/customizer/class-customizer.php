@@ -126,7 +126,8 @@ class MP_CORE_Customizer{
 		foreach ( $this->_args as $section ){
 			foreach ( $section['settings'] as $id => $setting ){
 				
-				$theme_mod_id = get_theme_mod( $id );
+				$theme_mod_value = get_theme_mod( $id );
+				$theme_mod_value = empty( $theme_mod_value ) ? $setting['default'] : $theme_mod_value;
 				
 				if  ( !empty( $setting['arg'] ) && $setting['arg'] != "responsive" && $setting['arg'] != "src" ){
 					
@@ -137,7 +138,7 @@ class MP_CORE_Customizer{
 						for( $x=0; $x < sizeof( $setting['element'] ); $x++ ){
 							
 							//Outout CSS for this element/arg
-							$this->mp_core_element_css( $setting['element'][$x], $setting['arg'][$x], $theme_mod_id );
+							$this->mp_core_element_css( $setting['element'][$x], $setting['arg'][$x], $theme_mod_value );
 	
 						}
 					}
@@ -145,7 +146,7 @@ class MP_CORE_Customizer{
 					else{
 						
 						 //Outout CSS for this element/arg
-						 $this->mp_core_element_css( $setting['element'], $setting['arg'], $theme_mod_id );
+						 $this->mp_core_element_css( $setting['element'], $setting['arg'], $theme_mod_value );
 						
 					}
 				}
@@ -164,24 +165,24 @@ class MP_CORE_Customizer{
 	 * @since    1.0.0
 	 * @param    string $element_id The CSS selector. 
 	 * @param    string $css_arg The CSS arg name. 
-	 * @param    string $theme_mod_id The CSS value. 
+	 * @param    string $theme_mod_value The CSS value. 
 	 * @return   void
 	 */
-	function mp_core_element_css( $element_id, $css_arg, $theme_mod_id ) {
+	function mp_core_element_css( $element_id, $css_arg, $theme_mod_value ) {
 		
 		echo $element_id . '{';
 								
 		//Background Image
 		if ( $css_arg == "background-image" ){
-			if (!empty ($theme_mod_id) || $theme_mod_id != false){
-				echo $css_arg . ': url(\'' . $theme_mod_id . '\');';
+			if (!empty ($theme_mod_value) || $theme_mod_value != false){
+				echo $css_arg . ': url(\'' . $theme_mod_value . '\');';
 			}
 			
 		}
 		
 		//Background Disabled
 		if ( $css_arg == "background-disabled" ){
-			if ( !empty( $theme_mod_id ) ){ //<--checked
+			if ( !empty( $theme_mod_value ) ){ //<--checked
 				echo 'background-image: none;';
 			}
 			
@@ -190,7 +191,7 @@ class MP_CORE_Customizer{
 		//Display
 		elseif( $css_arg == "display" ){
 			
-			$display_val = $theme_mod_id == false ? 'none' : 'block';
+			$display_val = $theme_mod_value == false ? 'none' : 'block';
 			
 			echo $css_arg . ':' . $display_val . ';';
 			
@@ -200,9 +201,10 @@ class MP_CORE_Customizer{
 		else{
 			
 			//Make sure it's not empty
-			if ( !empty( $theme_mod_id ) || $theme_mod_id != false ){
-				echo $css_arg . ':' . $theme_mod_id . ';';
+			if ( !empty( $theme_mod_value ) || $theme_mod_value != false ){
+				echo $css_arg . ':' . $theme_mod_value . ';';
 			}
+	
 		}
 	
 		echo '}';
@@ -283,7 +285,7 @@ class MP_CORE_Customizer{
 			//Create settings and controls
 			foreach ( $section['settings'] as $setting_id => $setting ){
 				$wp_customize->add_setting( $setting_id, array(
-					'default'    => $this->mp_core_theme_mod( $setting_id )
+					'default'    => $setting['default']
 				) );
 				
 				//Set default for priority if not filled out
