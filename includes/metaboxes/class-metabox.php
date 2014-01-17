@@ -294,7 +294,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							}
 							
 							//This is the last one in a set of repeatable fields
-							echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a><a href="#" class="mp_drag button">' . __('Drag Me', 'mp_core') . '</a></div>';
+							echo '<div class="mp_duplicate_buttons"><a class="mp_duplicate button">' . __('Add New', 'mp_core') . '</a><a class="mp_duplicate_remove button">' . __('Remove', 'mp_core') . '</a>';
 							echo '</li>';
 						}
 						
