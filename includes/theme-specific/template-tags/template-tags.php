@@ -174,6 +174,8 @@ function mp_core_page_title(){
 		 * we can run the loop properly, in full.
 		 */
 		rewind_posts();
+	} elseif( is_404() ){
+		_e( 'Nothing Found!', 'mp_core' );
 	} elseif ( get_post_type() ) {
 		
 		//If taxonomy
@@ -181,8 +183,8 @@ function mp_core_page_title(){
 			 printf( '<span>' . single_tag_title( '', false ) . '</span>' );
 		}
 		//If page or single
-		else if( is_page() || is_single() || is_singular( get_post_type() ) ) {
-			the_title( );
+		else if( is_page() || is_single() || is_singular() ) {
+			the_title();
 		}
 		//If Search
 		else if ( is_search() ){

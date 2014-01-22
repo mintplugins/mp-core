@@ -115,7 +115,7 @@ function mp_core_get_all_hierarchical_post_types($args = array('public' => true,
 }
 
 /**
- * Get all Posts by a certain taxonomy
+ * Get all terms in a certain taxonomy
  *
  * @since    1.0.0
  * @link     http://moveplugins.com/doc/mp_core_get_all_terms_by_tax/
