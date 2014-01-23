@@ -49,18 +49,24 @@ add_action( 'admin_init', 'mp_core_addTinyMCELinkClasses' );
  * @return   array $rgb Format is [0]R [1]G [2]B in that order: Array ( [0] => 204 [1] => 204 [2] => 204 )
  */
 function mp_core_hex2rgb( $hex ) {
-   $hex = str_replace("#", "", $hex);
-
-   if(strlen($hex) == 3) {
-      $r = hexdec(substr($hex,0,1).substr($hex,0,1));
-      $g = hexdec(substr($hex,1,1).substr($hex,1,1));
-      $b = hexdec(substr($hex,2,1).substr($hex,2,1));
-   } else {
-      $r = hexdec(substr($hex,0,2));
-      $g = hexdec(substr($hex,2,2));
-      $b = hexdec(substr($hex,4,2));
-   }
-   $rgb = array($r, $g, $b);
-   //return implode(",", $rgb); // returns the rgb values separated by commas
-   return $rgb; // returns an array with the rgb values
+	
+	if (!empty($hex)){
+	   $hex = str_replace("#", "", $hex);
+	
+	   if(strlen($hex) == 3) {
+		  $r = hexdec(substr($hex,0,1).substr($hex,0,1));
+		  $g = hexdec(substr($hex,1,1).substr($hex,1,1));
+		  $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+	   } else {
+		  $r = hexdec(substr($hex,0,2));
+		  $g = hexdec(substr($hex,2,2));
+		  $b = hexdec(substr($hex,4,2));
+	   }
+	   $rgb = array($r, $g, $b);
+	   //return implode(",", $rgb); // returns the rgb values separated by commas
+	   return $rgb; // returns an array with the rgb values
+	}
+	else{
+		return NULL;
+	}
 }
