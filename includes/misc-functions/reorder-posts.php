@@ -121,7 +121,7 @@ function mp_core_show_order_column($name){
  * @return   void
 */
 function mp_core_make_all_hierarchical_posts_sortable(){
-	$hierarchical_post_types = mp_core_get_all_hierarchical_post_types();
+	$hierarchical_post_types = mp_core_get_all_hierarchical_post_types($args = array( '_builtin' => false, 'hierarchical' => true ) );
 	
 	foreach ( $hierarchical_post_types as $id => $post_type ){
 		

@@ -35,7 +35,7 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 	
 	//Default setting for post id if blank
 	global $post;
-	$post_id = isset( $post_id ) ? $post_id : $post->ID;
+	$post_id = isset( $post_id ) ? $post_id : isset( $post->ID ) ? $post->ID : NULL;
 	
 	//Default width if blank
 	$width = isset( $width ) ? $width : 600;

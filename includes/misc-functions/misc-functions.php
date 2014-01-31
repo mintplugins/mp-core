@@ -70,3 +70,30 @@ function mp_core_hex2rgb( $hex ) {
 		return NULL;
 	}
 }
+				
+/**
+ * Ajax to display help content
+ *
+ * @since    1.0.0
+ * @link     http://codex.wordpress.org/Function_Reference/mp_core_hex2rgb
+ * @param    string $hex a colour hex
+ * @return   array $rgb Format is [0]R [1]G [2]B in that order: Array ( [0] => 204 [1] => 204 [2] => 204 )
+ */
+function mp_core_show_help_content_ajax(){
+	
+	//Get Help href
+	$help_url = $_POST['help_href'];
+	
+	//Get Help Type
+	$help_type = $_POST['help_type'];
+	
+	if ( $help_type == 'oembed' ){
+		echo mp_core_oembed_get($help_url);
+	}
+	else{
+		echo '<iframe src="' . $help_url . '" width="100%" height="400px"/>';	
+	}
+	
+	exit;
+}
+add_action( 'wp_ajax_mp_core_help_content_ajax', 'mp_core_show_help_content_ajax' );

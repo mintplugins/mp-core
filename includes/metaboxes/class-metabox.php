@@ -101,9 +101,26 @@ if (!class_exists('MP_CORE_Metabox')){
 				//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
 				wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				//Metabox scripts for duplicating fields etc
-				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );									
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	 	
+				
+				//If this script has already been localized, don't do it again. We only need it once. Global var used so other class calls don't duplicate output.
+				global $mp_core_metabox_js_localized;
+				
+				if (!$mp_core_metabox_js_localized){
+					wp_localize_script( 'mp-core-metabox-js', 'mp_core_metabox_js', array(
+						'loading' => __( 'Loading...', 'mp_core' ),
+						'hide' => __( 'Hide', 'mp_core' ),
+						'cantremove' => __( 'Can\'t Remove', 'mp_core' )
+					) );
+					
+					$mp_core_metabox_js_localized = true;
+					
+				}
+				
 				//Action hook alllowing for more scripts to be loaded only when this metabox is used
 				do_action('mp_core_' . $this->_args['metabox_id'] . '_metabox_custom_scripts');
+				
+		
 			}
 		}
 				
@@ -1220,6 +1237,51 @@ if (!class_exists('MP_CORE_Metabox')){
         
         <?php
 	
+		}
+		
+		/**
+		 * help field. Parameters in this function match all below
+		 *
+		 * @access   public
+		 * @since    1.0.0
+   		 * @param    string $field_id Required. This must be a unique name with no spaces
+		 * @param    string $field_title Required. This is the title of the field that will display to the user
+		 * @param    string $field_description Required. The user will see this description above this field
+		 * @param    string $value Required. The value displayed in this field
+		 * @param    string $classname Required. The name of the  css class for this field
+		 * @return   void
+		*/
+		function help( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div style="clear: both;"></div>';
+			foreach ($field_select_values as $help_array){
+				echo '<div class="mp_core_help">';		
+					echo '<a class="mp_core_help_' . $help_array['type'] . '" alt="' . $help_array['link_text'] . '" href="' . $help_array['link'] . '" target="' . $help_array['target'] . '" >' . $help_array['link_text'] . '</a>';
+				echo '</div>';		
+			}
+			echo '<div style="clear: both;"></div>';
+			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
+			echo '</label></div>';
+			echo '</div>'; 
 		}
 		
 		/**

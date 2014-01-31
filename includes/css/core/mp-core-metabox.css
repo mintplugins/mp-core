@@ -6,7 +6,6 @@
 .mp_duplicate, .mp_duplicate_remove{
 	margin:10px 5px 0px 0px!important; 
 }
-
 .mp_field{
 	border-bottom: solid 1px #dfdfdf;
 	padding-bottom: 12px;
@@ -74,4 +73,50 @@
 	display: inline-block;
 	float: left;
 	margin-right: 10px;
+}
+.mp_core_help{
+	float:left;	
+	margin-right:20px;
+}
+.mp_core_help_oembed:before,
+.mp_core_help_video:before{
+	content: "\f126";
+	display: inline-block;
+	font: 400 20px/1 dashicons;
+	speak: none;
+	left: -1px;
+	padding: 0 5px 0 0;
+	position: relative;
+	top: 0;
+	text-decoration: none!important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.mp_core_help_document:before{
+	content: "\f123";
+	display: inline-block;
+	font: 400 20px/1 dashicons;
+	speak: none;
+	left: -1px;
+	padding: 0 5px 0 0;
+	position: relative;
+	top: 0;
+	text-decoration: none!important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.mp_core_help_directory:before{
+	display: inline-block;
+	font: 400 20px/1 dashicons;
+	speak: none;
+	left: -1px;
+	position: relative;
+	top: 0;
+	text-decoration: none!important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	content: "\f106";	
 }

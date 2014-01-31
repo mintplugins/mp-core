@@ -17,7 +17,7 @@ jQuery(document).ready(function($){
 		
 		//TinyMCE fix - temporarily removes it from each TinyMCE area in this repeater
 		metabox_container.find('.wp-editor-area').each(function(){
-			tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+			tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 		});
 		
 		//Create clone of original
@@ -57,8 +57,8 @@ jQuery(document).ready(function($){
 				$(this).find('*').each(function() {
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
-						tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
-						tinyMCE.execCommand( 'mceAddControl', true, this.id );
+						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
+						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
 					}
 				});	
 			}
@@ -83,8 +83,8 @@ jQuery(document).ready(function($){
 					
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
-						tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
-						tinyMCE.execCommand( 'mceAddControl', true, this.id );
+						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
+						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
 					}
 					
 				});	
@@ -129,11 +129,11 @@ jQuery(document).ready(function($){
 						this.name = this.name.replace('[1]', '[0]');
 					}
 					
-					//tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
-					tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+					tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
@@ -141,7 +141,7 @@ jQuery(document).ready(function($){
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
-					tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+					tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 				});	
 			}else{
 				$(this).find('*').each(function() {
@@ -149,11 +149,11 @@ jQuery(document).ready(function($){
 						this.name = this.name.replace('['+ (name_number+1) +']', '[' + (name_number) +']');
 					}
 					
-					//tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
-					tinyMCE.execCommand( 'mceAddControl', true, $(this).attr('id') );
+					tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
@@ -184,7 +184,7 @@ jQuery(document).ready(function($){
 			$(theoriginal).css( 'border-color', '#ff0000' );
 		}
 		else{
-			$(this).html('Can\'t Remove' );	
+			$(this).html( mp_core_metabox_js.cantremove );	
 		}
 		
 		return false;   
@@ -266,7 +266,7 @@ jQuery(document).ready(function($){
 			
 			//Remove control for Tiny MCE
 			$(this).find('.wp-editor-area').each(function(){
-				tinyMCE.execCommand( 'mceRemoveControl', true, $(this).attr('id') );
+				tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 			});
 			
 		},
@@ -296,8 +296,8 @@ jQuery(document).ready(function($){
 						
 						//Re-initialize tinymce for each TInyMCE area in this repeater
 						if ( this.className == 'wp-editor-area') {
-							tinyMCE.execCommand( 'mceRemoveControl', true, this.id );
-							tinyMCE.execCommand( 'mceAddControl', true, this.id );
+							tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
+							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
 						}
 				
 				});
@@ -427,4 +427,52 @@ jQuery(document).ready(function($){
 		
 	});
 	
+	//When any metabox "help" button has been clicked
+	$( '.mp_core_help a').on('click', function(event){
+		
+		var this_help_button = $(this);
+		
+		var help_url = this_help_button.attr('href');
+		var help_type = this_help_button.attr('class').replace('mp_core_help_', '');
+		
+		if (help_type != 'directory'){
+			
+			event.preventDefault();
+			
+			//If this button doesn't say "Hide" or "Loading"
+			if ( this_help_button.html() != mp_core_metabox_js.loading && this_help_button.html() != mp_core_metabox_js.hide ){
+			
+				this_help_button.attr('mp_core_help_original_text', this_help_button.html() );
+				
+				//Reset Help Text to "Hide" (localized in metabox class php)
+				this_help_button.html(mp_core_metabox_js.loading);
+			
+				var postData = {
+					action: 'mp_core_help_content_ajax',
+					help_href: help_url,
+					help_type: help_type 
+				};
+								
+				$.ajax({
+					type: "POST",
+					data: postData,
+					url: 'admin-ajax.php',
+					success: function (response) {
+						var help_ajax = $('<div class="mp_core_help_content_ajax">' + response + '</div>').appendTo(this_help_button.parent().parent().parent().parent());	
+						this_help_button.html(mp_core_metabox_js.hide);					
+					}
+				}).fail(function (data) {
+					console.log(data);
+				});
+			//If the button DOES say "Hide" or "Loading"	
+			}else{
+				
+				this_help_button.parent().parent().parent().parent().find('.mp_core_help_content_ajax').detach();
+				
+				//Reset Help Text to "Hide" (localized in metabox class php)
+				this_help_button.html(this_help_button.attr('mp_core_help_original_text'));
+			}
+		}
+				
+	});
 });
