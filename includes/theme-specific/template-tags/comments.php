@@ -142,54 +142,132 @@ if ( ! function_exists( 'mp_core_comments_template' ) ) {
  */
 if ( ! function_exists( 'mp_core_comment' ) ) {
 	function mp_core_comment( $comment, $args, $depth ) {
+		
 		$GLOBALS['comment'] = $comment;
+		
 		switch ( $comment->comment_type ) :
 			case 'pingback' :
 			case 'trackback' :
-		?>
-		<li class="post pingback">
-			<p><?php _e( 'Pingback:', 'temp' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?></p>
-		<?php
-				break;
-			default :
-		?>
-		<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
-			<article id="comment-<?php comment_ID(); ?>" class="comment">
-				<footer>
-					<div class="comment-author vcard">
-                    	
-                        <?php //Filter hook for avatar image size
-						$size = has_filter( 'mp_core_avatar_size' ) ? apply_filters( 'mp_core_avatar_size', 96 ) : 96;
-						?>
-                    
-						<?php echo mp_core_get_avatar( $comment, $size ); ?>
-						<?php printf( sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
-					</div><!-- .comment-author .vcard -->
-					<?php if ( $comment->comment_approved == '0' ) : ?>
-						<em><?php _e( 'Your comment is awaiting moderation.', 'temp' ); ?></em>
-						<br />
-					<?php endif; ?>
-	
-					<div class="comment-meta commentmetadata">
-						<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>"><time datetime="<?php comment_time( 'c' ); ?>">
-						<?php printf( _x( '%1$s at %2$s', '1: date, 2: time', 'temp' ), get_comment_date(), get_comment_time() ); ?>
-						</time></a>
-					</div><!-- .comment-meta .commentmetadata -->
-				</footer>
-	
-				<div class="comment-content"><?php comment_text(); ?></div>
-	
-				<div class="reply">
-					<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
-                    <?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?>
-				</div><!-- .reply -->
-			</article><!-- #comment-## -->
-	
-		<?php
-				break;
+				?>
+				<li class="post pingback">
+					<p><?php _e( 'Pingback:', 'temp' ); ?> <?php comment_author_link(); ?><?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?></p>
+				</li>
+				<?php
+						break;
+					default :
+				?>
+				<li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
+					<article id="comment-<?php comment_ID(); ?>" class="comment">
+						
+						<?php do_action('mp_core_comment_prepend', $comment, $args, $depth); ?>
+										
+						<?php do_action('mp_core_comment_append', $comment, $args, $depth); ?>
+						
+					</article><!-- #comment-## -->
+				</li>
+				<?php
+			break;
 		endswitch;
 	}
 }; // ends check for mp_core_comment()
+
+function mp_core_default_comment( $comment, $args, $depth ){
+    
+	//Avatar Hooks here
+    do_action( 'mp_core_comment_avatar', $comment, $args, $depth );
+	
+	//Comment Meta Hooks here
+    do_action( 'mp_core_comment_meta', $comment, $args, $depth );
+	
+	//Comment Content Hooks here
+    do_action( 'mp_core_comment_content', $comment, $args, $depth );
+                	
+}
+add_action( 'mp_core_comment_prepend', 'mp_core_default_comment', 10, 3 );
+
+/**
+ * Displays the avatar in the mp core default comment
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @param    object $comment Comment data object.
+ * @param    array $args
+ * @param    int $depth The number of replies deep this comment is.
+ * @return   void
+ */
+function mp_core_comment_avatar_callback( $comment, $args, $depth ){
+	?>
+    <div class="mp-core-comment-avatar">
+		<?php
+        
+        //Filter hook for avatar image size
+        $size = has_filter( 'mp_core_comment_avatar_size' ) ? apply_filters( 'mp_core_comment_avatar_size', 96 ) : 96;
+        
+        echo mp_core_get_avatar( $comment, $size ); 
+        
+        ?>
+    </div>	
+    <?php
+}
+add_action( 'mp_core_comment_avatar', 'mp_core_comment_avatar_callback', 10, 3 );
+
+/**
+ * Displays the meta in the mp core default comment
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @param    object $comment Comment data object.
+ * @param    array $args
+ * @param    int $depth The number of replies deep this comment is.
+ * @return   void
+ */
+function mp_core_comment_meta_callback( $comment, $args, $depth ){
+ 	?>
+	<div class="mp-core-comment-meta">
+             
+        <div class="comment-author vcard">                    
+            <?php printf( sprintf( '<cite class="fn">%s</cite>', get_comment_author_link() ) ); ?>
+        </div><!-- .comment-author .vcard -->
+        
+        <?php if ( $comment->comment_approved == '0' ) : ?>
+            <em><?php _e( 'Your comment is awaiting moderation.', 'temp' ); ?></em>
+            <br />
+        <?php endif; ?>
+
+        <div class="comment-meta commentmetadata">
+        	
+            <div class="mp-core-comment-time" datetime="<?php comment_time( 'c' ); ?>">
+                <a class="mp-core-comment-time-link" href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>">
+                	<?php printf( _x( '%1$s at %2$s', '1: date, 2: time', 'temp' ), get_comment_date(), get_comment_time() ); ?>
+                </a>
+            </div>
+            
+            <div class="reply">
+				<?php comment_reply_link( array_merge( $args, array( 'depth' => $depth, 'max_depth' => $args['max_depth'] ) ) ); ?>
+                <?php edit_comment_link( __( 'Edit', 'temp' ), '<span class="edit-link">', '<span>' ); ?>
+            </div><!-- .reply -->
+    
+        </div><!-- .comment-meta .commentmetadata -->
+        
+    </div>
+    <?php
+}
+add_action( 'mp_core_comment_meta', 'mp_core_comment_meta_callback', 10, 3 );
+
+/**
+ * Displays the avatar in the mp core default comment
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @param    object $comment Comment data object.
+ * @param    array $args
+ * @param    int $depth The number of replies deep this comment is.
+ * @return   void
+ */
+function mp_core_comment_content_callback( $comment, $args, $depth ){
+	?><div class="comment-content"><?php comment_text(); ?></div><?php
+}
+add_action( 'mp_core_comment_content', 'mp_core_comment_content_callback', 10, 3 );
 
 /**
  * Displays and allows customization of the comment form

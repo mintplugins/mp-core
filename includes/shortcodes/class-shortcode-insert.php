@@ -228,6 +228,9 @@ class MP_CORE_Shortcode_Insert{
 			<div id="choose-<?php echo $this->_args['shortcode_id']; ?>" style="display: none;">
 				<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 				<?php
+				
+				do_action( 'mp_core_before_' . $this->_args['shortcode_id'] . '_shortcode_output' ); 
+                
 				if ( $this->_args['shortcode_options'] ) {
 					echo '<p>' . $this->_args['shortcode_description'] . '</p>';
 					
@@ -247,6 +250,9 @@ class MP_CORE_Shortcode_Insert{
 						<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode();" />
 						<a id="<?php echo $this->_args['shortcode_id']; ?>-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
 					</p>
+                    
+                    <?php do_action( 'mp_core_after_' . $this->_args['shortcode_id'] . '_shortcode_output' ); ?>
+				
 				</div>
 			</div>
 			<?php

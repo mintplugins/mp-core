@@ -172,10 +172,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			global $_registered_pages;
 		
 			// Get the name of the hook for this plugin
-			// We use "plugins.php" as the parent as we want our page to appear under "plugins.php?page=mp_core_install_plugins_page"
-			$hookname = get_plugin_page_hookname('mp_core_install_plugins_page', 'plugins.php');
+			// We use "options-general.php" as the parent as we want our page to appear under "options-general.php?page=mp_core_install_plugins_page"
+			$hookname = get_plugin_page_hookname('mp_core_install_plugins_page', 'options-general.php');
 		
-			// Add the callback via the action on $hookname, so the callback function is called when the page "plugins.php?page=mp_core_install_plugins_page" is loaded
+			// Add the callback via the action on $hookname, so the callback function is called when the page "options-general.php?page=mp_core_install_plugins_page" is loaded
 			if (!empty($hookname)) {
 				add_action($hookname, array( $this, 'mp_core_install_check_callback') );
 			}
@@ -217,12 +217,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			}
 			
 			//Redirect to referring page when complete
-			$custom_page_extension = "http" . (($_SERVER['SERVER_PORT']==443) ? "s://" : "://") . $_SERVER['HTTP_HOST'] . $_SERVER['HTTP_REFERER'];
+			$custom_page_extension = $_SERVER['HTTP_REFERER'];
 			
 			//Javascript for redirection
 			echo '<script type="text/javascript">';
 				echo "window.location = '" . $custom_page_extension . "';";
 			echo '</script>';
+			
 			
 			echo '</div>';
 									
@@ -376,7 +377,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									echo $plugin['plugin_message'] . '</p>';
 								
 									//Display a custom download button."; 
-									printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' . $plugin_name_slug . '&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
+									printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' . $plugin_name_slug . '&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
 									
 									//Dismiss button
 									$this->mp_core_dismiss_button( $plugin );
@@ -412,7 +413,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 										
 					echo __( 'There are items that need to be installed.' , 'mp_core' ) . '</p>';
 				
-					printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install All Items', 'mp_core')  . '</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugins_page&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
+					printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install All Items', 'mp_core')  . '</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugins_page&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
 					
 					echo '| <a href="#TB_inline?width=600&height=550&inlineId=mp-core-installer-details" class="thickbox">' . __( 'Details', 'mp_core' ) . "</a>";
 					
@@ -436,7 +437,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 														 
 							echo '</ol>';							 
 														
-							printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install All Items', 'mp_core')  . '</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugins_page&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
+							printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install All Items', 'mp_core')  . '</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugins_page&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
 							
 							echo '</p>';	
 							
