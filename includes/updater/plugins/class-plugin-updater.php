@@ -123,14 +123,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		function add_custom_plugin( $custom_api_plugins ) {
 			
-			//Set plugin vars			
+			//Set plugin vars like software license, name, slug	, version
 			$this->set_plugin_vars();
 			
 			if( empty( $custom_api_plugins ) ) return $custom_api_plugins;
 			
 			//Add the slug to the info to send to the API
 			$to_send = array( 'slug' => $this->slug );
-			
+						
 			//Check the API for a new version and return the info object
 			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
 					
@@ -162,7 +162,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		function plugins_api_filter( $_data, $_action = '', $_args = null ){
 			
-			//Set plugin vars			
+			//Set plugin vars like software license, name, slug	, version	
 			$this->set_plugin_vars();
 			
 			if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
@@ -190,62 +190,52 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Parse the args
 			$args = $this->parse_the_args( $this->_args );
 			
-			//We need to find the directory name, or 'slug', of this plugin. So get Plugins directory
-			$all_plugins_dir = explode( 'wp-content/plugins/', __FILE__ );
-			
-			//Get list of all active plugins
-			$active_plugins = apply_filters( 'active_plugins', get_option( 'active_plugins' ));
-			
-			//Loop through each active plugin's string EG: (subdirectory/filename.php)
-			foreach ($active_plugins as $active_plugin){
-				//Check if the filename of the plugin passed-in exists in any of the plugin strings
-				if (strpos($active_plugin, $args['software_filename'])){	
-					
-					//Store the plugin's directory and name. IE: mp_core/mp_core.php
-					$plugin_dir_and_name = $active_plugin;
-										
-					//Stop looping
-					break;
-				}
-			}
+			//Get all plugins		
+			$all_plugins = get_plugins();
 						
-			//Complete plugin url
-			$plugin_url = $all_plugins_dir[0] . 'wp-content/plugins/' . $plugin_dir_and_name; 
-			$this->_plugin_url = $plugin_url;
-			
-			//Get plugin data
-			$plugin_data = get_plugin_data( $plugin_url, $markup = true, $translate = true );
-			
-			//If we should ignore the WP repo
-			if ( $args['software_wp_repo_ignore'] ){
-			
-				//Disable check on WP.org repo for this plugin
-				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
+			//Loop through all plugins
+			foreach ( (array)$all_plugins as $plugin_file => $plugin_data) {
 				
-			}
-			
-			//If this software is licensed, do checks for updates using the license
-			if ( $args['software_licensed'] ){
+				
+				//Split the plugin_file from mp-core/mp-core.php to just mp-core.php (because that's what the plugin passed us in $args['software_filename'])
+				//This allows us to potentially have a different plugin directory name (like mp-core2/mp-core.php) and updates still work		
+				$plugin_filename = explode('/', $plugin_file);
+				
+				//Compare if the plugin we are looping through is the one we are looking for
+				if ($plugin_filename[1] == $args['software_filename']) {
 											
-				//Get license		
-				$license_key = trim( get_option( $args['software_name_slug'] . '_license_key' ) );	
-				
-				//Disable check on WP.org repo for this plugin
-				add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
-								
-			}
-			//If this software does not require a license, check for update from MP repo
-			else{
-																		
-				$license_key = NULL;		
-			}
+					//If we should ignore the WP repo
+					if ( $args['software_wp_repo_ignore'] ){
 					
-			//Set variables
-			$this->name     = plugin_basename( $plugin_url ); //EG: mp-core/mp-core.php
-			$this->slug     = basename( $plugin_url, '.php'); //EG: mp-core
-			$this->software_license  = $license_key;
-			$this->version  = $plugin_data['Version'];
-			
+						//Disable check on WP.org repo for this plugin
+						add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
+						
+					}
+					
+					//If this software is licensed, do checks for updates using the license
+					if ( $args['software_licensed'] ){
+													
+						//Get license		
+						$license_key = trim( get_option( $args['software_name_slug'] . '_license_key' ) );	
+						
+						//Disable check on WP.org repo for this plugin
+						add_filter( 'http_request_args', array( &$this, 'disable_plugin_check_from_wp'), 10, 2 );
+										
+					}
+					//If this software does not require a license, check for update from MP repo
+					else{
+																				
+						$license_key = NULL;		
+					}
+								
+					//Set variables
+					$this->name     = $plugin_file; //EG: mp-core/mp-core.php
+					$this->slug     = basename( $plugin_file, '.php'); //EG: mp-core
+					$this->software_license  = $license_key;
+					$this->version  = $plugin_data['Version'];
+					
+				}
+			}					
 		}
 		
 		/**
@@ -523,7 +513,7 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 		
 		//My wp_remote_post to my custom api is in a function which hooks to this filter:
 		$custom_api_plugins = apply_filters( 'mp_core_custom_plugins', $custom_api_plugins );
-				
+						
 		//If there are plugins passed into this filter
 		if ( is_object($custom_api_plugins) && (count(get_object_vars($custom_api_plugins)) > 0) ){
 			//Loop through each custom plugin in the custom transient object
