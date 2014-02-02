@@ -163,7 +163,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) && $license_valid ) {
 					
 					//Redirect to plugin install page
-					header( 'Location: ' . admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin_name_slug . '&mp-source=mp-core-directory&action=install-plugin&plugin=' . $plugin_name_slug  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
+					header( 'Location: ' . admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin_name_slug . '&mp-source=mp-core-directory&action=install-plugin&plugin=' . $plugin_name_slug  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
 					
 				}
 				//If the install button for this plugin has been clicked and license entered is NOT valid!
@@ -205,7 +205,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 */
 		public function plugin_directory_page() {
 			
-			echo '<div class="wrap">' . screen_icon( 'plugins' )  .	'<h2>' . __( 'Install Plugins', 'mp_core' ) . '</h2>';
+			echo '<div class="wrap">' . screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', __( 'Install Plugins', 'mp_core' )) . '</h2>';
+			
+			do_action( 'mp_core_directory_' . $this->_args['slug'] . '_header_output' );
 			
 			echo '<div id="availablethemes">';
 			
@@ -247,7 +249,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					$install_output .= 'Plugin is installed but not active';
 					
 					//Set $install_output to "Activate" plugin
-					$install_output .= '<a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
+					$install_output .= '<a href="' . wp_nonce_url('options-general.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
 					
 					//If this plugin requires a license, show that license
 					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
@@ -287,7 +289,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						else{
 							
 							// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'plugins.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
+							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
 						}
 											
 					}else{

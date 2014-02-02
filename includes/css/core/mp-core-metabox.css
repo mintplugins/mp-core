@@ -120,3 +120,7 @@
 	-moz-osx-font-smoothing: grayscale;
 	content: "\f106";	
 }
+.mp-core-radio-button{
+	float:left;
+	display:inline-block;	
+}
