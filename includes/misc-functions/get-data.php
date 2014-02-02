@@ -172,7 +172,7 @@ function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
 		}
 	 	
 	}
-	//print_r ($all_taxonomies);
+	
 	//Loop through all taxonomies
 	foreach ( $all_taxonomies as $taxonomy_name => $taxonomy_user_items ){
 		//Loop through each user-created taxonomy item within each taxonomy
@@ -185,6 +185,23 @@ function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
 	//array( '12*my_category' => 'My Category Term' );
 	
 	return ( $return_array );
+}
+
+/**
+ * Get number of posts per tax term
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_number_postpercat/
+ * @see      get_taxonomies()
+ * @see      get_terms()
+ * @param    int $term_id The ID of the tax term (IE The category "Books"'s ID)
+ * @return   int 
+ */
+function mp_core_number_postpercat($term_id) {
+    global $wpdb;
+    $query = "SELECT count FROM $wpdb->term_taxonomy WHERE term_id = $term_id";
+    $num = $wpdb->get_col($query);
+    return $num[0];
 }
 
 /**

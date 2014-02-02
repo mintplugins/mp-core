@@ -56,21 +56,30 @@ add_action( 'admin_enqueue_scripts', 'mp_core_admin_enqueue_scripts' );
 function mp_core_reorder_posts_on_submit(){
 	//Only do this if the mp_submitted_order field has been submitted
 	if ( isset( $_GET['mp_submitted_order'] ) ){
-		//Loop through each value in the GET variable
-		foreach ($_GET as $key => $value) { 
-			//If this value starts with 'mp_order'
-		 	if ( strpos($key, 'mp_order') !== false ){
-				
-				//Extract the post id 
-				$post_id = explode( 'mp_order_', $key );
-				$post_id = $post_id[1];
-				
-				//Set the new values for this post
-				$this_post['ID'] = $post_id;
-				$this_post['menu_order'] = $value;
-				
-				// Update the post into the database
-				wp_update_post( $this_post );
+			
+		//No hooks are available to do a custom "nonce" check here as best we can!
+		if ( strpos($_SERVER['HTTP_REFERER'], admin_url( 'edit.php') ) === false ) {
+			
+			 die( 'Security check' ); 	
+		}
+		else{
+		
+			//Loop through each value in the GET variable
+			foreach ($_GET as $key => $value) { 
+				//If this value starts with 'mp_order'
+				if ( strpos($key, 'mp_order') !== false ){
+					
+					//Extract the post id 
+					$post_id = explode( 'mp_order_', $key );
+					$post_id = $post_id[1];
+					
+					//Set the new values for this post
+					$this_post['ID'] = $post_id;
+					$this_post['menu_order'] = $value;
+					
+					// Update the post into the database
+					wp_update_post( $this_post );
+				}
 			}
 		}
 	}
