@@ -98,10 +98,8 @@ if (!class_exists('MP_CORE_Metabox')){
 				wp_enqueue_media();
 				//image uploader script
 				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
-				//drag and drop sortable script - http://farhadi.ir/projects/html5sortable/
-				wp_enqueue_script( 'sortable', plugins_url( 'js/core/sortable.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 				//Metabox scripts for duplicating fields etc
-				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'sortable' ) );	 	
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable' ) );	 	
 				
 				//If this script has already been localized, don't do it again. We only need it once. Global var used so other class calls don't duplicate output.
 				global $mp_core_metabox_js_localized;
