@@ -53,11 +53,13 @@ add_action( 'admin_enqueue_scripts', 'mp_core_admin_enqueue_scripts' );
 function mp_core_reorder_posts_on_submit(){
 	//Only do this if the mp_submitted_order field has been submitted
 	if ( isset( $_GET['mp_submitted_order'] ) ){
+		
+			echo $_SERVER['HTTP_REFERER'] . admin_url();
 			
 		//No hooks are available to do a custom "nonce" check here as best we can!
-		if ( strpos($_SERVER['HTTP_REFERER'], admin_url( 'edit.php') ) === false ) {
+		if ( strpos($_SERVER['HTTP_REFERER'], admin_url() ) === false ) {
 			
-			 die( 'Security check' ); 	
+			 //die( 'Security check' ); 	
 		}
 		else{
 		
