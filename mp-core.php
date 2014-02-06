@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.1.2.2
+Version: beta1.1.2.3
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -190,11 +190,6 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
  * Misc Functions
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
-
-/**
- * Misc Functions - Reorder Posts Scripts
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/reorder-posts.php' );
 
 /*
 |--------------------------------------------------------------------------
