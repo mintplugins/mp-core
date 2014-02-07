@@ -55,7 +55,7 @@ class MP_CORE_Shortcode_Insert{
 			'shortcode_id' => NULL,
 			'shortcode_title' => NULL,
 			'shortcode_description' => NULL,
-			'shortcode_plugin_dir_url' => NULL,
+			'shortcode_icon_spot' => NULL,
 			'shortcode_options' => array()
 		);
 		
@@ -65,7 +65,6 @@ class MP_CORE_Shortcode_Insert{
 		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
 		add_action( 'admin_footer', array( $this, 'mp_core_shortcode_admin_footer_for_thickbox' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
-		add_action( 'admin_head', array( $this, 'admin_shortcode_icon' ) );
 	}
 	
 	/**
@@ -136,8 +135,8 @@ class MP_CORE_Shortcode_Insert{
 				//Output new style button
 				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
 				
-				//If we passed the plugin location, there is most likely an image so show it
-				$output .= !empty( $this->_args['shortcode_plugin_dir_url'] ) ? '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>' : '';
+				//If we passed the plugin location, there is most likely an image so create a place for it
+				$output .= !empty( $this->_args['shortcode_icon_spot'] ) ? '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>' : '';
 				
 				//Finish the output
 				$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
@@ -203,9 +202,9 @@ class MP_CORE_Shortcode_Insert{
 					} ?>
 				});
 				function insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode() {
-	
-					// Send the shortcode to the editor
-					window.send_to_editor('[<?php echo $this->_args['shortcode_id']; 
+						
+					tinyMCE.activeEditor.selection.setContent(
+						'[<?php echo $this->_args['shortcode_id']; 
 						
 						foreach ($this->_args['shortcode_options'] as $option){
 							
@@ -219,7 +218,15 @@ class MP_CORE_Shortcode_Insert{
 							}
 						}
 					
-					?>]');
+					?>]'
+					);			
+					
+					<?php 
+					//Use this hook to execute functions that need to be called when the shortcode is inserted into the active tinymce editor
+					do_action('mp_core_shortcode_' . $this->_args['shortcode_id'] . '_insert_event'); 
+					?>
+					
+					tb_remove();
 				}
 				
 			</script>
@@ -259,49 +266,7 @@ class MP_CORE_Shortcode_Insert{
 			}
 		}
 	}
-	
-	/**
-	 * Admin Downloads Icon
-	 *
-	 * Echoes the CSS for the shortcode insert icon.
-	 *
-	 * @since 1.0.0
-	 * @global $post_type
-	 * @return void
-	*/
-	function admin_shortcode_icon() {
-		
-		if ( !empty( $this->_args['shortcode_plugin_dir_url'] ) ){
-			global $post_type;	
 			
-			$this_plugin_url = $this->_args['shortcode_id'] . '_PLUGINS_URL';
-			
-			$images_url  = $this->_args['shortcode_plugin_dir_url'] . 'assets/images/';
-			$icon_url    = $images_url . $this->_args['shortcode_id'] .'-icon.png';
-			$icon_2x_url = $images_url . $this->_args['shortcode_id'] . '-icon-2x.png';
-			
-			?>
-			<style type="text/css" media="screen">
-				#<?php echo $this->_args['shortcode_id']; ?>-media-button {
-					background: url(<?php echo $icon_url; ?>) 0 -16px no-repeat;
-					background-size: 12px 30px;
-				}
-				@media
-				only screen and (-webkit-min-device-pixel-ratio: 1.5),
-				only screen and (   min--moz-device-pixel-ratio: 1.5),
-				only screen and (     -o-min-device-pixel-ratio: 3/2),
-				only screen and (        min-device-pixel-ratio: 1.5),
-				only screen and (        		 min-resolution: 1.5dppx) {
-					#<?php echo $this->_args['shortcode_id']; ?>-media-button {
-						background-image: url(<?php echo $icon_2x_url; ?>);
-						background-position: 0 -17px;
-					}
-				}
-			</style>
-			<?php
-		}
-	}
-		
 	/**
 	* basictext field
 	*
