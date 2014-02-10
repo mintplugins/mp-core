@@ -202,9 +202,9 @@ class MP_CORE_Shortcode_Insert{
 					} ?>
 				});
 				function insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode() {
-						
-					tinyMCE.activeEditor.selection.setContent(
-						'[<?php echo $this->_args['shortcode_id']; 
+					
+					// Send the shortcode to the editor ?>
+ -					window.send_to_editor('[<?php echo $this->_args['shortcode_id']; 
 						
 						foreach ($this->_args['shortcode_options'] as $option){
 							
@@ -218,8 +218,7 @@ class MP_CORE_Shortcode_Insert{
 							}
 						}
 					
-					?>]'
-					);			
+					?>]');
 					
 					<?php 
 					//Use this hook to execute functions that need to be called when the shortcode is inserted into the active tinymce editor

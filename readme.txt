@@ -1,4 +1,4 @@
-=== Move Plugins Core ===
+=== MP Core ===
 Contributors: johnstonphilip
 Donate link: http://moveplugins.com/
 Tags: framework
@@ -13,7 +13,6 @@ This plugin gives developers access to a core set of classes for creating Settin
 == Description ==
 
 This plugin gives developers access to a core set of classes for creating Settings, Metaboxes, Widgets, Plugins and more.
-
 
 == Installation ==
 
@@ -33,5 +32,5 @@ This is a group of powerful classes and functions. To understand how to build th
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0.0 =
 * Original release

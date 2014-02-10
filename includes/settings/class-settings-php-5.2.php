@@ -228,6 +228,43 @@ class MP_CORE_Settings{
 
 /* Fields ***************************************************************/
 /**
+ * Basic Text Field
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @see      absint()
+ * @param    array $args
+ * @return   void
+ */
+function mp_core_basictext( $args = array() ) {
+	$defaults = array(
+		'menu'        => '', 
+		'min'         => 1,
+		'max'         => 9999999999999999, //<- this should have a filter added
+		'step'        => 1,
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo esc_attr( $id ); ?>">
+		<div id="<?php echo $id ?>"><?php echo esc_attr( $value ); ?>
+		<?php echo $description; ?>
+        </div>
+	</label>
+<?php
+} 
+
+/**
  * Number Field
  *
  * @access   public
@@ -585,7 +622,7 @@ function mp_core_select( $args = array() ) {
 	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
 	?>
 	<label for="<?php echo $id; ?>">
-		<select name="<?php echo $name; ?>">
+		<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
 			<option value=""></option>
 			<?php foreach ( $options as $option_id => $option_label ) : ?>
 			<option value="<?php echo esc_attr( $option_id ); ?>" <?php selected( $option_id, $value ); ?>>
