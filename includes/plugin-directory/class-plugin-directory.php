@@ -152,7 +152,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					$plugin['plugin_license'] = $license;
 					
 					//Redirect when complete back to Directory page
-					$plugin['plugin_success_link'] = add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url() . $this->_args['parent_slug'] );
+					$plugin['plugin_success_link'] = !empty($this->_args['plugin_success_link']) ? $this->_args['plugin_success_link'] : add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url() . $this->_args['parent_slug'] );
 									
 					// Create update/install plugin page
 					new MP_CORE_Plugin_Installer( $plugin );
@@ -246,10 +246,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					$install_output .= '</div>';	
 					
 					//Set $install_output to say the plugin is installed but not active
-					$install_output .= 'Plugin is installed but not active';
+					$install_output .= __( 'Plugin is installed but not active', 'mp_core' );
 					
 					//Set $install_output to "Activate" plugin
-					$install_output .= '<a href="' . wp_nonce_url('options-general.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
+					$install_output .= '<div style="clear: both;"></div><a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
 					
 					//If this plugin requires a license, show that license
 					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
