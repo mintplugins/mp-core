@@ -113,9 +113,6 @@ jQuery(document).ready(function($){
 	
 		var theoriginal = $(this).parent().parent();
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
-		var name_number = 0;
-		
 
 		$(theoriginal).css( 'background-color', '#f7fff7' );
 		$(theoriginal).css( 'border-color', '#008d00' );
@@ -130,11 +127,9 @@ jQuery(document).ready(function($){
 	
 		var theoriginal = $(this).parent().parent();
 		var metabox_container = theoriginal.parent();
-		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
-		var name_number = 0;
 					
-		$(theoriginal).css( 'background-color', '');
-		$(theoriginal).css( 'border-color', '' );
+		$(theoriginal).css( 'background-color', '#fefff8');
+			$(theoriginal).css( 'border-color', '#c2c59e' );
 				
 		return false;   
 		    
@@ -233,11 +228,31 @@ jQuery(document).ready(function($){
 		
 		if ($(therepeaterclass).length > 1){
 			//Remove this repeater if it isn't the only one on the page
-			$(theoriginal).css( 'background-color', '');
-			$(theoriginal).css( 'border-color', '' );
+			$(theoriginal).css( 'background-color', '#fefff8');
+			$(theoriginal).css( 'border-color', '#c2c59e' );
 		}		
 		
 		$(this).html('Remove' );	
+		
+		return false;   
+		    
+	});
+	
+	//When we roll over this repeater
+	$(document).on("hover", ".repeater_container li", function(){ 
+	
+		$(this).css( 'background-color', '#fefff8' );
+		$(this).css( 'border-color', '#c2c59e' );
+		
+		return false;   
+		    
+	});
+	
+	//When we roll out of the remove button
+	$(document).on("mouseleave", ".repeater_container li", function(){ 
+		
+		$(this).css( 'background-color', '' );
+		$(this).css( 'border-color', '' );
 		
 		return false;   
 		    
@@ -253,23 +268,18 @@ jQuery(document).ready(function($){
 	
 	//When we click on the toggle for this repeater - hide or show this repeater
 	$(document).on("click", '.repeater_container .handlediv', function(){
-				
+								
 		var theoriginal = $(this).parent();
 		
-		var height = $(theoriginal).attr('style');
-				
-		//Show if no value set in style attr
-		if ( typeof height === 'undefined'){
+		var closed = $(theoriginal).hasClass( "closed" );
+					
+		//Show there is no closed class (it gets removed just before this call)
+		if ( !closed ){
 			$(theoriginal).css( 'height', 'inherit');
 		}
-		//Hide if height is set to inherit
-		else if( height != 'height: 35px;' ){
-			$(theoriginal).css( 'height', '35px');
-		}
-		//Show if height value is 35
+		//Hide if there is a closed class (it gets added just before this call)
 		else{
-			
-			$(theoriginal).css( 'height', 'inherit');
+			$(theoriginal).css( 'height', '35px');
 		}
 		
 	});
