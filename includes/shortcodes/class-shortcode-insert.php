@@ -127,13 +127,13 @@ class MP_CORE_Shortcode_Insert{
 			if ( version_compare( $wp_version, '3.5', '<' ) ) {
 				
 				//Output old style button
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
+				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
 				
 			//If we are on a newer than 3.5 WordPress	
 			} else {
 				
 				//Output new style button
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
 				
 				//If we passed the plugin location, there is most likely an image so create a place for it
 				$output .= !empty( $this->_args['shortcode_icon_spot'] ) ? '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>' : '';

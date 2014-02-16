@@ -108,6 +108,38 @@ jQuery(document).ready(function($){
 		    
 	});
 	
+	//When we roll over the duplicate button
+	$(document).on("hover", ".mp_duplicate", function(){ 
+	
+		var theoriginal = $(this).parent().parent();
+		var metabox_container = theoriginal.parent();
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
+		var name_number = 0;
+		
+
+		$(theoriginal).css( 'background-color', '#f7fff7' );
+		$(theoriginal).css( 'border-color', '#008d00' );
+		
+		
+		return false;   
+		    
+	});
+	
+	//When we roll out of the duplicate button
+	$(document).on("mouseleave", ".mp_duplicate", function(){ 
+	
+		var theoriginal = $(this).parent().parent();
+		var metabox_container = theoriginal.parent();
+		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
+		var name_number = 0;
+					
+		$(theoriginal).css( 'background-color', '');
+		$(theoriginal).css( 'border-color', '' );
+				
+		return false;   
+		    
+	});
+	
 	//When we click the remove button
 	$(document).on("click", ".mp_duplicate_remove", function(){ 
 	
@@ -211,19 +243,32 @@ jQuery(document).ready(function($){
 		    
 	});
 	
+	//On load, if only 1 repeater, show it. If more than 1, leave them minimized
+	$('.repeater_container').each(function(){
+			var number_of_li = $(this).find('li').length;
+			if ( number_of_li == 1 ){
+				$(this).find('li').css( 'height', 'inherit');
+			}
+	});
+	
 	//When we click on the toggle for this repeater - hide or show this repeater
 	$(document).on("click", '.repeater_container .handlediv', function(){
-		
+				
 		var theoriginal = $(this).parent();
 		
-		var height = $(theoriginal).css('height');
-		
-		//Hide
-		if ( height != '35px' ){
+		var height = $(theoriginal).attr('style');
+				
+		//Show if no value set in style attr
+		if ( typeof height === 'undefined'){
+			$(theoriginal).css( 'height', 'inherit');
+		}
+		//Hide if height is set to inherit
+		else if( height != 'height: 35px;' ){
 			$(theoriginal).css( 'height', '35px');
 		}
-		//Show
+		//Show if height value is 35
 		else{
+			
 			$(theoriginal).css( 'height', 'inherit');
 		}
 		
@@ -458,7 +503,7 @@ jQuery(document).ready(function($){
 					data: postData,
 					url: 'admin-ajax.php',
 					success: function (response) {
-						var help_ajax = $('<div class="mp_core_help_content_ajax">' + response + '</div>').appendTo(this_help_button.parent().parent().parent().parent());	
+						var help_ajax = $('<div class="mp_core_help_content_ajax mp_core_help_type_' + help_type + '">' + response + '</div>').appendTo(this_help_button.parent().parent().parent().parent());	
 						this_help_button.html(mp_core_metabox_js.hide);					
 					}
 				}).fail(function (data) {
