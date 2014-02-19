@@ -81,6 +81,10 @@
 .mp_core_help_type_oembed{
 	max-width:500px;	
 }
+.mp_core_help_type_oembed .mp-core-oembed-full-width-div{
+	border: 1px solid #D8D8D8;
+	float:left;	
+}
 .mp_core_help_oembed:before,
 .mp_core_help_video:before{
 	content: "\f126";

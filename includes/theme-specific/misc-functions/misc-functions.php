@@ -36,10 +36,15 @@ if ( ! function_exists( 'mp_core_link_to_menu_editor' ) ):
 	
 		// see wp-includes/nav-menu-template.php for available arguments
 		extract( $args );
-	
-		$link = $link_before
-			. '<a href="' .admin_url( 'nav-menus.php' ) . '">' . $before . __( 'Add a menu', 'mp_core' ) . $after . '</a>'
-			. $link_after;
+		
+		if ( is_user_logged_in() && current_user_can('edit_theme_options') ) {
+			$link = $link_before
+				. '<a href="' .admin_url( 'nav-menus.php' ) . '">' . $before . __( 'Add a menu', 'mp_core' ) . $after . '</a>'
+				. $link_after;
+		}
+		else{
+			$link = NULL;	
+		}
 	
 		// We have a list
 		if ( FALSE !== stripos( $items_wrap, '<ul' )

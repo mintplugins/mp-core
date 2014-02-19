@@ -140,8 +140,13 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 			global $wp_customize;
 	
 			if ( !isset( $wp_customize ) ) {
-				//We're not on the customizer page so load the "Add new logo" button
-				echo ('<a id="mp-core-upload-logo" href="' . admin_url( 'customize.php' ) . '">' . __( 'Upload your logo', 'mp_core' ) . '</a>'); 
+				
+				if ( is_user_logged_in() && current_user_can('edit_theme_options') ) {
+				
+					//We're not on the customizer page so load the "Add new logo" button
+					echo ('<a id="mp-core-upload-logo" href="' . admin_url( 'customize.php' ) . '">' . __( 'Upload your logo', 'mp_core' ) . '</a>'); 
+				
+				}
 			}
 			else{
 				//We are on the customizer page so load the placeholder for the logo

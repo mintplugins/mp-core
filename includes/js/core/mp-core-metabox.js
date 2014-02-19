@@ -513,7 +513,7 @@ jQuery(document).ready(function($){
 					data: postData,
 					url: 'admin-ajax.php',
 					success: function (response) {
-						var help_ajax = $('<div class="mp_core_help_content_ajax mp_core_help_type_' + help_type + '">' + response + '</div>').appendTo(this_help_button.parent().parent().parent().parent());	
+						var help_ajax = $('<div class="mp_core_help_content_ajax mp_core_help_type_' + help_type + '">' + response + '</div><div style="clear: both;"></div>').appendTo(this_help_button.parent().parent().parent().parent());	
 						this_help_button.html(mp_core_metabox_js.hide);					
 					}
 				}).fail(function (data) {

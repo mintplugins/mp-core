@@ -57,7 +57,7 @@ if ( ! function_exists( 'mp_core_paginate_links' ) ) :
 		
 		$defaults = array(
 			'total'     => $wp_query->max_num_pages,
-			'base'      => remove_query_arg( $array_of_url_args_to_remove, get_pagenum_link(1)) . '%_%' . $url_args,
+			'base'      => remove_query_arg( $array_of_url_args_to_remove, html_entity_decode(get_pagenum_link(1))) . '%_%' . $url_args,
 			'format'    => $format,
 			'current'   => $current_page,
 			'prev_next' => true,
