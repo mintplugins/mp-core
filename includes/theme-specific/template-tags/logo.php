@@ -121,10 +121,10 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 				if ( !empty( $default_height ) ){ 
 					$image_height = $default_height;
 				}
-				//If there is no default height, use the actual size of the uploaded image
+				//If there is no default height, set it automaticaly based on the width
 				else{
 					//Image height
-					$image_height = $image_size[1];
+					$image_height = NULL;
 				}
 					
 			}

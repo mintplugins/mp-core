@@ -1,0 +1,26 @@
+/*!
+ *  Move Plugins Font 1.0.0 by @moveplugins - http://moveplugins.com
+ *  License - Font: SIL OFL 1.1, CSS: MIT License
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'moveplugins';
+  src: url('moveplugins.eot?v=4.0.3');
+  src: url('moveplugins.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('moveplugins.woff?v=4.0.3') format('woff'), url('moveplugins.ttf?v=4.0.3') format('truetype'), url('moveplugins.svg?v=4.0.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="mp-font"]:before,
+[class*=" mp-font"]:before{
+  display: inline-block;
+  font-family: 'moveplugins';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.mp-font-moveplugins-logo:before {
+  content: "\0041";
+}

@@ -226,7 +226,7 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 	$html_output .= !empty( $min_width ) ? ' min-width:' . $min_width . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= !empty( $max_width ) ? ' max-width:' . $max_width . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= '">';
-		$html_output .= '<img class="mp-core-oembed-full-width-img" style="position:relative; display:block; '; 
+		$html_output .= '<img class="mp-core-oembed-full-width-img" style="position:relative; display:block; padding:0px; margin:0px;'; 
 		$html_output .= '" width="100%" src="' . plugins_url( 'images/16x9.gif', dirname(dirname(__FILE__))) . '"/>';
 		$html_output .= $iframe_code;
 	$html_output .= '</div>';
