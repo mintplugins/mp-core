@@ -216,16 +216,34 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 				
 			}
 			
-			//Redirect to referring page when complete
-			$custom_page_extension = $_SERVER['HTTP_REFERER'];
+			//Set redirect to referring page when complete
+			$redirect_after_install_url = $_SERVER['HTTP_REFERER'];
+			
+			//Check if we should redirect to the theme page - option is set when new MP theme activated
+			$theme_page_redirect = get_option('mp_core_theme_redirect_after_install');
+			
+			//If this option has been saved
+			if ( !empty($theme_page_redirect) ){
+				
+				//If theme pages redirect is true
+				if ( $theme_page_redirect ){
+					
+					//Change redirect url to be the themes page
+					$redirect_after_install_url = admin_url('themes.php');
+				}
+				
+			}
 			
 			//Javascript for redirection
 			echo '<script type="text/javascript">';
-				echo "window.location = '" . $custom_page_extension . "';";
+				echo "window.location = '" . $redirect_after_install_url . "';";
 			echo '</script>';
 			
 			
 			echo '</div>';
+			
+			//Reset theme redirect option  to false so new plugins redirect to referrer instead of themes page
+			update_option('mp_core_theme_redirect_after_install', false);
 									
 		}
 		
