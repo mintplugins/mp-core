@@ -7,6 +7,7 @@
 	margin:10px 5px 0px 0px!important; 
 }
 .mp_field{
+	position:relative;
 	border-bottom: solid 1px #dfdfdf;
 	padding-bottom: 12px;
 	margin:12px 0px 0px 0px;
@@ -17,12 +18,16 @@
 .mp_field > input[type=number]{
 	width:60px;
 }
+.mp_field > input[type=range]{
+	padding:0px;
+}
 .mp_title{
 	margin-bottom:5px;	
 }
-.custom_media_url{
-	margin-bottom:10px; 
+.mp_media_upload .custom_media_url,
+.mp_media_upload .custom_media_upload{
 	clear:right; 
+	margin-bottom:10px;	
 }
 .custom_media_image{
 	max-width:30px;
@@ -127,7 +132,45 @@
 	-moz-osx-font-smoothing: grayscale;
 	content: "\f106";	
 }
+.mp_core_showhider_button.closed:after,
+.mp_core_showhider_button.open:after
+{
+	display: inline-block;
+	font: 400 20px/1 dashicons;
+	speak: none;
+	left: -1px;
+	position: relative;
+	top: 0;
+	text-decoration: none!important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.mp_core_showhider_button.closed:after{
+	content: "\f140";	
+}	
+.mp_core_showhider_button.open:after{
+	content: "\f142";	
+}	
+[showhider]{
+	display:none;
+}
 .mp-core-radio-button{
 	float:left;
 	display:inline-block;	
+}
+
+/*Show bubble above range inputs*/
+output { 
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#444444), to(#999999));
+  background-image: -webkit-linear-gradient(top, #444444, #999999);
+  background-image: -moz-linear-gradient(top, #444444, #999999);
+  background-image: -ms-linear-gradient(top, #444444, #999999);
+  background-image: -o-linear-gradient(top, #444444, #999999);
+  width: 40px; 
+  vertical-align: top;
+  text-align: center; 
+  color: white; 
+  display: inline-block; 
+  margin-left: 5px;
 }

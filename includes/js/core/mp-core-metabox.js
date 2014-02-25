@@ -530,4 +530,59 @@ jQuery(document).ready(function($){
 		}
 				
 	});
+	
+	//Show range value beside range inputs
+	$(function() {
+		var el, newPoint, newPlace, offset;
+		
+		// Select all range inputs, watch for change
+		$("input[type='range']").change(function() {
+			
+			// Cache this for efficiency
+			el = $(this);
+									
+			// Set value
+			el.next("output").text(el.val());
+		})
+		// Fake a change to position bubble at page load
+		.trigger('change');
+	});
+	
+	//Showhider function which shows and hides fields based on their parent showhider
+	$( ".mp_core_showhider_button.closed" ).on('click', function(event){
+			event.preventDefault;
+			
+			var this_button = $(this);
+			
+			//Get name of showhider group
+			var showhidergroup = this_button.attr('showhidergroup');
+			
+			//Show fields in this showhider			
+			$( '[showhider=' + showhidergroup + ']').css('display', 'block');
+			
+			//After showhider is open, update the classes
+			setTimeout(function() {
+				this_button.removeClass('closed').addClass('open');
+			}, 300);
+			
+						
+	});
+	$(document).on('click', '.mp_core_showhider_button.open', function(event){
+	//$( ".mp_core_showhider_button.open" ).on('click', function(event){
+			event.preventDefault;
+						
+			var this_button = $(this);
+						
+			//Get name of showhider group
+			var showhidergroup = this_button.attr('showhidergroup');
+			
+			//Hide fields in this showhider					
+			$( '[showhider=' + showhidergroup + ']').css('display', 'none');
+			
+			//After showhider is open, update the classes
+			setTimeout(function() {
+				this_button.removeClass('open').addClass('closed');
+			}, 300);						
+	});
+
 });

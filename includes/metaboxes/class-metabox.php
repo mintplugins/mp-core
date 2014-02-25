@@ -253,7 +253,8 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_class' => 'mp_repeater', 
 											'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
-											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false
+											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
+											'field_showhider' => isset( $thefield['field_showhider'] ) ? ' showhider="' . $thefield['field_showhider'] . '" ' : NULL
 										);
 										
 										//call function for field type (callback function name stored in $this->$field['field_type']
@@ -299,7 +300,8 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_class' => 'mp_repeater', 
 										'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
-										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false
+										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
+										'field_showhider' => isset( $thefield['field_showhider'] ) ? 'showhider="' . $thefield['field_showhider'] . '"' : NULL
 									);
 									
 									//call function for field type (callback function name stored in $this->$field['field_type']
@@ -342,6 +344,8 @@ if (!class_exists('MP_CORE_Metabox')){
 						$field_select_values = isset($field['field_select_values']) ? $field['field_select_values'] : NULL;
 						//set the preset value to the passed in value
 						$preset_value = isset($field['field_value']) ? $field['field_value'] : '';
+						//set the showhider
+						$showhider_value = isset($field['field_showhider']) ? 'showhider="' . $field['field_showhider'] . '"' : '';
 						
 						//Make array to pass to callback function
 						$callback_args = array(
@@ -352,7 +356,8 @@ if (!class_exists('MP_CORE_Metabox')){
 							'field_class' => $field['field_id'], 
 							'field_select_values' => $field_select_values, 
 							'field_preset_value' => $preset_value, 
-							'field_required' => $field_required
+							'field_required' => $field_required,
+							'field_showhider' => $showhider_value
 						);
 						
 						//call function for field type (function name stored in $this->$field['field_type']
@@ -539,6 +544,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -547,7 +553,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
@@ -574,6 +580,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -588,7 +595,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -615,6 +622,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -629,7 +637,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -656,6 +664,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -670,7 +679,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -697,6 +706,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -706,7 +716,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			extract( $args, EXTR_SKIP );
 						
 			$checked = empty($field_value) ? '' : 'checked';
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -733,6 +743,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -747,7 +758,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -774,6 +785,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -788,7 +800,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -815,6 +827,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -829,7 +842,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -856,6 +869,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -870,7 +884,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -897,6 +911,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -911,7 +926,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -940,6 +955,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -948,7 +964,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 						
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -975,6 +991,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -989,7 +1006,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -1027,6 +1044,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1041,7 +1059,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
@@ -1083,6 +1101,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1097,12 +1116,12 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" min="0" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_class; ?>" min="0" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> ><output class="<?php echo $field_class; ?>_output" for="<?php echo $field_class; ?>"></output>
 			<?php        
 			echo '</div>'; 
 		}
@@ -1126,6 +1145,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1140,7 +1160,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -1167,6 +1187,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1180,8 +1201,8 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
-			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+						
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -1224,6 +1245,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1242,7 +1264,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			$icon_class = explode( '[', $field_id );
 			$icon_class = explode( ']', $icon_class[2] );
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
@@ -1317,6 +1339,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
@@ -1325,7 +1348,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			foreach ($field_select_values as $help_array){
 				echo '<div class="mp_core_help">';		
@@ -1333,7 +1356,49 @@ if (!class_exists('MP_CORE_Metabox')){
 				echo '</div>';		
 			}
 			echo '<div style="clear: both;"></div>';
-			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_class . '" value=" " />';
+			echo '</label></div>';
+			echo '</div>'; 
+		}
+		
+		/**
+		 * showhider field. Used to show or hide options. Parameters in this function match all below
+		 *
+		 * @access   public
+		 * @since    1.0.0
+   		 * @param    string $field_id Required. This must be a unique name with no spaces
+		 * @param    string $field_title Required. This is the title of the field that will display to the user
+		 * @param    string $field_description Required. The user will see this description above this field
+		 * @param    string $value Required. The value displayed in this field
+		 * @param    string $classname Required. The name of the  css class for this field
+		 * @return   void
+		*/
+		function showhider( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+				'field_showhider' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div style="clear: both;"></div>';
+			
+			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . $field_class . '">' . $field_title . '</a>';
+			
+			echo '<div style="clear: both;"></div>';
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -1357,6 +1422,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_select_values' => NULL,
 				'field_preset_value' => NULL,
 				'field_required' => NULL,
+				'field_showhider' => NULL,
 			);
 			
 			//Get and parse args
