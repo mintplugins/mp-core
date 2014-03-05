@@ -26,6 +26,7 @@
 			'software_api_url' => 'http://moveplugins.com',//The URL where EDD and mp_repo are installed and checked
 			'software_filename' => 'mp-core.php',
 			'software_licensed' => false, //<-Boolean
+			'software_wp_repo_ignore' => true
 		);
 		
 		//Since this is a plugin, call the Plugin Updater class

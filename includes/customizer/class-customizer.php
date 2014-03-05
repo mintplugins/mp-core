@@ -70,7 +70,7 @@ class MP_CORE_Customizer{
 	 */
 	function mp_core_customize_register_transport( $wp_customize ) {
 		
-		$no_transport_types = array( 'background-image', 'background-disabled', 'responsive' );
+		$no_transport_types = array( 'background-image', 'background-disabled', 'responsive', 'background-color-opacity' );
 		
 		//Fiter hook for args to ignore and make the page refresh
 		$no_transport_types = apply_filters( 'mp_core_customizer_transport_ignore_types', $no_transport_types );
@@ -180,6 +180,34 @@ class MP_CORE_Customizer{
 			
 		}
 		
+		//Background Opacity
+		if ( $css_arg == "background-color-opacity" ){
+					
+				//Store the opacity value in a global variable so we can use it next time through this on the rgb for the background
+				global $mp_core_customizer_background_opacity;
+				$mp_core_customizer_background_opacity = $theme_mod_value;
+			
+						
+		}
+		
+		//Background Color
+		if ( $css_arg == "background-color" ){
+			
+			//If we set this up correctly, our opacity is right before our color and has been stored in the global variable
+			global $mp_core_customizer_background_opacity;
+			
+			if (!empty ($theme_mod_value) || $theme_mod_value != false){
+								
+				$rgb = mp_core_hex2rgb( $theme_mod_value );
+				echo $css_arg . ': rgba(' . $rgb[0] . ', ' . $rgb[1] . ', ' . $rgb[2] . ', ' . $mp_core_customizer_background_opacity . ');';
+				
+			}
+			
+			//Now that we've used it, set it to NULL
+			$mp_core_customizer_background_opacity = NULL;
+			
+		}
+		
 		//Background Disabled
 		if ( $css_arg == "background-disabled" ){
 			if ( !empty( $theme_mod_value ) ){ //<--checked
@@ -189,7 +217,7 @@ class MP_CORE_Customizer{
 		}
 		
 		//Display
-		elseif( $css_arg == "display" ){
+		if( $css_arg == "display" ){
 			
 			$display_val = $theme_mod_value == false ? 'none' : 'block';
 			
@@ -198,14 +226,14 @@ class MP_CORE_Customizer{
 		}
 		
 		//Other
-		else{
+		//else{
 			
 			//Make sure it's not empty
 			if ( !empty( $theme_mod_value ) || $theme_mod_value != false ){
 				echo $css_arg . ':' . $theme_mod_value . ';';
 			}
 	
-		}
+		//}
 	
 		echo '}';
 	
@@ -485,6 +513,29 @@ class MP_CORE_Customizer{
 			'label' => $setting['label'],
 			'section' => $section_id,
 			'type' => 'select',
+			'choices' => $setting['choices']
+		) );
+	
+	 }	
+	 
+	  /**
+	 * Type Select Field. Used to add a control for the image type
+	 *
+	 * @access   public
+	 * @since    1.0.0
+	 * @see      WP_Customize_Manager::add_control()
+	 * @param    WP_Customize_Manager $wp_customize Theme Customizer object.
+	 * @param    $section_id The ID of this Section. Settings are separated into Sections.
+	 * @param    $setting_id The ID of this Setting.
+	 * @param    $section An array containing the 'label', 'priority', and 'choices' for this setting.
+	 * @return   void
+	 */
+	 function range( $wp_customize, $section_id, $setting_id, $setting ){
+		
+		$wp_customize->add_control( $setting_id, array(
+			'label' => $setting['label'],
+			'section' => $section_id,
+			'type' => 'range',
 			'choices' => $setting['choices']
 		) );
 	

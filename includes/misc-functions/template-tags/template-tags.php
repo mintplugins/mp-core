@@ -109,8 +109,25 @@ function mp_core_get_avatar( $id_or_email, $size ){
  * @param    int $max_width Optional. The maximum width in pixels this video should ever be.
  * @return   string $html_output An iframe html tag containing the video wrapped in a div set to 100% width over a 16x9 image.
  */ 
-function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
-		
+function mp_core_oembed_get($video_url, $args){
+	
+	$args_defaults = array(
+		'min_width' => NULL,
+		'max_width' => NULL,
+		'iframe_css_id' => NULL,
+		'iframe_css_class' => NULL,
+	);
+	
+	//Get and parse args
+	$args = wp_parse_args( $args, $args_defaults );
+	
+	//Set CSS ID	
+	$args['iframe_css_id'] = !empty( $args['iframe_css_id'] ) ? 'id="' . $args['iframe_css_id'] . '"' : '';
+	
+	//Set CSS Class	
+	$args['iframe_css_class'] = !empty( $args['iframe_css_class'] ) ? 'class="' . $args['iframe_css_class'] . '"' : '';
+	
+	//Check if iframe exists in the video url
 	$iframe = strpos( html_entity_decode($video_url), '<iframe' );
 		
 	//Is this a URL?
@@ -186,7 +203,7 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 			if ( $video_oembed ){
 		
 				$video_code_explode = explode( '<iframe ', $video_oembed );
-				$video_code = '<iframe seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;';
+				$video_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;';
 				$video_code .= '" ' . $video_code_explode[1];	
 				
 				$iframe_code = $video_code;			
@@ -196,7 +213,7 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 		//If this is not a supported oembed url (like youtube.com/embed/...")
 		else{
 									
-			$iframe_code = '<iframe seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;" src="' . $video_url . '" /></iframe>';
+			$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;" src="' . $video_url . '" /></iframe>';
 							
 		}
 			
@@ -216,15 +233,15 @@ function mp_core_oembed_get($video_url, $min_width = NULL, $max_width = NULL){
 			//Cut off anything after the iframe
 			$iframe_code = explode( '>', $iframe_code[1]);
 						
-			$iframe_code = '<iframe seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;" ' . $iframe_code[0] . '/></iframe>';
+			$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class']  . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;" ' . $iframe_code[0] . '/></iframe>';
 										
 		}
 		
 	}
 
 	$html_output = '<div class="mp-core-oembed-full-width-div" style="display:inline-block; position:relative; width:100%;';
-	$html_output .= !empty( $min_width ) ? ' min-width:' . $min_width . 'px; margin: 0px auto 0px auto;' : NULL;
-	$html_output .= !empty( $max_width ) ? ' max-width:' . $max_width . 'px; margin: 0px auto 0px auto;' : NULL;
+	$html_output .= !empty( $args['min_width'] ) ? ' min-width:' . $args['min_width'] . 'px; margin: 0px auto 0px auto;' : NULL;
+	$html_output .= !empty( $args['max_width'] ) ? ' max-width:' . $args['max_width'] . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= '">';
 		$html_output .= '<img class="mp-core-oembed-full-width-img" style="position:relative; display:block; padding:0px; margin:0px;'; 
 		$html_output .= '" width="100%" src="' . plugins_url( 'images/16x9.gif', dirname(dirname(__FILE__))) . '"/>';
