@@ -181,7 +181,7 @@ class MP_CORE_Customizer{
 		}
 		
 		//Background Opacity
-		if ( $css_arg == "background-color-opacity" ){
+		elseif ( $css_arg == "background-color-opacity" ){
 					
 				//Store the opacity value in a global variable so we can use it next time through this on the rgb for the background
 				global $mp_core_customizer_background_opacity;
@@ -191,10 +191,12 @@ class MP_CORE_Customizer{
 		}
 		
 		//Background Color
-		if ( $css_arg == "background-color" ){
+		elseif ( $css_arg == "background-color" ){
 			
 			//If we set this up correctly, our opacity is right before our color and has been stored in the global variable
 			global $mp_core_customizer_background_opacity;
+			
+			$mp_core_customizer_background_opacity = empty($mp_core_customizer_background_opacity) ? 1 : $mp_core_customizer_background_opacity;
 			
 			if (!empty ($theme_mod_value) || $theme_mod_value != false){
 								
@@ -209,7 +211,7 @@ class MP_CORE_Customizer{
 		}
 		
 		//Background Disabled
-		if ( $css_arg == "background-disabled" ){
+		elseif ( $css_arg == "background-disabled" ){
 			if ( !empty( $theme_mod_value ) ){ //<--checked
 				echo 'background-image: none;';
 			}
@@ -217,7 +219,7 @@ class MP_CORE_Customizer{
 		}
 		
 		//Display
-		if( $css_arg == "display" ){
+		elseif( $css_arg == "display" ){
 			
 			$display_val = $theme_mod_value == false ? 'none' : 'block';
 			
@@ -226,14 +228,14 @@ class MP_CORE_Customizer{
 		}
 		
 		//Other
-		//else{
+		else{
 			
 			//Make sure it's not empty
 			if ( !empty( $theme_mod_value ) || $theme_mod_value != false ){
 				echo $css_arg . ':' . $theme_mod_value . ';';
 			}
 	
-		//}
+		}
 	
 		echo '}';
 	
