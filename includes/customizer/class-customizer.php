@@ -185,7 +185,7 @@ class MP_CORE_Customizer{
 					
 				//Store the opacity value in a global variable so we can use it next time through this on the rgb for the background
 				global $mp_core_customizer_background_opacity;
-				$mp_core_customizer_background_opacity = $theme_mod_value;
+				$mp_core_customizer_background_opacity = intval($theme_mod_value);
 			
 						
 		}
@@ -196,7 +196,7 @@ class MP_CORE_Customizer{
 			//If we set this up correctly, our opacity is right before our color and has been stored in the global variable
 			global $mp_core_customizer_background_opacity;
 			
-			$mp_core_customizer_background_opacity = empty($mp_core_customizer_background_opacity) ? 1 : $mp_core_customizer_background_opacity;
+			$mp_core_customizer_background_opacity = !is_numeric($mp_core_customizer_background_opacity) ? 1 : $mp_core_customizer_background_opacity;
 			
 			if (!empty ($theme_mod_value) || $theme_mod_value != false){
 								
