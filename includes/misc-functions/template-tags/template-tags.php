@@ -109,7 +109,7 @@ function mp_core_get_avatar( $id_or_email, $size ){
  * @param    int $max_width Optional. The maximum width in pixels this video should ever be.
  * @return   string $html_output An iframe html tag containing the video wrapped in a div set to 100% width over a 16x9 image.
  */ 
-function mp_core_oembed_get($video_url, $args){
+function mp_core_oembed_get($video_url, $args = NULL){
 	
 	$args_defaults = array(
 		'min_width' => NULL,
