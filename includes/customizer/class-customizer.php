@@ -185,7 +185,7 @@ class MP_CORE_Customizer{
 					
 				//Store the opacity value in a global variable so we can use it next time through this on the rgb for the background
 				global $mp_core_customizer_background_opacity;
-				$mp_core_customizer_background_opacity = intval($theme_mod_value);
+				$mp_core_customizer_background_opacity = floatval($theme_mod_value);
 			
 						
 		}

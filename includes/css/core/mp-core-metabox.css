@@ -154,6 +154,7 @@
 }	
 [showhider]{
 	display:none;
+	padding-left:20px;
 }
 .mp-core-radio-button{
 	float:left;
