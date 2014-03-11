@@ -192,17 +192,21 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Get all plugins		
 			$all_plugins = get_plugins();
+			
+
 						
 			//Loop through all plugins
 			foreach ( (array)$all_plugins as $plugin_file => $plugin_data) {
-				
 				
 				//Split the plugin_file from mp-core/mp-core.php to just mp-core.php (because that's what the plugin passed us in $args['software_filename'])
 				//This allows us to potentially have a different plugin directory name (like mp-core2/mp-core.php) and updates still work		
 				$plugin_filename = explode('/', $plugin_file);
 				
+				//If the plugin isn't in a directory, use the base 
+				$plugin_filename = isset($plugin_filename[1]) ? $plugin_filename[1] : $plugin_file;
+				
 				//Compare if the plugin we are looping through is the one we are looking for
-				if ($plugin_filename[1] == $args['software_filename']) {
+				if ($plugin_filename == $args['software_filename']) {
 											
 					//If we should ignore the WP repo
 					if ( $args['software_wp_repo_ignore'] ){
