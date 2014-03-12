@@ -209,122 +209,128 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			
 			do_action( 'mp_core_directory_' . $this->_args['slug'] . '_header_output' );
 			
-			echo '<div id="availablethemes">';
+			echo '<div class="theme-browser">';
 			
-			//Loop through all returned plugins from the wp_remote_post in the construct function	
-			foreach ( $this->plugins as $plugin ){
-								
-				//Plugin Name Slug
-				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core		
+				echo '<div class="themes">';
 				
-				//This next section figures out what do make the $install_output variable
-				
-				//Check if plugin is installed
-				$check_plugin = $this->check_if_plugin_is_on_this_server( $plugin );
-				
-				//If the plugin is active
-				if ( $check_plugin['plugin_active'] ) {
-										
-					//Show the green light
-					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
-						$install_output .= '<div class="mp-core-green-light"></div>';
-					$install_output .= '</div>';	
-				
-					//Set $install_output to say the plugin is active
-					$install_output .= 'Plugin is active';
+				//Loop through all returned plugins from the wp_remote_post in the construct function	
+				foreach ( $this->plugins as $plugin ){
+									
+					//Plugin Name Slug
+					$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core		
 					
-					//If this plugin requires a license, show that license
-					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
+					//This next section figures out what do make the $install_output variable
 					
-				}
-				//If the plugin is installed but is not active
-				elseif ( $check_plugin['plugin_exists'] ) {
+					//Check if plugin is installed
+					$check_plugin = $this->check_if_plugin_is_on_this_server( $plugin );
 					
-					//Show the red light
-					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
-						$install_output .= '<div class="mp-core-red-light"></div>';
-					$install_output .= '</div>';	
+					//If the plugin is active
+					if ( $check_plugin['plugin_active'] ) {
+											
+						//Show the green light
+						$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+							$install_output .= '<div class="mp-core-green-light"></div>';
+						$install_output .= '</div>';	
 					
-					//Set $install_output to say the plugin is installed but not active
-					$install_output .= __( 'Plugin is installed but not active', 'mp_core' );
-					
-					//Set $install_output to "Activate" plugin
-					$install_output .= '<div style="clear: both;"></div><a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
-					
-					//If this plugin requires a license, show that license
-					$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
-					
-				}
-				//If the plugin isn't instaled or active
-				else{
-					
-					
-					//Show the red light
-					$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
-						$install_output .= '<div class="mp-core-red-light"></div>';
-					$install_output .= '</div>';	
-					
-					//Set $install_output to say the plugin is installed but not active
-					$install_output .= 'Plugin is not installed.';
-												
-					/** If plugins_api isn't available, load the file that holds the function */
-					if ( ! function_exists( 'plugins_api' ) )
-						require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
- 
- 
-					//Check if this plugin exists in the WordPress Repo
-					$args = array( 'slug' => $plugin_name_slug );
-					$api = plugins_api( 'plugin_information', $args );
-										
-					//If it doesn't, display link which downloads it from your custom URL
-					if (isset($api->errors)){ 
+						//Set $install_output to say the plugin is active
+						$install_output .= 'Plugin is active';
 						
 						//If this plugin requires a license, show that license
-						if ( $plugin['plugin_licensed'] == true ){
-													
-							//show license
-							$install_output .= $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] );
-							
-						}
-						else{
-							
-							// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
-						}
-											
-					}else{
-						//Otherwise display the WordPress.org Repo Install button
-						$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
-					
+						$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
+						
 					}
+					//If the plugin is installed but is not active
+					elseif ( $check_plugin['plugin_exists'] ) {
+						
+						//Show the red light
+						$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+							$install_output .= '<div class="mp-core-red-light"></div>';
+						$install_output .= '</div>';	
+						
+						//Set $install_output to say the plugin is installed but not active
+						$install_output .= __( 'Plugin is installed but not active', 'mp_core' );
+						
+						//Set $install_output to "Activate" plugin
+						$install_output .= '<div style="clear: both;"></div><a href="' . wp_nonce_url('plugins.php?action=activate&amp;plugin=' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] . '&amp;plugin_status=all&amp;paged=1&amp;s=', 'activate-plugin_' . $check_plugin['plugin_directory'] . $plugin['plugin_filename'] ) . '" title="' . __('Activate ', 'mp_core') . $plugin['plugin_name'] . '" class="button" >' . __('Activate ', 'mp_core') . '"' . $plugin['plugin_name'] . '"</a>';
+						
+						//If this plugin requires a license, show that license
+						$install_output .= $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : NULL;
+						
+					}
+					//If the plugin isn't instaled or active
+					else{
+						
+						
+						//Show the red light
+						$install_output = '<div class="mp-core-true-false-light  mp-core-directory-true-false-light">';
+							$install_output .= '<div class="mp-core-red-light"></div>';
+						$install_output .= '</div>';	
+						
+						//Set $install_output to say the plugin is installed but not active
+						$install_output .= 'Plugin is not installed.';
+													
+						/** If plugins_api isn't available, load the file that holds the function */
+						if ( ! function_exists( 'plugins_api' ) )
+							require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+	 
+	 
+						//Check if this plugin exists in the WordPress Repo
+						$args = array( 'slug' => $plugin_name_slug );
+						$api = plugins_api( 'plugin_information', $args );
+											
+						//If it doesn't, display link which downloads it from your custom URL
+						if (isset($api->errors)){ 
+							
+							//If this plugin requires a license, show that license
+							if ( $plugin['plugin_licensed'] == true ){
+														
+								//show license
+								$install_output .= $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] );
+								
+							}
+							else{
+								
+								// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
+								$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
+							}
+												
+						}else{
+							//Otherwise display the WordPress.org Repo Install button
+							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=mp-core-directory&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
+						
+						}
+						
+					}
+									
+					//Show this plugin on the page
+					echo '<div class="theme">
+							<a href="' . $plugin['plugin_buy_url'] . '" class="theme-screenshot" target="_blank">
+								<img src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '" />
+							</a>
+							
+							<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>
+							
+							<div class="mp-core-plugin-info">
+								<h3>' . $plugin['plugin_name'] . '</h3>
+								
+								<div class="theme-author">
+								
+									' . $plugin['plugin_description'] . 
+								
+								'</div>
+								
+								<div class="action-links">
+									
+										' . $install_output . '
+											
+								</div>
+							</div>
+	
+					</div>';
 					
 				}
-								
-				//Show this plugin on the page
-				echo '<div class="available-theme">
-						<a href="' . $plugin['plugin_buy_url'] . '" class="screenshot" target="_blank">
-							<img src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '" />
-						</a>
-						
-						<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>
-						
-						<h3>' . $plugin['plugin_name'] . '</h3>
-						
-						<div class="theme-author">
-						
-							' . $plugin['plugin_description'] . 
-						
-						'</div>
-						
-						<div class="action-links">
-							
-								' . $install_output . '
-									
-						</div>
-
-				</div>';
 				
-			}
+				echo '</div>';
 			
 			echo '</div>';
 			

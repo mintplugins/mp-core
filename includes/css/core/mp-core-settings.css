@@ -29,13 +29,16 @@
 	width:100%;	
 	margin-top:5px;
 }
-.available-theme{
-	position:relative;
+.mp-core-plugin-info{
+	padding:10px;
+}
+.mp-core-plugin-info h3{
+	margin:0px 0px 10px 0px;	
 }
 .mp-core-directory-price{
 	position: absolute;
-	top: 21px;
-	left: 1px;
+	top: 0px;
+	left: 0px;
 	background-color: rgba(0, 0, 0, 0.27);
 	color: #fff;
 	padding: 7px;
