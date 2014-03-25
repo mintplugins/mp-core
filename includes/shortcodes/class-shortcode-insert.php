@@ -278,7 +278,7 @@ class MP_CORE_Shortcode_Insert{
 	* @return     void
 	*/
 	function basictext($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_id . '" value=" " />';
@@ -296,7 +296,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function textbox($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -314,7 +314,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function password($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -333,7 +333,7 @@ class MP_CORE_Shortcode_Insert{
 	*/
 	function checkbox($field_id, $field_title, $field_description, $value){
 		$checked = empty($value) ? '' : 'checked';
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -351,7 +351,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function inout_range($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -369,7 +369,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function url($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -387,7 +387,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function date($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -405,7 +405,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function number($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -423,7 +423,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function textarea($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';
@@ -443,7 +443,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function select($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -471,7 +471,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function colorpicker($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';
@@ -489,7 +489,7 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	*/
 	function mediaupload($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';

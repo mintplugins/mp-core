@@ -612,7 +612,8 @@ function mp_core_select( $args = array() ) {
 		'value'       => '',
 		'options'     => array(),
 		'description' => '',
-		'registration' => '' 
+		'registration' => '' ,
+		'use_labels' => false
 	);
 	
 	$args = wp_parse_args( $args, $defaults );
@@ -624,11 +625,13 @@ function mp_core_select( $args = array() ) {
 	<label for="<?php echo $id; ?>">
 		<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
 			<option value=""></option>
-			<?php foreach ( $options as $option_id => $option_label ) : ?>
+			<?php foreach ( $options as $option_id => $option_label ) { 
+				if ($use_labels){ $option_id = str_replace("-", "_", sanitize_title( $option_label ) ); }
+			?>
 			<option value="<?php echo esc_attr( $option_id ); ?>" <?php selected( $option_id, $value ); ?>>
 				<?php echo esc_attr( $option_label ); ?>
 			</option>
-			<?php endforeach; ?>
+			<?php }; ?>
 		</select>
 		<?php echo $description; ?>
 	</label>

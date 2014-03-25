@@ -175,3 +175,11 @@ output {
   display: inline-block; 
   margin-left: 5px;
 }
+
+#TB_ajaxContent{
+	width:100%!important;
+	-moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+     -o-box-sizing: border-box;
+        box-sizing: border-box;	
+}
