@@ -24,6 +24,7 @@
  * @since      1.0.0
  * @return     void
  */
+
 if (!class_exists('MP_CORE_Metabox')){
 	class MP_CORE_Metabox{
 				
@@ -384,11 +385,11 @@ if (!class_exists('MP_CORE_Metabox')){
 		public function mp_core_save_data() {
 			
 			//Check if post type has been set
-			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;
+			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;				
 			
 			//If we are saving this post type - we dont' want to save every single metabox that has been created using this class - only this post type
 			if ( $this->_args['metabox_posttype'] == $this_post_type ) {
-				
+									
 			   global $post;
 			   $this->_post_id = isset($post->ID) ? $post->ID : '';
 			  // verify if this is an auto save routine. 
@@ -403,7 +404,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				
 				//Loop through each item in the passed array
 				foreach ($this->_metabox_items_array as $field){
-				
+															
 					// verify this came from our screen and with proper authorization,
 					// because save_post can be triggered at other times
 					if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
@@ -443,31 +444,61 @@ if (!class_exists('MP_CORE_Metabox')){
 							
 							//Store all the post values for this repeater in $these_repeater_field_id_values
 							$these_repeater_field_id_values = $_POST[$field['field_repeater']];
-				
-							//Loop through all of the fields in the $_POST with this repeater
-							foreach($these_repeater_field_id_values as $repeat_field){
+							
+							//Sanitize user input for this repeater field and add it to the $data array
+							$allowed_tags = array(
+								'a' => array(
+									'href' => array(),
+									'title' => array()
+								),
+								'br' => array(),
+								'em' => array(),
+								'strong' => array(),
+								'p' => array(),
+							);
+							
+							//Set default for repeat counter
+							$repeater_counter = 0;
 								
-								//Sanitize user input for this repeater field and add it to the $data array
-								$allowed_tags = array(
-									'a' => array(
-										'href' => array(),
-										'title' => array()
-									),
-									'br' => array(),
-									'em' => array(),
-									'strong' => array(),
-									'p' => array(),
-								);
-								if ( $field['field_type'] == 'textarea' ){
-									$repeat_field[$field['field_id']] = wp_kses(htmlentities( $repeat_field[$field['field_id']], ENT_QUOTES), $allowed_tags ); 
+							//Loop through all of the repeats in the $_POST with this repeater
+							foreach( $these_repeater_field_id_values as $repeater ){
+								
+								//Loop through all of the repeats in the $_POST with this repeater
+								foreach( $repeater as $field_id => $field_value ){
+																	
+									//Loop through each passed in fields so we can find the "type"
+									foreach ( $this->_metabox_items_array as $child_loop_field ){
+										
+										if ( isset($child_loop_field['field_repeater']) ){
+											
+											//If the current iteration of passed-in field's repeater matches the repeater we're on in the master loop
+											if ( $child_loop_field['field_repeater'] == $field['field_repeater']){
+												
+												//If this child loop's id matched the current one in the POST array
+												if ( $child_loop_field['field_id'] == $field_id ){
+													
+													//Sanitize each field according to its type
+													if ( $child_loop_field['field_type'] == 'textarea' ){
+														$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities( $field_value, ENT_QUOTES), $allowed_tags ); 
+													}
+													elseif( $child_loop_field['field_type'] == 'wp_editor' ){
+														$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities(wpautop( $field_value, true ), ENT_QUOTES), $allowed_tags ); 									
+													}
+													else{
+														$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
+													}
+									
+													
+												}
+												
+											}
+										}
+									}
 								}
-								elseif( $field['field_type'] == 'wp_editor' ){
-									$repeat_field[$field['field_id']] = wp_kses(htmlentities(wpautop( $repeat_field[$field['field_id']], true ), ENT_QUOTES), $allowed_tags ); 
-								}
-								else{
-									$repeat_field[$field['field_id']] = sanitize_text_field( $repeat_field[$field['field_id']] );	
-								}
-							}
+								//Increment repeat counter
+								$repeater_counter = $repeater_counter + 1;		
+							}	
+											
 						}
 					}
 					//This is not a repeater field.
@@ -511,13 +542,14 @@ if (!class_exists('MP_CORE_Metabox')){
 					}
 					
 				}//End of foreach through $this->_metabox_items_array
-				
+								
 				//If the final field was a repeater, update that repeater now
 				if ($prev_repeater != false){
 					// Update $data 
 					update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 				}
 			}
+		
 		}
 		
 		/**

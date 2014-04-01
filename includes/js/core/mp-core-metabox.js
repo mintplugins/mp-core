@@ -98,7 +98,7 @@ jQuery(document).ready(function($){
 		});
 		
 		//Reset the body in the iframe for each wp_editor/tinymce field in this repeater
-		theclone.find('.mceIframeContainer > iframe').contents().find('body').each(function() {
+		theclone.find('.mce-container > iframe').contents().find('body').each(function() {
 			$(this).html("");
 		});
 		
