@@ -160,6 +160,9 @@
 	float:left;
 	display:inline-block;	
 }
+.mp_field textarea{
+	max-width:100%;	
+}
 
 /*Show bubble above range inputs*/
 output { 
