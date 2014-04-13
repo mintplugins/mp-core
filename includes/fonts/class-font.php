@@ -56,7 +56,18 @@ class MP_CORE_Font{
 		//Font Family - Merriweather Sans -> Merriweather+Sans
 		$this->_font_family_slug = str_replace( " ", "+", $this->_font_family );
 		
-		add_action( 'wp_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
+		//If this class is created after wp_enqueue_scripts has already run
+		if ( did_action('wp_enqueue_scripts') === 1 ){
+			
+			//Then run it in the footer
+			add_action( 'wp_footer', array( $this, 'mp_core_enqueue_scripts' ) );
+		}
+		//If this class is created before wp_enqueue_scripts has been run
+		else{
+			
+			//Run it in wp_enqueue_scripts
+			add_action( 'wp_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
+		}
 		
 		add_action( 'mp_core_tinymce_css', array( $this, 'mp_core_enqueue_scripts' ) );
 			
