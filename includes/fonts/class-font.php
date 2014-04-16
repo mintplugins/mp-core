@@ -82,17 +82,25 @@ class MP_CORE_Font{
 	* @return   void
  	*/
 	function mp_core_enqueue_scripts() {
-					
-		$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
 		
-		if ( !is_wp_error( $google_font_face ) ){
-			$google_font_face = str_replace("font-family: '" . $this->_font_family . "';", "font-family: '" . $this->_css_font_family . "';", $google_font_face['body'] );
+		global $mp_core_font_families;
+					
+		if ( !isset( $mp_core_font_families[$this->_font_family_slug] ) ){
 			
-			if ( current_filter() == 'mp_core_tinymce_css'){
-				echo $google_font_face;
-			}
-			else{
-				echo '<style> ' . $google_font_face . '</style>';
+			//Add this font family slug to the array of font families so we dont re-create it again
+			$mp_core_font_families[$this->_font_family_slug] = true;
+		
+			$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
+			
+			if ( !is_wp_error( $google_font_face ) ){
+				$google_font_face = str_replace("font-family: '" . $this->_font_family . "';", "font-family: '" . $this->_css_font_family . "';", $google_font_face['body'] );
+				
+				if ( current_filter() == 'mp_core_tinymce_css'){
+					echo $google_font_face;
+				}
+				else{
+					echo '<style> ' . $google_font_face . '</style>';
+				}
 			}
 		}
 		

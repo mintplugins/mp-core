@@ -1092,6 +1092,59 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		/**
+		* select field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function datalist( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_input_class' => NULL,
+				'field_container_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+				'field_showhider' => NULL,
+                'field_placeholder' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_input_class = $field_required == true ? $field_input_class . ' mp_required' : $field_input_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+			?>
+			<input name="<?php echo $field_id; ?>" list="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> value="<?php echo $field_value; ?>" />
+            <datalist id="<?php echo $field_id; ?>">
+                <option value="">
+                <?php foreach ( $field_select_values as $select_value => $select_text) : ?>
+                	<option value="<?php echo isset($select_text) ? esc_attr( $select_text ) : esc_attr( $select_value ); ?>">
+                <?php endforeach; ?>
+            </datalist>
+			
+			<?php        
+			echo '</div>'; 
+		}
+		
+		/**
 		* radio field
 		*
 		* @access   public
