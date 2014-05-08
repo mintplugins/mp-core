@@ -206,7 +206,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				);
 								
 				$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-																					
+																									
 				// make sure the response was successful
 				if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
 					$failed = true;
@@ -283,12 +283,28 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
 			$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
 			
-			$verify_license_args = array(
-				'software_name'      => $args['software_name'],
-				'software_api_url'   => $args['software_api_url']
-			);
+			$software_name_slug = sanitize_title( $args['software_name'] );
+			
+			//Listen for our activate button to be clicked
+			if( isset( $_POST[ $software_name_slug . '_license_key' ] ) ) {
+								
+				//If it has, store it in the license_key variable 
+				$license_key = $_POST[ $software_name_slug . '_license_key' ];
 				
-			new MP_CORE_Verify_License( $verify_license_args );		
+				//Check nonce
+				if( ! check_admin_referer( $software_name_slug . '_nonce', $software_name_slug . '_nonce' ) ) 	
+					return false; // get out if we didn't click the Activate button
+					
+				$args = array(
+					'software_name'      => $args['software_name'],
+					'software_api_url'   => $args['software_api_url'],
+					'software_license_key'   => $license_key,
+					'software_store_license' => true,
+				);
+							
+				mp_core_verify_license( $args );
+				
+			}	
 			
 		}
 		
@@ -321,11 +337,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$verify_license_args = array(
 				'software_name'      => $args['software_name'],
 				'software_api_url'   => $args['software_api_url'],
-				'software_license_key'   => $license_key
+				'software_license_key'   => $license_key,
+				'software_store_license' => true,
 			);
 			
 			//Double check license. Use the Verfiy License class to verify whether this license is valid or not
-			new MP_CORE_Verify_License( $verify_license_args );	
+			mp_core_verify_license( $verify_license_args );	
 			
 			//Get license status (set in verify license class)
 			$status = get_option( $args['theme_name_slug'] . '_license_status_valid' );

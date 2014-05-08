@@ -97,3 +97,113 @@ function mp_core_show_help_content_ajax(){
 	exit;
 }
 add_action( 'wp_ajax_mp_core_help_content_ajax', 'mp_core_show_help_content_ajax' );
+
+/**
+ * Replace all whitespace and dashes to underscores in a string
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_sanitize_title_with_underscores
+ * @see      sanitize_title
+ * @param    string $string The String to sanitize
+ * @return   string $string The sanitized string
+ */
+function mp_core_sanitize_title_with_underscores( $string ){
+	
+	//Replace all whitespace and dashes to underscores
+	return str_replace("-", "_", sanitize_title( $string ) );
+}
+
+/**
+ * Red Light if false, Green light if true
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
+ */
+function mp_core_true_false_light($args = array() ) {
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$class = $value == true ? 'mp-core-green-light' : 'mp-core-red-light';
+	
+	?>
+	<div class="mp-core-true-false-light">
+		<div class="<?php echo $class; ?>"></div>
+		<?php echo $description; ?>
+	</div>
+	<?php
+}
+
+/**
+ * Zip a directory and all of its files and subdirectories
+ */
+function mp_core_zip_directory($source, $destination)
+{
+    if (!extension_loaded('zip') || !file_exists($source)) {
+        return false;
+    }
+
+    $zip = new ZipArchive();
+    if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
+        return false;
+    }
+	
+	$dirname = explode('/', $destination);
+	$dirname = explode('.', end($dirname));
+	$dirname = $dirname[0];
+
+    $source = str_replace('\\', '/', realpath($source));
+
+    if (is_dir($source) === true)
+    {
+        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($files as $file)
+        {
+            $file = str_replace('\\', '/', $file);
+
+            // Ignore "." and ".." folders
+            if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..')) )
+                continue;
+
+            $file = realpath($file);
+
+            if (is_dir($file) === true)
+            {
+                $zip->addEmptyDir(str_replace($source . '/', $dirname . '/', $file . '/'));
+            }
+            else if (is_file($file) === true)
+            {
+                $zip->addFromString(str_replace($source . '/', $dirname . '/', $file), file_get_contents($file));
+            }
+        }
+    }
+    else if (is_file($source) === true)
+    {
+        $zip->addFromString(basename($source), file_get_contents($source));
+    }
+
+    return $zip->close();
+}
+
+/**
+ * Delete a directory and all of its files and subdirectories
+ */
+function mp_core_remove_directory($dir) {
+    if (!file_exists($dir)) return true;
+    if (!is_dir($dir)) return unlink($dir);
+    foreach (scandir($dir) as $item) {
+        if ($item == '.' || $item == '..') continue;
+        if (!mp_core_remove_directory($dir.DIRECTORY_SEPARATOR.$item)) return false;
+    }
+    return rmdir($dir);
+}

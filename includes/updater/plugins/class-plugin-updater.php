@@ -335,12 +335,28 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
 			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
 			
-			$args = array(
-				'software_name'      => $args['software_name'],
-				'software_api_url'   => $args['software_api_url']
-			);
-						
-			new MP_CORE_Verify_License( $args );		
+			$software_name_slug = sanitize_title( $args['software_name'] );
+			
+			//Listen for our activate button to be clicked
+			if( isset( $_POST[ $software_name_slug . '_license_key' ] ) ) {
+								
+				//If it has, store it in the license_key variable 
+				$license_key = $_POST[ $software_name_slug . '_license_key' ];
+				
+				//Check nonce
+				if( ! check_admin_referer( $software_name_slug . '_nonce', $software_name_slug . '_nonce' ) ) 	
+					return false; // get out if we didn't click the Activate button
+					
+				$args = array(
+					'software_name'      => $args['software_name'],
+					'software_api_url'   => $args['software_api_url'],
+					'software_license_key'   => $license_key,
+					'software_store_license' => true,
+				);
+							
+				mp_core_verify_license( $args );
+				
+			}
 
 		}
 				
@@ -400,18 +416,42 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//API response
 			$api_response = get_site_transient( $args['software_name_slug'] );
 			
-			//Get license
-			$license_key = get_option( $args['software_name_slug'] . '_license_key' );
+			//If a new license has just been submitted
+			if ( isset( $_POST[$args['software_name_slug'] . '_license_key'] ) ){
+				 
+				//Get license from $_POST var
+				$license_key = $_POST[$args['software_name_slug'] . '_license_key'];
+				
+			}
+			//Otherwise get the license from the database
+			else{
+								
+				//Get license from database
+				$license_key = get_option( $args['software_name_slug'] . '_license_key' );
 			
-			//Set args to Verfiy the License
-			$verify_license_args = array(
-				'software_name'      => $args['software_name'],
-				'software_api_url'   => $args['software_api_url'],
-				'software_license'   => $license_key
-			);
+			}
 			
-			//Double check license. Use the Verfiy License class to verify whether this license is valid or not
-			new MP_CORE_Verify_License( $verify_license_args );	
+			//Only verify the license if the transient is older than 7 days
+			$check_licenses_transient_time = get_site_transient( 'mp_check_licenses_transient' );
+			
+			//If our transient is older than 7 days (604800 seconds)
+			//if ( time() > ($check_licenses_transient_time + 604800) ){
+				
+				//reset the transient
+				set_site_transient( 'mp_check_licenses_transient', time() );
+			
+				//Set args to Verfiy the License
+				$verify_license_args = array(
+					'software_name'      => $args['software_name'],
+					'software_api_url'   => $args['software_api_url'],
+					'software_license_key'   => $license_key,
+					'software_store_license' => true,
+				);
+								
+				//Double check license. Use the Verfiy License function to verify and store whether this license is valid or not
+				mp_core_verify_license( $verify_license_args );	
+				
+			//}
 			
 			//Get license status (set in verify license class)
 			$status = get_option( $args['software_name_slug'] . '_license_status_valid' );

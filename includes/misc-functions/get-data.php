@@ -296,7 +296,7 @@ function mp_core_get_all_tags_in_cat( $args ){
  * @see      wp_upload_dir()
  * @global   object $wpdb wpdb Object
  * @param    string $attachment_url See link for description
- * @return   array $return_array An array with all of the tax terms that have a related tax term
+ * @return   mixed $return If the attachment exists, return the attachment id. If not, return false
  */
 function mp_core_get_attachment_id_from_url( $attachment_url = '' ) {
  
@@ -305,7 +305,7 @@ function mp_core_get_attachment_id_from_url( $attachment_url = '' ) {
  
 	// If there is no url, return.
 	if ( '' == $attachment_url )
-		return;
+		return false;
  
 	// Get the upload directory paths
 	$upload_dir_paths = wp_upload_dir();

@@ -278,7 +278,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This repeater has never been saved
 						else{
 							//Create start of div for this repeat 
-							echo '<li class="' . $field['field_repeater'] . '_repeater postbox closed"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+							echo '<li class="' . $field['field_repeater'] . '_repeater postbox"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 							
 							foreach ($this->_metabox_items_array as $thefield){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -685,7 +685,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';

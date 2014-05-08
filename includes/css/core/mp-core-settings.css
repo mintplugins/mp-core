@@ -54,3 +54,11 @@
 .mp-core-plugin-directory-license-wrap .submit{
 	padding-top:5px;	
 }
+
+.mp-core-clearedfix:after {
+	content: ".";
+	visibility: hidden;
+	display: block;
+	height: 0;
+	clear: both;
+}

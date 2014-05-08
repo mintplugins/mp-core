@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://moveplugins.com
 Description: A core group of classes and functions.
-Version: beta1.1.4.4
+Version: beta1.1.4.5
 Author: Move Plugins
 Author URI: http://moveplugins.com
 Text Domain: mp_core
@@ -101,11 +101,6 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 */
 
 /**
- * Include License Checking functions
- */
-require( MP_CORE_PLUGIN_DIR . 'includes/licensing/class-verify-license.php' );
-
-/**
  * Include Plugin Installer Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.php' );
@@ -190,6 +185,12 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
  * Misc Functions
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
+
+/**
+ * Include License Checking functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/licensing/licensing-functions.php' );
+require( MP_CORE_PLUGIN_DIR . 'includes/licensing/class-show-license-form.php' );
 
 /*
 |--------------------------------------------------------------------------

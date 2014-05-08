@@ -452,6 +452,39 @@ function mp_core_textbox( $args = array() ) {
 } 
 
 /**
+ * Password Field
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
+ */
+function mp_core_password( $args = array() ) {
+	
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'description' => '',
+		'registration' => '' ,
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+?>
+	<label for="<?php echo $id; ?>">
+		<input type="password" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>">
+		<br /><?php echo $description; ?>
+	</label>
+<?php
+} 
+
+
+/**
  * Email Field
  *
  * @access   public
@@ -666,36 +699,6 @@ function mp_core_colorpicker($args = array() ) {
 		<input type="text" class="of-color" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo esc_attr( $value ); ?>" size="25" />
 		<?php echo $description; ?>
 		
-	</div>
-	<?php
-}
-
-/**
- * Light
- *
- * @access   public
- * @since    1.0.0
- * @see      wp_parse_args()
- * @see      esc_attr()
- * @param    array $args
- * @return   void
- */
-function mp_core_true_false_light($args = array() ) {
-	$defaults = array(
-		'name'        => '',
-		'value'       => '',
-		'description' => '',
-	);
-	
-	$args = wp_parse_args( $args, $defaults );
-	extract( $args );
-	
-	$class = $value == true ? 'mp-core-green-light' : 'mp-core-red-light';
-	
-	?>
-	<div class="mp-core-true-false-light">
-		<div class="<?php echo $class; ?>"></div>
-		<?php echo $description; ?>
 	</div>
 	<?php
 }

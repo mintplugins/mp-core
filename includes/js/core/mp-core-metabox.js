@@ -15,6 +15,9 @@ jQuery(document).ready(function($){
 		var therepeaterclass = '.'+theoriginal.attr('class').split(' ')[0];
 		var name_number = 0;
 		
+		//"Action Hook" trigger before repeater is cloned
+		$(window).trigger("mp_core_duplicate_repeater_before", theoriginal );
+		
 		//TinyMCE fix - temporarily removes it from each TinyMCE area in this repeater
 		metabox_container.find('.wp-editor-area').each(function(){
 			tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
@@ -104,6 +107,9 @@ jQuery(document).ready(function($){
 		
 		name_repeaters();
 		
+		//"Action Hook" trigger after repeater is cloned
+		$(window).trigger("mp_core_duplicate_repeater_after", [ theoriginal, theclone ] );
+		
 		return false;   
 		    
 	});
@@ -117,7 +123,6 @@ jQuery(document).ready(function($){
 		$(theoriginal).css( 'background-color', '#f7fff7' );
 		$(theoriginal).css( 'border-color', '#008d00' );
 		
-		
 		return false;   
 		    
 	});
@@ -129,7 +134,7 @@ jQuery(document).ready(function($){
 		var metabox_container = theoriginal.parent();
 					
 		$(theoriginal).css( 'background-color', '#fefff8');
-			$(theoriginal).css( 'border-color', '#c2c59e' );
+		$(theoriginal).css( 'border-color', '#c2c59e' );
 				
 		return false;   
 		    
@@ -160,7 +165,7 @@ jQuery(document).ready(function($){
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
-					tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
+					//tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
@@ -168,7 +173,7 @@ jQuery(document).ready(function($){
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
-					tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
+					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 				});	
 			}else{
 				$(this).find('*').each(function() {
@@ -180,7 +185,7 @@ jQuery(document).ready(function($){
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
-					tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
+					//tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
@@ -267,21 +272,44 @@ jQuery(document).ready(function($){
 	});
 	
 	//When we click on the toggle for this repeater - hide or show this repeater
-	$(document).on("click", '.repeater_container .handlediv', function(){
-								
+	$(document).on("click", '.repeater_container .hndle, .repeater_container .handlediv, .postbox h3, .postbox .handlediv', function(){
+		
 		var theoriginal = $(this).parent();
 		
-		var closed = $(theoriginal).hasClass( "closed" );
-					
-		//Show there is no closed class (it gets removed just before this call)
+		var closed = theoriginal.hasClass( "closed" );
+
+													
+		//This is closed so open it 
 		if ( !closed ){
-			$(theoriginal).css( 'height', 'inherit');
+			
+			theoriginal.removeClass("closed");
+			
+			//reveresed for dynamically created metaboxes...hopefully removed soon: https://core.trac.wordpress.org/ticket/27996
+			theoriginal.find('.inside').css( 'display', 'block');
+			
+			//Hide all mp_fields
+			theoriginal.find("[class^='mp_field'] ").each(function(){
+				$(this).css( 'display', '');
+			});
+			
+			theoriginal.css('height', 'inherit');
 		}
-		//Hide if there is a closed class (it gets added just before this call)
+		//This is open so close it
 		else{
-			$(theoriginal).css( 'height', '35px');
+
+			theoriginal.addClass("closed");
+			
+			//reveresed for dynamically created metaboxes...hopefully removed soon: https://core.trac.wordpress.org/ticket/27996
+			theoriginal.find('.inside').css( 'display', 'none');
+			
+			//Hide all mp_fields
+			theoriginal.find("[class^='mp_field'] ").each(function(){
+				$(this).css( 'display', 'none');
+			});
+			
+			theoriginal.css('height', '35px');
 		}
-		
+			
 	});
 	
 	//Put the title of this repeater at the top of it based on what is inside of it's first field
