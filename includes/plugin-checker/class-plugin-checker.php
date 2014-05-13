@@ -2,19 +2,19 @@
 /**
  * This file contains the MP_CORE_Plugin_Checker class and its activating function
  *
- * @link http://moveplugins.com/doc/plugin-checker-class/
+ * @link http://mintplugins.com/doc/plugin-checker-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
  
 /**
- * Plugin Checker Class for the MP Core Plugin by Move Plugins.
+ * Plugin Checker Class for the MP Core Plugin by Mint Plugins.
  * 
  * This Class is run at init by the 'mp_core_plugin_checker' function. 
  * It accepts a multidimentional array of plugins to check for existence.
@@ -23,7 +23,7 @@
  * Note: The actual check only happens on the admin side so resources are not being wasted on the front end
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/plugin-checker-class/
+ * @link       http://mintplugins.com/doc/plugin-checker-class/
  * @since      1.0.0
  * @return     void
  */
@@ -738,7 +738,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
  * Get the Plugin Checker Started
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/plugin-checker-class/
+ * @link     http://mintplugins.com/doc/plugin-checker-class/
  * @author   Philip Johnston
  * @see      MP_CORE_Plugin_Checker
  * @see      apply_filters()

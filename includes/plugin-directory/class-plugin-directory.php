@@ -2,24 +2,24 @@
 /**
  * This file contains the MP_CORE_Plugin_Directory class 
  *
- * @link http://moveplugins.com/doc/plugin-directory-class/
+ * @link http://mintplugins.com/doc/plugin-directory-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
   
  /**
- * Plugin Directory Class for the MP Core Plugin by Move Plugins.
+ * Plugin Directory Class for the MP Core Plugin by Mint Plugins.
  * 
  * This class facilitates the creation of directory pages in WordPress containing plugins to install.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/plugin-directory-class/
+ * @link       http://mintplugins.com/doc/plugin-directory-class/
  * @since      1.0.0
  * @return     void
  */

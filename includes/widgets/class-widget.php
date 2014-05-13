@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Widget class
  *
- * @link http://moveplugins.com/doc/widget-class/
+ * @link http://mintplugins.com/doc/widget-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * This class is meant to be extended with a custom construct function. See link for more.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/widget-class/
+ * @link       http://mintplugins.com/doc/widget-class/
  * @since      1.0.0
  * @return     void
  */

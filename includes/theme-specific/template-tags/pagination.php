@@ -2,14 +2,14 @@
 /**
  * This page contains template tag function used to display pagination.
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -19,7 +19,7 @@
  *
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_paginate_links/
+ * @link     http://mintplugins.com/doc/mp_core_paginate_links/
  * @see      has_filter()
  * @see      apply_filters()
  * @see      get_option()  

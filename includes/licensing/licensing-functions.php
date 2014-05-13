@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Verify_License class
  *
- * @link http://moveplugins.com/doc/verify-license-class/
+ * @link http://mintplugins.com/doc/verify-license-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * It takes the name of the plugin or theme, and the Software API URL it should check for verification.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/verify-license-class/
+ * @link       http://mintplugins.com/doc/verify-license-class/
  * @since      1.0.0
  * @return     void
  */

@@ -7,8 +7,8 @@
  * @package    MP Core
  * @subpackage Functions
  *
- * @link       http://moveplugins.com/doc/move-plugins-core-api/
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @link       http://mintplugins.com/doc/move-plugins-core-api/
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * This function returns the featured image url of a post
  *  
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_the_featured_image/
+ * @link     http://mintplugins.com/doc/mp_core_the_featured_image/
  * @see      has_filter()
  * @see      get_filter()
  * @see      get_post_thumbnail_id()
@@ -61,7 +61,7 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
  * This is a simple function which gets just the avatar URL without the wrapper tag
  *  
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_avatar_url/
+ * @link     http://mintplugins.com/doc/mp_core_get_avatar_url/
  * @param    string $after The result of the get_avatar( $id_or_email, 32 ); is passed to this function as a string.
  * @return   string The avatar URL only without the wrapper tag.
  */
@@ -75,7 +75,7 @@ function mp_core_get_avatar_url( $get_avatar ){
  * Get avatar tag at retina size (2x). This function is exactly the same as the WP default "get_avatar()" but returns image at 2x.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_avatar/
+ * @link     http://mintplugins.com/doc/mp_core_get_avatar/
  * @param    string $comment The id or email of the user who's avatar we want
  * @param    int $size The size in pixels that this image should be at 1x.
  * @return   string The avatar URL only without the wrapper tag.
@@ -103,7 +103,7 @@ function mp_core_get_avatar( $id_or_email, $size ){
  * Supports videos passed-in in iframes as well. Pretty much, any video you throw at this, it will return it ready for responsive sizing.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_oembed_get/
+ * @link     http://mintplugins.com/doc/mp_core_oembed_get/
  * @param    string $video_url The URL of the Video or an iframe html
  * @param    int $min_width Optional. The minimum width in pixels this video should ever be.
  * @param    int $max_width Optional. The maximum width in pixels this video should ever be.

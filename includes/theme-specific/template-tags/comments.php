@@ -2,14 +2,14 @@
 /**
  * Custom template tag functions specifically used in themes.
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * Template tag which displays comments in theme
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comments_template/
+ * @link     http://mintplugins.com/doc/mp_core_comments_template/
  * @see      comments_open()
  * @see      get_comments_number()
  * @see      post_password_required()
@@ -118,7 +118,7 @@ if ( ! function_exists( 'mp_core_comments_template' ) ) {
  * Used as a callback by wp_list_comments() for displaying the comments.
  * 
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comment/
+ * @link     http://mintplugins.com/doc/mp_core_comment/
  * @see      comment_author_link()
  * @see      edit_comment_link()
  * @see      comment_class()
@@ -189,7 +189,7 @@ add_action( 'mp_core_comment_prepend', 'mp_core_default_comment', 10, 3 );
  * Displays the avatar in the mp core default comment
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @link     http://mintplugins.com/doc/mp_core_comment_form/
  * @param    object $comment Comment data object.
  * @param    array $args
  * @param    int $depth The number of replies deep this comment is.
@@ -215,7 +215,7 @@ add_action( 'mp_core_comment_avatar', 'mp_core_comment_avatar_callback', 10, 3 )
  * Displays the meta in the mp core default comment
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @link     http://mintplugins.com/doc/mp_core_comment_form/
  * @param    object $comment Comment data object.
  * @param    array $args
  * @param    int $depth The number of replies deep this comment is.
@@ -258,7 +258,7 @@ add_action( 'mp_core_comment_meta', 'mp_core_comment_meta_callback', 10, 3 );
  * Displays the avatar in the mp core default comment
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @link     http://mintplugins.com/doc/mp_core_comment_form/
  * @param    object $comment Comment data object.
  * @param    array $args
  * @param    int $depth The number of replies deep this comment is.
@@ -275,7 +275,7 @@ add_action( 'mp_core_comment_content', 'mp_core_comment_content_callback', 10, 3
  * Filter mp_core_comments_args
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_comment_form/
+ * @link     http://mintplugins.com/doc/mp_core_comment_form/
  * @see      wp_get_current_commenter()
  * @see      get_option()
  * @see      wp_login_url()

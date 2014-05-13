@@ -1,0 +1,26 @@
+/*!
+ *  Mint Plugins Font 1.0.0 by @mintplugins - http://mintplugins.com
+ *  License - Font: SIL OFL 1.1, CSS: MIT License
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'mintplugins';
+  src: url('mintplugins.eot?v=4.0.3');
+  src: url('mintplugins.eot?#iefix&v=4.0.3') format('embedded-opentype'), url('mintplugins.woff?v=4.0.3') format('woff'), url('mintplugins.ttf?v=4.0.3') format('truetype'), url('mintplugins.svg?v=4.0.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class^="mp-font"]:before,
+[class*=" mp-font"]:before{
+  display: inline-block;
+  font-family: 'mintplugins';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.mp-font-mintplugins-logo:before {
+  content: "\0041";
+}

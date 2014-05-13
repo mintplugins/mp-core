@@ -2,14 +2,14 @@
 /**
  * This page contains the functions used in managing a logo for a website.
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * Add a logo image to the customizer which can be used in themes.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_logo_customizer/
+ * @link     http://mintplugins.com/doc/mp_core_logo_customizer/
  * @see      has_filter()
  * @see      apply_filters() 
  * @see      MP_CORE_Customizer
@@ -70,7 +70,7 @@ add_action ('init', 'mp_core_logo_customizer');
  * Template tag which displays the logo image.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_logo_image/
+ * @link     http://mintplugins.com/doc/mp_core_logo_image/
  * @see      get_theme_mod()
  * @see      esc_url()
  * @see      home_url()

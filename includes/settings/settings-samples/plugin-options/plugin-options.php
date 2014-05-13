@@ -7,7 +7,7 @@
  * Step 3. Go to line 17 and set the title, slug, and type for this page.
  * Step 4. Include options tabs.
  * Go here for full setup instructions: 
- * http://moveplugins.com/settings-class/
+ * http://mintplugins.com/settings-class/
  */
 
 function my_plugin_settings(){
@@ -16,7 +16,7 @@ function my_plugin_settings(){
 	 * Set args for new administration menu.
 	 *
 	 * For complete instructions, visit:
-	 * http://moveplugins.com/how-to-set-the-args-when-creating-a-new-settings-page/
+	 * http://mintplugins.com/how-to-set-the-args-when-creating-a-new-settings-page/
 	 *
 	 */
 	$args = array('title' => __('Sample Settings', 'mp_core'), 'slug' => 'my_plugin_settings', 'type' => 'options');

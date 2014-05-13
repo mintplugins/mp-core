@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Shortcode_Insert class 
  *
- * @link http://moveplugins.com/doc/shortcode-insert-class/
+ * @link http://mintplugins.com/doc/shortcode-insert-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -17,7 +17,7 @@
  * This class is used to easily create “shortcode builders” which assemble the pieces of a shortcode for the user and insert it into the content area.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/shortcode-insert-class/
+ * @link       http://mintplugins.com/doc/shortcode-insert-class/
  * @since      1.0.0
  * @return     void
  */

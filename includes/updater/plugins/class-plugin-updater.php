@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Plugin_Updater class which plugins can use to keep themselves up to date
  *
- * @link       http://moveplugins.com/doc/plugin-updater-class/
+ * @link       http://mintplugins.com/doc/plugin-updater-class/
  * @since      1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -18,7 +18,7 @@
  * This class will work in conjunction with the MP Repo plugin as a custom repo.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/plugin-updater-class/
+ * @link       http://mintplugins.com/doc/plugin-updater-class/
  * @since      1.0.0
  * @return     void
  */	
@@ -30,7 +30,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 *
 		 * @access   public
 		 * @since    1.0.0
-		 * @link     http://moveplugins.com/doc/plugin-updater-class/
+		 * @link     http://mintplugins.com/doc/plugin-updater-class/
 		 * @author   Philip Johnston
 		 * @see      MP_CORE_Plugin_Updater::set_license_green_light()
 		 * @see      MP_CORE_Plugin_Updater::plugins_page()

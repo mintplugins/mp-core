@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Metabox class
  *
- * @link http://moveplugins.com/doc/metabox-class/
+ * @link http://mintplugins.com/doc/metabox-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -20,7 +20,7 @@
  * It works by passing an associative array containing the information for the fields to the class
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/metabox-class/
+ * @link       http://mintplugins.com/doc/metabox-class/
  * @since      1.0.0
  * @return     void
  */
@@ -36,7 +36,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		 *
 		 * @access   public
 		 * @since    1.0.0
-		 * @link     http://moveplugins.com/doc/metabox-class/
+		 * @link     http://mintplugins.com/doc/metabox-class/
 		 * @author   Philip Johnston
 		 * @see      MP_CORE_Metabox::mp_core_add_metabox()
 		 * @see      MP_CORE_Metabox::mp_core_save_data()
@@ -466,6 +466,8 @@ if (!class_exists('MP_CORE_Metabox')){
 								'em' => array(),
 								'strong' => array(),
 								'p' => array(),
+								'blockquote' => array(),
+								'script' => array()
 							);
 							
 							//Set default for repeat counter
@@ -490,7 +492,7 @@ if (!class_exists('MP_CORE_Metabox')){
 													
 													//Sanitize each field according to its type
 													if ( $child_loop_field['field_type'] == 'textarea' ){
-														$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities( $field_value, ENT_QUOTES), $allowed_tags ); 
+														$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( $field_value, ENT_QUOTES); 
 													}
 													elseif( $child_loop_field['field_type'] == 'wp_editor' ){
 														$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities(wpautop( $field_value, true ), ENT_QUOTES), $allowed_tags ); 									
@@ -536,7 +538,9 @@ if (!class_exists('MP_CORE_Metabox')){
 							'br' => array(),
 							'em' => array(),
 							'strong' => array(),
-							'p' => array()
+							'p' => array(),
+							'blockquote' => array(),
+							'script' => array()
 						);
 						if ( $field['field_type'] == 'textarea' ){
 							$data = wp_kses( htmlentities( $post_value, ENT_QUOTES ), $allowed_tags );

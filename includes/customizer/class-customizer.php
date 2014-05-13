@@ -2,24 +2,24 @@
 /**
  * This file contains the MP_CORE_Customizer class
  *
- * @link http://moveplugins.com/doc/customizer-class/
+ * @link http://mintplugins.com/doc/customizer-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
 
 /**
- * Customizer Class for the MP Core Plugin by Move Plugins.
+ * Customizer Class for the MP Core Plugin by Mint Plugins.
  * 
  * This class uses associative arrays to create new customizer fields. They can auto transport without needing to write extra javascript files.
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/customizer-class/
+ * @link       http://mintplugins.com/doc/customizer-class/
  * @since      1.0.0
  * @return     void
  */
@@ -33,7 +33,7 @@ class MP_CORE_Customizer{
 	 *
 	 * @access   public
 	 * @since    1.0.0
-	 * @link      http://moveplugins.com/doc/customizer-class/
+	 * @link      http://mintplugins.com/doc/customizer-class/
 	 * @see      MP_CORE_Customizer::mp_core_customize_menu()
 	 * @see      MP_CORE_Customizer::mp_core_customize_preview_js()
 	 * @see      MP_CORE_Customizer::mp_core_customize_register_settings_and_controls()
@@ -567,7 +567,7 @@ function mp_core_customize_textarea_control($wp_customize) {
 	 * This class extends the WP_Customize_Control class to make a textarea
 	 *
 	 * @author     Philip Johnston
-	 * @link       http://moveplugins.com/doc/customizer-class/
+	 * @link       http://mintplugins.com/doc/customizer-class/
 	 * @since      1.0.0
 	 * @return     void
 	 */

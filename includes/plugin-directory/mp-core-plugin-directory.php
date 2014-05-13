@@ -1,15 +1,15 @@
 <?php
 /**
- * Plugin Directory Class for the mp_core Plugin by Move Plugins
- * http://moveplugins.com/doc/plugin-directory-class/
+ * Plugin Directory Class for the mp_core Plugin by Mint Plugins
+ * http://mintplugins.com/doc/plugin-directory-class/
  */
 function mp_core_plugin_directory(){
 	
 	$args = array (
 		'parent_slug' => 'plugins.php',
-		'page_title' => 'Move Plugins',
+		'page_title' => 'Mint Plugins',
 		'slug' => 'mp_core_plugin_directory',
-		'directory_list_url' => 'https://moveplugins.com/repo-group/move-plugins/'
+		'directory_list_url' => 'https://mintplugins.com/repo-group/move-plugins/'
 	);
 	
 	new MP_CORE_Plugin_Directory( $args );

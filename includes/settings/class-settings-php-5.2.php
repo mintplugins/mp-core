@@ -2,13 +2,13 @@
 /**
  * This file contains the MP_CORE_Settings class 
  *
- * @link http://moveplugins.com/doc/settings-class/
+ * @link http://mintplugins.com/doc/settings-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -23,7 +23,7 @@
  * It also creates the page for settings and outputs the settings passed-in to the class.
  *
  * @author     Philip Johnston
- * @link http://moveplugins.com/doc/settings-class/
+ * @link http://mintplugins.com/doc/settings-class/
  * @since      1.0.0
  * @return     void
  */
@@ -38,7 +38,7 @@ class MP_CORE_Settings{
 	 *
 	 * @access   public
 	 * @since    1.0.0
-	 * @link     http://moveplugins.com/doc/settings-class-args/
+	 * @link     http://mintplugins.com/doc/settings-class-args/
 	 * @see      MP_CORE_Settings::mp_core_enqueue_scripts()
 	 * @see      MP_CORE_Settings::mp_core_add_page()
 	 * @see      wp_parse_args()

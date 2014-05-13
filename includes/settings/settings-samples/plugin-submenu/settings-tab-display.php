@@ -8,7 +8,7 @@
  * Step 3. Go to line 17 and set the title for this tab.
  * Step 4. Begin creating your custom options on line 30
  * Go here for full setup instructions: 
- * http://moveplugins.com/settings-class/
+ * http://mintplugins.com/settings-class/
  */
 
 /**
@@ -21,7 +21,7 @@ function my_plugin_settings_display_settings_new_tab(){
 	
 }
 
-//Hook into the new tab hook filter contained in the settings class in the Move Plugins Core
+//Hook into the new tab hook filter contained in the settings class in the Mint Plugins Core
 add_filter('my_plugin_settings_display_settings_new_tab_hook', 'my_plugin_settings_display_settings_new_tab');
 
 /**

@@ -4,14 +4,14 @@
  *
  * Eventually, some of the functionality here could be replaced by core features or eliminated.
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -20,7 +20,7 @@
  * Get our wp_nav_menu() fallback, wp_page_menu(), to show a home link. If a theme doesn't use the 
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_page_menu_args/
+ * @link     http://mintplugins.com/doc/mp_core_page_menu_args/
  * @param    array $args Options passed to the wp_page_menu() function in WP
  * @return   array Options passed to the wp_page_menu() function in WP
  */
@@ -34,7 +34,7 @@ add_filter( 'wp_page_menu_args', 'mp_core_page_menu_args' );
  * Adds custom classes to the array of body classes.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_body_classes/
+ * @link     http://mintplugins.com/doc/mp_core_body_classes/
  * @see      is_multi_author()
  * @param    array $classes The names of the classes to add to the body
  * @return   array The names of the classes to add to the body
@@ -56,7 +56,7 @@ add_filter( 'body_class', 'mp_core_body_classes' );
  * Filter in a link to a content ID attribute for the next/previous image links on image attachment pages
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_enhanced_image_navigation/
+ * @link     http://mintplugins.com/doc/mp_core_enhanced_image_navigation/
  * @see      is_attachment()
  * @see      wp_attament_is_image()
  * @see      get_post()
@@ -94,7 +94,7 @@ add_filter( 'attachment_link', 'mp_core_enhanced_image_navigation', 10, 2 );
  * Filters wp_title to print a neat <title> tag based on what is being viewed.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_wp_title/
+ * @link     http://mintplugins.com/doc/mp_core_wp_title/
  * @global   int $page The page of the post, as specified by the query var page 
  * @global   boolean $paged Whether this page has multiple pages to it
  * @param    string $title The title of the current page

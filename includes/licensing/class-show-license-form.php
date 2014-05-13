@@ -5,7 +5,7 @@
  * 
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/
+ * @link       http://mintplugins.com/doc/
  * @since      1.0.0
  * @return     void
  */
@@ -17,7 +17,7 @@ class MP_CORE_Show_License_Form_In_Notices{
 		 *
 		 * @access   public
 		 * @since    1.0.0
-		 * @link     http://moveplugins.com/doc/metabox-class/
+		 * @link     http://mintplugins.com/doc/metabox-class/
 		 * @author   Philip Johnston
 		 * @see      MP_CORE_Show_License_Form_In_Notices::mp_core_add_metabox()
 		 * @see      wp_parse_args()

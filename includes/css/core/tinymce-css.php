@@ -2,13 +2,13 @@
 /**
  * This page is meant to be loaded outside of "WordPress". It creates css needed for the TinyMCE from the customizer and font classes in MP CORE
  *
- * @link http://moveplugins.com/doc/
+ * @link http://mintplugins.com/doc/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage CSS
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */

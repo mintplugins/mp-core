@@ -2,14 +2,14 @@
 /**
  * This page contains template tag functions usable by themes
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -17,7 +17,7 @@
 /**
  * Display navigation to next/previous pages when applicable (like in a single.php template)
  *
- * @link     http://moveplugins.com/doc/mp_core_content_nav/
+ * @link     http://mintplugins.com/doc/mp_core_content_nav/
  * @see      is_single()
  * @see      is_attachment()
  * @see      get_post()  
@@ -84,7 +84,7 @@ endif; // mp_core_content_nav
 /**
  * Prints HTML with meta information for the current post-date/time and author.
  *
- * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @link     http://mintplugins.com/doc/mp_core_posted_on/
  * @see      esc_url()
  * @see      get_permalink()
  * @see      esc_attr()  
@@ -109,7 +109,7 @@ endif;
 /**
  * Prints HTML with meta information for the current post-date/time and author.
  *
- * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @link     http://mintplugins.com/doc/mp_core_posted_on/
  * @see      esc_url()
  * @see      get_author_posts_url()
  * @see      get_the_author_meta()
@@ -129,7 +129,7 @@ endif;
 /**
  * This template tag displays the title of the page whether it is an archive, category, tag, page, post, custom post type, search page, or anything.
  *
- * @link     http://moveplugins.com/doc/mp_core_posted_on/
+ * @link     http://mintplugins.com/doc/mp_core_posted_on/
  * @see      is_category()
  * @see      single_cat_title()
  * @see      is_tag()  

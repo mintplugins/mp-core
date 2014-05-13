@@ -7,7 +7,7 @@
  * @package    MP Core
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -102,7 +102,7 @@ add_action( 'wp_ajax_mp_core_help_content_ajax', 'mp_core_show_help_content_ajax
  * Replace all whitespace and dashes to underscores in a string
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_sanitize_title_with_underscores
+ * @link     http://mintplugins.com/doc/mp_core_sanitize_title_with_underscores
  * @see      sanitize_title
  * @param    string $string The String to sanitize
  * @return   string $string The sanitized string

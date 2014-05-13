@@ -2,22 +2,22 @@
 /**
  * This file contains the MP_CORE_Plugin_Installer class
  *
- * @link http://moveplugins.com/doc/plugin-installer-class/
+ * @link http://mintplugins.com/doc/plugin-installer-class/
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
  
 /**
- * Plugin Installer Class for the mp_core Plugin by Move Plugins
+ * Plugin Installer Class for the mp_core Plugin by Mint Plugins
  *
  * @author     Philip Johnston
- * @link       http://moveplugins.com/doc/plugin-installer-class/
+ * @link       http://mintplugins.com/doc/plugin-installer-class/
  * @since      1.0.0
  * @return     void
  */

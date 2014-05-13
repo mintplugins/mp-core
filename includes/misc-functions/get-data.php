@@ -7,7 +7,7 @@
  * @package    MP Core
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -17,7 +17,7 @@
  * Get all Pages into a tidy associative array containing just the page ID as the key and the Page Title as the value
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_pages/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_pages/
  * @see      get_pages()
  * @return   array $output An array of pages containing just the page ID as the key and the Page Title as the value
  */
@@ -39,7 +39,7 @@ function mp_core_get_all_pages() {
  * Note: Only use this function on or after the 'register_sidebar' hook 
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_post_types/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_post_types/
  * @see      get_post_types()
  * @param    array $args (required) See link for description.
  * @return   array $return_array An array with all the post types structured with the key as the post_type ID and the value as the Post Type Name
@@ -63,7 +63,7 @@ function mp_core_get_all_post_types( $args = array('public' => true, '_builtin' 
  * Get all Post by a certain post type
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_posts_by_type/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_posts_by_type/
  * @see      get_posts()
  * @param    string $slug (required) The slug of the Post Type
  * @return   array $return_array An array with all the posts in the given Post Type structured with the key as the Post ID and the value as the Post Title
@@ -94,7 +94,7 @@ function mp_core_get_all_posts_by_type( $slug ) {
  * Note: Only use this function on or after the 'register_sidebar' hook
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_hierarchical_post_types/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_hierarchical_post_types/
  * @see      get_post_types()
  * @param    array $args (required) See link for description.
  * @return   array $return_array An array with all the  hierarchical post types structured with the key as the post_type ID and the value as the Post Type Name
@@ -118,7 +118,7 @@ function mp_core_get_all_hierarchical_post_types($args = array('public' => true,
  * Get all terms in a certain taxonomy
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_terms_by_tax/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_terms_by_tax/
  * @see      taxonomy_exists()
  * @see      get_terms()
  * @param    string $slug (required) The slug of the taxonomy
@@ -143,7 +143,7 @@ function mp_core_get_all_terms_by_tax($slug) {
  * array( '12*my_category' => 'My Category Term' );
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_tax_terms/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_tax_terms/
  * @see      get_taxonomies()
  * @see       get_terms()
  * @param    array $exclude_slugs Array containing taxonomy slugs to skip
@@ -191,7 +191,7 @@ function mp_core_get_all_tax_terms( $exclude_slugs = array() ) {
  * Get number of posts per tax term
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_number_postpercat/
+ * @link     http://mintplugins.com/doc/mp_core_number_postpercat/
  * @see      get_taxonomies()
  * @see      get_terms()
  * @param    int $term_id The ID of the tax term (IE The category "Books"'s ID)
@@ -213,7 +213,7 @@ function mp_core_number_postpercat($term_id) {
  * I need to do further testing with this function. - Phil Johnston
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_all_tags_in_cat/
+ * @link     http://mintplugins.com/doc/mp_core_get_all_tags_in_cat/
  * @see      wpdb::get_results()
  * @see      get_tag_link()
  * @global   object $wpdb wpdb Object
@@ -289,7 +289,7 @@ function mp_core_get_all_tags_in_cat( $args ){
  * Get the attachment id using a url
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_attachment_id_from_url/
+ * @link     http://mintplugins.com/doc/mp_core_get_attachment_id_from_url/
  * @see      wpdb::get_results()
  * @see      wpdb::get_var()
  * @see      wpdb::prepare()
@@ -331,7 +331,7 @@ function mp_core_get_attachment_id_from_url( $attachment_url = '' ) {
  * Get the attachment id using a url
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_get_current_url/
+ * @link     http://mintplugins.com/doc/mp_core_get_current_url/
  * @return   string $url The current Page's URL
  */
 function mp_core_get_current_url() {
@@ -339,4 +339,33 @@ function mp_core_get_current_url() {
   $url .= ( $_SERVER["SERVER_PORT"] !== 80 ) ? ":".$_SERVER["SERVER_PORT"] : "";
   $url .= $_SERVER["REQUEST_URI"];
   return $url;
+}
+
+/**
+ * Get the taxonomy terms a post has. 
+ * This function can be used before the query is run - where the WP default wp_get_post_terms can't.
+ *
+ * @since    1.0.0
+ * @link     http://mintplugins.com/doc/mp_core_get_current_url/
+ * @global   $wpdb 
+ * @param    int $post_id The id of the post who's terms we want.
+ * @return   array $terms The terms attached to this post array( 0 => term_id, 1 => term_id2 )
+ */
+function mp_core_get_post_terms_before_query( $post_id ){
+	
+	global $wpdb;
+				
+	//Get the term taxonomy ids for this post. The term taxonomy id is a link between the post id and taxonomy term id
+	$term_taxonomy_ids = $wpdb->get_col($wpdb->prepare( "SELECT term_taxonomy_id FROM $wpdb->term_relationships WHERE object_id=%d", $post_id ) );
+	
+	$terms = array();
+	
+	//Now that we have the links, loop through each link id and find the linked term id
+	foreach( $term_taxonomy_ids as $term_taxonomy_id ){
+		$term = $wpdb->get_col($wpdb->prepare( "SELECT term_id FROM $wpdb->term_taxonomy WHERE term_taxonomy_id=%d", $term_taxonomy_id ) );
+		array_push( $terms, $term[0] );
+	}
+	
+	return $terms;
+	
 }

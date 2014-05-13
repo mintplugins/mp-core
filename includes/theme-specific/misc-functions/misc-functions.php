@@ -4,14 +4,14 @@
  *
  * Eventually, some of the functionality here could be replaced by core features or eliminated.
  * 
- * @link http://moveplugins.com/doc/move-plugins-core-api/
+ * @link http://mintplugins.com/doc/move-plugins-core-api/
  *
  * @since 1.0.0
  *
  * @package    MP Core
  * @subpackage Theme Specific Functions
  *
- * @copyright  Copyright (c) 2013, Move Plugins
+ * @copyright  Copyright (c) 2014, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -20,7 +20,7 @@
  * Menu fallback if no menu is set up. Link to "Appearance" > "Menus" so the user can manage their menus.
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_link_to_menu_editor/
+ * @link     http://mintplugins.com/doc/mp_core_link_to_menu_editor/
  * @see      current_user_can()
  * @see      admin_url()
  * @param    array $args See wp-includes/nav-menu-template.php for available arguments
@@ -73,7 +73,7 @@ endif;
  * Returns true if a blog has more than 1 category
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_categorized_blog/
+ * @link     http://mintplugins.com/doc/mp_core_categorized_blog/
  * @see      set_transient()
  * @see      get_transient()
  * @see      get_categories()
@@ -105,7 +105,7 @@ function mp_core_categorized_blog() {
  * Flush out the transients used in mp_core_categorized_blog
  *
  * @since    1.0.0
- * @link     http://moveplugins.com/doc/mp_core_category_transient_flusher/
+ * @link     http://mintplugins.com/doc/mp_core_category_transient_flusher/
  * @see      delete_transient()
  * @return   void
  */
