@@ -137,47 +137,49 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 								
 				//Plugin Name Slug
 				$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] ); //EG move-plugins-core	
-							
-				//Listen for our activate button to be clicked
-				if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
-									
-					//If it has, store it in the license_key variable 
-					$license_key = $_POST[ $plugin_name_slug . '_license_key' ];
+				
+				//If this plugin requires a license
+				if ( $plugin['plugin_licensed'] ){	
 					
-					//Check nonce
-					if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
-						return false; // get out if we didn't click the Activate button
+					//Listen for our activate button to be clicked
+					if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
+										
+						//If it has, store it in the license_key variable 
+						$license_key = $_POST[ $plugin_name_slug . '_license_key' ];
+						
+						//Check nonce
+						if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
+							return false; // get out if we didn't click the Activate button
+						
+					
+						
+						$args = array(
+							'software_name'      => $plugin['plugin_name'],
+							'software_api_url'   => $plugin['plugin_api_url'],
+							'software_license_key'   => $license_key,
+							'software_store_license' => true,
+						);
+						
+						//Store, Verify, and Set the "Green Light" Notification option for this license
+						$license_valid = mp_core_verify_license( $args );	
+						
+					}
 					
 				}
-				else{
-					
-					$license_key = NULL;
-				
-				}
-				
-				$args = array(
-					'software_name'      => $plugin['plugin_name'],
-					'software_api_url'   => $plugin['plugin_api_url'],
-					'software_license_key'   => $license_key,
-					'software_store_license' => true,
-				);
-			
-				//Store, Verify, and Set the "Green Light" Notification option for this license
-				$license_valid = mp_core_verify_license( $args );	
 				
 				//Get license
 				$license = get_option( $plugin_name_slug . '_license_key' );
 				$license_valid = get_option( $plugin_name_slug . '_license_status_valid' );
-				
+		
 				//If we are on the install page for this plugin
 				if ( $this->_page == 'mp_core_install_plugin_page_' .  $plugin_name_slug ){
-					
+										
 					//Plugin License
 					$plugin['plugin_license'] = $license;
 					
 					//Redirect when complete back to Directory page
 					$plugin['plugin_success_link'] = !empty($this->_args['plugin_success_link']) ? $this->_args['plugin_success_link'] : add_query_arg( array( 'page' => $this->_args['slug'] ), self_admin_url() . $this->_args['parent_slug'] );
-									
+														
 					// Create update/install plugin page
 					new MP_CORE_Plugin_Installer( $plugin );
 										
