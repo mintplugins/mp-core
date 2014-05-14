@@ -287,11 +287,6 @@ jQuery(document).ready(function($){
 			//reveresed for dynamically created metaboxes...hopefully removed soon: https://core.trac.wordpress.org/ticket/27996
 			theoriginal.find('.inside').css( 'display', 'block');
 			
-			//Hide all mp_fields
-			theoriginal.find("[class^='mp_field'] ").each(function(){
-				$(this).css( 'display', '');
-			});
-			
 			theoriginal.css('height', 'inherit');
 		}
 		//This is open so close it
@@ -301,11 +296,6 @@ jQuery(document).ready(function($){
 			
 			//reveresed for dynamically created metaboxes...hopefully removed soon: https://core.trac.wordpress.org/ticket/27996
 			theoriginal.find('.inside').css( 'display', 'none');
-			
-			//Hide all mp_fields
-			theoriginal.find("[class^='mp_field'] ").each(function(){
-				$(this).css( 'display', 'none');
-			});
 			
 			theoriginal.css('height', '35px');
 		}
