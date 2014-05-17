@@ -59,10 +59,14 @@
 .mp_drag.hndle{
 	padding:8px 12px!important;	
 }
-.mp_iconfontpicker_item{
+.mp_iconfontpicker_item, .mp-core-icon-picker-item-shortcode{
 	float:left;
 	display:inline-block;
 	padding:15px;	
+}
+.mp_iconfontpicker_item>div, 
+.mp-core-icon-picker-item-shortcode>div{
+	font-size:30px;	
 }
 .mp-iconfontpicker-title{
 	border: 0;

@@ -97,6 +97,11 @@ class MP_CORE_Shortcode_Insert{
 			//image uploader script
 			wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );	
 			
+			//custom js scripts
+			wp_enqueue_script( 'mp_core_shortcode_inserter_js', plugins_url( 'js/core/mp-core-shortcode-inserter.js', dirname(__FILE__) ),  array( 'jquery' ) );	
+			
+			
+			
 		}
 	}
 	
@@ -509,6 +514,62 @@ class MP_CORE_Shortcode_Insert{
 				?><img class="custom_media_image" src="<?php echo $value; ?>" style="display: none;" /><?php
 			}
 		}
+	echo '</div>';   
+
+	}
+	
+	/**
+	* iconfontpicker field
+	*
+	* @access   public
+	* @since    1.0.0
+	* @return   void
+	*/
+	function iconfontpicker($field_id, $field_title, $field_description, $value){
+		
+		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
+			echo '</label></div>';
+			
+			//Font thumbnail
+			echo '<div class="mp_font_icon_thumbnail">';
+				echo '<div class="'. $field_id . '">';
+					echo '<div class="mp-iconfontpicker-title" ></div>';
+				echo '</div>';
+			echo '</div>';
+		
+		
+			
+			?>       
+			<!-- Icon select and text field -->
+			<div class="mp-icon-font-field-container">
+				<input class="mp-icon-font-field <?php echo $field_id; ?>" id="<?php echo $field_id; ?>" type="hidden" name="<?php echo $field_id; ?>" value="">
+				<a class="mp-core-shortcode-icon-select button"><?php _e('Select Icon', 'mp_core'); ?></a>
+			</div>
+					
+			<div class="mp-core-icon-picker-area" style="display: none;">
+						
+				<?php
+				foreach( $value as $icon ){
+					
+					echo '<a href="#" class="mp-core-icon-picker-item-shortcode">';
+												
+						echo '<div class="' . $icon . ' mp-core-icon">';
+							
+							echo '<div class="mp-iconfontpicker-title" >' . $icon . '</div>';
+						
+						echo '</div>';
+					
+					echo '</a>';
+						 
+				} 
+				?>
+				
+			</div>
+	
+	<?php
+	
 	echo '</div>';   
 
 	}

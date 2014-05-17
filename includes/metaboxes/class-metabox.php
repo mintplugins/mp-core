@@ -467,7 +467,9 @@ if (!class_exists('MP_CORE_Metabox')){
 								'strong' => array(),
 								'p' => array(),
 								'blockquote' => array(),
-								'script' => array()
+								'script' => array(),
+								'style' => array(),
+								'span' => array()
 							);
 							
 							//Set default for repeat counter
@@ -540,7 +542,9 @@ if (!class_exists('MP_CORE_Metabox')){
 							'strong' => array(),
 							'p' => array(),
 							'blockquote' => array(),
-							'script' => array()
+							'script' => array(),
+							'style' => array(),
+							'span' => array()
 						);
 						if ( $field['field_type'] == 'textarea' ){
 							$data = wp_kses( htmlentities( $post_value, ENT_QUOTES ), $allowed_tags );
