@@ -135,11 +135,19 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			global $post;
 			$this->_post_id = isset($post->ID) ? $post->ID : '';
-			
+						
+			//Get current page
+			$current_page = get_current_screen();
+				
 			//defaults
 			$metabox_posttype = (isset($this->_args['metabox_posttype']) ? $this->_args['metabox_posttype'] : "post");
 			$metabox_context = (isset($this->_args['metabox_context']) ? $this->_args['metabox_context'] : "advanced");
 			$metabox_priority = (isset($this->_args['metabox_priority']) ? $this->_args['metabox_priority'] : "default");
+			
+			//Only create metabox if we are on the right post type
+			if ( $current_page->base != 'post' || $post->post_type != $metabox_posttype){
+				return;	
+			}
 			
 			add_meta_box( 
 				$this->_args['metabox_id'],
@@ -399,139 +407,67 @@ if (!class_exists('MP_CORE_Metabox')){
 			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;				
 			
 			//If we are saving this post type - we dont' want to save every single metabox that has been created using this class - only this post type
-			if ( $this->_args['metabox_posttype'] == $this_post_type ) {
+			if ( $this->_args['metabox_posttype'] != $this_post_type ) {
+				return;	
+			}
 									
-			   global $post;
-			   $this->_post_id = isset($post->ID) ? $post->ID : '';
-			  // verify if this is an auto save routine. 
-			  // If it is our form has not been submitted, so we dont want to do anything
-			  if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
-				  return;
+		    global $post;
+		    $this->_post_id = isset($post->ID) ? $post->ID : '';
+		   
+		    // verify if this is an auto save routine. 
+		    // If it is our form has not been submitted, so we dont want to do anything
+		  	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
+				return;
+		
+			//these_repeater_fields variable holds repeated values to be saved in database
+			$these_repeater_field_id_values = array();
+			//Set default for $repeater to false
+			$prev_repeater = false;
 			
-				//these_repeater_fields variable holds repeated values to be saved in database
-				$these_repeater_field_id_values = array();
-				//Set default for $repeater to false
-				$prev_repeater = false;
+			//Loop through each item in the passed array
+			foreach ($this->_metabox_items_array as $field){
+														
+				// verify this came from our screen and with proper authorization,
+				// because save_post can be triggered at other times
+				if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
+					if ( !wp_verify_nonce( $_POST[$field['field_id'] . '_metabox_nonce'], plugin_basename( __FILE__ ) ) )
+					  return;
+				}else{
+					return;
+				}
 				
-				//Loop through each item in the passed array
-				foreach ($this->_metabox_items_array as $field){
-															
-					// verify this came from our screen and with proper authorization,
-					// because save_post can be triggered at other times
-					if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
-						if ( !wp_verify_nonce( $_POST[$field['field_id'] . '_metabox_nonce'], plugin_basename( __FILE__ ) ) )
-						  return;
-					}else{
+				// Check permissions
+				if ( $this->_args['metabox_posttype'] == $_POST['post_type'] ) {
+					if ( !current_user_can( 'edit_page', $this->_post_id ) )
 						return;
-					}
-					
-					// Check permissions
-					if ( $this->_args['metabox_posttype'] == $_POST['post_type'] ) {
-						if ( !current_user_can( 'edit_page', $this->_post_id ) )
-							return;
-					}
-					else{
-						if ( !current_user_can( 'edit_post', $this->_post_id ) )
-							return;
-					}
-					
-					// OK, we're authenticated: we need to find and save the data
-					
-					//If the passed array has the field_repeater value set, than loop through all of the fields with that repeater
-					if ( isset($field['field_repeater']) ){
-						//If this repeater has not already been looped through and saved, loop through and save it.
-						//Because if this is a repeater, the whole repeater gets looped through and saved and never touched again
-						if ($prev_repeater != $field['field_repeater']){
-							//But first check if the previous field was the last in a set of repeaters. If so, update that set of repeaters now
-							if ($prev_repeater != false){
-								// Update $data 
-								update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
-								//Reset these_repeater_field_id_values
-								$these_repeater_field_id_values = array();
-							}
-							
-							//Set $prev_repeater to current field repeater 
-							$prev_repeater = $field['field_repeater'];
-							
-							//Store all the post values for this repeater in $these_repeater_field_id_values
-							$these_repeater_field_id_values = $_POST[$field['field_repeater']];
-							
-							//Sanitize user input for this repeater field and add it to the $data array
-							$allowed_tags = array(
-								'a' => array(
-									'href' => array(),
-									'title' => array()
-								),
-								'br' => array(),
-								'em' => array(),
-								'strong' => array(),
-								'p' => array(),
-								'blockquote' => array(),
-								'script' => array(),
-								'style' => array(),
-								'span' => array()
-							);
-							
-							//Set default for repeat counter
-							$repeater_counter = 0;
-								
-							//Loop through all of the repeats in the $_POST with this repeater
-							foreach( $these_repeater_field_id_values as $repeater ){
-								
-								//Loop through all of the repeats in the $_POST with this repeater
-								foreach( $repeater as $field_id => $field_value ){
-																	
-									//Loop through each passed in fields so we can find the "type"
-									foreach ( $this->_metabox_items_array as $child_loop_field ){
-										
-										if ( isset($child_loop_field['field_repeater']) ){
-											
-											//If the current iteration of passed-in field's repeater matches the repeater we're on in the master loop
-											if ( $child_loop_field['field_repeater'] == $field['field_repeater']){
-												
-												//If this child loop's id matched the current one in the POST array
-												if ( $child_loop_field['field_id'] == $field_id ){
-													
-													//Sanitize each field according to its type
-													if ( $child_loop_field['field_type'] == 'textarea' ){
-														$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( $field_value, ENT_QUOTES); 
-													}
-													elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-														$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities(wpautop( $field_value, true ), ENT_QUOTES), $allowed_tags ); 									
-													}
-													else{
-														$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
-													}
-									
-													
-												}
-												
-											}
-										}
-									}
-								}
-								//Increment repeat counter
-								$repeater_counter = $repeater_counter + 1;		
-							}	
-											
-						}
-					}
-					//This is not a repeater field.
-					else{
-						//But if the previous field was a repeater, update that repeater now
+				}
+				else{
+					if ( !current_user_can( 'edit_post', $this->_post_id ) )
+						return;
+				}
+				
+				// OK, we're authenticated: we need to find and save the data
+				
+				//If the passed array has the field_repeater value set, than loop through all of the fields with that repeater
+				if ( isset($field['field_repeater']) ){
+					//If this repeater has not already been looped through and saved, loop through and save it.
+					//Because if this is a repeater, the whole repeater gets looped through and saved and never touched again
+					if ($prev_repeater != $field['field_repeater']){
+						//But first check if the previous field was the last in a set of repeaters. If so, update that set of repeaters now
 						if ($prev_repeater != false){
 							// Update $data 
 							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
-							//Set $prev_repeater back to false
-							$prev_repeater = false;
-							//Set $these_repeater_field_id_values back to be an empty array
+							//Reset these_repeater_field_id_values
 							$these_repeater_field_id_values = array();
 						}
 						
-						//Update single post:
-						//get value from $_POST
-						$post_value = isset($_POST[$field['field_id']]) ? $_POST[$field['field_id']] : '';
-						//sanitize user input
+						//Set $prev_repeater to current field repeater 
+						$prev_repeater = $field['field_repeater'];
+						
+						//Store all the post values for this repeater in $these_repeater_field_id_values
+						$these_repeater_field_id_values = $_POST[$field['field_repeater']];
+						
+						//Sanitize user input for this repeater field and add it to the $data array
 						$allowed_tags = array(
 							'a' => array(
 								'href' => array(),
@@ -546,29 +482,102 @@ if (!class_exists('MP_CORE_Metabox')){
 							'style' => array(),
 							'span' => array()
 						);
-						if ( $field['field_type'] == 'textarea' ){
-							$data = wp_kses( htmlentities( $post_value, ENT_QUOTES ), $allowed_tags );
-						}
-						elseif( $field['field_type'] == 'wp_editor' ){
-							$data = wp_kses( htmlentities( wpautop( $post_value, true ), ENT_QUOTES ), $allowed_tags );
-						}
-						else{
-							$data = sanitize_text_field( $post_value );
-						}
 						
+						//Set default for repeat counter
+						$repeater_counter = 0;
+							
+						//Loop through all of the repeats in the $_POST with this repeater
+						foreach( $these_repeater_field_id_values as $repeater ){
+							
+							//Loop through all of the repeats in the $_POST with this repeater
+							foreach( $repeater as $field_id => $field_value ){
+																
+								//Loop through each passed in fields so we can find the "type"
+								foreach ( $this->_metabox_items_array as $child_loop_field ){
+									
+									if ( isset($child_loop_field['field_repeater']) ){
+										
+										//If the current iteration of passed-in field's repeater matches the repeater we're on in the master loop
+										if ( $child_loop_field['field_repeater'] == $field['field_repeater']){
+											
+											//If this child loop's id matched the current one in the POST array
+											if ( $child_loop_field['field_id'] == $field_id ){
+												
+												//Sanitize each field according to its type
+												if ( $child_loop_field['field_type'] == 'textarea' ){
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( $field_value, ENT_QUOTES); 
+												}
+												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses(htmlentities(wpautop( $field_value, true ), ENT_QUOTES), $allowed_tags ); 									
+												}
+												else{
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
+												}
+								
+												
+											}
+											
+										}
+									}
+								}
+							}
+							//Increment repeat counter
+							$repeater_counter = $repeater_counter + 1;		
+						}	
+										
+					}
+				}
+				//This is not a repeater field.
+				else{
+					//But if the previous field was a repeater, update that repeater now
+					if ($prev_repeater != false){
 						// Update $data 
-						update_post_meta($this->_post_id, $field['field_id'], $data);
+						update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+						//Set $prev_repeater back to false
+						$prev_repeater = false;
+						//Set $these_repeater_field_id_values back to be an empty array
+						$these_repeater_field_id_values = array();
 					}
 					
-				}//End of foreach through $this->_metabox_items_array
-								
-				//If the final field was a repeater, update that repeater now
-				if ($prev_repeater != false){
+					//Update single post:
+					//get value from $_POST
+					$post_value = isset($_POST[$field['field_id']]) ? $_POST[$field['field_id']] : '';
+					//sanitize user input
+					$allowed_tags = array(
+						'a' => array(
+							'href' => array(),
+							'title' => array()
+						),
+						'br' => array(),
+						'em' => array(),
+						'strong' => array(),
+						'p' => array(),
+						'blockquote' => array(),
+						'script' => array(),
+						'style' => array(),
+						'span' => array()
+					);
+					if ( $field['field_type'] == 'textarea' ){
+						$data = wp_kses( htmlentities( $post_value, ENT_QUOTES ), $allowed_tags );
+					}
+					elseif( $field['field_type'] == 'wp_editor' ){
+						$data = wp_kses( htmlentities( wpautop( $post_value, true ), ENT_QUOTES ), $allowed_tags );
+					}
+					else{
+						$data = sanitize_text_field( $post_value );
+					}
+					
 					// Update $data 
-					update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+					update_post_meta($this->_post_id, $field['field_id'], $data);
 				}
-			}
-		
+				
+			}//End of foreach through $this->_metabox_items_array
+							
+			//If the final field was a repeater, update that repeater now
+			if ($prev_repeater != false){
+				// Update $data 
+				update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+			}		
 		}
 		
 		/**

@@ -25,9 +25,20 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 		//validate inputs
 		if(!$url OR !$width ) return false;
 		
-		//screen is 2x so double the size of images
-		$aq_width = has_filter('aq_resize_width') ? apply_filters( 'aq_resize_width', $width) : $width;
-		$aq_height = has_filter('aq_resize_height') ? apply_filters( 'aq_resize_height', $height) : $height;
+		//If using ajax, go retina as a default
+		if ( defined('DOING_AJAX') ){	
+			
+			//screen is 2x so double the size of images
+			$aq_width = $width * 2;
+			$aq_height = $height * 2;
+			
+		}else{
+			
+			//screen is 2x so double the size of images
+			$aq_width = has_filter('aq_resize_width') ? apply_filters( 'aq_resize_width', $width) : $width;
+			$aq_height = has_filter('aq_resize_height') ? apply_filters( 'aq_resize_height', $height) : $height;
+			
+		}
 		
 		//define upload path & dir
 		$upload_info = wp_upload_dir();

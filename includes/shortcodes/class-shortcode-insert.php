@@ -538,8 +538,6 @@ class MP_CORE_Shortcode_Insert{
 					echo '<div class="mp-iconfontpicker-title" ></div>';
 				echo '</div>';
 			echo '</div>';
-		
-		
 			
 			?>       
 			<!-- Icon select and text field -->
