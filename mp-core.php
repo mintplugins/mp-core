@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
 Description: A core group of classes and functions.
-Version: beta1.1.4.9
+Version: beta1.1.5.1
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_core

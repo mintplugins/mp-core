@@ -64,7 +64,7 @@ if ( ! function_exists( 'mp_core_paginate_links' ) ) :
 			'prev_text'    => apply_filters( 'mp_core_pagination_prev', '<' ),
 			'next_text'    => apply_filters( 'mp_core_pagination_prev', '>' ),
 			'type'      => 'list',
-			'show_all'  => true
+			'show_all'  => false
 		);
 		
 		$args = wp_parse_args( $args, $defaults );
