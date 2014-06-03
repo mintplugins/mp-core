@@ -186,6 +186,12 @@ if (!class_exists('MP_CORE_Metabox')){
 		public function mp_core_metabox_callback() {
 			
 			global $post;
+					
+			if( !session_id() )
+				session_start();
+			
+			$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']] = array();
+			
 			$this->_post_id = isset($post->ID) ? $post->ID : '';
 			
 			$prev_repeater = false;
@@ -213,6 +219,9 @@ if (!class_exists('MP_CORE_Metabox')){
 									
 						//Get the array of variables stored in the database for this repeater
 						$current_stored_repeater = get_post_meta( $this->_post_id, $key = $field['field_repeater'], $single = true );
+						
+						//Store this value in the global metabox array so we can check for change upon save
+						$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_repeater']] = $current_stored_repeater;
 						
 						//This is a brand new repeater
 						$repeat_counter = 0;
@@ -344,6 +353,10 @@ if (!class_exists('MP_CORE_Metabox')){
 						if ( isset($_GET['post'])){
 							// Use get_post_meta to retrieve an existing value from the database and use the value for the form
 							$value = get_post_meta( $this->_post_id, $key = $field['field_id'], $single = true );
+							
+							//Store this value in the global metabox array so we can check for change upon save
+							$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] = $value;
+						
 							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
 							if ($field['field_type'] != "checkbox"){
 								$value = isset($value) ? $value : $field['field_value'];
@@ -403,6 +416,9 @@ if (!class_exists('MP_CORE_Metabox')){
 		 */	
 		public function mp_core_save_data() {
 			
+			if( !session_id() )
+				session_start();
+				
 			//Check if post type has been set
 			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;				
 			
@@ -455,8 +471,30 @@ if (!class_exists('MP_CORE_Metabox')){
 					if ($prev_repeater != $field['field_repeater']){
 						//But first check if the previous field was the last in a set of repeaters. If so, update that set of repeaters now
 						if ($prev_repeater != false){
-							// Update $data 
-							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+							
+							//Before we save, lets check to make sure it's actually different. 
+							//To do that, we need to loop through and strip the slashes we've put in (which apparently don't come back out from the database)
+							$saved_comparison_counter = 0;
+							$saved_comparison_field_id_values = array();
+							
+							foreach( $these_repeater_field_id_values as $saved_comparison_repeater ){
+								
+								foreach( $saved_comparison_repeater as $saved_comparison_field_id => $saved_comparsion_field_value ){
+								
+									$saved_comparison_field_id_values[$saved_comparison_counter][$saved_comparison_field_id] = stripslashes($saved_comparsion_field_value);
+								
+								}
+								
+								$saved_comparison_counter = $saved_comparison_counter + 1;
+								
+							}
+							
+							//If the value has changed, update this meta value. Otherwise, dont.
+							if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+								// Update $these_repeater_field_id_values 
+								update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+							}
+				
 							//Reset these_repeater_field_id_values
 							$these_repeater_field_id_values = array();
 						}
@@ -531,8 +569,30 @@ if (!class_exists('MP_CORE_Metabox')){
 				else{
 					//But if the previous field was a repeater, update that repeater now
 					if ($prev_repeater != false){
-						// Update $data 
-						update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+						
+						//Before we save, lets check to make sure it's actually different. 
+						//To do that, we need to loop through and strip the slashes we've put in (which apparently don't come back out from the database)
+						$saved_comparison_counter = 0;
+						$saved_comparison_field_id_values = array();
+						
+						foreach( $these_repeater_field_id_values as $saved_comparison_repeater ){
+							
+							foreach( $saved_comparison_repeater as $saved_comparison_field_id => $saved_comparsion_field_value ){
+							
+								$saved_comparison_field_id_values[$saved_comparison_counter][$saved_comparison_field_id] = stripslashes($saved_comparsion_field_value);
+							
+							}
+							
+							$saved_comparison_counter = $saved_comparison_counter + 1;
+							
+						}
+						
+						//If the value has changed, update this meta value. Otherwise, dont.
+						if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+							// Update $these_repeater_field_id_values 
+							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+						}
+						
 						//Set $prev_repeater back to false
 						$prev_repeater = false;
 						//Set $these_repeater_field_id_values back to be an empty array
@@ -567,17 +627,43 @@ if (!class_exists('MP_CORE_Metabox')){
 						$data = sanitize_text_field( $post_value );
 					}
 					
-					// Update $data 
-					update_post_meta($this->_post_id, $field['field_id'], $data);
+					//If the value has changed, update this meta value. Otherwise, dont.
+					if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] != $data ){
+						// Update $data 
+						update_post_meta($this->_post_id, $field['field_id'], $data);
+					}
 				}
 				
 			}//End of foreach through $this->_metabox_items_array
 							
 			//If the final field was a repeater, update that repeater now
 			if ($prev_repeater != false){
-				// Update $data 
-				update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
-			}		
+				
+				//Before we save, lets check to make sure it's actually different. 
+				//To do that, we need to loop through and strip the slashes we've put in (which apparently don't come back out from the database)
+				$saved_comparison_counter = 0;
+				$saved_comparison_field_id_values = array();
+				
+				foreach( $these_repeater_field_id_values as $saved_comparison_repeater ){
+					
+					foreach( $saved_comparison_repeater as $saved_comparison_field_id => $saved_comparsion_field_value ){
+					
+						$saved_comparison_field_id_values[$saved_comparison_counter][$saved_comparison_field_id] = stripslashes($saved_comparsion_field_value);
+					
+					}
+					
+					$saved_comparison_counter = $saved_comparison_counter + 1;
+					
+				}
+				
+				//If the value has changed, update this meta value. Otherwise, dont.
+				if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+					// Update $these_repeater_field_id_values 
+					update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
+				}
+			}	
+			
+			
 		}
 		
 		/**
@@ -618,7 +704,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_input_class . '" value=" " />';
+			
 			echo '</label></div>';
 			echo '</div>'; 
 		}
