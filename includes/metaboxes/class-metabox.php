@@ -58,6 +58,10 @@ if (!class_exists('MP_CORE_Metabox')){
 				'metabox_priority' => NULL 
 			);
 			
+			if( !session_id() ){
+				session_start();
+			}
+			
 			//Get and parse args
 			$this->_args = wp_parse_args( $args, $args_defaults );
 			
@@ -186,9 +190,6 @@ if (!class_exists('MP_CORE_Metabox')){
 		public function mp_core_metabox_callback() {
 			
 			global $post;
-					
-			if( !session_id() )
-				session_start();
 			
 			$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']] = array();
 			
