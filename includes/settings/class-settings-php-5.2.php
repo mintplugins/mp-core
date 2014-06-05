@@ -704,6 +704,46 @@ function mp_core_colorpicker($args = array() ) {
 }
 
 /**
+ * Easy Digital Downloads Product 
+ *
+ * @access   public
+ * @since    1.0.0
+ * @see      wp_parse_args()
+ * @see      esc_attr()
+ * @param    array $args
+ * @return   void
+ */
+function mp_core_edd_download_select( $args = array() ) {
+	
+	//If there is no EDD function - It's not installed so don't do anything with this.
+	if (!function_exists( 'EDD' ) ){
+		
+		echo __( 'You need to install and activate Easy Digital Downloads', 'mp_core' );
+		return false;
+	}
+	
+	$defaults = array(
+		'name'        => '',
+		'value'       => '',
+		'options'     => array(),
+		'description' => '',
+		'registration' => '' ,
+		'use_labels' => false
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	extract( $args );
+	
+	$id   = esc_attr( $name );
+	$name = esc_attr( sprintf( $registration . '[%s]', $name ) );
+	?>
+	<label for="<?php echo $id; ?>">
+		<?php echo EDD()->html->product_dropdown( array( 'id' => $id, 'name' => $name, 'chosen' => true, 'selected' => esc_attr( $value ) )); ?><br />
+		<?php echo $description; ?>
+	</label>
+<?php
+}
+/**
  * Returns the options array 
  * The $registration variable must match the name of the set of options. It is set in the register_settings function. 
  * If the $key variable is set, it will return just that setting. If not, it will return the entire set of settings as an array.

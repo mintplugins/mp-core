@@ -85,10 +85,10 @@ class MP_CORE_Font{
 		
 		global $mp_core_font_families;
 					
-		if ( !isset( $mp_core_font_families[$this->_font_family_slug] ) ){
+		if ( !isset( $mp_core_font_families[$this->_css_font_family] ) ){
 			
-			//Add this font family slug to the array of font families so we dont re-create it again
-			$mp_core_font_families[$this->_font_family_slug] = true;
+			//Add this font family to the array of font families so we dont re-create it again
+			$mp_core_font_families[$this->_css_font_family] = true;
 		
 			$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . ':' . $this->_font_family_extras );
 			
