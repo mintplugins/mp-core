@@ -544,10 +544,10 @@ if (!class_exists('MP_CORE_Metabox')){
 												
 												//Sanitize each field according to its type
 												if ( $child_loop_field['field_type'] == 'textarea' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities(str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", $field_value ) ) ), ENT_QUOTES ); 
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", wp_kses(wpautop( $field_value, true )), $allowed_tags ) ) ), ENT_QUOTES ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( wp_kses( wpautop( $field_value, true ), $allowed_tags ) ), ENT_QUOTES ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
@@ -619,10 +619,10 @@ if (!class_exists('MP_CORE_Metabox')){
 						'span' => array()
 					);
 					if ( $field['field_type'] == 'textarea' ){
-						$data = htmlentities( str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", wp_kses( $post_value ), $allowed_tags ) ) ), ENT_QUOTES );
+						$data = htmlentities( mp_core_fix_quotes( wp_kses( $post_value, $allowed_tags ) ), ENT_QUOTES );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = htmlentities( str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", wp_kses( wpautop( $post_value, true ) ), $allowed_tags ) ) ), ENT_QUOTES );
+						$data = htmlentities( mp_core_fix_quotes( wp_kses( wpautop( $post_value, true ), $allowed_tags ) ), ENT_QUOTES );
 					}
 					else{
 						$data = str_replace("‘", "'", sanitize_text_field( $post_value ) );

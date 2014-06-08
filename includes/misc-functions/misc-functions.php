@@ -36,9 +36,24 @@ function mp_core_addTinyMCELinkClasses( $wp ) {
 	do_action('mp_core_editor_styles');
 	
 	//All inline styles including the customizer
-	add_editor_style( plugins_url('/css/core/tinymce-css.php', dirname( __FILE__ ) ) );
+	//add_editor_style( plugins_url('/css/core/tinymce-css.php', dirname( __FILE__ ) ) );
 }
 add_action( 'admin_init', 'mp_core_addTinyMCELinkClasses' );
+
+/**
+ * This function takes a string and changes all "weird" apostrphes and quotes and converts them to "normal" ones.
+ *
+ * @since    1.0.0
+ * @link     http://moveplugins.com/doc/mp_core_fix_quotes
+ * @see      function_name()
+ * @param    string $string See link for description.
+ * @return   void
+ */
+function mp_core_fix_quotes( $string ){
+	
+	return str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", $string ) ) );
+		
+}
 
 /**
  * Convert a hex color code to an RGB array
