@@ -628,8 +628,13 @@ if (!class_exists('MP_CORE_Metabox')){
 						$data = str_replace("‘", "'", sanitize_text_field( $post_value ) );
 					}
 					
+					//If this hasn't been saved or there is a glitch with the PHP session for some reason
+					if ( !isset( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] ) ){
+						// Update $data 
+						update_post_meta($this->_post_id, $field['field_id'], $data);
+					}
 					//If the value has changed, update this meta value. Otherwise, dont.
-					if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] != $data ){
+					else if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] != $data ){
 						// Update $data 
 						update_post_meta($this->_post_id, $field['field_id'], $data);
 					}
