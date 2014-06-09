@@ -272,15 +272,14 @@ jQuery(document).ready(function($){
 	});
 	
 	//When we click on the toggle for this repeater - hide or show this repeater
-	$(document).on("click", '.repeater_container .hndle, .repeater_container .handlediv, .postbox h3, .postbox .handlediv', function(){
+	$(document).on("click", '.repeater_container .hndle, .repeater_container .handlediv', function(){
 		
 		var theoriginal = $(this).parent();
 		
 		var closed = theoriginal.hasClass( "closed" );
-
-													
+										
 		//This is closed so open it 
-		if ( !closed ){
+		if ( closed ){
 			
 			theoriginal.removeClass("closed");
 			

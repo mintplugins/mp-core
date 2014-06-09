@@ -235,9 +235,12 @@ if (!class_exists('MP_CORE_Metabox')){
 							
 							//Loop the same amount of times the user clicked 'repeat' (including the first one that was there before they clicked 'repeat')
 							foreach ($current_stored_repeater as $repeater_set) {
-						
+								
+								//Should we add the "closed" class (if there's more than 1 repeater)
+								$closed_class = count($current_stored_repeater) > 1 ? 'closed' : '';
+								
 								//Create start of div for this repeat 
-								echo '<li class="' . $field['field_repeater'] . '_repeater postbox closed"> <div class="mp_repeater_handlediv handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+								echo '<li class="' . $field['field_repeater'] . '_repeater ' . $closed_class . '"> <div class="mp_repeater_handlediv handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
 								
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -515,7 +518,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							'br' => array(),
 							'em' => array(),
 							'strong' => array(),
-							'p' => array(),
+							'p' => array( 'style' => array() ),
 							'blockquote' => array(),
 							'script' => array(),
 							'style' => array(),
@@ -547,7 +550,7 @@ if (!class_exists('MP_CORE_Metabox')){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( wp_kses( wpautop( $field_value, true ), $allowed_tags ) ), ENT_QUOTES ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
@@ -612,17 +615,17 @@ if (!class_exists('MP_CORE_Metabox')){
 						'br' => array(),
 						'em' => array(),
 						'strong' => array(),
-						'p' => array(),
+						'p' => array( 'style' => array() ),
 						'blockquote' => array(),
 						'script' => array(),
 						'style' => array(),
 						'span' => array()
 					);
 					if ( $field['field_type'] == 'textarea' ){
-						$data = htmlentities( mp_core_fix_quotes( wp_kses( $post_value, $allowed_tags ) ), ENT_QUOTES );
+						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = htmlentities( mp_core_fix_quotes( wp_kses( wpautop( $post_value, true ), $allowed_tags ) ), ENT_QUOTES );
+						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $post_value ), true ), $allowed_tags ), ENT_QUOTES );
 					}
 					else{
 						$data = str_replace("‘", "'", sanitize_text_field( $post_value ) );
