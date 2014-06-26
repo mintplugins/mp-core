@@ -56,6 +56,70 @@ function mp_core_fix_quotes( $string ){
 }
 
 /**
+ * Get a post meta value and return a default if empty
+ *
+ * @since    1.0.0
+ * @link     https://mintplugins.com/doc/mp_core_get_post_meta
+ * @param    int $post_id The id of the post this meta value is attached to.
+ * @param    string $meta_key The key for the value we want to get.
+ * @param    mixed $default The default value for this if nothing is saved.
+ * @return   mixed $meta_value Either the meta value saved or the default passed-in.
+ */
+function mp_core_get_post_meta( $post_id, $meta_key, $default, $args = array() ){
+	
+	$default_args = array(
+		'before' => NULL,
+		'after' => NULL,
+	);
+	
+	$args = wp_parse_args( $args, $default_args );
+			
+	//Get the post meta field we are looking for
+	$meta_value = get_post_meta($post_id, $meta_key, true);
+	
+	//If the meta_value is empty 
+	if ( empty( $meta_value ) ){
+		
+		//If this meta value is set to be the number 0
+		if ( is_numeric( $meta_value ) ){
+			
+			//If there is a before value
+			if ( !empty( $args['before_meta_value'] ) ){
+				$meta_value = $args['before_meta_value'] . $meta_value;
+			}
+			
+			//If there is an after value
+			if ( !empty( $args['after_meta_value'] ) ){
+				$meta_value = $args['after_meta_value'] . $meta_value;
+			}
+			
+			return $meta_value;
+			
+		}
+		//If it is truly just empty
+		else{
+			
+			//return the default value
+			return $default;
+		}
+		
+	}
+	
+	//If there is a before value
+	if ( !empty( $args['before_meta_value'] ) ){
+		$meta_value = $args['before_meta_value'] . $meta_value;
+	}
+	
+	//If there is an after value
+	if ( !empty( $args['after_meta_value'] ) ){
+		$meta_value = $args['after_meta_value'] . $meta_value;
+	}
+			
+	return $meta_value;	
+	
+}
+
+/**
  * Convert a hex color code to an RGB array
  *
  * @since    1.0.0

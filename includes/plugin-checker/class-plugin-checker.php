@@ -223,6 +223,27 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									
 					$plugin_name_slug = sanitize_title ( $plugin['plugin_name'] );
 					
+					//Listen for our Submit License button to be clicked
+					if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
+										
+						//If it has, store it in the license_key variable 
+						$license_key = $_POST[ $plugin_name_slug . '_license_key' ];
+						
+						//Check nonce
+						if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
+							return false; // get out if we didn't click the Activate button
+							
+						$args = array(
+							'software_name'      => $plugin['plugin_name'],
+							'software_api_url'   => $plugin['plugin_api_url'],
+							'software_license_key'   => $license_key, //EG move-plugins-core_license_key
+							'software_store_license' => true, //Store this newly submitted license
+						);
+									
+						mp_core_verify_license( $args );
+						
+					}
+					
 					//If this plugin could use a different/parent plugin's license (this is likely an add-on plugin).
 					//If this passes, it just means the user doesn't have to enter the same license again
 					if (!empty( $plugin['plugin_licensed_parent_name'] ) ){
@@ -231,6 +252,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 						
 						//Get the previously saved license for the parent plugin from the database
 						$license_key = get_option( $parent_plugin_name_slug . '_license_key' );
+						
+						//If there's no parent license key entered, see if there's one entered for this plugin
+						$license_key = empty( $license_key ) ? get_option( $plugin_name_slug . '_license_key' ) : $license_key;
 						
 						$verify_license_args = array(
 							'software_name'      => $plugin['plugin_name'],
@@ -471,7 +495,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 					foreach( $installed_themes as $theme_slug => $theme ){
 					
 						//If this theme is not the theme we're hoping to install
-						if ( $theme['headers:WP_Theme:private']['Name'] != $plugin['plugin_name'] ){
+						if ( $theme[0] != $plugin['plugin_name'] ){
 							
 							//For now, set this theme to be listed as not installed
 							$theme_installed = false;

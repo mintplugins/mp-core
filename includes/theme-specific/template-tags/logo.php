@@ -119,7 +119,7 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 				
 				//If there is a default height passed-in for the width of the logo, apply it
 				if ( !empty( $default_height ) ){ 
-					$image_height = $default_height;
+					$image_height = ' height="' . $default_height . '" ';
 				}
 				//If there is no default height, set it automaticaly based on the width
 				else{
@@ -131,7 +131,7 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 		
 			echo '<a href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
 				
-			echo '<img id="mp-core-logo" src="' . $logo_image . '" width="' . $image_width . '" height="' . $image_height . '" alt="home" />';
+			echo '<img id="mp-core-logo" src="' . $logo_image . '" width="' . $image_width . '"' . $image_height . ' alt="home" />';
 				
 			echo '</a>';
 			

@@ -240,7 +240,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								$closed_class = count($current_stored_repeater) > 1 ? 'closed' : '';
 								
 								//Create start of div for this repeat 
-								echo '<li class="' . $field['field_repeater'] . '_repeater ' . $closed_class . '"> <div class="mp_repeater_handlediv handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+								echo '<li class="' . $field['field_repeater'] . '_repeater ' . $closed_class . '"> <div class="mp_repeater_handlediv handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span><div class="mp-core-repeater-description">' . __( ' Click to edit. Drag to re-order', 'mp_core' ) . '</div></h3>';
 								
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -711,6 +711,49 @@ if (!class_exists('MP_CORE_Metabox')){
 			extract( $args, EXTR_SKIP );
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
+			
+			echo '</label></div>';
+			echo '</div>'; 
+		}
+		
+		/**
+		 * repeatertitle field. Parameters in this function match all below
+		 *
+		 * @access   public
+		 * @since    1.0.0
+   		 * @param    string $field_id Required. This must be a unique name with no spaces
+		 * @param    string $field_title Required. This is the title of the field that will display to the user
+		 * @param    string $field_description Required. The user will see this description above this field
+		 * @param    string $value Required. The value displayed in this field
+		 * @param    string $classname Required. The name of the  css class for this field
+		 * @return   void
+		*/
+		function repeatertitle( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_input_class' => NULL,
+				'field_container_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+				'field_showhider' => NULL,
+                'field_placeholder' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . ' repeatertitle" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			

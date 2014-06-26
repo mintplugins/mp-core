@@ -305,12 +305,21 @@ jQuery(document).ready(function($){
 	function name_repeaters(){
 		
 		$('.repeater_container li').each(function(index) {
+			var thetitle = $(this).find('.repeatertitle .mp_title strong').html();
+			if ( thetitle === '' ){
+				 thetitle = $(this).find('> .mp_field strong').html();
+			}
 			
-			var thetitle = $(this).find('> .mp_field strong').html();
 			var thevalue = $(this).find('> .mp_field > input').val();
+			if ( thevalue === '' ){
+				 thevalue = $(this).find('> .repeatertitle em').html();
+			}
 			
-			if ( thevalue ){		
+			if ( thetitle && thevalue ){		
 				$(this).find( '> .mp_drag > span').html(thetitle + ': ' + thevalue);
+			}
+			else if( thetitle ){
+				$(this).find( '> .mp_drag > span').html(thetitle);
 			}
 			else{
 				$(this).find( '> .mp_drag > span').html( 'Enter info:' );
