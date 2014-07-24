@@ -227,8 +227,11 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This is a brand new repeater
 						$repeat_counter = 0;
 						
+						//Get the showhider
+						$showhider = !empty($field['field_showhider']) ? 'showhider="' . $field['field_showhider'] . '"' : NULL;
+						
 						//Create ul container for this repeater
-						echo '<ul class="repeater_container">';
+						echo '<ul class="repeater_container" ' . $showhider . '>';
 						
 						//If this repeater has had info saved to it previously
 						if ($current_stored_repeater != NULL){
@@ -240,7 +243,16 @@ if (!class_exists('MP_CORE_Metabox')){
 								$closed_class = count($current_stored_repeater) > 1 ? 'closed' : '';
 								
 								//Create start of div for this repeat 
-								echo '<li class="' . $field['field_repeater'] . '_repeater ' . $closed_class . '"> <div class="mp_repeater_handlediv handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span><div class="mp-core-repeater-description">' . __( ' Click to edit. Drag to re-order', 'mp_core' ) . '</div></h3>';
+								echo '<li class="' . $field['field_repeater'] . '_repeater ' . $closed_class . '"> 
+									<div class="mp_repeater_handlediv handlediv" title="Click to toggle">
+										<br>
+									</div>
+									<h3 class="mp_drag hndle">
+										<div class="mp-core-repeater-title">' . __( 'Enter Info:', 'mp_core' ) . '</div>
+										<div class="mp-core-repeater-values-description"></div>
+										<div class="mp-core-repeater-values-ellipses">...</div>
+										<div class="mp-core-repeater-description">' . __( ' Click to edit. Drag to re-order', 'mp_core' ) . '</div>
+									</h3>';
 								
 								foreach ($this->_metabox_items_array as $thefield){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){

@@ -57,6 +57,7 @@
 	margin:0px!important;
 }
 .mp_drag.hndle{
+	height:19px;	
 	padding:8px 12px!important;	
 }
 .mp_iconfontpicker_item, .mp-core-icon-picker-item-shortcode{
@@ -158,7 +159,12 @@
 }	
 [showhider]{
 	display:none;
-	padding-left:20px;
+	margin-left:20px;
+	margin-right:20px;
+}
+.repeater_container > * > *{
+	margin-left:0px;
+	margin-right:0px;
 }
 .mp-core-radio-button{
 	float:left;
@@ -191,7 +197,11 @@ output {
         box-sizing: border-box;	
 }
 .repeatertitle{
-	display:none;	
+	display:none!important;	
+}
+.mp-core-repeater-title{
+	float:left;
+	white-space: nowrap;
 }
 .mp-core-repeater-description{
 	font-weight:normal;
@@ -199,4 +209,22 @@ output {
 	float:right;
 	margin: 3px 10px 0px 0px;
 	font-size:11px;	
+	white-space: nowrap;
+}
+.mp-core-repeater-values-description,
+.mp-core-repeater-values-ellipses{
+	font-weight:normal;
+	color:#888;
+	float:left;
+	margin: 3px 0px 0px 5px;
+	font-size:11px;	
+	overflow:hidden;
+	max-width:50%;
+	white-space: nowrap;
+}
+.mp-core-repeater-values-ellipses{
+	margin-left:0px;	
+}
+.repeater_container > li:first-child .mp_animation_length{
+	display:none!important;	
 }

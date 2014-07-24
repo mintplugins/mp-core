@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
 Description: A core group of classes and functions.
-Version: beta1.1.6.0
+Version: beta1.1.6.1
 Author: Mint Plugins
 Author URI: http://mintplugins.com
 Text Domain: mp_core
@@ -185,6 +185,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/get-data.php' );
  * Misc Functions
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/misc-functions.php' );
+
+/**
+ * Animation Functions
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/animation-functions.php' );
 
 /**
  * Include License Checking functions

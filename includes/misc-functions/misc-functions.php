@@ -65,7 +65,7 @@ function mp_core_fix_quotes( $string ){
  * @param    mixed $default The default value for this if nothing is saved.
  * @return   mixed $meta_value Either the meta value saved or the default passed-in.
  */
-function mp_core_get_post_meta( $post_id, $meta_key, $default, $args = array() ){
+function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = array() ){
 	
 	$default_args = array(
 		'before' => NULL,
@@ -84,13 +84,13 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default, $args = array() )
 		if ( is_numeric( $meta_value ) ){
 			
 			//If there is a before value
-			if ( !empty( $args['before_meta_value'] ) ){
-				$meta_value = $args['before_meta_value'] . $meta_value;
+			if ( !empty( $args['before'] ) ){
+				$meta_value = $args['before'] . $meta_value;
 			}
 			
 			//If there is an after value
-			if ( !empty( $args['after_meta_value'] ) ){
-				$meta_value = $args['after_meta_value'] . $meta_value;
+			if ( !empty( $args['after'] ) ){
+				$meta_value = $meta_value . $args['after'];
 			}
 			
 			return $meta_value;
@@ -106,13 +106,13 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default, $args = array() )
 	}
 	
 	//If there is a before value
-	if ( !empty( $args['before_meta_value'] ) ){
-		$meta_value = $args['before_meta_value'] . $meta_value;
+	if ( !empty( $args['before'] ) ){
+		$meta_value = $args['before'] . $meta_value;
 	}
 	
 	//If there is an after value
-	if ( !empty( $args['after_meta_value'] ) ){
-		$meta_value = $args['after_meta_value'] . $meta_value;
+	if ( !empty( $args['after'] ) ){
+		$meta_value = $meta_value . $args['after'];
 	}
 			
 	return $meta_value;	
@@ -285,4 +285,51 @@ function mp_core_remove_directory($dir) {
         if (!mp_core_remove_directory($dir.DIRECTORY_SEPARATOR.$item)) return false;
     }
     return rmdir($dir);
+}
+
+/**
+ * Count and return the number of words in a string
+ */
+function mp_core_word_count($html) {
+
+  # strip all html tags
+  $wc = strip_tags($html);
+
+  # remove 'words' that don't consist of alphanumerical characters or punctuation
+  $pattern = "#[^(\w|\d|\'|\"|\.|\!|\?|;|,|\\|\/|\-|:|\&|@)]+#";
+  $wc = trim(preg_replace($pattern, " ", $wc));
+
+  # remove one-letter 'words' that consist only of punctuation
+  $wc = trim(preg_replace("#\s*[(\'|\"|\.|\!|\?|;|,|\\|\/|\-|:|\&|@)]\s*#", " ", $wc));
+
+  # remove superfluous whitespace
+  $wc = preg_replace("/\s\s+/", " ", $wc);
+
+  # split string into an array of words
+  $wc = explode(" ", $wc);
+
+  # remove empty elements
+  $wc = array_filter($wc);
+
+  # return the number of words
+  return count($wc);
+
+}
+
+/**
+ * Limit number of words in a string
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $text  string The string whose words we want to limit
+ * @param    $limit int The number of words to limit the text to
+ * @return   $text  string The limited string
+ */
+function mp_core_limit_text_to_words($text, $limit) {
+  if (mp_core_word_count($text) > $limit) {
+	  $words = str_word_count($text, 2);
+	  $pos = array_keys($words);
+	  $text = substr($text, 0, $pos[$limit]);
+  }
+  return $text;
 }

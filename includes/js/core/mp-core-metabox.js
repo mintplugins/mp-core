@@ -304,27 +304,35 @@ jQuery(document).ready(function($){
 	//Put the title of this repeater at the top of it based on what is inside of it's first field
 	function name_repeaters(){
 		
+		//Loop through each repeat
 		$('.repeater_container li').each(function(index) {
-			var thetitle = $(this).find('.repeatertitle .mp_title strong').html();
-			if ( thetitle === '' ){
-				 thetitle = $(this).find('> .mp_field strong').html();
+			
+			//If we have a title field for this repeater set
+			thetitle = $(this).find('> .repeatertitle strong').html();
+			
+			if ( thetitle ){
+				$(this).find( '> .mp_drag > .mp-core-repeater-title').html(thetitle);
 			}
 			
-			var thevalue = $(this).find('> .mp_field > input').val();
-			if ( thevalue === '' ){
-				 thevalue = $(this).find('> .repeatertitle em').html();
-			}
+			//Reset the description for this repeater
+			thedescription = '';
+					
+			//Loop through each field in this repeat
+			$(this).find('.mp_field').each(function(index){
+				
+				if ( $(this).find('> input').val() ){
+					
+					//Add the title of the first field in the repeater
+					thedescription += $(this).find('> .mp_title strong').html() + ': ';
+					
+					//Add the value of each field
+					thedescription += $(this).find('> input').val() + ', ';		
+				}
+				
+			});
+						
+			$(this).find( '> .mp_drag > .mp-core-repeater-values-description').html(thedescription);
 			
-			if ( thetitle && thevalue ){		
-				$(this).find( '> .mp_drag > span').html(thetitle + ': ' + thevalue);
-			}
-			else if( thetitle ){
-				$(this).find( '> .mp_drag > span').html(thetitle);
-			}
-			else{
-				$(this).find( '> .mp_drag > span').html( 'Enter info:' );
-			}
-		
 		});
 			
 	}
@@ -594,7 +602,7 @@ jQuery(document).ready(function($){
 						
 	});
 	$(document).on('click', '.mp_core_showhider_button.open', function(event){
-	//$( ".mp_core_showhider_button.open" ).on('click', function(event){
+		
 			event.preventDefault;
 						
 			var this_button = $(this);
@@ -610,5 +618,6 @@ jQuery(document).ready(function($){
 				this_button.removeClass('open').addClass('closed');
 			}, 300);						
 	});
+
 
 });

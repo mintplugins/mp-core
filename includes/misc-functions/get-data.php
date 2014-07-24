@@ -369,3 +369,45 @@ function mp_core_get_post_terms_before_query( $post_id ){
 	return $terms;
 	
 }
+
+/**
+ * Get a post's excerpt using an id
+ *
+ * @since    1.0.0
+ * @link     http://mintplugins.com/doc/mp_core_get_excerpt_by_id/
+ * @param    int $post_id The id of the post who's excerpt we want.
+ * @return   string $the_excerpt The Excerpt of the post ID we passed in
+ */
+function mp_core_get_excerpt_by_id($post_id){
+    $the_post = get_post($post_id); //Gets post ID
+    $the_excerpt = $the_post->post_content; //Gets post_content to be used as a basis for the excerpt
+    $excerpt_length = 35; //Sets excerpt length by word count
+    $the_excerpt = strip_tags(strip_shortcodes($the_excerpt)); //Strips tags and images
+    $words = explode(' ', $the_excerpt, $excerpt_length + 1);
+
+    if(count($words) > $excerpt_length) :
+        array_pop($words);
+        array_push($words, '…');
+        $the_excerpt = implode(' ', $words);
+    endif;
+
+    $the_excerpt = '<p>' . $the_excerpt . '</p>';
+
+    return $the_excerpt;
+}
+
+/**
+ * Get the highest parent of any taxonomy term
+ *
+ * @since    1.0.0
+ * @link     http://mintplugins.com/doc/mp_core_get_excerpt_by_id/
+ * @param    string $term_id The id of the term
+ * @return   string $taxonomy The slug of the taxonomy
+ */
+function mp_core_get_term_top_most_parent( $term_id, $taxonomy ){
+    $parent  = get_term_by( 'id', $term_id, $taxonomy );
+    while ( $parent->parent != 0 ){
+        $parent  = get_term_by( 'id', $parent->parent, $taxonomy );
+    }
+    return $parent;
+}
