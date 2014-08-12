@@ -128,6 +128,9 @@ if ( ! function_exists( 'mp_core_logo_image' ) ) {
 				}
 					
 			}
+			else{
+				$image_height = ' height="' . $image_height . '" ';
+			}
 		
 			echo '<a href="' . esc_url( home_url( '/' ) ) . '" title="' . esc_attr( get_bloginfo( 'name', 'display' ) ) . '" rel="home">';
 				

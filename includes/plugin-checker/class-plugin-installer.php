@@ -178,7 +178,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					'api' => 'true',
 					'slug' => $this->plugin_name_slug,
 					'author' => NULL, //$this->_args['software_version'] - not working for some reason
-					'license_key' => $this->_args['plugin_license']
+					'license_key' => $this->_args['plugin_license'],
+					'old_license_key' => get_option( $this->plugin_name_slug . '_license_key' )
 				);
 								
 				$request = wp_remote_post( $this->_args['plugin_api_url']  . '/repo/' . $this->plugin_name_slug, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				

@@ -24,8 +24,13 @@
  */
 function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_animate, $animation_repeater ){
 	
+	//If we are on an iphone, ipad, android, or other touch enabled screens, don't do this because mouse over's aren't available
+	if ( mp_core_is_iphone() || mp_core_is_ipad() || mp_core_is_android() ){
+		return;	
+	}
+	
 	//Set the first frame CSS
-	$js_output = '<style type="text/css" id="' . str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate)) . '">';
+	$js_output = '<style type="text/css" id="' . str_replace(' ', '', str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate))) . '">';
 	
 		$js_output .= $mouse_over_string . ' ' . $child_to_animate . '{';
 			
@@ -54,7 +59,7 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 			'}); 	
 			
 			//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-			$(document).find("#' . str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate)) . '").remove(); 
+			$(document).find("#' . str_replace(' ', '', str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate))) . '").remove(); 
 		});
 	</script>';
 	

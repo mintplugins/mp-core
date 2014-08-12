@@ -272,7 +272,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'api' => 'true',
 					'slug' => $_data['slug'],
 					'author' => '', //$this->version - not working for some reason
-					'license_key' => $this->software_license
+					'license_key' => $this->software_license,
+					'old_license_key' => get_option( $_data['slug'] . '_license_key' )
 				);
 			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
 									
@@ -434,8 +435,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Only verify the license if the transient is older than 7 days
 			$check_licenses_transient_time = get_site_transient( 'mp_check_licenses_transient' );
 			
-			//If our transient is older than 7 days (604800 seconds)
-			//if ( time() > ($check_licenses_transient_time + 604800) ){
+			//If our transient is older than 30 days (2592000 seconds)
+			if ( time() > ($check_licenses_transient_time + 2592000) ){
 				
 				//reset the transient
 				set_site_transient( 'mp_check_licenses_transient', time() );
@@ -451,7 +452,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				//Double check license. Use the Verfiy License function to verify and store whether this license is valid or not
 				mp_core_verify_license( $verify_license_args );	
 				
-			//}
+			}
 			
 			//Get license status (set in verify license class)
 			$status = get_option( $args['software_name_slug'] . '_license_status_valid' );

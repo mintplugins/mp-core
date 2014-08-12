@@ -333,3 +333,48 @@ function mp_core_limit_text_to_words($text, $limit) {
   }
   return $text;
 }
+
+/**
+ * Check if the browser is an iPhone
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $user_agent string The User agent of the browser
+ * @return   $boolean boolean True if it is an iPhone, False if not.
+ */
+function mp_core_is_iphone($user_agent=NULL) {
+    if(!isset($user_agent)) {
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    }
+    return (strpos($user_agent, 'iPhone') !== FALSE);
+}
+
+/**
+ * Check if the browser is an iPad
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $user_agent string The User agent of the browser
+ * @return   $boolean boolean True if it is an iPad, False if not.
+ */
+function mp_core_is_ipad($user_agent=NULL) {
+    if(!isset($user_agent)) {
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    }
+    return (strpos($user_agent, 'iPad') !== FALSE);
+}
+
+/**
+ * Check if the browser is an android
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $user_agent string The User agent of the browser
+ * @return   $boolean boolean True if it is an android, False if not.
+ */
+function mp_core_is_android($user_agent=NULL) {
+    if(!isset($user_agent)) {
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+    }
+    return (strpos($user_agent, 'android') !== FALSE);
+}

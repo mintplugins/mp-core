@@ -565,22 +565,16 @@ jQuery(document).ready(function($){
 				
 	});
 	
-	//Show range value beside range inputs
-	$(function() {
-		var el, newPoint, newPlace, offset;
-		
-		// Select all range inputs, watch for change
-		$("input[type='range']").change(function() {
-			
-			// Cache this for efficiency
-			el = $(this);
-									
-			// Set value
-			el.next("output").text(el.val());
-		})
-		// Fake a change to position bubble at page load
-		.trigger('change');
+	//When the user drags a range slider, show its value beside it
+	$(document).on("change mousemove", "input[type='range']", function() {
+		$(this).next().html($(this).val());
 	});
+	
+	//Show each range slider's value bseide it when the page loads
+	$(document).find("input[type='range']").each(function(){
+		$(this).next().html($(this).val());
+	});
+
 	
 	//Showhider function which shows and hides fields based on their parent showhider
 	$( ".mp_core_showhider_button.closed" ).on('click', function(event){

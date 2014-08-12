@@ -230,6 +230,9 @@ class MP_CORE_Shortcode_Insert{
 					do_action('mp_core_shortcode_' . $this->_args['shortcode_id'] . '_insert_event'); 
 					?>
 					
+					//Use this jQuery Trigger to execute javascript that needs to be called when the shortcode is inserted into the active tinymce editor
+					jQuery( window ).trigger( "mp_core_shortcode_<?php echo $this->_args['shortcode_id']; ?>_insert_event", event );
+					
 					tb_remove();
 				}
 				
@@ -259,7 +262,7 @@ class MP_CORE_Shortcode_Insert{
 					?>
 					<p class="submit">
 						<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode();" />
-						<a id="<?php echo $this->_args['shortcode_id']; ?>-cancel-download-insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
+						<a id="<?php echo $this->_args['shortcode_id']; ?>_cancel_download_insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
 					</p>
                     
                     <?php do_action( 'mp_core_after_' . $this->_args['shortcode_id'] . '_shortcode_output' ); ?>

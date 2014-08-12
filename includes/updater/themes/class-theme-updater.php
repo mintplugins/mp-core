@@ -202,7 +202,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					'api' => 'true',
 					'slug' => $args['theme_name_slug'],
 					'theme' => true,
-					'license_key' => $license_key
+					'license_key' => $license_key,
+					'old_license_key' => get_option( $args['theme_name_slug'] . '_license_key' )	 
 				);
 								
 				$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
@@ -215,7 +216,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				$update_data = json_decode( wp_remote_retrieve_body( $response ) );
 											
 				//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
-				$update_data->url =  $update_data->homepage;
+				if ( isset( $update_data->homepage ) ){
+					$update_data->url =  $update_data->homepage;
+				}
+				else{
+					$update_data->url = '';
+				}
 								
 				if ( ! is_object( $update_data ) ) {
 					$failed = true;
@@ -333,16 +339,26 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Api Response
 			$api_response = get_site_transient( $args['response_key'] );
 			
-			//Set args to Verfiy the License
-			$verify_license_args = array(
-				'software_name'      => $args['software_name'],
-				'software_api_url'   => $args['software_api_url'],
-				'software_license_key'   => $license_key,
-				'software_store_license' => true,
-			);
+			//Only verify the license if the transient is older than 7 days
+			$check_licenses_transient_time = get_site_transient( 'mp_check_licenses_transient' );
 			
-			//Double check license. Use the Verfiy License class to verify whether this license is valid or not
-			mp_core_verify_license( $verify_license_args );	
+			//If our transient is older than 30 days (2592000 seconds)
+			if ( time() > ($check_licenses_transient_time + 2592000) ){
+				
+				//We reset the transient on the plugins page
+			
+				//Set args to Verfiy the License
+				$verify_license_args = array(
+					'software_name'      => $args['software_name'],
+					'software_api_url'   => $args['software_api_url'],
+					'software_license_key'   => $license_key,
+					'software_store_license' => true,
+				);
+				
+				//Double check license. Use the Verfiy License class to verify whether this license is valid or not
+				mp_core_verify_license( $verify_license_args );	
+				
+			}
 			
 			//Get license status (set in verify license class)
 			$status = get_option( $args['theme_name_slug'] . '_license_status_valid' );

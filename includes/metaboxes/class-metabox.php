@@ -311,7 +311,12 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This repeater has never been saved
 						else{
 							//Create start of div for this repeat 
-							echo '<li class="' . $field['field_repeater'] . '_repeater postbox"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle"><span>' . __( 'Enter Info:', 'mp_core' ) . '</span></h3>';
+							echo '<li class="' . $field['field_repeater'] . '_repeater postbox"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle">
+										<div class="mp-core-repeater-title">' . __( 'Enter Info:', 'mp_core' ) . '</div>
+										<div class="mp-core-repeater-values-description"></div>
+										<div class="mp-core-repeater-values-ellipses">...</div>
+										<div class="mp-core-repeater-description">' . __( ' Click to edit. Drag to re-order', 'mp_core' ) . '</div>
+									</h3>';
 							
 							foreach ($this->_metabox_items_array as $thefield){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
@@ -525,7 +530,10 @@ if (!class_exists('MP_CORE_Metabox')){
 						$allowed_tags = array(
 							'a' => array(
 								'href' => array(),
-								'title' => array()
+								'title' => array(),
+								'target' => array(),
+								'class' => array(),
+								'style' => array()
 							),
 							'br' => array(),
 							'em' => array(),
@@ -559,10 +567,10 @@ if (!class_exists('MP_CORE_Metabox')){
 												
 												//Sanitize each field according to its type
 												if ( $child_loop_field['field_type'] == 'textarea' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES ); 
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" | ENT_SUBSTITUTE, "UTF-8" ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
@@ -622,7 +630,10 @@ if (!class_exists('MP_CORE_Metabox')){
 					$allowed_tags = array(
 						'a' => array(
 							'href' => array(),
-							'title' => array()
+							'title' => array(),
+							'target' => array(),
+							'class' => array(),
+							'style' => array()
 						),
 						'br' => array(),
 						'em' => array(),
@@ -634,10 +645,10 @@ if (!class_exists('MP_CORE_Metabox')){
 						'span' => array()
 					);
 					if ( $field['field_type'] == 'textarea' ){
-						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES );
+						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $post_value ), true ), $allowed_tags ), ENT_QUOTES );
+						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $post_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
 					else{
 						$data = str_replace("‘", "'", sanitize_text_field( $post_value ) );
