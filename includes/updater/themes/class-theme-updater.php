@@ -194,7 +194,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 																		
 			$update_data = get_site_transient( $args['response_key'] ); //malachi-update-response
 				
-			if ( false == $update_data ) {
+			if ( false == $update_data || !isset( $update_data->new_version ) ) {
 				
 				$failed = false;
 	
