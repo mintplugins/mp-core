@@ -50,14 +50,14 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 		}
 		
 		//check if $img_url is local
-		if(strpos( $url, $upload_url ) === false) return false;
+		if(strpos( $url, $upload_url ) === false) return $url;
 		
 		//define path of image
 		$rel_path = str_replace( $upload_url, '', $url);
 		$img_path = $upload_dir . $rel_path;
 		
 		//check if img path exists, and is an image indeed
-		if( !file_exists($img_path) OR !getimagesize($img_path) ) return false;
+		if( !file_exists($img_path) OR !getimagesize($img_path) ) return $url;
 		
 		//get image info
 		$info = pathinfo($img_path);
@@ -152,7 +152,7 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 				}
 				
 			} else {
-			
+				
 				$resized_img_path = image_resize( $img_path, $aq_width, $aq_height, $crop ); // Fallback foo
 				if(!is_wp_error($resized_img_path)) {
 					$resized_rel_path = str_replace( $upload_dir, '', $resized_img_path);

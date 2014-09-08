@@ -66,10 +66,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				
 				//Create install page for each plugin		
 				$this->create_install_pages();
+				
+				//Enqueue Scripts for directory page
+				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') );
 			}
-			
-			//Enqueue Scripts
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') );
 									
 			//Create Plugin Directory Page
 			add_action( 'admin_menu', array( $this, 'add_submenu_page') );
@@ -89,6 +89,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			
 			//mp_core_settings_css
 			wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
+			
+			//mp_core_directory_css
+			wp_enqueue_style( 'mp_core_directory_css', plugins_url('css/core/mp-core-directory.css', dirname(__FILE__)) );
 			
 			//directory page js
 			wp_enqueue_script( 'mp_core_directory_js', plugins_url( 'js/core/directory-page.js', dirname(__FILE__)),  array( 'jquery' ) );
@@ -150,8 +153,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						//Check nonce
 						if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
 							return false; // get out if we didn't click the Activate button
-						
-					
 						
 						$args = array(
 							'software_name'      => $plugin['plugin_name'],
@@ -231,13 +232,15 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 */
 		public function plugin_directory_page() {
 			
-			echo '<div class="wrap">' . screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', __( 'Install Plugins', 'mp_core' )) . '</h2>';
+			echo '<div class="wrap">';
 			
-			do_action( 'mp_core_directory_' . $this->_args['slug'] . '_header_output' );
+			echo screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', __( 'Install Plugins', 'mp_core' )) . '</h2>';
 			
-			echo '<div class="theme-browser">';
+			echo apply_filters( 'mp_core_directory_header_' . $this->_args['slug'], NULL );
 			
-				echo '<div class="themes">';
+			echo '<div class="mp-directory-browser">';
+			
+				echo '<div class="mp-directory-items">';
 				
 				//Loop through all returned plugins from the wp_remote_post in the construct function	
 				foreach ( $this->plugins as $plugin ){
@@ -329,26 +332,31 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					}
 									
 					//Show this plugin on the page
-					echo '<div class="theme">
-							<a href="' . $plugin['plugin_buy_url'] . '" class="theme-screenshot" target="_blank">
-								<img src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '" />
-							</a>
+					echo '<div class="mp-directory-item">
+							<div class="mp-core-directory-item-img-holder">
+								<div class="mp-core-directory-item-img-holder-cell">
+									<a href="' . $plugin['plugin_buy_url'] . '" class="mp-core-directory-item-image-link" target="_blank">
+										<img class="mp-core-directory-item-image" src="' . $plugin['plugin_image'] . '" alt="' . $plugin['plugin_name'] . '" />
+									</a>
+								</div>
+							</div>
 							
-							<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>
-							
-							<div class="mp-core-plugin-info">
-								<h3>' . $plugin['plugin_name'] . '</h3>
-								
-								<div class="theme-author">
-								
-									' . $plugin['plugin_description'] . 
-								
-								'</div>
-								
-								<div class="action-links">
+							<div class="mp-core-directory-item-info-holder">
+								<div class="mp-core-directory-item-info-holder-cell">
+									<div class="mp-core-directory-item-title">' . $plugin['plugin_name'] . '</div>
+									<div class="mp-core-directory-price">' . $plugin['plugin_price'] . '</div>
 									
-										' . $install_output . '
-											
+									<div class="mp-core-directory-item-desc">
+									
+										' . $plugin['plugin_description'] . 
+									
+									'</div>
+									
+									<div class="mp-core-directory-item-action-links">
+										
+											' . $install_output . '
+												
+									</div>
 								</div>
 							</div>
 	
@@ -357,6 +365,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				}
 				
 				echo '</div>';
+				
+				echo apply_filters( 'mp_core_directory_footer_' . $this->_args['slug'], NULL );
 			
 			echo '</div>';
 			
@@ -446,7 +456,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				$output .= '<div class="mp-core-directory-buy"><a class="button" href="' . $buy_url . '" target="_blank">' . __( 'Get License Now - ', 'mp_core' ) . $price . '</a></div>'; 
 				
 				//Ask the user if they already have a license.
-				$output .= '<div class="mp-core-directory-license-msg">' . __('Already have a license? Enter here to install:', 'mp_core') . '</div>';
+				$output .= '<div class="mp-core-directory-license-msg">' . __('Already have a license?', 'mp_core') . '</div>';
 				
 				//License Form
 				$output .= '<form method="post">';

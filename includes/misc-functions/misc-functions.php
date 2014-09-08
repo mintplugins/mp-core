@@ -120,6 +120,47 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = ar
 }
 
 /**
+ * Return a line of CSS if a value exists
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    string $css_name - The name of the css value we want
+ * @param    string $css_value - The value of the css value we want to use. If this is blank, we return NULL
+ * @param    string $css_unit_after - The CSS unit we want to use. For example 'px' or '%'. This an be blank if none is needed
+ * @return   mixed String or NULL - If we have css to show, it's a string of css - a single line. If not, we return NULL
+ */
+function mp_core_css_line( $css_name, $css_value = NULL, $css_unit_after = NULL ) {
+	
+	//If the css_value is empty 
+	if ( empty( $css_value ) ){
+		
+		//If this meta value is set to be the number 0
+		if ( is_numeric( $css_value ) ){
+			
+			$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';	
+			
+			return $css_line;
+			
+		}
+		//If it is truly just empty
+		else{
+			
+			//return nothing so there is no output for this CSS line
+			return NULL;
+		}
+		
+	}
+	//If there is a css_value
+	else{
+		
+		$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';	
+				
+		return $css_line;
+	}
+	
+}
+
+/**
  * Convert a hex color code to an RGB array
  *
  * @since    1.0.0

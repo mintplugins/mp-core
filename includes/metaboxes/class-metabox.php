@@ -290,7 +290,7 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
 											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
 											'field_showhider' => isset( $thefield['field_showhider'] ) ? ' showhider="' . $thefield['field_showhider'] . '" ' : NULL,
-											'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' field_placeholder="' . $thefield['field_placeholder'] . '" ' : NULL
+											'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL
 										);
 										
 										//call function for field type (callback function name stored in $this->$field['field_type']
@@ -345,7 +345,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
 										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
 										'field_showhider' => isset( $thefield['field_showhider'] ) ? 'showhider="' . $thefield['field_showhider'] . '"' : NULL,
-										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' field_placeholder="' . $thefield['field_placeholder'] . '" ' : NULL
+										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL
 									);
 									
 									//call function for field type (callback function name stored in $this->$field['field_type']
@@ -533,6 +533,7 @@ if (!class_exists('MP_CORE_Metabox')){
 								'title' => array(),
 								'target' => array(),
 								'class' => array(),
+								'alt' => array(),
 								'style' => array()
 							),
 							'br' => array(),
@@ -542,7 +543,17 @@ if (!class_exists('MP_CORE_Metabox')){
 							'blockquote' => array(),
 							'script' => array(),
 							'style' => array(),
-							'span' => array()
+							'span' => array(),
+							'img' => array(
+								'src' => array(),
+								'width' => array(),
+								'height' => array(),
+								'class' => array(),
+								'id' => array(),
+								'style' => array(),
+								'alt' => array()		
+							),
+							'del' => array()
 						);
 						
 						//Set default for repeat counter
@@ -567,7 +578,7 @@ if (!class_exists('MP_CORE_Metabox')){
 												
 												//Sanitize each field according to its type
 												if ( $child_loop_field['field_type'] == 'textarea' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" | ENT_SUBSTITUTE, "UTF-8" ); 
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES | ENT_SUBSTITUTE, "utf-8" ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" ); 									
@@ -633,6 +644,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							'title' => array(),
 							'target' => array(),
 							'class' => array(),
+							'alt' => array(),
 							'style' => array()
 						),
 						'br' => array(),
@@ -642,7 +654,17 @@ if (!class_exists('MP_CORE_Metabox')){
 						'blockquote' => array(),
 						'script' => array(),
 						'style' => array(),
-						'span' => array()
+						'span' => array(),
+						'img' => array(
+							'src' => array(),
+							'width' => array(),
+							'height' => array(),
+							'class' => array(),
+							'id' => array(),
+							'style' => array(),
+							'alt' => array()		
+						),
+						'del' => array() 
 					);
 					if ( $field['field_type'] == 'textarea' ){
 						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
@@ -1170,7 +1192,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>' . $field_placeholder;
+			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
 			echo $field_value;
 			echo '</textarea>';
 			echo '</div>'; 

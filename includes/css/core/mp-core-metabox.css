@@ -159,8 +159,16 @@
 }	
 [showhider]{
 	display:none;
-	margin-left:20px;
-	margin-right:20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	background-color: rgba(46, 162, 204, 0.06);
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-left: solid 1px #dfdfdf;
+	border-right: solid 1px #dfdfdf;
+	margin-top: 0px;
 }
 .repeater_container > * > *{
 	margin-left:0px;

@@ -1,0 +1,40 @@
+/**
+ * Directory Style
+ * http://mintplugins.com
+ */
+
+.mp-directory-browser .mp-directory-items .mp-directory-item{
+	position:relative;
+	width:30%;
+	margin:0px 1% 15px 0px;
+	border: 1px solid #dedede;	
+	display:table;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	float:left;
+}
+.mp-directory-browser .mp-directory-items .mp-directory-item:nth-child(3n+1){
+	clear:left;
+}
+.mp-core-directory-item-img-holder{
+	padding:0px;	
+}
+.mp-core-directory-item-info-holder{
+	padding:10px;
+}
+.mp-core-directory-item-img-holder{
+	vertical-align:top;	
+}
+.mp-core-directory-item-image{
+	width:100%;	
+}
+.mp-core-directory-item-title{
+	color: #222;
+	font-size: 1.3em;	
+	font-weight:700;
+}
+.mp-core-directory-item-desc,
+.mp-core-directory-item-action-links{
+	margin-top:10px;	
+}
