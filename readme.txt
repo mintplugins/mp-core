@@ -1,36 +1,38 @@
 === MP Core ===
-Contributors: johnstonphilip
+Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
-Tags: framework
-Requires at least: 3.3
-Tested up to: 3.6
-Stable tag: beta1.0.6.2
+Tags: Core, Functions, Classes, Utility
+Requires at least: 3.5
+Tested up to: 4.0
+Stable tag: 1.0.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin gives developers access to a core set of classes for creating Settings, Metaboxes, Widgets, Plugins and more.
+A plugin for developers which contains a group of classes and functions used to power plugins and themes. The idea here is keeping all the code that we re-use over and over, and keeping it in one place so it never needs to be re-written - saving time and being efficient.
 
 == Description ==
 
-This plugin gives developers access to a core set of classes for creating Settings, Metaboxes, Widgets, Plugins and more.
+A plugin for developers which contains a group of classes and functions used to power plugins and themes. The idea here is keeping all the code that we re-use over and over, and keeping it in one place so it never needs to be re-written - saving time and being efficient.
+
+On its own this plugin doesn’t actually do anything. Rather, it’s functions and classes can be utilized by other plugins and themes.
 
 == Installation ==
 
 This section describes how to install the plugin and get it working.
 
-1. Upload the 'mp_core' folder to the `/wp-content/plugins/` directory
+1. Upload the 'mp-core’ folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. API available at http://mintplugins.com/mp_core/
+3. Build Bricks under the “Stacks and Bricks” menu. 
+4. Visit the Documentation/API page to learn how to build on MP Core
 
 == Frequently Asked Questions ==
 
-= What do I do with this?  =
-
-This is a group of powerful classes and functions. To understand how to build themes and plugins using these classes, go to http://mintplugins.com/mp_core/ for full API
+See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Screenshots ==
 
+
 == Changelog ==
 
-= 1.0.0.0 =
+= 1.0.0.0 = September 10, 2014
 * Original release
