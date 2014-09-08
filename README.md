@@ -2,13 +2,13 @@
 
 ### Welcome to our GitHub Repository
 
-A plugin for developers which contains a group of classes and functions used to power plugins and themes. The idea here is keeping all the code that we re-use over and over, and keeping it in one place so it never needs to be re-written - saving time and being efficient.
+MP Core is a plugin for developers which contains a group of classes and functions used to power plugins and themes. The idea here is keeping all the code that we re-use over and over, and keeping it in one place so it never needs to be re-written - saving time and being efficient.
 
 More information can be found at [mintplugins.com/plugins/mp-core/](https://mintplugins.com/plugins/mp-core/).
 
 ## Installation ##
 
-For detailed setup instructions, visit the official [Documentation/API](https://mintplugins.com/doc/mp-core-api/) page.
+For detailed setup and use instructions, visit the official [Documentation/API](https://mintplugins.com/doc/mp-core-api/) page.
 
 1. You can clone the GitHub repository: `https://github.com/mintplugins/mp-core.git`
 2. Or download it directly as a ZIP file: `https://github.com/mintplugins/mp-core/archive/master.zip`
