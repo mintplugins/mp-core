@@ -527,34 +527,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$these_repeater_field_id_values = $_POST[$field['field_repeater']];
 						
 						//Sanitize user input for this repeater field and add it to the $data array
-						$allowed_tags = array(
-							'a' => array(
-								'href' => array(),
-								'title' => array(),
-								'target' => array(),
-								'class' => array(),
-								'alt' => array(),
-								'style' => array()
-							),
-							'br' => array(),
-							'em' => array(),
-							'strong' => array(),
-							'p' => array( 'style' => array() ),
-							'blockquote' => array(),
-							'script' => array(),
-							'style' => array(),
-							'span' => array(),
-							'img' => array(
-								'src' => array(),
-								'width' => array(),
-								'height' => array(),
-								'class' => array(),
-								'id' => array(),
-								'style' => array(),
-								'alt' => array()		
-							),
-							'del' => array()
-						);
+						$allowed_tags = wp_kses_allowed_html( 'post' );
 						
 						//Set default for repeat counter
 						$repeater_counter = 0;
@@ -584,7 +557,7 @@ if (!class_exists('MP_CORE_Metabox')){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" ); 									
 												}
 												else{
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = sanitize_text_field( $field_value );	
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = mp_core_fix_quotes( sanitize_text_field( $field_value ) );	
 												}
 								
 												
@@ -638,34 +611,8 @@ if (!class_exists('MP_CORE_Metabox')){
 					//get value from $_POST
 					$post_value = isset($_POST[$field['field_id']]) ? $_POST[$field['field_id']] : '';
 					//sanitize user input
-					$allowed_tags = array(
-						'a' => array(
-							'href' => array(),
-							'title' => array(),
-							'target' => array(),
-							'class' => array(),
-							'alt' => array(),
-							'style' => array()
-						),
-						'br' => array(),
-						'em' => array(),
-						'strong' => array(),
-						'p' => array( 'style' => array() ),
-						'blockquote' => array(),
-						'script' => array(),
-						'style' => array(),
-						'span' => array(),
-						'img' => array(
-							'src' => array(),
-							'width' => array(),
-							'height' => array(),
-							'class' => array(),
-							'id' => array(),
-							'style' => array(),
-							'alt' => array()		
-						),
-						'del' => array() 
-					);
+					$allowed_tags = wp_kses_allowed_html( 'post' );
+					
 					if ( $field['field_type'] == 'textarea' ){
 						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
@@ -673,7 +620,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $post_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
 					else{
-						$data = str_replace("‘", "'", sanitize_text_field( $post_value ) );
+						$data = mp_core_fix_quotes( $post_value );
 					}
 					
 					//If this hasn't been saved or there is a glitch with the PHP session for some reason
