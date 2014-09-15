@@ -228,6 +228,7 @@ output {
 	font-size:11px;	
 	overflow:hidden;
 	max-width:50%;
+	height:15px;
 	white-space: nowrap;
 }
 .mp-core-repeater-values-ellipses{
