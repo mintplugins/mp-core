@@ -43,6 +43,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			//Get and parse args
 			$this->_args = $args;
+			$this->_mp_theme_update_transient_already_run = NULL;
 						
 			//Show License on Themes page and Update Nag
 			add_action( 'load-themes.php', array( $this, 'themes_page') );  
@@ -105,16 +106,25 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$args = $this->parse_the_args( $this->_args );
 				
 			$api_response = get_site_transient( $args['response_key'] );
-						
-			if( false === $api_response )
+				
+			//If there's no value in the transient			
+			if( false === $api_response ){
+				//See if we checked for an update on this page load already
+				$api_response = $this->update_data;
+			}
+			
+			//If its still false
+			if( false === $api_response ){
 				return;
+			}
 	
 			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $args['theme_slug'] ), 'upgrade-theme_' . $args['theme_slug'] );
 			$update_onclick = ' onclick="if ( confirm(\'' . esc_js( __( "Updating this theme will lose any customizations you have made. 'Cancel' to stop, 'OK' to update." ) ) . '\') ) {return true;}return false;"';
 			
-			
 			//We could use version_compare here but it doesn't account for beta mode: if ( version_compare( $args['theme_version'], $api_response->new_version, '<' ) ) {	
-			if( $args['theme_version'] < $api_response->new_version ){	
+			if( $args['theme_version'] >= $api_response->new_version ){
+			}
+			else{
 	
 				echo '<div id="update-nag">';
 					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
@@ -150,16 +160,34 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 */
 		function theme_update_transient($value) {
 			
+			//This hook runs like 16 times on themes page load - WTF wastes resources eh?
+			$this->_mp_theme_update_transient_already_run;
+			
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
-			$update_data = $this->check_for_update();
-			
-			//Add the license to the package URL if the license passed in is not NULL - this is now done in the mp_repo plugin
-			//$update_data['package'] = $args['software_license'] != NULL ? add_query_arg('license', $args['software_license'], $update_data['package'] ) : $update_data['package'];
+			if ( empty( $this->_mp_theme_update_transient_already_run ) ){
+				
+				$check_themes_at_this_time = get_site_transient( 'mp_theme_update_transient' );
+				
+				//If it's been at least 10 minutes since our last check - otherwise this runs every stinking time we load the themes page
+				//if ( empty( $check_themes_at_this_time ) || time() > $check_themes_at_this_time ){
 					
-			if ( $update_data ) {
-				$value->response[ $args['theme_slug'] ] = $update_data;
+					//Add 600 seconds to our theme check transient ( 10 mins )
+					//set_site_transient( 'mp_theme_update_transient', time() + '600' );
+					
+					$update_data = $this->check_for_update();
+							
+					if ( $update_data ) {
+						$value->response[ $args['theme_slug'] ] = $update_data;
+					}
+					
+					$this->_mp_theme_update_transient_already_run = $update_data;
+				//}
+			
+			}
+			else{
+				$value->response[ $args['theme_slug'] ] = $this->_mp_theme_update_transient_already_run;
 			}
 			
 			return $value;
@@ -170,7 +198,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 *
 		 */
 		function check_for_update() {
-						
+			
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
@@ -244,10 +272,17 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			}
 			
 			//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $args['theme_version'], $update_data->new_version, >=' ) ){
-			if( $args['theme_version'] >= $update_data->new_version ){				
+			if( $args['theme_version'] >= $update_data->new_version ){	
+						
 				return false;
 			}
 			
+			//Update the transient for this response key
+			set_site_transient( $args['response_key'], $update_data, strtotime( '+12 hours' ) );
+			
+			//Save the update data in the class-wide variable so we can use it for the nag
+			$this->update_data = $update_data;
+		
 			return (array) $update_data;
 			
 		}
@@ -297,6 +332,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				//If it has, store it in the license_key variable 
 				$license_key = $_POST[ $software_name_slug . '_license_key' ];
 				
+				//Reset the License Checking Transient
+				set_site_transient( 'mp_check_licenses_transient', time() );
+				
 				//Check nonce
 				if( ! check_admin_referer( $software_name_slug . '_nonce', $software_name_slug . '_nonce' ) ) 	
 					return false; // get out if we didn't click the Activate button
@@ -342,11 +380,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Only verify the license if the transient is older than 7 days
 			$check_licenses_transient_time = get_site_transient( 'mp_check_licenses_transient' );
 			
-			//If our transient is older than 30 days (2592000 seconds)
-			if ( time() > ($check_licenses_transient_time + 2592000) ){
-				
-				//We reset the transient on the plugins page
+			//If our transient is older than 30 days (2592000 seconds) and we didn't just save this (because we already have a check for that running)
+			if ( time() > ($check_licenses_transient_time + 2592000) && !isset( $_POST[ $args['theme_name_slug'] . '_license_key' ] ) ){
 			
+				//reset the transient
+				set_site_transient( 'mp_check_licenses_transient', time() );
+				
 				//Set args to Verfiy the License
 				$verify_license_args = array(
 					'software_name'      => $args['software_name'],
