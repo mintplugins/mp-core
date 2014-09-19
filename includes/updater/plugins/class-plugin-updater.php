@@ -259,33 +259,43 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			global $wp_version;
 			
-			//Parse the args
-			$args = $this->parse_the_args( $this->_args );
+			//If we've already fetched the api, don't waste - return what we already found
+			if ( isset( $this->api_request ) && !empty( $this->api_request ) ){ 
+				return $this->api_request;
+			}
+			else{ 
 			
-			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
-			
-			if( $_data['slug'] != $this->slug )
-				return;
-	
-			$api_params = array(
-					'api' => 'true',
-					'slug' => $_data['slug'],
-					'author' => '', //$this->version - not working for some reason
-					'license_key' => $this->software_license,
-					'old_license_key' => get_option( $_data['slug'] . '_license_key' )
-				);
-			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
-									
-			if ( !is_wp_error( $request ) ):
-				$request = json_decode( wp_remote_retrieve_body( $request ) );
-				set_site_transient( $args['software_name_slug'],  $request );
-				if( $request )
-					$request->sections = maybe_unserialize( $request->sections );
-				return $request;
-			else:
-				return false;
-			endif;
+				//Parse the args
+				$args = $this->parse_the_args( $this->_args );
+				
+				//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+				$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+				
+				if( $_data['slug'] != $this->slug )
+					return;
+		
+				$api_params = array(
+						'api' => 'true',
+						'slug' => $_data['slug'],
+						'author' => '', //$this->version - not working for some reason
+						'license_key' => $this->software_license,
+						'old_license_key' => get_option( $_data['slug'] . '_license_key' )
+					);
+				$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+										
+				if ( !is_wp_error( $request ) ){
+					$request = json_decode( wp_remote_retrieve_body( $request ) );
+					set_site_transient( $args['software_name_slug'],  $request );
+					if( $request ){
+						$request->sections = maybe_unserialize( $request->sections );
+					}
+					$this->api_request = $request;
+					return $request;
+				}else{
+					return false;
+				}
+				
+			}
 		}
 		
 		/**
