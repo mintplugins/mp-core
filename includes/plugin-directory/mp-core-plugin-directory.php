@@ -9,7 +9,7 @@ function mp_core_plugin_directory(){
 		'parent_slug' => 'plugins.php',
 		'page_title' => 'Mint Plugins',
 		'slug' => 'mp_core_plugin_directory',
-		'directory_list_url' => 'https://mintplugins.com/repo-group/move-plugins/'
+		'directory_list_url' => 'https://mintplugins.com/repo-group/mint-plugins/'
 	);
 	
 	new MP_CORE_Plugin_Directory( $args );
