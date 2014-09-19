@@ -77,6 +77,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Plugin Name Slug
 			$args['software_name_slug'] = sanitize_title ( $args['software_name'] ); //EG move-plugins-core		
 			
+			//Get current screen
+			$this->current_screen = get_current_screen();
+			
 			return $args;	
 		}
 				
@@ -259,12 +262,23 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			global $wp_version;
 			
+			//Get the transient where we store the api request for this plugin for 24 hours
+			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
+			
 			//If we've already fetched the api, don't waste - return what we already found
-			if ( isset( $this->api_request ) && !empty( $this->api_request ) ){ 
+			if ( isset( $this->api_request ) && !empty( $this->api_request ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core' ){ 
+				
 				return $this->api_request;
+				
+			}
+			//If we have this data in the 24 hour transient (saving checks from more often than 24 hours - can be cleared by using the "Check Again" button on the updates page)
+			else if( !empty( $mp_api_request_transient ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core'){
+		
+				return $mp_api_request_transient;
+				
 			}
 			else{ 
-			
+				
 				//Parse the args
 				$args = $this->parse_the_args( $this->_args );
 				
@@ -290,6 +304,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 						$request->sections = maybe_unserialize( $request->sections );
 					}
 					$this->api_request = $request;
+					//Expires in 1 day (86400 seconds)
+					set_site_transient( 'mp_api_request_' . $this->slug, $request, 86400 );
 					return $request;
 				}else{
 					return false;
