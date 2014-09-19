@@ -262,6 +262,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			global $wp_version;
 			
+			//If this isn't being run by a page - get outta here. We don't want to waste.
+			if ( !isset($this->current_screen->base) ){
+				return false;	
+			}
+			
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
 			
