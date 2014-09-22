@@ -21,6 +21,14 @@
 .mp_field > input[type=range]{
 	padding:0px;
 }
+.mp_field em{
+	float: none;
+	clear: both;
+	display: block;	
+}
+.mp_field em > br:first-child{
+	display: none;	
+}
 .mp_title{
 	margin-bottom:5px;	
 }
@@ -236,4 +244,24 @@ output {
 }
 .repeater_container > li:first-child .mp_animation_length{
 	display:none!important;	
+}
+.mp-core-popup-help-icon{
+	position:absolute;
+	top:0px;
+	right:0px;
+}
+.mp-core-popup-help-icon:before{
+	content: "\f223";	
+	display: inline-block;
+	font: 400 20px/1 dashicons;
+	speak: none;
+	left: -1px;
+	padding: 0 5px 0 0;
+	position: relative;
+	top: 0;
+	text-decoration: none!important;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color:#CCC;
 }
