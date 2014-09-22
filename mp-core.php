@@ -2,7 +2,7 @@
 /*
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
-Description: A core group of classes and functions.
+Description: A core group of classes and functions shared by all MintPlugins creating efficiency, robustness, and speed.
 Version: beta1.1.6.7
 Author: Mint Plugins
 Author URI: https://mintplugins.com
@@ -166,7 +166,7 @@ require( MP_CORE_PLUGIN_DIR . 'includes/customizer/class-customizer.php' );
 require( MP_CORE_PLUGIN_DIR . 'includes/fonts/class-font.php' );
 
 /**
- * Include AQ Resizer
+ * Include AQ Resizer Function
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer.php' );
 require( MP_CORE_PLUGIN_DIR . 'includes/aq-resizer/aq-resizer-ratio-check.php' );
