@@ -99,12 +99,14 @@ if (!class_exists('MP_CORE_Metabox')){
 				wp_enqueue_style( 'wp-color-picker' );
 				wp_enqueue_script( 'wp-color-picker' );
 				wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker') );
+				//mp-ajax-popup script used for popup help tips and videos to help the user
+				wp_enqueue_script( 'mp-ajax-popup-js', plugins_url( 'js/core/mp-ajax-popup.js', dirname(__FILE__)),  array( 'jquery' ) );
 				//media upload scripts
 				wp_enqueue_media();
 				//image uploader script
 				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
 				//Metabox scripts for duplicating fields etc
-				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable' ) );	 	
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable', 'mp-ajax-popup-js' ) );	 	
 				
 				//If this script has already been localized, don't do it again. We only need it once. Global var used so other class calls don't duplicate output.
 				global $mp_core_metabox_js_localized;
@@ -334,7 +336,8 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
 										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
 										'field_showhider' => isset( $thefield['field_showhider'] ) ? 'showhider="' . $thefield['field_showhider'] . '"' : NULL,
-										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL
+										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL,
+										'field_popup_help' => isset( $thefield['field_popup_help'] ) ? $thefield['field_popup_help'] : NULL,
 									);
 									
 									//call function for field type (callback function name stored in $this->$field['field_type']
@@ -387,6 +390,8 @@ if (!class_exists('MP_CORE_Metabox')){
 						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '';
 						//set the placeholder
 						$placeholder_value = isset($field['field_placeholder']) ? 'placeholder="' . $field['field_placeholder'] . '"' : '';
+						//set the popup help
+						$popup_help = isset($field['field_popup_help']) ? $field['field_popup_help'] : NULL;
 						
 						//Make array to pass to callback function
 						$callback_args = array(
@@ -400,7 +405,8 @@ if (!class_exists('MP_CORE_Metabox')){
 							'field_preset_value' => $preset_value, 
 							'field_required' => $field_required,
 							'field_showhider' => $showhider_value,
-							'field_placeholder' => $placeholder_value
+							'field_placeholder' => $placeholder_value,
+							'field_popup_help' => $popup_help
 						);
 						
 						//call function for field type (function name stored in $this->$field['field_type']
@@ -683,6 +689,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -693,8 +700,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon">' . $field_popup_help . '</div>' : NULL;
+			echo  '<div class="mp-core-popup-help-icon"></div>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			
 			echo '</label></div>';
 			echo '</div>'; 
 		}
@@ -726,6 +734,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -807,6 +816,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -851,6 +861,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -895,6 +906,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -934,6 +946,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -978,6 +991,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1022,6 +1036,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1066,6 +1081,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1110,6 +1126,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1156,6 +1173,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1194,6 +1212,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1210,6 +1229,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
@@ -1249,6 +1269,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1302,6 +1323,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1361,6 +1383,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1407,6 +1430,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1451,6 +1475,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1511,6 +1536,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1607,6 +1633,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1654,6 +1681,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
@@ -1694,6 +1722,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
 			);
 			
 			//Get and parse args
