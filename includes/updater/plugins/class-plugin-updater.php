@@ -262,13 +262,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			global $wp_version;
 			
-			//If this isn't being run by a page - get outta here. We don't want to waste.
-			if ( !isset($this->current_screen->base) ){
+			//Get the transient where we store the api request for this plugin for 24 hours
+			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
+			
+			//If this isn't being run by a page - get outta here. We don't want to waste - unless it's been over 24 hours since our last check.
+			if ( !isset($this->current_screen->base) && !empty( $mp_api_request_transient ) ){
 				return false;	
 			}
 			
-			//Get the transient where we store the api request for this plugin for 24 hours
-			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
+			//Manual Override for current screen. If we got this far, either it actually IS 'update-core', OR our transient doesn't exist (over 24 hours since last check)
+			$this->current_screen->base = 'update-core';
 			
 			//If we've already fetched the api, don't waste - return what we already found
 			if ( isset( $this->api_request ) && !empty( $this->api_request ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core' ){ 
