@@ -322,17 +322,6 @@ if (!class_exists('MP_CORE_Metabox')){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
 									//formula to match all field in the rows they were saved to the rows they are displayed in  = $field_position_in_repeater*$number_of_repeats+$i
 									
-									//set variables for new callback field
-									$field_id           = $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']';
-									$field_title        = $thefield['field_title'];
-									$field_description  = $thefield['field_description'];
-									$field_value        = isset($thefield['field_value']) ? $thefield['field_value'] : '';
-									$field_input_class        = 'mp_repeater';
-									$field_container_class = isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL; 
-									$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
-									$field_preset_value =  isset($thefield['field_value']) ? $thefield['field_value'] : '';
-									$field_required     = isset( $thefield['field_required'] ) ? $thefield['field_required'] : false;
-									
 									//Make array to pass to callback function
 									$callback_args = array(
 										'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
