@@ -28,31 +28,26 @@ jQuery(document).ready(function($){
 			}
 		
 			//Width of the popup
-			popup_width = popup.width();	
-			popup_height = popup.height();
-						
-			//Width of the popup
-			popup_width = popup.width();	
-			popup_height = popup.height();	
+			popup_width = popup.outerWidth();			
+			popup_height = popup.outerHeight();	
+			
+			console.log(popup_width);
+			console.log(popup_height);
 									
 			var thisdiv_position = thisdiv.offset();
-			var holder_position = thisdiv.parent().offset();
+			var holder_position = thisdiv.parent().parent().parent().offset();
 			
 			//X Positions for the Article div
 			xpos_left_trigger_element = thisdiv_position.left;		
-			xpos_right_trigger_element = xpos_left_trigger_element + thisdiv.width();		
+			xpos_right_trigger_element = xpos_left_trigger_element + thisdiv.outerWidth();		
 			
 			//Y Positions for the Article div
 			ypos_top_trigger_element = thisdiv_position.top;		
-			ypos_bottom_trigger_element = ypos_top_trigger_element + thisdiv.height();		
+			ypos_bottom_trigger_element = ypos_top_trigger_element + thisdiv.outerHeight();		
 			
 			//X Positions for the Holder Parent div
 			xpos_left_holder = holder_position.left;
-			xpos_right_holder = xpos_left_holder + thisdiv.parent().width();
-			
-			//Width of the popup
-			popup_width = popup.outerWidth();			
-			popup_height = popup.outerHeight();	
+			xpos_right_holder = xpos_left_holder + thisdiv.parent().parent().parent().outerWidth();
 			
 			//If we are on at least loop #5 - position the popup						
 			if (loop_counter > 5){	
@@ -62,7 +57,7 @@ jQuery(document).ready(function($){
 				if ( (xpos_right_trigger_element + popup_width) < xpos_right_holder ){
 					//Position popup to the right 
 					popup.css({
-						left: thisdiv.width(),
+						left: thisdiv.outerWidth(),
 						visibility: 'visible',
 						opacity:1
 					});
@@ -82,7 +77,7 @@ jQuery(document).ready(function($){
 				else{
 					//Position popup directly over
 					popup.css({
-						left: ((thisdiv.width()) / 2) - ( popup_width / 2 ),
+						left: ((thisdiv.outerWidth()) / 2) - ( popup_width / 2 ),
 						visibility: 'visible',
 						opacity:1
 					});
@@ -90,30 +85,30 @@ jQuery(document).ready(function($){
 				
 				//Find appropriate Y Pos
 				//If this entire article is in view
-				if ( ypos_bottom_trigger_element < window.pageYOffset + $(window).height() && ypos_top_trigger_element > window.pageYOffset ){
+				if ( ypos_bottom_trigger_element < window.pageYOffset + $(window).outerHeight() && ypos_top_trigger_element > window.pageYOffset ){
 					
 					//Height of popup in half
-					var half_height_popup = popup.height() / 2;
+					var half_height_popup = popup.outerHeight() / 2;
 					
 					//Position popup in the vertical middle of the article
 					popup.css({
-						top: ((thisdiv.height()) / 2) - ( half_height_popup ),
+						top: ((thisdiv.outerHeight()) / 2) - ( half_height_popup ),
 						visibility: 'visible',
 						opacity:1
 					});
 				}
 				//If the top of the article is cut-off
-				else if( ypos_bottom_trigger_element < window.pageYOffset + $(window).height() && ypos_top_trigger_element < window.pageYOffset ){
+				else if( ypos_bottom_trigger_element < window.pageYOffset + $(window).outerHeight() && ypos_top_trigger_element < window.pageYOffset ){
 					
 					//Position popup below
 					popup.css({
-						top: (thisdiv.height()),
+						top: (thisdiv.outerHeight()),
 						visibility: 'visible',
 						opacity:1
 					});
 				}
 				//If the bottom of the article is cut-off
-				else if( ypos_bottom_trigger_element > window.pageYOffset + $(window).height() && ypos_top_trigger_element > window.pageYOffset ){
+				else if( ypos_bottom_trigger_element > window.pageYOffset + $(window).outerHeight() && ypos_top_trigger_element > window.pageYOffset ){
 					
 					//Position popup above
 					popup.css({
@@ -144,7 +139,7 @@ jQuery(document).ready(function($){
 			//Trigger the mp_ajax_popup_event event
             self.trigger('mp_ajax_popup_event', data);
 			
-        }, 400);
+        }, 900);
     });
 	
     $(document).on('mouseleave', '[mp_ajax_popup]', function() {		

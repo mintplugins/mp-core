@@ -248,10 +248,11 @@ output {
 
 /* Help Popup */
 .mp-core-popup-help-icon{
-	position:absolute;
-	top:0px;
-	right:0px;
+	position:relative;
+	display:inline;
+	margin-left:10px;
 	cursor: pointer;
+	width:100%;
 }
 .mp-core-popup-help-icon:before{
 	content: "\f223";	
@@ -260,7 +261,6 @@ output {
 	speak: none;
 	left: -1px;
 	padding: 0 5px 0 0;
-	position: relative;
 	top: 0;
 	text-decoration: none!important;
 	vertical-align: top;
@@ -270,13 +270,12 @@ output {
 }
 .mp-ajax-popup{
 	position:absolute;
-	max-height:400px;
-	min-width:200px;
-	max-width:400px;
+	width:400px;
 	z-index:9999999999999;	
 	visibility:hidden;
 	opacity:0;
 	float:left;
+	display:block;
 	
 	background:#FFF;
 	border: solid 1px #CCC;
@@ -290,10 +289,22 @@ output {
 	-moz-box-shadow: 0px 0px 10px -2px rgba(222,222,222,1);
 	box-shadow: 0px 0px 10px -2px rgba(222,222,222,1);
 	
-	-webkit-transition: opacity .8s ease-in-out, width .8s ease-in-out;
-	-moz-transition: opacity .8s ease-in-out, width .8s ease-in-out;
-	-ms-transition: opacity .8s ease-in-out, width .8s ease-in-out;
-	-o-transition: opacity .8s ease-in-out, width .8s ease-in-out;
-	transition: opacity .8s ease-in-out, width .8s ease-in-out;
+	cursor:default;
 	
+}
+.mp-ajax-popup *{
+	max-width:100%;	
+}
+@media all and (max-width: 600px) {
+ .mp-ajax-popup{
+	width:200px; 
+ }
+}
+.mp-core-popup-help-float-left{
+	float:left;
+	margin-right:10px;
+}
+.mp-core-popup-help-float-right{
+	float:right;
+	margin-left:10px;
 }
