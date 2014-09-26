@@ -700,8 +700,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
-			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon">' . $field_popup_help . '</div>' : NULL;
-			echo  '<div class="mp-core-popup-help-icon"></div>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo '</div>'; 
@@ -745,6 +744,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . ' repeatertitle" ' . $field_showhider  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			
 			echo '</label></div>';
@@ -788,6 +788,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
@@ -833,6 +834,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
@@ -878,6 +880,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
@@ -918,6 +921,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			$checked = empty($field_value) ? '' : 'checked';
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="checkbox" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_input_class . '" value="' . $field_id . '" ' . $checked . ' />';
@@ -963,6 +967,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
@@ -1008,6 +1013,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
@@ -1053,6 +1059,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
@@ -1098,6 +1105,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
@@ -1143,6 +1151,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
@@ -1184,6 +1193,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo wp_editor( html_entity_decode($field_value) , 'mp_core_wp_editor_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
@@ -1248,7 +1258,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		}
 		
 		/**
-		* select field
+		* datalist field
 		*
 		* @access   public
 		* @since    1.0.0
@@ -1286,6 +1296,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
@@ -1340,6 +1351,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			
@@ -1447,6 +1459,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
@@ -1492,6 +1505,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			?>       
@@ -1557,6 +1571,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
 			
