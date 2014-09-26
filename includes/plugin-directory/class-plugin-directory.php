@@ -236,7 +236,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			
 			echo screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', __( 'Install Plugins', 'mp_core' )) . '</h2>';
 			
-			echo apply_filters( 'mp_core_directory_header_' . $this->_args['slug'], NULL );
+			do_action( 'mp_core_directory_header_' . $this->_args['slug'] );
 			
 			echo '<div class="mp-directory-browser">';
 			
@@ -366,7 +366,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				
 				echo '</div>';
 				
-				echo apply_filters( 'mp_core_directory_footer_' . $this->_args['slug'], NULL );
+				do_action( 'mp_core_directory_footer_' . $this->_args['slug'] );
 			
 			echo '</div>';
 			
