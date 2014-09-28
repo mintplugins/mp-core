@@ -3,38 +3,59 @@
  * http://mintplugins.com
  */
 
-.mp-directory-browser .mp-directory-items .mp-directory-item{
-	position:relative;
-	width:30%;
-	margin:0px 1% 15px 0px;
-	border: 1px solid #dedede;	
-	display:table;
-	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-	box-sizing: border-box;         /* Opera/IE 8+ */
-	float:left;
+.mp-core-directory .mp-directory-browser a{
+	text-decoration:none;
 }
-.mp-directory-browser .mp-directory-items .mp-directory-item:nth-child(3n+1){
-	clear:left;
+.mp-core-directory .wp-filter{
+	margin: 0px 0px 16px 0px;	
 }
-.mp-core-directory-item-img-holder{
-	padding:0px;	
+.mp-core-directory .plugin-card-bottom{
+	position:relative;	
 }
-.mp-core-directory-item-info-holder{
-	padding:10px;
+.mp-core-directory .mp-column-plugin-status{
+	position:absolute;
+	top:12px;
+	right:20px;
 }
-.mp-core-directory-item-img-holder{
-	vertical-align:top;	
+.mp-core-directory .mp-column-installation{
+	width:100%;
+	max-width:100%;
 }
-.mp-core-directory-item-image{
+.mp-core-directory-license-input{
+	margin:0;	
+}
+.mp-core-directory .mp-core-directory-price{
+	text-align:right;
+	color:#dedede;
+}
+.mp-core-directory .authors{
+	display:inline;
+	margin-right:10px;	
+}
+
+/* Directory Styles */
+.mp-core-directory-true-false-light{
+	padding:1px 5px 0px 0px;	
+	display:inline;
+}
+.mp-core-plugin-directory-license-wrap .mp-core-directory-license-input{
 	width:100%;	
+	max-width: 265px;
+	float: left;
+	margin-right: 10px;
 }
-.mp-core-directory-item-title{
-	color: #222;
-	font-size: 1.3em;	
-	font-weight:700;
+.mp-core-directory-update-license-form p.submit,
+.mp-core-directory-new-license-form p.submit{
+	margin-top: 5px;
+	margin-bottom: 0px;
+	text-align: left;
+	padding: 0px;	
 }
-.mp-core-directory-item-desc,
-.mp-core-directory-item-action-links{
-	margin-top:10px;	
+.mp-core-directory .mp-directory-browser .mp-core-directory-update-license-form p.submit input,
+.mp-core-directory .mp-directory-browser .mp-core-directory-new-license-form p.submit input{
+	height: 26.5px;
+	line-height: 25px;
+}
+.mp-core-directory .mp-directory-install-btn{
+	float:right;	
 }

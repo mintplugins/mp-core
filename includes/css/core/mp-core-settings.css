@@ -17,42 +17,11 @@
 	background-color:#F00;	
 }
 
-/* Directory Styles */
-.mp-core-directory-true-false-light{
-	float:left;
-	padding:1px 5px 0px 0px;	
-}
-.mp-core-directory-update-license-form{
-	display:none;	
-}
-.mp-core-plugin-directory-license-wrap .mp-core-cirectory-license-input{
-	width:100%;	
-	margin-top:5px;
-}
-.mp-core-plugin-info{
-	padding:10px;
-}
-.mp-core-plugin-info h3{
-	margin:0px 0px 10px 0px;	
-}
-.mp-core-directory-price{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	background-color: rgba(0, 0, 0, 0.27);
-	color: #fff;
-	padding: 7px;
-}
-.mp-core-directory-buy{
-	margin-top:10px;	
-}
-.mp-core-directory-license-msg{
-	clear:left;
-	margin:10px 0px 0px 0px;
-	padding:0px;	
-}
-.mp-core-plugin-directory-license-wrap .submit{
-	padding-top:5px;	
+.mp-core-grey-light{
+	display:inline-block;
+	width:10px;
+	height:10px;
+	background-color:#999;	
 }
 
 .mp-core-clearedfix:after {

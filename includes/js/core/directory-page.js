@@ -1,7 +1,8 @@
 jQuery(document).ready(function($){
-	   
-	$('.mp-core-plugin-directory-license-wrap .mp-core-update-license').click(function() {
-		$( this + ' .mp-core-directory-update-license-form' ).css( 'display', 'block' );
+	
+	//Activate Masonry for Directory Pages
+	var msnry = new Masonry( '#mp-directory-items', {
+	  // options
 	});
 
   
