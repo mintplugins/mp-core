@@ -193,9 +193,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			global $post;
 			
-			$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']] = array();
-			
 			$this->_post_id = isset($post->ID) ? $post->ID : '';
+			
+			$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id] = array();
 			
 			$prev_repeater = false;
 			
@@ -224,7 +224,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$current_stored_repeater = get_post_meta( $this->_post_id, $key = $field['field_repeater'], $single = true );
 						
 						//Store this value in the global metabox array so we can check for change upon save
-						$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_repeater']] = $current_stored_repeater;
+						$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_repeater']] = $current_stored_repeater;
 						
 						//This is a brand new repeater
 						$repeat_counter = 0;
@@ -368,7 +368,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							$value = get_post_meta( $this->_post_id, $key = $field['field_id'], $single = true );
 							
 							//Store this value in the global metabox array so we can check for change upon save
-							$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] = $value;
+							$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] = $value;
 						
 							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
 							if ($field['field_type'] != "checkbox"){
@@ -506,7 +506,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							}
 							
 							//If the value has changed, update this meta value. Otherwise, dont.
-							if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+							if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
 								// Update $these_repeater_field_id_values 
 								update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 							}
@@ -591,7 +591,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						}
 						
 						//If the value has changed, update this meta value. Otherwise, dont.
-						if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+						if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
 							// Update $these_repeater_field_id_values 
 							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 						}
@@ -619,12 +619,12 @@ if (!class_exists('MP_CORE_Metabox')){
 					}
 					
 					//If this hasn't been saved or there is a glitch with the PHP session for some reason
-					if ( !isset( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] ) ){
+					if ( !isset( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] ) ){
 						// Update $data 
 						update_post_meta($this->_post_id, $field['field_id'], $data);
 					}
 					//If the value has changed, update this meta value. Otherwise, dont.
-					else if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$field['field_id']] != $data ){
+					else if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] != $data ){
 						// Update $data 
 						update_post_meta($this->_post_id, $field['field_id'], $data);
 					}
@@ -653,7 +653,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				}
 				
 				//If the value has changed, update this meta value. Otherwise, dont.
-				if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$prev_repeater] !== $saved_comparison_field_id_values ){
+				if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
 					// Update $these_repeater_field_id_values 
 					update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 				}
