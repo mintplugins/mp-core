@@ -324,12 +324,17 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				<div class="wp-filter">
 					<ul class="filter-links">
                     
-					<?php //Loop through each Directory List URL passed-in
+					<?php 
+					$description = NULL;
+					
+					//Loop through each Directory List URL passed-in
 					foreach ( $this->_args['directory_list_url'] as $directory_list_slug => $directory_list_array ){ ?>
                         
                         <li class="<?php echo $directory_list_slug; ?>"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp-directory-tab' => $directory_list_slug ), admin_url( 'admin.php' ) ); ?>" <?php echo $this->_mp_directory_tab ==  $directory_list_slug ? 'class="current"' : NULL; ?>><?php echo $directory_list_array['title']; ?></a> </li>
                     
-					<?php } ?>
+					<?php 
+						$description = $this->_mp_directory_tab ==  $directory_list_slug ? $directory_list_array['description'] : $description;
+					} ?>
 				</ul>
 				
 					<form class="search-form search-plugins" method="get" action="">
@@ -340,6 +345,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						<input type="submit" name="" id="search-submit" class="button screen-reader-text" value="<?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?>">	
 					</form>
 				</div>
+                <?php if ( !empty( $description ) ){ ?>
+                    <br class="clear">
+                    <p><?php echo $description ?></p>
+                <?php } ?>
 			<?php
 			}
 			
