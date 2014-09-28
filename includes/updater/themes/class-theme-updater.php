@@ -180,12 +180,13 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 			
-			//If this isn't being run by a page - get outta here. We don't want to waste.
+			//If this isn't being run by a page, or if our transient has something in it - get outta here. We don't want to waste.
 			if ( !isset($this->current_screen->base) && !empty( $mp_api_request_transient ) ){
 				return false;	
 			}
 			
 			//Manual Override for current screen. If we got this far, either it actually IS 'update-core', OR our transient doesn't exist (over 24 hours since last check)
+			$this->current_screen = new stdClass();
 			$this->current_screen->base = 'update-core';
 			
 			//If we've already fetched the api and found an update, don't waste - return what we already found
