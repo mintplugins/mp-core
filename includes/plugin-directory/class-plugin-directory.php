@@ -370,7 +370,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						$installed_output .= 'Plugin is active';
 						
 						//If this plugin requires a license, show that license
-						$install_output = $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : sprintf( '<a class="button mp-directory-install-btn" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Re-Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
+						$install_output = $plugin['plugin_licensed'] == true ? $this->display_license( $plugin_name_slug, $check_plugin, $plugin['plugin_buy_url'],  $plugin['plugin_price'] ) : sprintf( '<a class="button mp-directory-install-btn" href="%s"> ' . __('Re-Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
 						
 					}
 					//If the plugin is installed but is not active
@@ -425,12 +425,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 							else{
 								
 								// "Oops! this plugin doesn't exist in the repo. So lets display a custom download button."; 
-								$install_output = sprintf( '<a class="button mp-directory-install-btn" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
+								$install_output = sprintf( '<a class="button mp-directory-install-btn" href="%s"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' .  $plugin['plugin_slug'] . '&action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin['plugin_slug']  . '&_wpnonce=%s', wp_create_nonce( 'install-plugin'  ) ) ) );
 							}
 												
 						}else{
 							//Otherwise display the WordPress.org Repo Install button
-							$install_output = sprintf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
+							$install_output = sprintf( '<a class="button mp-directory-install-btn" href="%s"> ' . __('Install "', 'mp_core') . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'update.php?action=install-plugin&mp-source=' . $this->_args['slug'] . '&plugin=' . $plugin_name_slug . '&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );	
 						
 						}
 						
