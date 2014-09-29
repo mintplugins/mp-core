@@ -399,7 +399,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                
 			</div>
             
-            <p><?php echo !empty( $description ) ? $description : NULL ?></p>
+            <p class="mp-core-directory-tab-description"><?php echo !empty( $description ) ? $description : NULL ?></p>
             
 			<?php
 			echo '<div class="mp-directory-browser">';

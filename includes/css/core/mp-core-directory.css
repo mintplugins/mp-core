@@ -56,6 +56,9 @@
 .mp-core-directory .mp-directory-install-btn{
 	float:right;	
 }
+.mp-core-directory .mp-core-directory-tab-description{
+	min-height:19px;	
+}
 
 /*Pagination on Directory Pages */
 .mp-core-directory .tablenav{
