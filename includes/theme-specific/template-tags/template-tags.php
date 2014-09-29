@@ -210,3 +210,22 @@ function mp_core_page_title(){
 
 	}
 }
+
+
+/**
+ * This template tag displays everything needed to keep Google happy for microformats - but when you don't want to actually show them to the user.
+ *
+ * @link     http://mintplugins.com/doc/mp_core_invisible_microformats/
+ * @return   void
+ */
+function mp_core_invisible_microformats(){
+	?>
+	<div class="microformats" style="display:none;">
+        <h1 class="entry-title"><?php the_title(); ?></h1>
+        <span class="author vcard"><span class="fn"><?php the_author(); ?></span></span>
+        <time class="published" datetime="<?php the_time('Y-m-d H:i:s'); ?>"><?php the_date(); ?></time>
+        <time class="updated" datetime="<?php the_modified_date('Y-m-d H:i:s'); ?>"><?php the_modified_date(); ?></time>
+        <div class="entry-summary"><?php the_excerpt(); ?></div>
+    </div>
+    <?php	
+}
