@@ -322,7 +322,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                 
 				//If multiple categories have been sent
 				if ( is_array( $this->_args['directory_list_urls'] ) ){
-				
+					
+					//If we are doing a search
+					if ( $this->_mp_directory_tab == 'search' ){?>
+						
+                        <li class="plugin-install-search"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => 'search' ), admin_url( 'admin.php' ) ); ?>" class=" current"><?php echo __( 'Search Results', 'mp_core' ); ?></a> </li>
+
+					<?php }
+					
 					//Loop through each Directory List URL passed-in
 					foreach ( $this->_args['directory_list_urls'] as $directory_list_slug => $directory_list_array ){ ?>
 						
