@@ -40,7 +40,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 *		@type string 'parent_slug' The slug name for the parent menu (or the file name of a standard WordPress admin page)
 		 *		@type string 'page_title' The title of the directory page.
 		 *		@type string 'slug' The slug for this directory. Make this an original, unspaced string.
-		 *		@type string 'directory_list_url' Link to URL where the API is set to to handle the directory. See MP Repo Plugin.
+		 *		@type string 'directory_list_urls' Link to URL where the API is set to to handle the directory. See MP Repo Plugin.
 		 * }
 		 * @return   void
 		 */
@@ -49,9 +49,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			//Set defaults for args		
 			$defaults = array(
 				'parent_slug' => NULL,
+				'menu_title' => NULL,
 				'page_title' => NULL,
 				'slug' => NULL,
-				'directory_list_url' => NULL
+				'limit_search_to_repo_group_slug' => NULL,
+				'directory_list_urls' => NULL,
+				'plugin_success_link' => NULL
 			);
 			
 			//Get and parse args
@@ -60,29 +63,41 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			//Make sure we are on the directory page
 			$this->_page = isset($_GET['page']) ? $_GET['page'] : NULL;
 			$this->_mp_page_source = isset($_GET['mp-source']) ? $_GET['mp-source'] : NULL;
-			$this->_mp_directory_tab = isset($_GET['mp-directory-tab']) ? $_GET['mp-directory-tab'] : NULL;
+			$this->_mp_directory_tab = isset($_GET['mp_core_directory_tab']) ? $_GET['mp_core_directory_tab'] : NULL;
+			$this->_mp_directory_paged = isset($_GET['mp_core_directory_paged']) ? $_GET['mp_core_directory_paged'] : 1;
 			
 			//If we are on the directory page or the mp_core_install_plugin page
 			if ( $this->_page  == $this->_args['slug'] || $this->_mp_page_source == $this->_args['slug'] ) {
 				
-				if ( is_array( $this->_args['directory_list_url'] ) ){
+				if ( is_array( $this->_args['directory_list_urls'] ) ){
 					
-					//If no tab has been entered, show the first directory list url in the array
+					//If no tab has been entered in the URL, show the first directory list url in the array
 					if ( !$this->_mp_directory_tab ){
 						
 						//Get the first Directory list URL in the array
-						$first_directory_list_url = reset($this->_args['directory_list_url']);
+						$first_directory_list_url = reset($this->_args['directory_list_urls']);
 						
-						$this->_mp_directory_tab = key($this->_args['directory_list_url']);
+						$this->_mp_directory_tab = key($this->_args['directory_list_urls']);
 						
 						//Get list of Plugins to show, Listen for Licenses, And if we are on an Installation page, Create install page for that plugin		
 						$this->setup_functions( $first_directory_list_url['directory_list_url'] );
 						
 					}
+					//If we are on the search tab
+					elseif ( $this->_mp_directory_tab == 'search' ){
+						
+						//Get list of Plugins to show, Listen for Licenses, And if we are on an Installation page, Create install page for that plugin		
+						$this->setup_functions( add_query_arg( array( 
+							'limit_to_repo_group' => $this->_args['limit_search_to_repo_group_slug'], 
+							's' => isset( $_GET['search']  ) ? $_GET['search'] : NULL
+						), $this->_args['search_api_url'] ) );
+						
+					}
+					//If a tab has been entered in the URL
 					else{
 							
 						//Loop through each directory list url
-						foreach( $this->_args['directory_list_url'] as $directory_list_slug => $directory_list_array ){
+						foreach( $this->_args['directory_list_urls'] as $directory_list_slug => $directory_list_array ){
 						
 							//If we are at the tab URL for one of our list URLs
 							if ( $this->_mp_directory_tab == $directory_list_slug ){
@@ -95,9 +110,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 						}
 					}
 					
-				}else{
-					//Get list of Plugins to show, Listen for Licenses, And if we are on an Installation page, Create install page for that plugin		
-					$this->setup_functions( $this->_args['directory_list_url'] );
 				}
 				
 				//Enqueue Scripts for directory page
@@ -154,7 +166,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 	 	 * @return   void
 		 */
 		public function add_submenu_page(){
-			add_submenu_page( $this->_args['parent_slug'], $this->_args['page_title'], $this->_args['page_title'], 'activate_plugins', $this->_args['slug'], array( &$this, 'plugin_directory_page' ) );	
+			add_submenu_page( $this->_args['parent_slug'], $this->_args['page_title'], $this->_args['menu_title'], 'activate_plugins', $this->_args['slug'], array( &$this, 'plugin_directory_page' ) );	
 		}
 		
 		/**
@@ -173,29 +185,23 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 		 * @return   void
 		 */
 		public function setup_functions( $directory_list_url ){
-			
-			//If we have passed more than 1 URL for the directory
-			if ( is_array( $directory_list_url ) ){
 				
-			}
-			else{
-				
-				//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-				$directory_list_url = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $directory_list_url ) : $directory_list_url;
-							
-				//Get list of plugins that should be shown
-				$plugins = wp_remote_post( $directory_list_url, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => array( 'directory' => 'true' ) ) );							 			
-				//Json decode plugins array
-				$this->plugins = json_decode($plugins['body'], true);
-				
-				if ( is_array( $this->plugins ) ){
-					//loop through each plugin
-					foreach ( $this->plugins as $plugin ){
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$directory_list_url = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $directory_list_url ) : $directory_list_url;
 						
-						//Listen for Plugin License (If Licensed), And if we are on an Installation page, Create install page for that plugin	
-						$this->single_plugin_setup( $plugin );
-										
-					}
+			//Get list of plugins that should be shown
+			$response = wp_remote_post( $directory_list_url, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => array( 'directory' => 'true', 'mp_directory_page' => $this->_mp_directory_paged ) ) );							 			
+			//Json decode plugins array
+			$this->response = json_decode($response['body'], true);
+			$this->plugins = $this->response['items'];
+			
+			if ( is_array( $this->plugins ) ){
+				//loop through each plugin
+				foreach ( $this->plugins as $plugin ){
+					
+					//Listen for Plugin License (If Licensed), And if we are on an Installation page, Create install page for that plugin	
+					$this->single_plugin_setup( $plugin );
+									
 				}
 			}
 		}
@@ -304,58 +310,104 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			
 			echo '<div class="wrap">';
 			
-			echo screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', __( 'Install Plugins', 'mp_core' )) . '</h2>';
+			echo screen_icon( 'plugins' )  .	'<h2>' . apply_filters( 'mp_core_directory_' . $this->_args['slug'] . '_title', $this->_args['page_title'] ) . '</h2>';
 			
-			if ( !is_array( $this->plugins ) ){
+			do_action( 'mp_core_directory_header_' . $this->_args['slug'] ); ?>
+           
+            <div class="wp-filter">
+                <ul class="filter-links">
+                
+                <?php 
+                $description = NULL;
+                
+				//If multiple categories have been sent
+				if ( is_array( $this->_args['directory_list_urls'] ) ){
 				
-				echo __( 'None Found', 'mp_core' );
-				
-				echo '</div>';
-				
-				return;
-			}
-			
-			
-			do_action( 'mp_core_directory_header_' . $this->_args['slug'] );
-			
-			//If multiple categories have been sent
-			if ( is_array( $this->_args['directory_list_url'] ) ){
-				?>
-				<div class="wp-filter">
-					<ul class="filter-links">
-                    
-					<?php 
-					$description = NULL;
-					
 					//Loop through each Directory List URL passed-in
-					foreach ( $this->_args['directory_list_url'] as $directory_list_slug => $directory_list_array ){ ?>
-                        
-                        <li class="<?php echo $directory_list_slug; ?>"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp-directory-tab' => $directory_list_slug ), admin_url( 'admin.php' ) ); ?>" <?php echo $this->_mp_directory_tab ==  $directory_list_slug ? 'class="current"' : NULL; ?>><?php echo $directory_list_array['title']; ?></a> </li>
-                    
+					foreach ( $this->_args['directory_list_urls'] as $directory_list_slug => $directory_list_array ){ ?>
+						
+						<li class="<?php echo $directory_list_slug; ?>"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => $directory_list_slug ), admin_url( 'admin.php' ) ); ?>" <?php echo $this->_mp_directory_tab ==  $directory_list_slug ? 'class="current"' : NULL; ?>><?php echo $directory_list_array['title']; ?></a> </li>
+					
 					<?php 
 						$description = $this->_mp_directory_tab ==  $directory_list_slug ? $directory_list_array['description'] : $description;
-					} ?>
-				</ul>
-				
-					<form class="search-form search-plugins" method="get" action="">
-						<input type="hidden" name="tab" value="search">
-								<label><span class="screen-reader-text"><?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?></span>
-							<input type="search" name="s" value="" class="wp-filter-search" placeholder="<?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?>">
-						</label>
-						<input type="submit" name="" id="search-submit" class="button screen-reader-text" value="<?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?>">	
-					</form>
+					} 
+				}?>
+            	
+                </ul>
+            
+                <form class="search-form search-plugins" method="get" action="">
+                    <input type="hidden" name="mp_core_directory_tab" value="search">
+                    <input type="hidden" name="page" value="<?php echo $this->_args['slug']; ?>">
+                    <label><span class="screen-reader-text"><?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?></span>
+                        <input type="search" name="search" value="<?php echo isset( $_GET['search'] ) ? $_GET['search'] : ''; ?>" class="" placeholder="<?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?>">
+                    </label>
+                    <input type="submit" name="" id="search-submit" class="button screen-reader-text" value="<?php echo __( 'Search ', 'mp_core' ) . $this->_args['page_title']; ?>">	
+                </form>
+            </div>
+            
+            <br class="clear">
+            
+            <div class="tablenav top">
+				<div class="alignleft actions">
 				</div>
-                <?php if ( !empty( $description ) ){ ?>
-                    <br class="clear">
-                    <p><?php echo $description ?></p>
-                <?php } ?>
+				<div class="tablenav-pages">
+                	<span class="displaying-num"><?php echo $this->response['total_items']; ?> <?php echo __( 'items', 'mp_core' ); ?></span>
+					<span class="pagination-links">
+                    	
+                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => 1 
+						), admin_url( 'admin.php' ) ); ?>">«</a>
+						
+                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->_mp_directory_paged == 1 ? 1 : $this->_mp_directory_paged - 1
+						), admin_url( 'admin.php' ) ); ?>">‹</a>
+                        
+						<span class="paging-input">
+                        	<form class="mp-core-directory-paged-form" action="<?php echo admin_url( 'admin.php' ); ?>" method="get">
+                                <label for="current-page-selector" class="screen-reader-text"><?php echo __( 'Select Page', 'mp_core' ); ?></label>
+                                <input class="page" type="hidden" name="page" value="<?php echo $this->_args['slug']; ?>">
+                                <input class="mp_core_directory_tab" type="hidden" name="mp_core_directory_tab" value="<?php echo $this->_mp_directory_tab; ?>">
+                                <input class="current-page" id="current-page-selector" title="Current page" type="text" name="mp_core_directory_paged" value="<?php echo !empty( $this->response['page'] ) ? $this->response['page'] : $_GET['mp_core_directory_paged']; ?>" size="4">
+                            </form> <?php echo __( 'of', 'mp_core' ); ?> <span class="total-pages"><?php echo $this->response['total_pages']; ?></span>
+                        </span>
+                        
+						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->_mp_directory_paged == $this->response['total_pages'] ? $this->_mp_directory_paged : $this->_mp_directory_paged + 1
+						), admin_url( 'admin.php' ) ); ?>">›</a>
+                        
+						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->response['total_pages']
+						), admin_url( 'admin.php' ) ); ?>">»</a>
+                        
+                    </span>
+               </div>				
+               
+			</div>
+            
+            <p><?php echo !empty( $description ) ? $description : NULL ?></p>
+            
 			<?php
-			}
-			
 			echo '<div class="mp-directory-browser">';
 			
 				echo '<div id="mp-directory-items">';
 				
+				if ( !is_array( $this->plugins ) || empty( $this->plugins ) ){
+				
+					echo '<div class="no-plugin-results">' . __( 'No items match your request.', 'mp_core' ) . '</div>';
+					
+					echo '</div>';
+					
+					return;
+				}
+			
 				//Loop through all returned plugins from the wp_remote_post in the construct function	
 				foreach ( $this->plugins as $plugin ){
 									
