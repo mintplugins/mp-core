@@ -419,6 +419,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Add 1 to the global_plugin_update_num - This variable is used during registering javascrits
 			$global_plugin_update_num = $global_plugin_update_num + 1;
 			
+			//mp_core_settings_css
+			wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(dirname(__FILE__) ) ) );
+			
 			//Enqueue style for this license message
 			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );	
 				

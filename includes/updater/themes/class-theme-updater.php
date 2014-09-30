@@ -385,6 +385,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		 * Enqueue Jquery on Theme page to place license in correct spot
 		 */
 		function enqueue_themes_scripts() {
+			
+			//mp_core_settings_css
+			wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(dirname(__FILE__) ) ) );
+			
 			//Enqueue style for this license message
 			wp_enqueue_style( 'mp-core-licensing-css', plugins_url( 'css/core/mp-core-licensing.css', dirname(dirname(__FILE__) ) ) );			
 		}	
