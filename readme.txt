@@ -34,5 +34,5 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.0 = September 10, 2014
+= 1.0.0.0 = September 29, 2014
 * Original release
