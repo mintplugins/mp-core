@@ -186,8 +186,10 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			}
 			
 			//Manual Override for current screen. If we got this far, either it actually IS 'update-core', OR our transient doesn't exist (over 24 hours since last check)
-			$this->current_screen = new stdClass();
-			$this->current_screen->base = 'update-core';
+			if ( !isset($this->current_screen->base) ){
+				$this->current_screen = new stdClass();
+				$this->current_screen->base = 'update-core';
+			}
 			
 			//If we've already fetched the api and found an update, don't waste - return what we already found
 			if ( isset( $this->api_request->new_version ) && !empty($this->api_request) && $this->api_request->new_version != 'No Theme Update Available' && !isset( $_GET['force-check'] ) ){ 

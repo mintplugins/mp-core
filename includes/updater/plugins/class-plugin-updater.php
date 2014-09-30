@@ -271,7 +271,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			}
 			
 			//Manual Override for current screen. If we got this far, either it actually IS 'update-core', OR our transient doesn't exist (over 24 hours since last check)
-			$this->current_screen->base = 'update-core';
+			if ( !isset($this->current_screen->base) ){
+				$this->current_screen = new stdClass();
+				$this->current_screen->base = 'update-core';
+			}
 			
 			//If we've already fetched the api, don't waste - return what we already found
 			if ( isset( $this->api_request ) && !empty( $this->api_request ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core' ){ 
