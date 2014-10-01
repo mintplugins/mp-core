@@ -34,5 +34,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.0.1 = October X, 2014
+* Made Theme and Plugin updates more efficient by 
+
 = 1.0.0.0 = September 29, 2014
 * Original production release following 167 beta releases since Feb 13, 2013

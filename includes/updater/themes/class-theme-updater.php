@@ -180,16 +180,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 			
-			//If this isn't being run by a page, or if our transient has something in it - get outta here. We don't want to waste.
-			if ( !isset($this->current_screen->base) && !empty( $mp_api_request_transient ) ){
-				return false;	
-			}
-			
-			//Manual Override for current screen. If we got this far, either it actually IS 'update-core', OR our transient doesn't exist (over 24 hours since last check)
-			if ( !isset($this->current_screen->base) ){
-				$this->current_screen = new stdClass();
-				$this->current_screen->base = 'update-core';
-			}
+			$current_screen = isset( $this->current_screen->base ) ? $this->current_screen->base : NULL;
 			
 			//If we've already fetched the api and found an update, don't waste - return what we already found
 			if ( isset( $this->api_request->new_version ) && !empty($this->api_request) && $this->api_request->new_version != 'No Theme Update Available' && !isset( $_GET['force-check'] ) ){ 
@@ -211,7 +202,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				return false;
 			}
 			//If we have this data in the 24 hour transient (saving checks from more often than 24 hours - can be cleared by using the "Check Again" button on the updates page)
-			else if( !empty($mp_api_request_transient) && $mp_api_request_transient !=  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core'){
+			else if( !empty($mp_api_request_transient) && $mp_api_request_transient !=  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $current_screen != 'update-core'){
 				
 				//echo "using prev transient";
 				
@@ -227,7 +218,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				
 			}
 			//If we have this data in the 24 hour transient and there's no update available
-			else if( !empty($mp_api_request_transient) && $mp_api_request_transient ==  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core'){
+			else if( !empty($mp_api_request_transient) && $mp_api_request_transient ==  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $current_screen != 'update-core'){
 				return false;
 			}
 			//If we're doing a new check for real
