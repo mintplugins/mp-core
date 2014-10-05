@@ -246,7 +246,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		}
 		
 		/**
-		 * Calls the API and, if successfull, returns the object delivered by the API.
+		 * Check if we should call the API or just return what is stored in the transient for this plugin
 		 *
 		 * @access   public
 		 * @since    1.0.0
@@ -265,53 +265,79 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
 			
-			//If we've already fetched the api, don't waste - return what we already found
-			if ( isset( $this->api_request ) && !empty( $this->api_request ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core' ){ 
+			//If we have no transient-saved value, run the API, set a fresh transient with the API value, and return that value too right now.
+			if ( empty( $mp_api_request_transient ) ){ 
 				
-				return $this->api_request;
-				
-			}
-			//If we have this data in the 24 hour transient (saving checks from more often than 24 hours - can be cleared by using the "Check Again" button on the updates page)
-			else if( !empty( $mp_api_request_transient ) && !isset( $_GET['force-check'] ) && $this->current_screen->base != 'update-core'){
-		
-				return $mp_api_request_transient;
+				return $this->actually_do_api_request( $_action, $_data );
 				
 			}
-			else{ 
-				
-				//Parse the args
-				$args = $this->parse_the_args( $this->_args );
-				
-				//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-				$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
-				
-				if( $_data['slug'] != $this->slug )
-					return;
+			
+			//If we have this data in the 24 hour transient, saving checks from more often than 24 hours - can be cleared by using the "Check Again" button on the updates page)
+			if( isset( $_GET['force-check'] ) ){
 		
-				$api_params = array(
-						'api' => 'true',
-						'slug' => $_data['slug'],
-						'author' => '', //$this->version - not working for some reason
-						'license_key' => $this->software_license,
-						'old_license_key' => get_option( $_data['slug'] . '_license_key' )
-					);
-				$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
-										
-				if ( !is_wp_error( $request ) ){
-					$request = json_decode( wp_remote_retrieve_body( $request ) );
-					set_site_transient( $args['software_name_slug'],  $request );
-					if( $request ){
-						$request->sections = maybe_unserialize( $request->sections );
-					}
-					$this->api_request = $request;
-					//Expires in 1 day (86400 seconds)
-					set_site_transient( 'mp_api_request_' . $this->slug, $request, 86400 );
-					return $request;
-				}else{
-					return false;
+				return $this->actually_do_api_request( $_action, $_data );
+				
+			}
+			
+			//If we are on the update-core page and we haven't already fetched the API for this plugin ON THIS PAGE LOAD
+			if(  ( isset( $this->current_screen->base ) && $this->current_screen->base == 'update-core' ) && empty( $this->api_request ) ){
+				
+				return $this->actually_do_api_request( $_action, $_data );
+				
+			}
+			
+			//Otherwise, return what is in the transient
+			return $mp_api_request_transient;
+				
+		}
+		
+		/**
+		 * Calls the API and, if successfull, returns the object delivered by the API.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @see MP_CORE_Plugin_Updater::parse_the_args()
+		 * @see get_bloginfo()
+		 * @see wp_remote_post()
+		 * @see is_wp_error()
+		 * @param string $_action The requested action.
+		 * @param array $_data Parameters for the API action.
+		 * @return false||object
+		 */
+		function actually_do_api_request( $_action, $_data ){
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			
+			if( $_data['slug'] != $this->slug )
+				return;
+	
+			$api_params = array(
+					'api' => 'true',
+					'slug' => $_data['slug'],
+					'author' => '', //$this->version - not working for some reason
+					'license_key' => $this->software_license,
+					'old_license_key' => get_option( $_data['slug'] . '_license_key' )
+				);
+			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+									
+			if ( !is_wp_error( $request ) ){
+				$request = json_decode( wp_remote_retrieve_body( $request ) );
+				set_site_transient( $args['software_name_slug'],  $request );
+				if( $request ){
+					$request->sections = maybe_unserialize( $request->sections );
 				}
-				
+				$this->api_request = $request;
+				//Expires in 1 day (86400 seconds)
+				set_site_transient( 'mp_api_request_' . $this->slug, $request, 86400 );
+				return $request;
+			}else{
+				return false;
 			}
+				
 		}
 		
 		/**
