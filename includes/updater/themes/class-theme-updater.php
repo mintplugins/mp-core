@@ -89,9 +89,6 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$args['theme'] = wp_get_theme( $args['theme_slug'] );
 			$args['theme_version'] = $args['theme']->get( 'Version' );
 			
-			//Response Key
-			$args['response_key'] = $args['theme_slug'] . '-update-response';			
-			
 			//Get current screen
 			$this->current_screen = get_current_screen();
 			
@@ -107,9 +104,9 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 				
-			$api_response = get_site_transient( $args['response_key'] );
+			$api_response = get_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 						
-			if( false === $api_response )
+			if( false === $api_response || $api_response == "No Theme Update Available" )
 				return;
 	
 			$update_url = wp_nonce_url( 'update.php?action=upgrade-theme&amp;theme=' . urlencode( $args['theme_slug'] ), 'upgrade-theme_' . $args['theme_slug'] );
@@ -117,12 +114,12 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			
 			
 			//We could use version_compare here but it doesn't account for beta mode: if ( version_compare( $args['theme_version'], $api_response->new_version, '<' ) ) {	
-			if( $args['theme_version'] < $api_response->new_version ){	
+			if( $args['theme_version'] < $api_response['new_version'] ){	
 	
 				echo '<div id="update-nag">';
 					printf( '<strong>%1$s %2$s</strong> is available. <a href="%3$s" class="thickbox" title="%4s">Check out what\'s new</a> or <a href="%5$s"%6$s>update now</a>.',
 						$args['theme']->get( 'Name' ),
-						$api_response->new_version,
+						$api_response['new_version'],
 						'#TB_inline?width=640&amp;inlineId=' . $args['theme_slug'] . '_changelog',
 						$args['theme']->get( 'Name' ),
 						$update_url,
@@ -130,7 +127,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 					);
 				echo '</div>';
 				echo '<div id="' . $args['theme_slug'] . '_' . 'changelog" style="display:none;">';
-					echo wpautop( $api_response->sections['changelog'] );
+					echo wpautop( $api_response['sections']['changelog'] );
 				echo '</div>';
 			}
 		}
@@ -144,7 +141,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Set the defaults and values for $args
 			$args = $this->parse_the_args( $this->_args );
 			
-			delete_site_transient( $args['response_key'] );
+			delete_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 		}
 		
 		/**
@@ -169,7 +166,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 		}
 		
 		/**
-		 * Check for Update for this theme
+		 * Check if we should call the API or just return what is stored in the transient for this theme
 		 *
 		 */
 		function check_for_update() {
@@ -180,134 +177,147 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 			
-			$current_screen = isset( $this->current_screen->base ) ? $this->current_screen->base : NULL;
+			//If we have no transient, check the API for real
+			if ( empty($mp_api_request_transient) ){
+				
+				//Actually Call the API
+				return $this->actually_check_for_update( $args );
+
+			}
 			
-			//If we've already fetched the api and found an update, don't waste - return what we already found
-			if ( isset( $this->api_request->new_version ) && !empty($this->api_request) && $this->api_request->new_version != 'No Theme Update Available' && !isset( $_GET['force-check'] ) ){ 
+			//If Force check is set
+			if ( isset( $_GET['force-check'] ) ){
 				
-				//echo "using prev api";
-				if( $args['theme_version'] >= $this->api_request['new_version'] ){	
+				//Actually Call the API
+				return $this->actually_check_for_update( $args );
+				
+			}
+			
+			//If we are on the update-core page 
+			if( isset( $this->current_screen->base ) && $this->current_screen->base == 'update-core' ) {
+				
+				//If we haven't already fetched the API for this theme ON THIS PAGE LOAD
+				if ( !isset( $this->api_request ) ){
 					
-					$this->api_request = 'No Theme Update Available';
-					set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], 'No Theme Update Available', 86400 );
-					return false;
+					//Actually Call the API
+					return $this->actually_check_for_update( $args );
 					
 				}
-				
-				return $this->api_request;
-				
-			}
-			//If we've already fetched the api and have NOT found an update, don't waste - return what we already found
-			if ( isset( $this->api_request ) && !empty($this->api_request) && $this->api_request == 'No Theme Update Available' && !isset( $_GET['force-check'] ) ){
-				return false;
-			}
-			//If we have this data in the 24 hour transient (saving checks from more often than 24 hours - can be cleared by using the "Check Again" button on the updates page)
-			else if( !empty($mp_api_request_transient) && $mp_api_request_transient !=  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $current_screen != 'update-core'){
-				
-				//echo "using prev transient";
-				
-				if( isset( $mp_api_request_transient['new_version'] ) && $args['theme_version'] >= $mp_api_request_transient['new_version'] ){	
-					
-					$mp_api_request_transient = 'No Theme Update Available';
-					set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], 'No Theme Update Available', 86400 );
-					return false;
-					
-				}
-				
-				return $mp_api_request_transient;
-				
-			}
-			//If we have this data in the 24 hour transient and there's no update available
-			else if( !empty($mp_api_request_transient) && $mp_api_request_transient ==  'No Theme Update Available' && !isset( $_GET['force-check'] ) && $current_screen != 'update-core'){
-				return false;
-			}
-			//If we're doing a new check for real
-			else{ 
-				//echo "checking for real";
-				
-				//If this software is licensed, do checks for updates using the license
-				if ( $args['software_licensed'] ){
-					
-					//Get license		
-					$license_key = trim( get_option( $args['theme_name_slug'] . '_license_key' ) );
-																
-				}
-				
-				//This isn't a licensed theme
+				//If we HAVE already fetched the API ON THIS PAGE LOAD
 				else{
-						
-					$license_key = NULL;
 					
-				}
-							
-				//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
-				$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
-																			
-				$update_data = get_site_transient( $args['response_key'] ); //malachi-update-response
-					
-				if ( false == $update_data || !isset( $update_data->new_version ) ) {
-					
-					$failed = false;
-		
-					$api_params = array(
-						'api' => 'true',
-						'slug' => $args['theme_name_slug'],
-						'theme' => true,
-						'license_key' => $license_key,
-						'old_license_key' => get_option( $args['theme_name_slug'] . '_license_key' )	 
-					);
-									
-					$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
-																										
-					// make sure the response was successful
-					if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
-						$failed = true;
+					//If there is no Theme Update available
+					if ( $this->api_request == 'No Theme Update Available' ){
+						return false;	
 					}
-					
-					$update_data = json_decode( wp_remote_retrieve_body( $response ) );
-												
-					//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
-					if ( isset( $update_data->homepage ) ){
-						$update_data->url =  $update_data->homepage;
-					}
+					//If there is a Theme Update available
 					else{
-						$update_data->url = '';
+						return $this->api_request;
 					}
-									
-					if ( ! is_object( $update_data ) ) {
-						$failed = true;
-					}
-		
-					// if the response failed, try again in 30 minutes
-					if ( $failed ) {
-						$data = new stdClass;
-						$data->new_version = $args['theme_version'];
-						set_site_transient( $args['response_key'], $data, strtotime( '+30 minutes' ) );
-						return false;
-					}
-		
-					// if the status is 'ok', return the update arguments
-					if ( ! $failed ) {
-						$update_data->sections = maybe_unserialize( $update_data->sections );
-						set_site_transient( $args['response_key'], $update_data, strtotime( '+12 hours' ) );
-					}
-		
+						
 				}
 				
-				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $args['theme_version'], $update_data->new_version, >=' ) ){
-				if( $args['theme_version'] >= $update_data->new_version ){	
-					
-					$this->api_request = 'No Theme Update Available';
-					set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], 'No Theme Update Available', 86400 );
-					return false;
-				}
-				
-				$this->api_request = (array) $update_data;
-				set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], (array) $update_data, 86400 );
-				return (array) $update_data;
-			
 			}
 			
+			//If we made it this far, return the transient value 
+			
+			//If there is no Theme Update available in the Transient Data
+			if ( $mp_api_request_transient == 'No Theme Update Available' ){
+				return false;	
+			}
+			//If there IS a Theme Update available in the Transient Data
+			else{
+				return $mp_api_request_transient;
+			}
+				
+		}
+		
+		/**
+		 * Check for Update for this theme
+		 *
+		 */
+		function actually_check_for_update( $args ){
+				
+			//If this software is licensed, do checks for updates using the license
+			if ( $args['software_licensed'] ){
+				
+				//Get license		
+				$license_key = trim( get_option( $args['theme_name_slug'] . '_license_key' ) );
+															
+			}
+			
+			//This isn't a licensed theme
+			else{
+					
+				$license_key = NULL;
+				
+			}
+						
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_theme_update_package_url' ) ? apply_filters( 'mp_core_theme_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];														
+				
+			$failed = false;
+
+			$api_params = array(
+				'api' => 'true',
+				'slug' => $args['theme_name_slug'],
+				'theme' => true,
+				'license_key' => $license_key,
+				'old_license_key' => get_option( $args['theme_name_slug'] . '_license_key' )	 
+			);
+							
+			$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
+																								
+			// make sure the response was successful
+			if ( is_wp_error( $response ) || 200 != wp_remote_retrieve_response_code( $response ) ) {
+				$failed = true;
+			}
+			
+			$update_data = json_decode( wp_remote_retrieve_body( $response ) );
+										
+			//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
+			if ( isset( $update_data->homepage ) ){
+				$update_data->url =  $update_data->homepage;
+			}
+			else{
+				$update_data->url = '';
+			}
+							
+			if ( ! is_object( $update_data ) ) {
+				$failed = true;
+			}
+
+			// if the response failed, try again in 30 minutes
+			if ( $failed ) {
+				$data = new stdClass;
+				$data->new_version = $args['theme_version'];
+				set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], 'No Theme Update Available', strtotime( '+30 minutes' ) ); //Check again in 30 mins
+				return false;
+			}
+
+			// if the status is 'ok', return the update arguments
+			if ( ! $failed ) {
+				
+				$update_data->sections = maybe_unserialize( $update_data->sections );
+				
+				//If there's not a new version of the theme
+				if( $args['theme_version'] >= $update_data->new_version ){	
+				
+					//Re Above: We could use version_compare but it doesn't account for beta versions:  if( version_compare( $args['theme_version'], $update_data->new_version, >=' ) ){
+					
+					$this->api_request = 'No Theme Update Available';
+					set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], 'No Theme Update Available', 86400 ); //Check again in 24 hours
+					return false;
+				}
+				//If there is a new version of the theme
+				else{
+					$this->api_request = (array) $update_data;
+					set_site_transient( 'mp_api_request_' . $args['theme_name_slug'], (array) $update_data, 86400 ); //Check again in 24 hours
+					return (array) $update_data;
+				}
+			
+			}
+					
 		}
 		
 		/**
@@ -399,7 +409,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$license_key = get_option( $args['theme_name_slug'] . '_license_key' );
 			
 			//Api Response
-			$api_response = get_site_transient( $args['response_key'] );
+			$api_response = get_site_transient( 'mp_api_request_' . $args['theme_name_slug'] );
 			
 			//Only verify the license if the transient is older than 7 days
 			$check_licenses_transient_time = get_site_transient( 'mp_check_licenses_transient' );
