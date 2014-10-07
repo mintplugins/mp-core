@@ -40,8 +40,8 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 	//Default width if blank
 	$width = isset( $width ) ? $width : 600;
 	
-	//Default width if blank
-	$height = isset( $height ) ? $height : 600;
+	//Set crop if there is a height. If not, don't crop
+	$crop = isset( $height ) ? true : false;
 	
 	//Set default for featured image
 	$image_url = has_filter('mp_featured_image_default') ? get_filter('mp_featured_image_default', '') : NULL;
@@ -52,7 +52,7 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 		$image_url = wp_get_attachment_image_src($image_id,'full');  
 		$image_url = $image_url[0];
 		
-		return $before . mp_aq_resize( $image_url, $width, $height, true ) . $after;    
+		return $before . mp_aq_resize( $image_url, $width, $height, $crop ) . $after;    
 	}
            
 }
