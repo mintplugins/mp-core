@@ -37,6 +37,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 = 1.0.0.1 = October X, 2014
 * Made Theme and Plugin updates more efficient
 * Fixed bug in plugin installs via directory tabs
+* Included Scale in Animation Functions
+* mp_core_the_featured_image now only crops the image if a height is provided
 
 = 1.0.0.0 = September 29, 2014
 * Original production release following 167 beta releases since Feb 13, 2013
