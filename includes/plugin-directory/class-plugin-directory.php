@@ -150,10 +150,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			wp_enqueue_style( 'mp_core_directory_css', plugins_url('css/core/mp-core-directory.css', dirname(__FILE__)) );
 			
 			//masonry script
-			wp_enqueue_script( 'mp_core_directory_masonry', plugins_url( 'js/core/masonry.pkgd.min.js', dirname(__FILE__)),  array( 'jquery' ) );
+			wp_enqueue_script( 'masonry' );
 			
 			//directory page js
-			wp_enqueue_script( 'mp_core_directory_js', plugins_url( 'js/core/directory-page.js', dirname(__FILE__)),  array( 'jquery', 'mp_core_directory_masonry' ) );
+			wp_enqueue_script( 'mp_core_directory_js', plugins_url( 'js/core/directory-page.js', dirname(__FILE__)),  array( 'jquery', 'masonry' ) );
 			
 			add_thickbox();
 			

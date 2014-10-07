@@ -1,7 +1,7 @@
 jQuery(document).ready(function($){
 	
 	//Activate Masonry for Directory Pages
-	var msnry = new Masonry( '#mp-directory-items', {
+	var mp_core_directory_masonry = new Masonry( '#mp-directory-items', {
 	  // options
 	});
 
