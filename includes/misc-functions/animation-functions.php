@@ -135,9 +135,14 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 				$unit = 'deg';
 			}
 			
-			//If this is rotation
+			//If this is X or Y
 			if ( $id == 'translateX' || $id == 'translateY' ){
 				$unit = 'px';
+			}
+			
+			//If this is scale
+			if ( $id == 'scale' ){
+				$value = $value / 100;
 			}
 			
 			//Output the value for this keyframe value
@@ -232,6 +237,11 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
 			//If this is rotation
 			if ( $id == 'translateX' || $id == 'translateY' ){
 				$unit = 'px';
+			}
+			
+			//If this is scale
+			if ( $id == 'scale' ){
+				$value = $value / 100;
 			}
 			
 			//Output the value for this keyframe value
@@ -355,6 +365,11 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 			//If this is rotation
 			if ( $id == 'translateX' || $id == 'translateY' ){
 				$unit = 'px';
+			}
+			
+			//If this is scale
+			if ( $id == 'scale' ){
+				$value = $value / 100;
 			}
 			
 			//Output the value for this keyframe value
