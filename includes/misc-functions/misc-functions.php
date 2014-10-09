@@ -419,3 +419,61 @@ function mp_core_is_android($user_agent=NULL) {
     }
     return (strpos($user_agent, 'android') !== FALSE);
 }
+
+/**
+ * This function will split an array of meta field formatted for MP_CORE_Metabox at a specific key, add new fields, and return it as a singe array. 
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $items_array array The array into which you wish to insert new fields
+ * @param    $new_values array An array with field arrays for MP_Core_Metabox
+ * @param    $split_key string The array key after which we will insert the new fieldss in $new_values
+ * @return   $return_items_array array The arrya of fields with the new ones inserted.
+ */
+function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
+	
+	$counter = 0;
+	
+	//Loop through passed-in metabox fields
+	foreach ( $items_array as $field_key => $field_array ){
+		
+		//If the current loop is for the brick_bg_image
+		if ($field_key == 'meta_hook_anchor_2'){
+			
+			//Split the array after the array with the field containing 'brick_bg_image'
+			$options_prior = array_slice($items_array, 0, $counter+1, true);
+			$options_after = array_slice($items_array, $counter+1);
+			
+			break;
+						
+		}
+		
+		//Increment Counter
+		$counter = $counter + 1;
+	
+	}
+	
+	if ( !empty($options_prior) ){
+		
+		//Add the first options to the return array
+		$return_items_array = $options_prior;
+		
+		//Loop through each passed-in field
+		foreach ( $new_fields as $new_field ){
+			
+			//Add new field to array
+			array_push($return_items_array, $new_field);
+			
+		}
+		
+		//Re-add fields that came after our split point
+		foreach ($options_after as $option){
+			//Add all fields that came after
+			array_push($return_items_array, $option);
+		}
+		
+	}
+	
+	return $return_items_array;
+
+}
