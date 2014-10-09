@@ -202,6 +202,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Loop through the pre-set, passed-in array of fields
 			foreach ($this->_metabox_items_array as $field){
 				
+				//If this is a hook_anchor, it doesn not need to be processed so skip over it. It's just used for filters to hook new meta options to the right location.
+				if ( $field['field_type'] == 'hook_anchor' ){
+					continue;	
+				}
+				
 				// Set up nonce for verification
 				wp_nonce_field( plugin_basename( __FILE__ ), $field['field_id'] . '_metabox_nonce' );	
 				
@@ -458,7 +463,12 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Loop through each item in the passed array
 			foreach ($this->_metabox_items_array as $field){
-														
+					
+				//If this is a hook_anchor, it doesn not need to be processed so skip over it. It's just used for filters to hook new meta options to the right location.
+				if ( $field['field_type'] == 'hook_anchor' ){
+					continue;	
+				}
+				
 				// verify this came from our screen and with proper authorization,
 				// because save_post can be triggered at other times
 				if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
