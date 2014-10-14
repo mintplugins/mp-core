@@ -34,6 +34,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.0.2 = October X, 2014
+* Added the mp_core_value_exists function for checking saved values
+* Used new mp_core_value_exists to apply field defaults if the user has never saved it.
+
 = 1.0.0.1 = October 9, 2014
 * Made Theme and Plugin updates more efficient
 * Fixed bug in plugin installs via directory tabs
