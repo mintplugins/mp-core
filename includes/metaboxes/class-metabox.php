@@ -796,6 +796,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -841,6 +844,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -888,6 +894,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -927,6 +936,16 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
+			
+			//If this has been saved before
+			if ( $field_value == '' || mp_core_value_exists( $field_value ) ){
+				$field_value = $field_value;
+			}
+			//If this has never been saved before
+			else{
+				//If there is no value saved but there is a default value, user that value
+				$field_value = mp_core_value_exists( $field_preset_value ) ? $field_preset_value : $field_value;
+			}
 						
 			$checked = empty($field_value) ? '' : 'checked';
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
@@ -975,6 +994,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -1020,6 +1042,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1067,6 +1092,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -1112,6 +1140,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1159,6 +1190,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -1200,6 +1234,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 						
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1246,6 +1283,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1304,6 +1344,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -1358,6 +1401,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1420,6 +1466,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
@@ -1467,6 +1516,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
@@ -1512,6 +1564,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 						
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -1574,6 +1629,9 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			//If there is no value saved but there is a default value, user that value
+			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
 			
 			//Get the non-repeater field ID and use it as a class for the icon
 			$icon_class = explode( '[', $field_id );
