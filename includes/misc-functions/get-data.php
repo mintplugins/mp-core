@@ -328,7 +328,7 @@ function mp_core_get_attachment_id_from_url( $attachment_url = '' ) {
 }
 
 /**
- * Get the attachment id using a url
+ * Get the Current URL 
  *
  * @since    1.0.0
  * @link     http://mintplugins.com/doc/mp_core_get_current_url/
