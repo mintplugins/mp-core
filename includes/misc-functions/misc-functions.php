@@ -22,6 +22,38 @@ function mp_core_enqueue_scripts(){
 add_action( 'wp_enqueue_scripts', 'mp_core_enqueue_scripts' );
 
 /**
+ * Check if a value exists in a variable. Similar to the "empty" PHP function - but returns true even if the value is 0.
+ *
+ * @since    1.0.0
+ * @param    mixed $value_to_check See link for description.
+ * @return   boolean
+ */
+function mp_core_value_exists( $value_to_check ) {	
+
+	//If the value_to_check is empty 
+	if ( empty( $value_to_check ) ){
+		
+		//If this value_to_check is set to be the number 0
+		if ( is_numeric( $value_to_check ) ){
+			
+			return true;
+			
+		}
+		//If it is truly just empty
+		else{
+			
+			//return the default value
+			return false;
+		}
+		
+	}
+	else{
+		return true;	
+	}
+	
+}
+
+/**
  * Add and return styles for the TinyMCE styles
  *
  * @since    1.0.0
