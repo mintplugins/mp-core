@@ -189,6 +189,9 @@
 .mp_field textarea{
 	max-width:100%;	
 }
+.mp_field .mp_input_100{
+	width:100%;	
+}
 
 /*Show bubble above range inputs*/
 output { 
