@@ -106,6 +106,40 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 					
 								
 				}
+				//If the height is greater than the width
+				else if ( $aq_height > $aq_width ){
+					
+					//Find the lowest common denominator of width=? when height=1
+					$height_lcd = $aq_height / $aq_width;
+										
+					//Find the value for height
+					$adjusted_aq_width = $orig_h / $height_lcd;
+					
+					//Set the width to the actual width of the image						
+					$adjusted_aq_height = $orig_h;
+					
+					//If the width of the image is more narrow than it needs to be with the height at actual size,
+					if ( $adjusted_aq_width > $orig_w ){
+						
+						//Find out how high we can make this image without being too narrow on the width
+						
+						//Find the lowest common denominator of width=? when height=1
+						$width_lcd = $aq_width / $aq_height;
+											
+						//Find the value for width
+						$adjusted_aq_height = $orig_w / $width_lcd;
+						
+						//Set the width to the actual width of the image						
+						$adjusted_aq_width = $orig_w;
+						
+						
+					}
+						
+					$aq_width = $adjusted_aq_width;	
+					$aq_height = $adjusted_aq_height;	
+					
+								
+				}
 			
 			}
 		}
