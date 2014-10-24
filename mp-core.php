@@ -50,6 +50,10 @@ if( !defined( 'MP_CORE_PLUGIN_DIR' ) )
 // Plugin Root File
 if( !defined( 'MP_CORE_PLUGIN_FILE' ) )
 	define( 'MP_CORE_PLUGIN_FILE', __FILE__ );
+	
+// Javascripts URL - Used as a prefix to load javascript scripts (non core related) included with the core
+if( !defined( 'MP_CORE_JS_SCRIPTS_URL' ) )
+	define( 'MP_CORE_JS_SCRIPTS_URL', plugin_dir_url( __FILE__ ) . 'includes/js/utility/' );
 
 /*
 |--------------------------------------------------------------------------
