@@ -291,7 +291,7 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_title' =>  $thefield['field_title'], 
 											'field_description' => $thefield['field_description'], 
 											'field_value' => $field_value, 
-											'field_input_class' => 'mp_repeater', 
+											'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater', 
 											'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL, 
 											'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
@@ -335,7 +335,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_title' => $thefield['field_title'], 
 										'field_description' => $thefield['field_description'], 
 										'field_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
-										'field_input_class' => 'mp_repeater', 
+										'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater', 
 										'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL, 
 										'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
@@ -392,7 +392,9 @@ if (!class_exists('MP_CORE_Metabox')){
 						//set the showhider
 						$showhider_value = isset($field['field_showhider']) ? 'showhider="' . $field['field_showhider'] . '"' : '';
 						//set the field container class
-						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '';
+						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '' . ' ' . $field['field_id'];
+						//set the field input class
+						$field_input_class = isset($field['field_input_class']) ? $field['field_input_class'] : '';
 						//set the placeholder
 						$placeholder_value = isset($field['field_placeholder']) ? 'placeholder="' . $field['field_placeholder'] . '"' : '';
 						//set the popup help
@@ -404,7 +406,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							'field_title' => $field['field_title'], 
 							'field_description' => $field['field_description'], 
 							'field_value' => $value, 
-							'field_input_class' => $field['field_id'], 
+							'field_input_class' => $field_input_class, 
 							'field_container_class' => $field_container_class, 
 							'field_select_values' => $field_select_values, 
 							'field_preset_value' => $preset_value, 
@@ -1776,7 +1778,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			
-			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . $field_input_class . '">' . $field_title . '</a>';
+			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . $field_id . '">' . $field_title . '</a>';
 			
 			echo '<div style="clear: both;"></div>';
 			echo '</label></div>';
