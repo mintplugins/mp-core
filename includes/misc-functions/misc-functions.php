@@ -470,7 +470,7 @@ function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
 	foreach ( $items_array as $field_key => $field_array ){
 		
 		//If the current loop is for the brick_bg_image
-		if ($field_key == 'meta_hook_anchor_2'){
+		if ($field_key == $split_key){
 			
 			//Split the array after the array with the field containing 'brick_bg_image'
 			$options_prior = array_slice($items_array, 0, $counter+1, true);
