@@ -509,3 +509,28 @@ function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
 	return $return_items_array;
 
 }
+
+/**
+ * Return the source URL of an image in HTML. The second parameter is the image number we want.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $html_string string A string containing HTML and an img attribute
+ * @param    $img_number Int The image number we want to get (1st, 2nd image etc)
+ * @return   $img_src string The source URL of the first img tag in the html string
+ */
+function mp_core_get_img_src_from_html( $html_string, $img_number ){
+	$doc = new DOMDocument();
+	@$doc->loadHTML( $html_string );
+	
+	$tags = $doc->getElementsByTagName('img');
+	
+	$image_counter = 1;
+	
+	foreach ($tags as $tag) {
+		if ( $image_counter == $img_number ){
+			return $tag->getAttribute('src');
+		}
+		$image_counter = $image_counter + 1;	   
+	}
+}
