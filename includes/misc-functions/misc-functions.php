@@ -534,3 +534,47 @@ function mp_core_get_img_src_from_html( $html_string, $img_number ){
 		$image_counter = $image_counter + 1;	   
 	}
 }
+
+/**
+ * Sort an Array using a specific key.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $array array The array we want to sort.
+ * @param    $key String The key we wish to sort by (eg create a 'date' key in sub-arrays and pass the word 'date' to sort by that number.
+ * @return   $order SORT_DESC or SORT_ASC 
+ */
+function mp_core_array_sort_by_key( $array, $key, $order=SORT_ASC )
+{
+    $new_array = array();
+    $sortable_array = array();
+
+    if (count($array) > 0) {
+        foreach ($array as $k => $v) {
+            if (is_array($v)) {
+                foreach ($v as $k2 => $v2) {
+                    if ($k2 == $key) {
+                        $sortable_array[$k] = $v2;
+                    }
+                }
+            } else {
+                $sortable_array[$k] = $v;
+            }
+        }
+
+        switch ($order) {
+            case SORT_ASC:
+                asort($sortable_array);
+            break;
+            case SORT_DESC:
+                arsort($sortable_array);
+            break;
+        }
+
+        foreach ($sortable_array as $k => $v) {
+            $new_array[$k] = $array[$k];
+        }
+    }
+
+    return $new_array;
+}
