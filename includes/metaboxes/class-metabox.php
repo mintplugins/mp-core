@@ -394,7 +394,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						//set the field container class
 						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '' . ' ' . $field['field_id'];
 						//set the field input class
-						$field_input_class = isset($field['field_input_class']) ? $field['field_input_class'] : '';
+						$field_input_class = isset($field['field_input_class']) ? $field['field_input_class'] . ' ' . $field['field_id'] : $field['field_id'];
 						//set the placeholder
 						$placeholder_value = isset($field['field_placeholder']) ? 'placeholder="' . $field['field_placeholder'] . '"' : '';
 						//set the popup help
