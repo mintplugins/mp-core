@@ -169,7 +169,7 @@
 	display:none;
 	margin-left: 10px;
 	margin-right: 10px;
-	background-color: rgba(46, 162, 204, 0.06);
+	background-color: #f2fafc;
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 10px;
@@ -177,6 +177,15 @@
 	border-left: solid 1px #dfdfdf;
 	border-right: solid 1px #dfdfdf;
 	margin-top: 0px;
+}
+.repeater_container[showhider]{
+	border-bottom: solid 1px #dfdfdf;	
+}
+.repeater_container [showhider]{
+	border-left:none!important;
+	border-right:none!important;
+	padding-top:10px!important;
+	background-color: transparent;
 }
 .repeater_container > * > *{
 	margin-left:0px;
