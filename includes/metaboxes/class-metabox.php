@@ -530,8 +530,8 @@ if (!class_exists('MP_CORE_Metabox')){
 						//Set $prev_repeater to current field repeater 
 						$prev_repeater = $field['field_repeater'];
 						
-						//Store all the post values for this repeater in $these_repeater_field_id_values
-						$these_repeater_field_id_values = $_POST[$field['field_repeater']];
+						//Store all the post values for this repeater in $these_repeater_field_id_values. If there are no POST values for this repeater, use the previously saved values.
+						$these_repeater_field_id_values = isset( $_POST[$field['field_repeater']] ) ? $_POST[$field['field_repeater']] : $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_repeater']];
 						
 						//Sanitize user input for this repeater field and add it to the $data array
 						$allowed_tags = wp_kses_allowed_html( 'post' );
