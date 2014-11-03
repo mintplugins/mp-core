@@ -576,8 +576,24 @@ jQuery(document).ready(function($){
 	});
 
 	
+	//Showhider indentation
+	$(document).find("[showhider]").each(function(){
+		
+		//Get the name of this fields parent showhider
+		var showhider_name = $(this).attr('showhider');
+		
+		//Get the margin of the parent showhider field
+		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
+		console.log(margin_left);
+		
+		//Add the showhider parent's margin to this field
+		$( this ).css( 'margin-left', (parseInt( $( this ).css( 'margin-left' ).replace(/[^-\d\.]/g, '') ) + parseInt( margin_left) )  + 'px' );
+		
+	});
+	
 	//Showhider function which shows and hides fields based on their parent showhider
 	$( ".mp_core_showhider_button.closed" ).on('click', function(event){
+			
 			event.preventDefault;
 			
 			var this_button = $(this);
@@ -602,15 +618,60 @@ jQuery(document).ready(function($){
 			var this_button = $(this);
 						
 			//Get name of showhider group
-			var showhidergroup = this_button.attr('showhidergroup');
-			
-			//Hide fields in this showhider					
-			$( '[showhider=' + showhidergroup + ']').css('display', 'none');
+			var showhidergroup = this_button.attr( 'showhidergroup' );
 			
 			//After showhider is open, update the classes
 			setTimeout(function() {
 				this_button.removeClass('open').addClass('closed');
-			}, 300);						
+			}, 300);
+			
+			//Hide fields in this showhider	 (2nd level showhider)				
+			$( '[showhider=' + showhidergroup + ']').each( function(){
+				
+				//Hide this field
+				$(this).css('display', 'none');
+				
+				//Child Showhider Button
+				var child_this_button = $(this).find( '[showhidergroup]' );
+				
+				//Get the showhider group names of any showhiders with this showhider as a parent
+				var child_showhidergroup = child_this_button.attr( 'showhidergroup' );
+				
+				//After showhider is open, update the classes
+				setTimeout(function() {
+					child_this_button.removeClass('open').addClass('closed');
+				}, 300);
+					
+				//Hide fields in this showhider	 (3rd level showhider)
+				$( '[showhider=' + child_showhidergroup + ']').each( function(){
+					
+					//Hide this field
+					$(this).css('display', 'none');
+					
+					//Child Showhider Button
+					var child_this_button = $(this).find( '[showhidergroup]' );
+					
+					//Get the showhider group names of any showhiders with this showhider as a parent
+					var child_showhidergroup = child_this_button.attr( 'showhidergroup' );
+					
+					//After showhider is open, update the classes
+					setTimeout(function() {
+						child_this_button.removeClass('open').addClass('closed');
+					}, 300);
+						
+					//Hide fields in this child showhidergroup (4th level showhider)
+					$( '[showhider=' + child_showhidergroup + ']').each( function(){
+						
+						//Hide this field
+						$(this).css('display', 'none');
+					
+					});
+					
+						
+				});
+				
+			});
+									
 	});
 
 });
