@@ -328,6 +328,14 @@ jQuery(document).ready(function($){
 					//Add the value of each field
 					thedescription += $(this).find('> input').val() + ', ';		
 				}
+				if ( $(this).find('> select option:selected').text() ){
+					
+					//Add the title of the first field in the repeater
+					thedescription += $(this).find('> .mp_title strong').html() + ': ';
+					
+					//Add the value of each field
+					thedescription += $(this).find('>select option:selected').text() + ', ';		
+				}
 				
 			});
 						
@@ -584,7 +592,6 @@ jQuery(document).ready(function($){
 		
 		//Get the margin of the parent showhider field
 		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
-		console.log(margin_left);
 		
 		//Add the showhider parent's margin to this field
 		$( this ).css( 'margin-left', (parseInt( $( this ).css( 'margin-left' ).replace(/[^-\d\.]/g, '') ) + parseInt( margin_left) )  + 'px' );
@@ -611,6 +618,7 @@ jQuery(document).ready(function($){
 			
 						
 	});
+	//When showhiders are closed
 	$(document).on('click', '.mp_core_showhider_button.open', function(event){
 		
 			event.preventDefault;
