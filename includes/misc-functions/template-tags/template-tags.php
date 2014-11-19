@@ -196,23 +196,27 @@ function mp_core_oembed_get($video_url, $args = NULL){
 			}
 		}
 		
-		//If video_oembed is set
-		if ( isset( $video_oembed ) ){
+		//If video_oembed is set and this is a supported oembed url
+		if ( isset( $video_oembed ) && $video_oembed ){
+						
+			$video_code_explode = explode( '<iframe ', $video_oembed );
+			$video_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;';
 			
-			//If this is a supported oembed url
-			if ( $video_oembed ){
-		
-				$video_code_explode = explode( '<iframe ', $video_oembed );
-				$video_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;';
-				$video_code .= '" ' . $video_code_explode[1];	
-				
-				$iframe_code = $video_code;			
+			//The link passed isn't something we can embed - so return the original URL
+			if ( !isset( $video_code_explode[1] ) ){
+				//For some very strange reason, this returns blank unless it is sent with an additional string - so I added a space to the end...?
+				return $video_url . ' ';
 			}
-	
+			
+			$video_code .= '" ' . $video_code_explode[1];	
+			
+			$iframe_code = $video_code;			
+			
 		}
 		//If this is not a supported oembed url (like youtube.com/embed/...")
 		else{
-									
+			
+			//Embed it in an iframe					
 			$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px;" src="' . $video_url . '" /></iframe>';
 							
 		}
@@ -223,7 +227,7 @@ function mp_core_oembed_get($video_url, $args = NULL){
 		
 		//Video code without width and height attributes
 		$iframe_code = preg_replace('/(<[^>]+) width=".*?"/i', '$1', preg_replace('/(<[^>]+) height=".*?"/i', '$1', html_entity_decode($video_url)));
-		
+				
 		//If there is a value in $iframe_code
 		if ( !empty($iframe_code) ){
 			
