@@ -34,9 +34,12 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.2 = October X, 2014
+= 1.0.0.2 = November 19, 2014
 * Added the mp_core_value_exists function for checking saved values
 * Used new mp_core_value_exists to apply field defaults if the user has never saved it.
+* Added Time Ago function for getting the date in a string like (1 week ago) etc
+* Fixed issue with Installation of plugins from directory pages
+* Added function which wraps media items in their html tag equivalent (mp_core_wrap_media_url_in_html_tag)
 
 = 1.0.0.1 = October 9, 2014
 * Made Theme and Plugin updates more efficient
