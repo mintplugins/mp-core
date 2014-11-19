@@ -578,3 +578,43 @@ function mp_core_array_sort_by_key( $array, $key, $order=SORT_ASC )
 
     return $new_array;
 }
+
+/**
+ * Wrap a url in it's appropriate HTML5 tag for displaying
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $array array The array we want to sort.
+ * @param    $key String The key we wish to sort by (eg create a 'date' key in sub-arrays and pass the word 'date' to sort by that number.
+ * @return   $order SORT_DESC or SORT_ASC 
+ */
+function mp_core_wrap_media_url_in_html_tag( $url, $args = array() ){
+   	
+	$defaults = array(
+		'autoplay_videos' => false
+	);
+	
+	$args = wp_parse_args( $args, $defaults );
+	$autoplay = $args['autoplay_videos'] ? 'autoplay' : NULL;
+	
+	$info     = pathinfo($url);
+	$basename = isset( $info['basename'] ) ? $info['basename'] : NULL;
+	$ext      = isset( $info['extension'] ) ? $info['extension'] : NULL;
+	
+	if ( $ext == 'jpg' || $ext == 'png' ){
+		$return_html = '<img src="' . $url . '" style="max-width:100%;" />';	
+	}
+	else if ( $ext == 'mp4' ){
+		$return_html = '<video controls ' . $autoplay . ' name="media" style="max-width:100%;">
+			<source src="' . $url . '" type="video/mp4">
+		</video>';	
+	}
+	else{
+		
+		return mp_core_oembed_get( $url );
+	}
+	
+	return $return_html;
+}
+
+}
