@@ -83,6 +83,9 @@ jQuery(document).ready(function($){
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
+					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
+						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('['+ (name_number-1) +']', '[' + (name_number) +']') );
+					}
 					
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
@@ -173,6 +176,10 @@ jQuery(document).ready(function($){
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
+					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
+						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('[1]', '[0]') );
+					}
+					
 					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 				});	
 			}else{
@@ -192,6 +199,9 @@ jQuery(document).ready(function($){
 					}
 					if ( this.href ){
 						this.href = this.href.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
+					}
+					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
+						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('['+ (name_number+1) +']', '[' + (name_number) +']') );
 					}
 				});	
 			}
@@ -583,6 +593,61 @@ jQuery(document).ready(function($){
 		$(this).next().html($(this).val());
 	});
 
+	//Conditional Fields - Fields that are only shown if a dropdown is set to a specific value
+	$(document).find("[mp_conditional_field_id]").each(function(){
+		
+		//Get the name of this fields parent conditional field
+		var parent_conditional_field_name = $(this).attr('mp_conditional_field_id');
+				
+		//Get the name of this value that parent needs to be set to in order for this field to be visible
+		var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
+						
+		//If the parent's value is set to what it should be for this field to be visible
+		if ( $.inArray( $( '[name="' + parent_conditional_field_name + '"]' ).val(), desired_conditional_field_values ) != -1 ){
+						
+			//Show this field
+			$(this).css( 'visibility', 'visible');
+			$(this).css( 'position', '');
+				
+		}
+		else{
+			//Hide this field - we don't use display block because the showhiders already use it
+			$(this).css( 'visibility', 'hidden');
+			$(this).css( 'position', 'absolute');
+		}
+		
+	});
+	
+	//When any mp_field select is changed
+	$( document ).on( 'change', '.mp_field select', function(){
+		
+		//Store this select field's class name and object
+		parent_name = $(this).attr('name');
+		parent_conditional_field = $(this);
+		
+		//Find any fields that have this field as a conditional parent
+		$(document).find('[mp_conditional_field_id="' + parent_name + '"]').each(function(){
+			
+			//Get the name of this value that parent needs to be set to in order for this field to be visible
+			var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
+					
+			//If the parent's value is set to what one of the values should be for this field to be visible
+			if ( $.inArray( $( parent_conditional_field ).val(), desired_conditional_field_values ) != -1 ){
+				
+				//Show this field
+				$(this).css( 'visibility', 'visible');
+				$(this).css( 'position', '');
+					
+			}
+			else{
+				//Hide this field - we don't use display block because the showhiders already use it
+				$(this).css( 'visibility', 'hidden');
+				$(this).css( 'position', 'absolute');
+			}
+			
+		});
+		
+	});
 	
 	//Showhider indentation
 	$(document).find("[showhider]").each(function(){
