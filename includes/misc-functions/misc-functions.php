@@ -548,6 +548,7 @@ function mp_core_array_sort_by_key( $array, $key, $order=SORT_ASC )
 {
     $new_array = array();
     $sortable_array = array();
+	$array = mp_core_object_to_array( $array );
 
     if (count($array) > 0) {
         foreach ($array as $k => $v) {
@@ -578,6 +579,60 @@ function mp_core_array_sort_by_key( $array, $key, $order=SORT_ASC )
 
     return $new_array;
 }
+
+/**
+ * Convert an stdObject to a multidimentional array
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $object object The object we want to convert into a multidimentional array.
+ * @return   $object array The converted array.
+ */
+function mp_core_object_to_array( $object ) {
+	if (is_object($object)) {
+		// Gets the properties of the given object
+		// with get_object_vars function
+		$object = get_object_vars($object);
+	}
+
+	if (is_array($object)) {
+		/*
+		* Return array converted to object
+		* Using __FUNCTION__ (Magic constant)
+		* for recursive call
+		*/
+		return array_map(__FUNCTION__, $object);
+	}
+	else {
+		// Return array
+		return $object;
+	}
+}
+
+/**
+ * Convert an stdObject to a multidimentional array
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $array array The multidimentional array we want to convert into an object.
+ * @return   $array object The converted object.
+ */
+function mp_core_array_to_object( $array ) {
+	if (is_array($array)) {
+		/*
+		* Return array converted to object
+		* Using __FUNCTION__ (Magic constant)
+		* for recursive call
+		*/
+		return (object) array_map(__FUNCTION__, $array);
+	}
+	else {
+		// Return object
+		return $array;
+	}
+}
+ 
+ 
 
 /**
  * Wrap a url in it's appropriate HTML5 tag for displaying
@@ -622,7 +677,7 @@ function mp_core_wrap_media_url_in_html_tag( $url, $args = array() ){
  *
  * @access   public
  * @since    1.0.0
- * @param    $date string A date
+ * @param    $date string A date or timestamp
  * @return   $time_ago string The time ago that this date is
  */
 function mp_core_time_ago( $date ){
@@ -637,8 +692,15 @@ function mp_core_time_ago( $date ){
     $lengths = array("60","60","24","7","4.35","12","10");
 
     $now = time();
-
-    $unix_date = strtotime( $date );
+	
+	//If the user passed a timestamp - don't try and convert it - just use it ya dingus!
+	if ( is_numeric( $date ) && (int)$date == $date ){
+		$unix_date = $date;
+	}
+	//If the user passed a date string - convert it to a timestamp.
+	else{
+    	$unix_date = strtotime( $date );
+	}
 
     // check validity of date
 

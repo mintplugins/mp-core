@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.0
-Stable tag: 1.0.0.1
+Tested up to: 4.1
+Stable tag: 1.0.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.0.3 = November X, 2014
+* Added conditionally visible metafields - only shown if their parent has value X
+* Added mp_core_object_to_array, mp_core_array_to_object, mp_core_time_ago functions
 
 = 1.0.0.2 = November 19, 2014
 * Added the mp_core_value_exists function for checking saved values
