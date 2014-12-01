@@ -34,7 +34,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.3 = November X, 2014
+= 1.0.0.3 = December 1, 2014
 * Added conditionally visible metafields - only shown if their parent has value X
 * Added mp_core_object_to_array, mp_core_array_to_object, mp_core_time_ago functions
 
