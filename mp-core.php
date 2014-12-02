@@ -105,6 +105,11 @@ add_action( 'init', 'mp_core_textdomain', 1 );
 */
 
 /**
+ * Activation Hook Function
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/misc-functions/install.php' );
+
+/**
  * Include Plugin Installer Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.php' );
