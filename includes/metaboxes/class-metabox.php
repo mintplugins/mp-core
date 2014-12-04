@@ -467,7 +467,14 @@ if (!class_exists('MP_CORE_Metabox')){
 		    // If it is our form has not been submitted, so we dont want to do anything
 		  	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
 				return;
-		
+				
+			//Check if this post has ever been saved through MP Core before
+			$previously_saved = get_post_meta( $this->_post_id, 'mp_core_previously_saved', true);
+			$previously_saved = !empty( $previously_saved ) ? true : false;
+			
+			//Tell this function that next time, this post has been saved
+			update_post_meta( $this->_post_id, 'mp_core_previously_saved', true );
+			
 			//these_repeater_fields variable holds repeated values to be saved in database
 			$these_repeater_field_id_values = array();
 			//Set default for $repeater to false
@@ -527,8 +534,8 @@ if (!class_exists('MP_CORE_Metabox')){
 								
 							}
 							
-							//If the value has changed, update this meta value. Otherwise, dont.
-							if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
+							//If the value has changed OR it's never been previously saved, update this meta value. Otherwise, dont.
+							if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values || !$previously_saved ){
 								// Update $these_repeater_field_id_values 
 								update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 							}
@@ -612,8 +619,8 @@ if (!class_exists('MP_CORE_Metabox')){
 							
 						}
 						
-						//If the value has changed, update this meta value. Otherwise, dont.
-						if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
+						//If the value has changed or it's never been previously saved, update this meta value. Otherwise, dont.
+						if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values || !$previously_saved){
 							// Update $these_repeater_field_id_values 
 							update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 						}
@@ -641,12 +648,12 @@ if (!class_exists('MP_CORE_Metabox')){
 					}
 					
 					//If this hasn't been saved or there is a glitch with the PHP session for some reason
-					if ( !isset( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] ) ){
+					if ( !isset( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] ) || !$previously_saved){
 						// Update $data 
 						update_post_meta($this->_post_id, $field['field_id'], $data);
 					}
 					//If the value has changed, update this meta value. Otherwise, dont.
-					else if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] != $data ){
+					else if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] != $data || !$previously_saved){
 						// Update $data 
 						update_post_meta($this->_post_id, $field['field_id'], $data);
 					}
@@ -674,8 +681,8 @@ if (!class_exists('MP_CORE_Metabox')){
 					
 				}
 				
-				//If the value has changed, update this meta value. Otherwise, dont.
-				if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values ){
+				//If the value has changed or this post has never been previously saves, update this meta value. Otherwise, dont.
+				if ( $_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$prev_repeater] !== $saved_comparison_field_id_values || !$previously_saved){
 					// Update $these_repeater_field_id_values 
 					update_post_meta($this->_post_id, $prev_repeater, $these_repeater_field_id_values);
 				}
