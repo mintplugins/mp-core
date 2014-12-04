@@ -274,6 +274,11 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			}
 			
 			$update_data = json_decode( wp_remote_retrieve_body( $response ) );
+			
+			//If there is no update data, return false
+			if( empty( $update_data ) ){
+				return false;	
+			}
 										
 			//temporarily added this so that the url in the transient isn't blank and won't trigger an error - Philj
 			if ( isset( $update_data->homepage ) ){
