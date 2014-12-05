@@ -120,6 +120,11 @@ require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-installer.ph
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-checker/class-plugin-checker.php' );
 
 /**
+ * Parent Plugin Installation Class - used with activation hooks for plugins that are license and require other plugins
+ */
+require( MP_CORE_PLUGIN_DIR . 'includes/activations/class-parent-plugin-installation.php' );
+
+/**
  * Include Plugin Directory Class
  */
 require( MP_CORE_PLUGIN_DIR . 'includes/plugin-directory/class-plugin-directory.php' );
