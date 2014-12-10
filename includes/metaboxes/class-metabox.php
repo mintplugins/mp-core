@@ -575,10 +575,10 @@ if (!class_exists('MP_CORE_Metabox')){
 												
 												//Sanitize each field according to its type
 												if ( $child_loop_field['field_type'] == 'textarea' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( mp_core_fix_quotes( $field_value ), ENT_QUOTES | ENT_SUBSTITUTE, "utf-8" ); 
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( mp_core_fix_quotes( $field_value ) ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ) ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = mp_core_fix_quotes( sanitize_text_field( $field_value ) );	
