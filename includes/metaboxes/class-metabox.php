@@ -578,7 +578,7 @@ if (!class_exists('MP_CORE_Metabox')){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( mp_core_fix_quotes( $field_value ) ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( wp_kses( wpautop( mp_core_fix_quotes( $field_value ), true ), $allowed_tags ) ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $field_value ) ), true ), $allowed_tags ) ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = mp_core_fix_quotes( sanitize_text_field( $field_value ) );	
@@ -641,7 +641,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( $post_value ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
+						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $post_value ) ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
 					}
 					else{
 						$data = mp_core_fix_quotes( $post_value );
