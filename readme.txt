@@ -38,6 +38,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
 * Took port number out of mp_core_get_current_url function. 
 * Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently
+* Changed html_entities on metabox saves to esc_html
 
 = 1.0.0.3 = December 1, 2014
 * Added conditionally visible metafields - only shown if their parent has value X
