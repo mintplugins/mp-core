@@ -1,4 +1,12 @@
 <p>
+<strong>1.0.0.4 December 12, 2014</strong>
+<ul>
+    <li>Changed metabox save routine to save all fields if it is the first time it is ever being saved</li>
+    <li>Took port number out of mp_core_get_current_url function. </li>
+    <li>Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently</li>
+    <li>Changed html_entities on metabox saves to esc_html</li>
+    <li>Added mp_core_fix_nbsp function to fix the black diamond question mark that shows up in tinymce fields</li>
+</ul>
 <strong>1.0.0.3 December 1, 2014</strong>
 <ul>
     <li>Added conditionally visible metafields - only shown if their parent has value X</li>

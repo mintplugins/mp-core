@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.3
+Stable tag: 1.0.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.4 = December X, 2014
+= 1.0.0.4 = December 12, 2014
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
 * Took port number out of mp_core_get_current_url function. 
 * Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently
