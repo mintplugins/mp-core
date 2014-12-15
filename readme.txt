@@ -34,6 +34,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.0.5 = December X, 2014
+* Changes the save routine for single meta fields to match the changes made for repeaters (quotes, esc_html)
+
 = 1.0.0.4 = December 12, 2014
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
 * Took port number out of mp_core_get_current_url function. 

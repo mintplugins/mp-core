@@ -638,13 +638,13 @@ if (!class_exists('MP_CORE_Metabox')){
 					$allowed_tags = wp_kses_allowed_html( 'post' );
 					
 					if ( $field['field_type'] == 'textarea' ){
-						$data = htmlentities( wp_kses( mp_core_fix_quotes( $post_value ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
+						$data = esc_html( mp_core_fix_quotes( $post_value ) );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = htmlentities( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $post_value ) ), true ), $allowed_tags ), ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8" );
+						$data = esc_html( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $post_value ) ), true ), $allowed_tags ) );
 					}
 					else{
-						$data = mp_core_fix_quotes( $post_value );
+						$data = mp_core_fix_quotes( sanitize_text_field( $post_value ) );
 					}
 					
 					//If this hasn't been saved or there is a glitch with the PHP session for some reason
