@@ -413,11 +413,11 @@ function mp_core_word_count($html) {
  * @param    $limit int The number of words to limit the text to
  * @return   $text  string The limited string
  */
-function mp_core_limit_text_to_words($text, $limit) {
+function mp_core_limit_text_to_words($text, $limit) {	
   if (mp_core_word_count($text) > $limit) {
 	  $words = str_word_count($text, 2);
 	  $pos = array_keys($words);
-	  $text = substr($text, 0, $pos[$limit]);
+	  $text = isset( $pos[$limit] ) ? substr($text, 0, $pos[$limit]) : $text;
   }
   return $text;
 }
