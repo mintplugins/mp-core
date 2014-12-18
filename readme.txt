@@ -35,7 +35,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 == Changelog ==
 
 = 1.0.0.5 = December X, 2014
-* Changes the save routine for single meta fields to match the changes made for repeaters (quotes, esc_html)
+* Changes the save routine for single meta fields to match the changes made for repeaters in 1.0.0.4 (quotes, esc_html)
+* Make metaboxes save every field upon every save. This was supposed to save time but was failing.
 
 = 1.0.0.4 = December 12, 2014
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
