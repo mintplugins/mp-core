@@ -471,6 +471,8 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Check if this post has ever been saved through MP Core before
 			$previously_saved = get_post_meta( $this->_post_id, 'mp_core_previously_saved', true);
 			$previously_saved = !empty( $previously_saved ) ? true : false;
+			//Temporary override
+			$previously_saved = false;
 			
 			//Tell this function that next time, this post has been saved
 			update_post_meta( $this->_post_id, 'mp_core_previously_saved', true );
