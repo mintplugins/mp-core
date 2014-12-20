@@ -45,6 +45,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Get args
 			$this->_args = $args;		
+				
+			//If we are not in the admin section of WP, get out of here
+			if ( !is_admin() ){
+				return;	
+			}
 									
 			//Set up hooks.
 			$this->hook();

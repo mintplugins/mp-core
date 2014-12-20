@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.4
+Stable tag: 1.0.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,9 +34,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.5 = December X, 2014
+= 1.0.0.5 = December 20, 2014
 * Changes the save routine for single meta fields to match the changes made for repeaters in 1.0.0.4 (quotes, esc_html)
 * Make metaboxes save every field upon every save. This was supposed to save time but was failing.
+* Made plugin updater only run if is_admin
 
 = 1.0.0.4 = December 12, 2014
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
