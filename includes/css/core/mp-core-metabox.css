@@ -320,8 +320,3 @@ output {
 	float:right;
 	margin-left:10px;
 }
-
-/* Hide the "File" menu that sometimes appears on tinymce */
-.mce-flow-layout{
-	display:none!important;	
-}
