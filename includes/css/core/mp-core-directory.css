@@ -64,7 +64,9 @@
 		min-height:55px;	
 	}
 }
-
+#mp-directory-items .plugin-card{
+	margin-left:0!important;
+}
 /*Pagination on Directory Pages */
 .mp-core-directory .tablenav{
 	display: inline-block;
