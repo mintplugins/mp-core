@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.5
+Stable tag: 1.0.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,9 +34,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.6 = December X, 2014
+= 1.0.0.6 = December 23, 2014
 * Fixed Directory layout css where boxes weren’t lining up
 * Added Mint Plugins as a tab on the Plugins > Add New screen.
+* Fixed the hiding of TinyMCE Controls (this broke in v1.0.0.5)
 
 = 1.0.0.5 = December 20, 2014
 * Changes the save routine for single meta fields to match the changes made for repeaters in 1.0.0.4 (quotes, esc_html)
