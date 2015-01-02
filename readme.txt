@@ -35,6 +35,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 == Changelog ==
 
 = 1.0.0.6 = December 23, 2014
+* Made field presets only show up if the post has never been saved (for metaboxes).
+* Made checkboxes able to be checked by default in metaboxes.
+* Removed gap below videos through mp_core_oembed_get by floating left.
+
+= 1.0.0.6 = December 23, 2014
 * Fixed Directory layout css where boxes weren’t lining up
 * Added Mint Plugins as a tab on the Plugins > Add New screen.
 * Fixed the hiding of TinyMCE Controls (this broke in v1.0.0.5)
