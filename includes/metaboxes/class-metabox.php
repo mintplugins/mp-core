@@ -366,31 +366,17 @@ if (!class_exists('MP_CORE_Metabox')){
 				else{
 					//And it's also not a repeater at all. It is a single field.
 					if ( !isset($field['field_repeater']) ){
+	
+						// Use mp_core_get_post_meta_or_never_been_saved to retrieve an existing value from the database or 'never_been_saved' if it was never previously saved.
+						$value = mp_core_get_post_meta_or_false_if_never_saved( $this->_post_id, $key = $field['field_id'] );
 						
-						// Use get_post_meta to retrieve an existing value from the database and use the value for the form
-						$value = mp_core_get_post_meta( $this->_post_id, $key = $field['field_id'], 'never_been_saved' );
+						//If this field has never been saved before 
+						if ( $value == 'never_been_saved' ){
 							
-						//If this field has been saved before 
-						if ( $value != 'never_been_saved' ){
-							
-							//Store this value in the global metabox array so we can check for change upon save
-							$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] = $value;
-						
-							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
-							if ($field['field_type'] != "checkbox"){
-								$value = isset($value) ? $value : $field['field_value'];
-							}
-						//If this field has never been saved before, set value to the passed-in value - unless there hasn't been a value passed in. In that case make it empty
-						}else{
-							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
-							if ($field['field_type'] != "checkbox"){
-								$value = isset($field['field_value']) ? $field['field_value'] : '';
-							}
-							//If this is a checkbox
-							else{
-								$value = isset($field['field_value']) ? $field['field_value'] : '';
-							}
+							//Set the value to be the pre-set value for this field passed-in.					
+							$value = isset($field['field_value']) ? $field['field_value'] : '';
 						}
+						
 						//If field required hasn't been set, set it to be false
 						$field_required = isset( $field['field_required'] ) ? $field['field_required'] : false;
 						//if $field_select_values hasn't been set, set it to be NULL
@@ -755,8 +741,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -809,8 +794,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -860,8 +844,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -970,8 +953,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1024,8 +1006,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1078,8 +1059,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1132,8 +1112,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1186,8 +1165,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1236,8 +1214,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1290,8 +1267,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1355,8 +1331,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1418,8 +1393,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1487,8 +1461,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1542,8 +1515,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1596,8 +1568,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
@@ -1666,8 +1637,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the output for html5 required field
 			$field_required_output = $field_required == true ? 'required="required"' : '';
 			
-			//If there is no value saved but there is a default value, user that value
-			$field_value = mp_core_value_exists( $field_value ) ? $field_value : $field_preset_value;
+			
 			
 			//Get the non-repeater field ID and use it as a class for the icon
 			$icon_class = explode( '[', $field_id );
