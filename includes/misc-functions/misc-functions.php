@@ -103,6 +103,66 @@ function mp_core_fix_nbsp( $string ){
 }
 
 /**
+ * Get a post meta or, if it's never been saved, return false. This function is based on the "get_metadata" function in WP core.
+ *
+ * @param int $object_id ID of the object metadata is for
+ * @param string $meta_key Metadata key. 
+ * @return string|array Single metadata value, or array of values
+ */
+function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
+	if ( ! is_numeric( $object_id ) ) {
+		return false;
+	}
+
+	$object_id = absint( $object_id );
+	if ( ! $object_id ) {
+		return false;
+	}
+
+	/**
+	 * Filter whether to retrieve metadata of a specific type.
+	 *
+	 * The dynamic portion of the hook, $meta_type, refers to the meta
+	 * object type (comment, post, or user). Returning a non-null value
+	 * will effectively short-circuit the function.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param null|array|string $value     The value get_metadata() should
+	 *                                     return - a single metadata value,
+	 *                                     or an array of values.
+	 * @param int               $object_id Object ID.
+	 * @param string            $meta_key  Meta key.
+	 * @param string|array      $single    Meta value, or an array of values.
+	 */
+	$check = apply_filters( "get_post_metadata", null, $object_id, $meta_key, true );
+	if ( null !== $check ) {
+		if ( $single && is_array( $check ) )
+			return $check[0];
+		else
+			return $check;
+	}
+
+	$meta_cache = wp_cache_get($object_id, 'post' . '_meta');
+
+	if ( !$meta_cache ) {
+		$meta_cache = update_meta_cache( 'post', array( $object_id ) );
+		$meta_cache = $meta_cache[$object_id];
+	}
+
+	if ( !$meta_key )
+		return $meta_cache;
+
+	if ( isset($meta_cache[$meta_key]) ) {
+		return maybe_unserialize( $meta_cache[$meta_key][0] );
+	}
+	
+	//Return string if this field has never been saved before (with the number added just to make it extremely unlikely that a field would save this exact value for another purpose. Don't hate the playa, hate the game).
+	return 'never_been_saved_73698363746983746';
+	
+}
+
+/**
  * Get a post meta value and return a default if empty
  *
  * @since    1.0.0
