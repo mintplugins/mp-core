@@ -368,10 +368,10 @@ if (!class_exists('MP_CORE_Metabox')){
 					if ( !isset($field['field_repeater']) ){
 	
 						// Use mp_core_get_post_meta_or_never_been_saved to retrieve an existing value from the database or 'never_been_saved' if it was never previously saved.
-						$value = mp_core_get_post_meta_or_false_if_never_saved( $this->_post_id, $key = $field['field_id'] );
+						$value = mp_core_get_post_meta_or_never_been_saved( $this->_post_id, $key = $field['field_id'] );
 						
 						//If this field has never been saved before 
-						if ( $value == 'never_been_saved' ){
+						if ( $value == 'never_been_saved_73698363746983746' ){
 							
 							//Set the value to be the pre-set value for this field passed-in.					
 							$value = isset($field['field_value']) ? $field['field_value'] : '';
