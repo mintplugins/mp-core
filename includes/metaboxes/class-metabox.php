@@ -320,7 +320,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						//This repeater has never been saved
 						else{
 							//Create start of div for this repeat 
-							echo '<li class="' . $field['field_repeater'] . '_repeater postbox"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle">
+							echo '<li class="' . $field['field_repeater'] . '_repeater"> <div class="handlediv" title="Click to toggle"><br></div><h3 class="mp_drag hndle">
 										<div class="mp-core-repeater-title">' . __( 'Enter Info:', 'mp_core' ) . '</div>
 										<div class="mp-core-repeater-values-description"></div>
 										<div class="mp-core-repeater-values-ellipses">...</div>
@@ -371,10 +371,12 @@ if (!class_exists('MP_CORE_Metabox')){
 				else{
 					//And it's also not a repeater at all. It is a single field.
 					if ( !isset($field['field_repeater']) ){
-						//If this post has been saved previously
-						if ( isset($_GET['post'])){
-							// Use get_post_meta to retrieve an existing value from the database and use the value for the form
-							$value = get_post_meta( $this->_post_id, $key = $field['field_id'], $single = true );
+						
+						// Use get_post_meta to retrieve an existing value from the database and use the value for the form
+						$value = mp_core_get_post_meta( $this->_post_id, $key = $field['field_id'], 'never_been_saved' );
+							
+						//If this field has been saved before 
+						if ( $value != 'never_been_saved' ){
 							
 							//Store this value in the global metabox array so we can check for change upon save
 							$_SESSION['mp_core_metabox_prev_values'][$this->_args['metabox_id']][$this->_post_id][$field['field_id']] = $value;
@@ -383,9 +385,16 @@ if (!class_exists('MP_CORE_Metabox')){
 							if ($field['field_type'] != "checkbox"){
 								$value = isset($value) ? $value : $field['field_value'];
 							}
-						//If this post has never been saved before, set value to the passed-in value - unless there hasn't been a value passed in. In that case make it empty
+						//If this field has never been saved before, set value to the passed-in value - unless there hasn't been a value passed in. In that case make it empty
 						}else{
-							$value = isset($field['field_value']) ? $field['field_value'] : '';
+							// If this is not a checkbox, set any empty settings to be the values set in the passed-in array, otherwise, leave them empty.
+							if ($field['field_type'] != "checkbox"){
+								$value = isset($field['field_value']) ? $field['field_value'] : '';
+							}
+							//If this is a checkbox
+							else{
+								$value = isset($field['field_value']) ? $field['field_value'] : '';
+							}
 						}
 						//If field required hasn't been set, set it to be false
 						$field_required = isset( $field['field_required'] ) ? $field['field_required'] : false;
