@@ -107,7 +107,7 @@ function mp_core_fix_nbsp( $string ){
  *
  * @param int $object_id ID of the object metadata is for
  * @param string $meta_key Metadata key. 
- * @return string If never been saved return: 'never_been_saved_73698363746983746' otherwise return the value saved for this meta.
+ * @return string If never been saved return: 'never_been_saved_73698363746983746' otherwise return the value saved for this meta. 
  */
 function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
 	if ( ! is_numeric( $object_id ) ) {
