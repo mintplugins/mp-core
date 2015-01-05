@@ -73,7 +73,7 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 			if ($aq_width > ($orig_w) || $aq_height > ($orig_h)){	
 			
 				//If the width is greater than the height
-				if ( $aq_width > $aq_height ){
+				if ( $aq_width > $aq_height && $aq_height > 0 ){
 					
 					//Find the lowest common denominator of width=? when height=1
 					$width_lcd = $aq_width / $aq_height;
@@ -107,7 +107,7 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 								
 				}
 				//If the height is greater than the width
-				else if ( $aq_height > $aq_width ){
+				else if ( $aq_height > $aq_width && $aq_width > 0){
 					
 					//Find the lowest common denominator of width=? when height=1
 					$height_lcd = $aq_height / $aq_width;
