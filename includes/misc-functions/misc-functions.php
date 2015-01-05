@@ -835,6 +835,9 @@ function mp_core_open_graph_video_meta_tags( $video_url ){
 	else{
 		$og_video_url = $video_url;	
 	}
+	
 	$content_output = '<meta property="og:video" content="' . $og_video_url . '">
 	<meta property="og:type" content="video.other">';
+	
+	return $content_output;
 }
