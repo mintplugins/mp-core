@@ -812,3 +812,29 @@ function mp_core_time_ago( $date ){
     return "$difference $periods[$j] {$tense}";
 
 }
+
+/**
+ * Get the html meta tags for facebook open graph for a video
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $date video_url A url to a video
+ * @return   $meta_tagts string the meta tags which should be placed in the header to make Open Graph display a video correctly.
+ */
+function mp_core_open_graph_video_meta_tags( $video_url ){
+	//Find the youtube video id by checking all the types of urls we could be given
+	if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $video_url, $match)) {
+		$youtube_video_code = $match[1];
+		$og_video_url = 'https://youtube.com/v/' . $youtube_video_code;
+	}
+	//Vimeo format of open graph (og)
+	else if( strpos( $video_url, 'vimeo.com' )  !== false ){
+		$vimeo_video_code = explode( '://vimeo.com/', $video_url );
+		$og_video_url = 'http://vimeo.com/moogaloop.swf?clip_id=' . $vimeo_video_code[1];	
+	}
+	else{
+		$og_video_url = $video_url;	
+	}
+	$content_output = '<meta property="og:video" content="' . $og_video_url . '">
+	<meta property="og:type" content="video.other">';
+}
