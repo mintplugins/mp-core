@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.6
+Stable tag: 1.0.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,10 +34,12 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.6 = December 23, 2014
-* Made field presets only show up if the post has never been saved (for metaboxes).
+= 1.0.0.7 = January X, 2014
+* Made field presets only show up if the field has never been saved (for metaboxes).
 * Made checkboxes able to be checked by default in metaboxes.
 * Removed gap below videos through mp_core_oembed_get by floating left.
+* Removed global post from mp_core_the_featured_image because it was un-needed and caused a bug.
+* Divide by zero fix for aq_resizer.
 
 = 1.0.0.6 = December 23, 2014
 * Fixed Directory layout css where boxes weren’t lining up
