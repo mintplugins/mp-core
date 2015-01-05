@@ -34,7 +34,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.7 = January X, 2014
+= 1.0.0.7 = January 4, 2014
 * Made field presets only show up if the field has never been saved (for metaboxes).
 * Made checkboxes able to be checked by default in metaboxes.
 * Removed gap below videos through mp_core_oembed_get by floating left.
