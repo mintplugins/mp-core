@@ -33,9 +33,9 @@
  */
 function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = NULL, $before = NULL, $after = NULL ){
 	
-	//Default setting for post id if blank
-	global $post;
-	$post_id = isset( $post_id ) ? $post_id : isset( $post->ID ) ? $post->ID : NULL;
+	if ( empty( $post_id ) ){
+		return false;	
+	}
 	
 	//Default width if blank
 	$width = isset( $width ) ? $width : 600;
@@ -48,7 +48,9 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 	
 	//get the post thumbnail for this post
 	$image_id = get_post_thumbnail_id($post_id);  
+	
 	if ($image_id != ""){ 
+	
 		$image_url = wp_get_attachment_image_src($image_id,'full');  
 		$image_url = $image_url[0];
 		
