@@ -24,11 +24,6 @@
  */
 function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_animate, $animation_repeater ){
 	
-	//If we are on an iphone, ipad, android, or other touch enabled screens, don't do this because mouse over's aren't available
-	if ( mp_core_is_iphone() || mp_core_is_ipad() || mp_core_is_android() ){
-		return;	
-	}
-	
 	//Set the first frame CSS
 	$js_output = '<style type="text/css" id="' . str_replace(' ', '', str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate))) . '">';
 	
@@ -48,16 +43,47 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 				' . mp_core_js_animate_set_first_keyframe( "$(this).find('" . $mouse_over_string . ' ' . $child_to_animate . "')", $animation_repeater ) . '
 			});
 			
-			$( document ).trigger(\'mp_core_animation_set_first_keyframe_trigger\');
+			$( document ).trigger(\'mp_core_animation_set_first_keyframe_trigger\');';
 			
-			$( document ).on( \'mouseenter\', \'' . $mouse_over_string . '\', function(event){
-				' . mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
-			'}); 
+			//If we are on an iphone, ipad, android, or other touch enabled screens, run the animations on the first touch, then go to the link on the second
+			if ( mp_core_is_iphone() || mp_core_is_ipad() || mp_core_is_android() ){
+				
+				$js_output .= '
+				//On mobile, the first click runs the animation and the second goes to the link.
+				$( document ).on( \'touchstart\', \'' . $mouse_over_string . '\', function(event){
 			
-			$( document ).on( \'mouseleave\', \'' . $mouse_over_string . '\', function(event){
-				' . mp_core_js_reverse_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
-			'}); 	
+					if ( typeof $(this).attr(\'mp_core_animation_run\') == \'undefined\' ){
+						
+						var this_element = $(this);
+						
+						event.preventDefault();
+											
+						' . mp_core_js_animate_element( "this_element.find('" . $child_to_animate . "')", $animation_repeater ) . '
+						
+						setInterval(function(){ 
+							
+							this_element.attr(\'mp_core_animation_run\', \'true\');
+							
+						}, 30);
+						
+					}
+				});';
+			}
+			//If we are not on mobile, run the animations on mouseenter and mouseleave
+			else{
 			
+				$js_output .= '
+					$( document ).on( \'mouseenter\', \'' . $mouse_over_string . '\', function(event){
+						' . mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
+					'}); 
+					
+					$( document ).on( \'mouseleave\', \'' . $mouse_over_string . '\', function(event){
+						' . mp_core_js_reverse_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
+					'});';
+			}
+			
+			$js_output .= '
+						
 			//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
 			$(document).find("#' . str_replace(' ', '', str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate))) . '").remove(); 
 		});
