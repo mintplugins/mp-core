@@ -320,3 +320,6 @@ output {
 	float:right;
 	margin-left:10px;
 }
+.mce-menubar{
+	display:none!important;	
+}
