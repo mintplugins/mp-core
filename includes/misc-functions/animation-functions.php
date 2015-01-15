@@ -50,7 +50,7 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 				
 				$js_output .= '
 				//On mobile, the first click runs the animation and the second goes to the link.
-				$( document ).on( \'touchstart\', \'' . $mouse_over_string . '\', function(event){
+				$( document ).on( \'touchend\', \'' . $mouse_over_string . '\', function(event){
 			
 					if ( typeof $(this).attr(\'mp_core_animation_run\') == \'undefined\' ){
 						
