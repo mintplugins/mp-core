@@ -54,7 +54,7 @@ class MP_CORE_Show_License_Form_In_Notices{
 			?>
 			<div id="<?php echo $this->_plugin_name_slug; ?>-plugin-license-wrap-in-notices" class="error wrap">
 				
-				<p class="plugin-description"><?php echo __( "Enter your license for ", 'mp_core' ) . $this->_args['plugin_name']; ?></p>
+				<p class="plugin-description"><?php echo __( "Enter your license to complete installation of ", 'mp_core' ) . $this->_args['plugin_name']; ?></p>
 				
 				<form method="post">
 								
