@@ -37,6 +37,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 = 1.0.0.8 = January X, 2015
 * Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.
 * Fixed TinyMCE Text Areas when repeated. Now they reset to the Visual Mode when moved in the DOM.
+* Improved Metabox Sanitation prior to saves.
+* Added mp_core_post_exists function to check if a post exists.
 
 = 1.0.0.7 = January 4, 2015
 * Made field presets only show up if the field has never been saved (for metaboxes).
