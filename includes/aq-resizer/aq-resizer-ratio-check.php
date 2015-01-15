@@ -39,7 +39,7 @@ if ( !function_exists( 'aq_resize_get_pixelratio' ) ){
 						if( window.devicePixelRatio >= 2 ){
 							the_cookie = "pixel_ratio="+window.devicePixelRatio+";"+the_cookie;
 							document.cookie = the_cookie;
-							location = '<?php $_SERVER['PHP_SELF'] ?>';
+							//location = '<?php $_SERVER['PHP_SELF'] ?>';
 						}
 					}
 				}
