@@ -538,10 +538,10 @@ if (!class_exists('MP_CORE_Metabox')){
 												
 												//Sanitize each field according to its type
 												if ( $child_loop_field['field_type'] == 'textarea' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( mp_core_fix_quotes( $field_value ) ); 
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses( mp_core_fix_quotes( esc_html( $field_value ) ), $allowed_tags ); 
 												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
-													$these_repeater_field_id_values[$repeater_counter][$field_id] = esc_html( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $field_value ) ), true ), $allowed_tags ) ); 									
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( wpautop( $field_value, true ) ) ) ), $allowed_tags ); 									
 												}
 												else{
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = mp_core_fix_quotes( sanitize_text_field( $field_value ) );	
@@ -580,10 +580,10 @@ if (!class_exists('MP_CORE_Metabox')){
 					$allowed_tags = wp_kses_allowed_html( 'post' );
 					
 					if ( $field['field_type'] == 'textarea' ){
-						$data = esc_html( mp_core_fix_quotes( $post_value ) );
+						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html($post_value ) ) ), $allowed_tags );
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
-						$data = esc_html( wp_kses( wpautop( mp_core_fix_quotes( mp_core_fix_nbsp( $post_value ) ), true ), $allowed_tags ) );
+						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( wpautop( $post_value, true ) ) ) ), $allowed_tags );
 					}
 					else{
 						$data = mp_core_fix_quotes( sanitize_text_field( $post_value ) );
