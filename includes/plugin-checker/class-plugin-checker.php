@@ -214,6 +214,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 						
 			//Check plugins and store needed ones in $plugins
 			$plugins = $this->mp_core_check_plugins( $this->_args, false );
+			
+			//If there are no plugins to show, return false.
+			if ( empty( $plugins ) ){
+				return false;	
+			}
 						
 			//Loop through each plugin that is supposed to be installed
 			foreach ( $plugins as $plugin_key => $plugin ){
