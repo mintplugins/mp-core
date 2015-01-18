@@ -245,7 +245,7 @@ function mp_core_oembed_get($video_url, $args = NULL){
 		
 	}
 
-	$html_output = '<div class="mp-core-oembed-full-width-div" style="display:inline-block; position:relative; width:100%; float:left;';
+	$html_output = '<div class="mp-core-oembed-full-width-div" style="display:inline-block; position:relative; width:100%; vertical-align:top;';
 	$html_output .= !empty( $args['min_width'] ) ? ' min-width:' . $args['min_width'] . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= !empty( $args['max_width'] ) ? ' max-width:' . $args['max_width'] . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= '">';
