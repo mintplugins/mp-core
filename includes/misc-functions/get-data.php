@@ -427,5 +427,13 @@ function mp_core_get_term_top_most_parent( $term_id, $taxonomy ){
  * @since    1.0.0
  */
 function mp_core_post_exists( $id ){
-  return is_string( get_post_status( $id ) );
+
+	$post_status = get_post_status( $id );
+	
+	//Posts in the trash don't REALLY "exist" - at least in the context we are talking about here.
+	if ( $post_status == 'trash' ){
+		return false;
+	}
+	
+  	return is_string( $post_status );
 }

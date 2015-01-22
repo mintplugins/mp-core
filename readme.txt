@@ -39,7 +39,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 * License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.
 * Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts
 * Shortcode Insert Class can now have conditional fields depending on parent fields.
-* 
+* Post Exists function: now returns false if the post is in the trash.
 
 = 1.0.0.8 = January 18, 2015
 * Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.
