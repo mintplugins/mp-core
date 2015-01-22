@@ -847,9 +847,9 @@ function mp_core_open_graph_video_meta_tags( $video_url ){
  *
  * @access   public
  * @since    1.0.0
- * @param    $date video_url A url to a video
- * @return   $meta_tagts string the meta tags which should be placed in the header to make Open Graph display a video correctly.
- */
+ * @param    $args The array of args to show stuff on the action page. 
+ * @return   $output_html string of HTML which will be used to display the action page
+  */
 function mp_core_simple_action_page( $args ){
 	
 	$default_args = array(
@@ -993,3 +993,17 @@ function mp_core_simple_action_page( $args ){
 	
 	return $output_html;
 }
+
+/**
+ * Enqueued CSS for all Admin pages. Some of these will be duplicated in classes - but WP's enqueue function takes care of that.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    void
+ * @return   void
+ */
+function mp_core_equeue_admin_scripts(){
+	//mp_core_settings_css
+	wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
+}
+add_action( 'admin_enqueue_scripts' , 'mp_core_equeue_admin_scripts' );
