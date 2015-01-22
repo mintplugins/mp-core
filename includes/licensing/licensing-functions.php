@@ -67,9 +67,13 @@ function mp_core_verify_license( $args ){
 		//Sanitize and update license
 		update_option( $software_name_slug . '_license_key', wp_kses(htmlentities($args['software_license_key'], ENT_QUOTES), '' ) );	 
 	}
+	
+	if(substr($args['software_api_url'], -1) == '/') {
+		$args['software_api_url'] = substr($args['software_api_url'], 0, -1);
+	}
 								
 	//Check the response from the repo if this license is valid					
-	$mp_repo_response = wp_remote_post( $args['software_api_url']  . '/repo/' . $software_name_slug . '/?license_check=true&license_key=' . $args['software_license_key'] . '&old_license_key=' . $old_license_key );
+	$mp_repo_response = wp_remote_post( $args['software_api_url']  . '/repo/' . $software_name_slug . '/?license_check=true&license_key=' . $args['software_license_key'] . '&old_license_key=' . $old_license_key, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false ) );
 												
 	//Retreive the body from the response - which should only have a 1 or a 0
 	$mp_repo_response_boolean = ( json_decode( wp_remote_retrieve_body( $mp_repo_response ) ) );
@@ -102,21 +106,21 @@ function mp_core_verify_license( $args ){
 function mp_core_listen_for_license_and_get_validity( $plugin_args ){
 		
 	$plugin_name_slug = sanitize_title($plugin_args['plugin_name']);
-				
+						
 	//If there's a license waiting in the $_POST var for this plugin
 	if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
-		
+				
 		//Check nonce
 		if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) ) 	
 			return false; // get out if we didn't click the Activate button
-			
+						
 		$verify_license_args = array(
 			'software_name'      => $plugin_args['plugin_name'],
 			'software_api_url'   => $plugin_args['plugin_api_url'],
 			'software_license_key'   => $_POST[ $plugin_name_slug . '_license_key' ],
 			'software_store_license' => true, //Store this newly submitted license
 		);
-		
+				
 		//Check and return the validity of this license
 		return mp_core_verify_license( $verify_license_args );
 		
