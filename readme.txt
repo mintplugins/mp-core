@@ -34,6 +34,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.0.9 = January X, 2015
+* You can now set a font size in pixels through the customizer using the arg font-size(px)
+* Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to flase because nginx's ssl wasn't verifying even though it was valid.
+* Enqueue admin css on every admin page using mp_core_equeue_admin_scripts
+
 = 1.0.0.8 = January 18, 2015
 * Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.
 * Fixed TinyMCE Text Areas when repeated. Now they reset to the Visual Mode when moved in the DOM.
