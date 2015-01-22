@@ -70,7 +70,7 @@ class MP_CORE_Customizer{
 	 */
 	function mp_core_customize_register_transport( $wp_customize ) {
 		
-		$no_transport_types = array( 'background-image', 'background-disabled', 'responsive', 'background-color-opacity' );
+		$no_transport_types = array( 'background-image', 'background-disabled', 'responsive', 'background-color-opacity', 'font-size(px)' );
 		
 		//Fiter hook for args to ignore and make the page refresh
 		$no_transport_types = apply_filters( 'mp_core_customizer_transport_ignore_types', $no_transport_types );
@@ -224,6 +224,17 @@ class MP_CORE_Customizer{
 			$display_val = $theme_mod_value == false ? 'none' : 'block';
 			
 			echo $css_arg . ':' . $display_val . ';';
+			
+		}
+		
+		//Display
+		elseif( $css_arg == "font-size(px)" ){
+			
+			if ( !empty( $theme_mod_value ) ){
+			
+				echo 'font-size' . ':' . $theme_mod_value . 'px;';
+				
+			}
 			
 		}
 		
