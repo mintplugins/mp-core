@@ -256,7 +256,9 @@ class MP_CORE_Shortcode_Insert{
 							$this->_args['shortcode_id'] . '_' . $option['option_id'], //<-- $field_id
 							$option['option_title'], //<-- $field_title
 							$option['option_description'], //<-- $field_description
-							$option['option_value'] //<-- $value
+							$option['option_value'], //<-- $value
+							isset( $option['option_conditional_id'] ) ? $this->_args['shortcode_id'] . '_' . $option['option_conditional_id'] : NULL, //<-- The id of the field which we want to check the value of - to see if this field should be shown at all
+							isset( $option['option_conditional_values'] ) ? $option['option_conditional_values'] : NULL //<-- array of values which, if selected from the conditional id, will show this field
 						);
                     }
 					?>
@@ -285,8 +287,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $value The current value to use for this field.
 	* @return     void
 	*/
-	function basictext($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function basictext($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '<input type="hidden" id="' . $field_id . '" name="' . $field_id . '" class="' . $field_id . '" value=" " />';
@@ -303,8 +309,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function textbox($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function textbox($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+			
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -321,8 +331,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function password($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function password($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -339,9 +353,13 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function checkbox($field_id, $field_title, $field_description, $value){
+	function checkbox($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
 		$checked = empty($value) ? '' : 'checked';
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -358,8 +376,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function inout_range($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function inout_range($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -376,8 +398,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function url($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function url($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -394,8 +420,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function date($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function date($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -412,8 +442,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function number($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function number($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -430,8 +464,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function textarea($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function textarea($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';
@@ -450,8 +488,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function select($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function select($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 		echo '</label></div>';
@@ -478,8 +520,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function colorpicker($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function colorpicker($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';
@@ -496,8 +542,12 @@ class MP_CORE_Shortcode_Insert{
 	* @param      string $field_description The string to use for the description above this field
 	* @param      string $value The current value to use for this field.
 	*/
-	function mediaupload($field_id, $field_title, $field_description, $value){
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+	function mediaupload($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 		echo '<strong>' .  $field_title . '</strong>';
 		echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 		echo '</label></div>';
@@ -528,9 +578,13 @@ class MP_CORE_Shortcode_Insert{
 	* @since    1.0.0
 	* @return   void
 	*/
-	function iconfontpicker($field_id, $field_title, $field_description, $value){
+	function iconfontpicker($field_id, $field_title, $field_description, $value, $conditional_id, $conditional_values){
+
+		//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+		$conditional_output = !empty( $conditional_id ) ? ' mp_conditional_field_id="' . $conditional_id . '" mp_conditional_field_values="' . implode(', ', $conditional_values ) . '" ' : NULL;
+
 		
-		echo '<div class="mp_field ' . $field_id . '_field"><div class="mp_title"><label for="' . $field_id . '">';
+		echo '<div class="mp_field ' . $field_id . '_field" ' . $conditional_output  . '><div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
