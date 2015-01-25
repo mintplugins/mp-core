@@ -1007,3 +1007,83 @@ function mp_core_equeue_admin_scripts(){
 	wp_enqueue_style( 'mp_core_settings_css', plugins_url('css/core/mp-core-settings.css', dirname(__FILE__)) );
 }
 add_action( 'admin_enqueue_scripts' , 'mp_core_equeue_admin_scripts' );
+
+/**
+ * Return a CSS line for box-shadow by giving just a post id and a meta prefix. The post must have the meta for each of the settings for this to work as expected.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $post_id The id of the post where the related meta is saved.
+ * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @param    $enabled_by_default boolean If true, this shadow will be on by default and return code if the user has never changed the meta setting.
+ * @return   void
+ */
+function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = false ){
+		
+	//Get the shadow properties
+	$shadow_enabled = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_enabled', $enabled_by_default );
+	
+	//If the shadow is disabled, return nothing.
+	if ( !$shadow_enabled ){
+		return NULL;	
+	}
+	
+	//Get the shadow settings
+	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 0 );
+	$shadow_x = $shadow_x / 10;
+	
+	$shadow_y = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_y', 0 );
+	$shadow_y = $shadow_y / 10;
+	
+	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 1 );
+	$shadow_blur = $shadow_blur / 10;
+	
+	$shadow_spread = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_spread', 1 );
+	$shadow_spread = $shadow_spread / 10;
+	
+	$shadow_color = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_color', '#000' );
+	$shadow_color = mp_core_hex2rgb( $shadow_color );
+	
+	$shadow_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_opacity', '50' );
+	$shadow_opacity = $shadow_opacity / 100;
+	
+	//Set the the RGBA string including the alpha
+	$shadow_color = 'rgba( ' . $shadow_color[0] . ', ' . $shadow_color[1] . ', ' . $shadow_color[2] . ', ' . $shadow_opacity . ')';
+	
+	$shadow_placement = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_placement', 'outset' );
+	$shadow_placement = $shadow_placement == 'inset' ? 'inset' : NULL;
+	
+	//Create the css box-shadow string
+	$css_output =  'box-shadow:' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color .' ' . $shadow_placement . ';';
+	
+	return $css_output;
+}
+
+/**
+ * Return a CSS line for border by giving just a post id and a meta prefix. The post must have the meta for each of the settings for this to work as expected.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $post_id The id of the post where the related meta is saved.
+ * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @return   void
+ */
+function mp_core_stroke_css( $post_id, $meta_prefix ){
+			
+	//Get the stroke settings
+	$stroke_size = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_size', 0 );
+		
+	$stroke_color = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_color', '#FFF' );
+	$stroke_color = mp_core_hex2rgb( $stroke_color );
+	
+	$stroke_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_opacity', '50' );
+	$stroke_opacity = $stroke_opacity / 100;
+	
+	//Set the the RGBA string including the alpha
+	$stroke_color = 'rgba( ' . $stroke_color[0] . ', ' . $stroke_color[1] . ', ' . $stroke_color[2] . ', ' . $stroke_opacity . ')';
+		
+	//Create the css border string
+	$css_output =  'border: solid ' . $stroke_size . 'px ' . $stroke_color . ';';
+	
+	return $css_output;
+}
