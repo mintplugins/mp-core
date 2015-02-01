@@ -60,7 +60,7 @@ jQuery(document).ready(function($){
 				$(this).find('*').each(function() {
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
-						$(this).css('display', 'block');
+						//$(this).css('display', 'block');
 						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
 						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
 							
@@ -101,7 +101,7 @@ jQuery(document).ready(function($){
 					
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
-						$(this).css('display', 'block');
+						//$(this).css('display', 'block');
 						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
 						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
 							
@@ -610,12 +610,26 @@ jQuery(document).ready(function($){
 	
 	//When the user drags a range slider, show its value beside it
 	$(document).on("change mousemove", "input[type='range']", function() {
-		$(this).next().html($(this).val());
+		$(this).next().val($(this).val());
 	});
 	
 	//Show each range slider's value bseide it when the page loads
 	$(document).find("input[type='range']").each(function(){
-		$(this).next().html($(this).val());
+		$(this).next().val($(this).val());
+	});
+	
+	//When a user types into the input range output field, update the range slider to match the value
+	$( document ).on( 'propertychange change keyup input paste', '.mp_core_input_range_output', function( event ){
+		
+		//If the value the user entered is greater than 100, back it back to 100
+		if ( $(this).val() > 100 ){
+			$(this).val( '100' );	
+		}
+		else if( $(this).val() < 0 ){
+			$(this).val( '0' );		
+		}
+		
+		$(this).prev().val($(this).val());
 	});
 
 	//Conditional Fields - Fields that are only shown if a dropdown is set to a specific value
@@ -674,12 +688,30 @@ jQuery(document).ready(function($){
 		
 	});
 	
-	//Showhider indentation
-	$(document).find("[showhider]").each(function(){
+	//Showhider indentation for showhiders that repeat
+	$(document).find('[showhider$="BBBBB"]').each(function(){
 		
 		//Get the name of this fields parent showhider
 		var showhider_name = $(this).attr('showhider');
+				
+		//Get the margin of the parent showhider field
+		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
 		
+		
+		margin_left = parseInt(margin_left) + 13;	
+		
+		
+		//Add the showhider parent's margin to this field
+		$( this ).css( 'margin-left', (parseInt( $( this ).css( 'margin-left' ).replace(/[^-\d\.]/g, '') ) + parseInt( margin_left) )  + 'px' );
+		
+	});
+	
+	//Showhider indentation for showhiders that don't repeat
+	$(document).find('[showhider]').each(function(){
+		
+		//Get the name of this fields parent showhider
+		var showhider_name = $(this).attr('showhider');
+				
 		//Get the margin of the parent showhider field
 		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
 		
