@@ -1,4 +1,18 @@
 <p>
+<strong>1.0.0.9 February 1, 2015</strong>
+<ul>    
+    <li>You can now set a font size in pixels through the customizer class using the arg font-size(px)</li>
+    <li>License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.</li>
+    <li>Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts</li>
+    <li>Shortcode Insert Class can now have conditional fields depending on parent fields.</li>
+    <li>Post Exists function: now returns false if the post is in the trash.</li>
+    <li>Directory: Images force load over ssl.</li>
+    <li>Directory: Load MP Core Directory over non ssl because it doesn’t work with NGINX but does over non SSL.</li>
+    <li>Added new functions for handling the output of css lines pertaining to box shadows and borders (strokes)</li>
+    <li>Metabox Input Ranges now have number fields that users can type in.</li>
+    <li>Showhiders can now repeat if they have a repeater AND field_showhider_repeats is true</li>
+    <li>Drop Shadow Function Added</li>
+</ul>
 <strong>1.0.0.8 January 18, 2015</strong>
 <ul>
 	<li>Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.</li>

@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.8
+Stable tag: 1.0.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,8 +34,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.0.9 = January X, 2015
-* You can now set a font size in pixels through the customizer using the arg font-size(px)
+= 1.0.0.9 = February 1, 2015
+* You can now set a font size in pixels through the customizer class using the arg font-size(px)
 * License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.
 * Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts
 * Shortcode Insert Class can now have conditional fields depending on parent fields.
@@ -43,6 +43,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 * Directory: Images force load over ssl.
 * Directory: Load MP Core Directory over non ssl because it doesn’t work with NGINX but does over non SSL.
 * Added new functions for handling the output of css lines pertaining to box shadows and borders (strokes)
+* Metabox Input Ranges now have number fields that users can type in.
+* Showhiders can now repeat if they have a repeater AND field_showhider_repeats is true
+* Drop Shadow Function Added
 
 = 1.0.0.8 = January 18, 2015
 * Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.
