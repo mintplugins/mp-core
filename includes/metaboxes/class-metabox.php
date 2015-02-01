@@ -280,6 +280,24 @@ if (!class_exists('MP_CORE_Metabox')){
 										//$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
 										//$field_preset_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
 										
+										
+										//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
+										if ( isset( $thefield['field_showhider'] ) ){
+											
+											//If the showhider repeats with the repeater
+											if ( isset( $thefield['field_showhider_repeats'] ) && $thefield['field_showhider_repeats'] ){
+												$showhider = 'showhider="' . $thefield['field_repeater'] . 'AAAAA' . $repeat_counter . 'BBBBBAAAAA' . $thefield['field_showhider'] . 'BBBBB' . '"';
+											}
+											//If the showhider does not repeat with this repeater
+											else{
+												$showhider = 'showhider="' . $thefield['field_showhider'] . '"';
+											}
+											
+										}
+										else{
+											$showhider = NULL;	
+										}
+									
 										//Make array to pass to callback function
 										$callback_args = array(
 											'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
@@ -291,7 +309,7 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
 											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
-											'field_showhider' => isset( $thefield['field_showhider'] ) ? ' showhider="' . $thefield['field_showhider'] . '" ' : NULL,
+											'field_showhider' => $showhider,
 											'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL,
 											'field_conditional_id' => isset( $thefield['field_conditional_id'] ) ? $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_conditional_id'] . ']' : NULL,
 											'field_conditional_values' => isset( $thefield['field_conditional_values'] ) ? $thefield['field_conditional_values'] : NULL
@@ -326,6 +344,24 @@ if (!class_exists('MP_CORE_Metabox')){
 								if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
 									//formula to match all field in the rows they were saved to the rows they are displayed in  = $field_position_in_repeater*$number_of_repeats+$i
 									
+									
+									//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
+									if ( isset( $thefield['field_showhider'] ) ){
+										
+										//If the showhider repeats with the repeater
+										if ( isset( $thefield['field_showhider_repeats'] ) && $thefield['field_showhider_repeats'] ){
+											$showhider = 'showhider="' . $thefield['field_repeater'] . 'AAAAA' . $repeat_counter . 'BBBBBAAAAA' . $thefield['field_showhider'] . 'BBBBB' . '"';
+										}
+										//If the showhider does not repeat with this repeater
+										else{
+											$showhider = 'showhider="' . $thefield['field_showhider'] . '"';
+										}
+										
+									}
+									else{
+										$showhider = NULL;	
+									}
+																		
 									//Make array to pass to callback function
 									$callback_args = array(
 										'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
@@ -337,7 +373,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
 										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
 										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
-										'field_showhider' => isset( $thefield['field_showhider'] ) ? 'showhider="' . $thefield['field_showhider'] . '"' : NULL,
+										'field_showhider' => $showhider,
 										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL,
 										'field_popup_help' => isset( $thefield['field_popup_help'] ) ? $thefield['field_popup_help'] : NULL,
 										'field_conditional_id' => isset( $thefield['field_conditional_id'] ) ? $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_conditional_id'] . ']' : NULL,
@@ -540,6 +576,9 @@ if (!class_exists('MP_CORE_Metabox')){
 												if ( $child_loop_field['field_type'] == 'textarea' ){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses( mp_core_fix_quotes( esc_html( $field_value ) ), $allowed_tags ); 
 												}
+												elseif ( $child_loop_field['field_type'] == 'multiple_checkboxes' ){
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = json_encode( $field_value ); 
+												}
 												elseif( $child_loop_field['field_type'] == 'wp_editor' ){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( wpautop( $field_value, true ) ) ) ), $allowed_tags ); 									
 												}
@@ -581,6 +620,9 @@ if (!class_exists('MP_CORE_Metabox')){
 					
 					if ( $field['field_type'] == 'textarea' ){
 						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html($post_value ) ) ), $allowed_tags );
+					}
+					elseif ( $field['field_type'] == 'multiple_checkboxes' ){
+						$data = json_encode( $post_value ); 
 					}
 					elseif( $field['field_type'] == 'wp_editor' ){
 						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( wpautop( $post_value, true ) ) ) ), $allowed_tags );
@@ -911,6 +953,71 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			echo '<input type="checkbox" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_input_class . '" value="' . $field_id . '" ' . $checked . ' />';
+			echo '</div>'; 
+		}
+		
+		/**
+		* Multiple checkboxes field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function multiple_checkboxes( $args ){
+						
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_input_class' => NULL,
+				'field_container_class' => NULL,
+				'field_select_values' => NULL,
+				'field_preset_value' => NULL,
+				'field_required' => NULL,
+				'field_showhider' => NULL,
+                'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
+				'field_conditional_id' => NULL,
+				'field_conditional_values' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
+			
+			//If this has been saved before
+			if ( $field_value == '' || mp_core_value_exists( $field_value ) ){
+				$field_values = json_decode( $field_value );
+			}
+			//If this has never been saved before
+			else{
+				//If there is no value saved but there is a default value, user that value
+				$field_values = mp_core_value_exists( $field_preset_value ) ? $field_preset_value : $field_value;
+			}
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
+			echo '</label></div>';
+						
+			//Loop through each checkbox option
+			foreach( $field_select_values as $field_slug => $field_readable_name ){
+				
+				//Check if there is a saved value for this checkbox
+				$checked = is_array( $field_values ) && in_array( $field_slug, $field_values ) ? 'checked' : '';
+				
+				//Show the checkbox
+				echo '<input type="checkbox" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '[]" class="' . $field_input_class . '" value="' . $field_slug . '" ' . $checked . ' /><span class="mp-multiple-checkboxes-desc">' . $field_readable_name . '</span>';
+				
+			}
 			echo '</div>'; 
 		}
 		
@@ -1846,7 +1953,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			
-			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . $field_id . '">' . $field_title . '</a>';
+			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '">' . $field_title . '</a>';
 			
 			echo '<div style="clear: both;"></div>';
 			echo '</label></div>';
