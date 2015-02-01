@@ -187,6 +187,12 @@
 	padding-top:10px!important;
 	background-color: transparent;
 }
+.repeater_container [showhider$="BBBBB"]{
+	margin-right:10px;
+	border-left: solid 1px #dfdfdf!important;
+	border-right: solid 1px #dfdfdf!important;
+	background-color: #f2fafc;
+}
 .repeater_container > * > *{
 	margin-left:0px;
 	margin-right:0px;
@@ -322,4 +328,8 @@ output {
 }
 .mce-menubar{
 	display:none!important;	
+}
+
+.mp-multiple-checkboxes-desc{
+	margin-right:10px;	
 }
