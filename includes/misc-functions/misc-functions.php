@@ -1019,15 +1019,7 @@ add_action( 'admin_enqueue_scripts' , 'mp_core_equeue_admin_scripts' );
  * @return   void
  */
 function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = false ){
-		
-	//Get the shadow properties
-	$shadow_enabled = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_enabled', $enabled_by_default );
-	
-	//If the shadow is disabled, return nothing.
-	if ( !$shadow_enabled ){
-		return NULL;	
-	}
-	
+			
 	//Get the shadow settings
 	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 0 );
 	$shadow_x = $shadow_x / 10;
@@ -1058,6 +1050,49 @@ function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = f
 	
 	return $css_output;
 }
+
+/**
+ * Return a CSS line for drop shadow (as opposed to a css box-shadow) by giving just a post id and a meta prefix. The post must have the meta for each of the settings for this to work as expected.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $post_id The id of the post where the related meta is saved.
+ * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @param    $enabled_by_default boolean If true, this shadow will be on by default and return code if the user has never changed the meta setting.
+ * @return   void
+ */
+function mp_core_drop_shadow_css( $post_id, $meta_prefix ){
+			
+	//Get the shadow settings
+	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 50 );
+	$shadow_x = ($shadow_x - 50) / 5;
+	
+	$shadow_y = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_y', 50 );
+	$shadow_y = ($shadow_y - 50) / 5;
+	
+	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 1 );
+	$shadow_blur = $shadow_blur / 5;
+	
+	$shadow_color_hex = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_color', '#000' );
+	$shadow_color = mp_core_hex2rgb( $shadow_color_hex );
+	
+	$shadow_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_opacity', '50' );
+	$shadow_opacity = $shadow_opacity / 100;
+	
+	//Set the the RGBA string including the alpha
+	$shadow_color = 'rgba( ' . $shadow_color[0] . ', ' . $shadow_color[1] . ', ' . $shadow_color[2] . ', ' . $shadow_opacity . ')';
+	
+	//http://stackoverflow.com/questions/3186688/drop-shadow-for-png-image-in-css
+	$css_output = "-webkit-filter: drop-shadow(" . $shadow_x . "px " . $shadow_y . "px " . $shadow_blur . "px " . $shadow_color . ");
+    
+	filter: url(\"data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='" . $shadow_blur . "'/><feOffset dx='" . $shadow_x ."' dy='" . $shadow_y . "' result='offsetblur'/><feFlood flood-color='" . $shadow_color . "'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow\");
+    -ms-filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";
+    filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";";
+	
+	
+	return $css_output;
+}
+
 
 /**
  * Return a CSS line for border by giving just a post id and a meta prefix. The post must have the meta for each of the settings for this to work as expected.
