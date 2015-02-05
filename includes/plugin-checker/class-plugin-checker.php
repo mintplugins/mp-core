@@ -219,9 +219,27 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 			if ( empty( $plugins ) ){
 				return false;	
 			}
+			
+			//Install_loop_counter
+			$install_loop_counter = 0;
 						
 			//Loop through each plugin that is supposed to be installed
 			foreach ( $plugins as $plugin_key => $plugin ){
+				
+				$install_loop_counter = $install_loop_counter + 1;
+								
+				//If we have installed 3 plugins
+				if ( $install_loop_counter >= 4 ){
+					
+					//Refresh the page so we don't crash anybody's servers with too much in one request.					
+					echo '
+					<script type="text/javascript">
+						document.location.reload(true);
+					</script>';
+					
+					exit;
+												
+				}
 				
 				//If this plugin requires a license to be installed
 				if ( $plugin['plugin_licensed'] ){
