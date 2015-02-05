@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.0.9
+Stable tag: 1.0.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.1.0 = February 4, 2015
+* Plugin Checker Class: Only install 3 dependant plugins at a time.
 
 = 1.0.0.9 = February 1, 2015
 * You can now set a font size in pixels through the customizer class using the arg font-size(px)
