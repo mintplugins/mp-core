@@ -276,12 +276,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										//If a value has not been saved, check if there has been a passed-in value. If so use it, if not, set it to be empty
 										else{
 											 $field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
-										}
-										
-										//$field_input_class        = 'mp_repeater';
-										//$field_select_values = isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL;
-										//$field_preset_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
-										
+										}								
 										
 										//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
 										if ( isset( $thefield['field_showhider'] ) ){
@@ -309,7 +304,7 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater', 
 											'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL, 
 											'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
-											'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
+											'field_default_attr' => NULL, 
 											'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
 											'field_showhider' => $showhider,
 											'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL,
@@ -373,7 +368,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater', 
 										'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL, 
 										'field_select_values' => isset($thefield['field_select_values']) ? $thefield['field_select_values'] : NULL,
-										'field_preset_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '', 
+										'field_default_attr' => NULL, 
 										'field_required' => isset( $thefield['field_required'] ) ? $thefield['field_required'] : false,
 										'field_showhider' => $showhider,
 										'field_placeholder' => isset( $thefield['field_placeholder'] ) ? ' placeholder="' . $thefield['field_placeholder'] . '" ' : NULL,
@@ -421,6 +416,10 @@ if (!class_exists('MP_CORE_Metabox')){
 						$field_select_values = isset($field['field_select_values']) ? $field['field_select_values'] : NULL;
 						//set the preset value to the passed in value
 						$preset_value = isset($field['field_value']) ? $field['field_value'] : '';
+						
+						//Default Field Attribute String:
+						$field_default_attr = isset($field['field_value']) ? ' mp_default_value="' . $field['field_value'] . '" ' : ' mp_default_value="" ';
+						
 						//set the showhider
 						$showhider_value = isset($field['field_showhider']) ? 'showhider="' . $field['field_showhider'] . '"' : '';
 						//set the field container class
@@ -445,7 +444,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							'field_input_class' => $field_input_class, 
 							'field_container_class' => $field_container_class, 
 							'field_select_values' => $field_select_values, 
-							'field_preset_value' => $preset_value, 
+							'field_default_attr' => $field_default_attr , 
 							'field_required' => $field_required,
 							'field_showhider' => $showhider_value,
 							'field_placeholder' => $placeholder_value,
@@ -549,8 +548,12 @@ if (!class_exists('MP_CORE_Metabox')){
 						//Set $prev_repeater to current field repeater 
 						$prev_repeater = $field['field_repeater'];
 						
-						//Store all the post values for this repeater in $these_repeater_field_id_values. If there are no POST values for this repeater, use the previously saved values.
+						//Store all the post values for this repeater in $these_repeater_field_id_values. 
 						$these_repeater_field_id_values = isset( $_POST[$field['field_repeater']] ) ? $_POST[$field['field_repeater']] : NULL;
+						
+						if ( !is_array( $these_repeater_field_id_values ) ){
+							continue;	
+						}
 						
 						//Sanitize user input for this repeater field and add it to the $data array
 						$allowed_tags = wp_kses_allowed_html( 'post' );
@@ -617,7 +620,16 @@ if (!class_exists('MP_CORE_Metabox')){
 					
 					//Update single post:
 					//get value from $_POST
-					$post_value = isset($_POST[$field['field_id']]) ? $_POST[$field['field_id']] : '';
+					if ( $field['field_type'] == 'checkbox' ){
+						$post_value = isset( $_POST[$field['field_id']] ) ? $_POST[$field['field_id']] : '';
+					}
+					else if ( isset($_POST[$field['field_id']] ) ){
+						$post_value = $_POST[$field['field_id']];
+					}
+					else{
+						continue;
+					}
+					
 					//sanitize user input
 					$allowed_tags = wp_kses_allowed_html( 'post' );
 					
@@ -675,7 +687,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -724,7 +736,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -768,7 +780,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_value' => NULL,
 				'field_input_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
 				'field_placeholder' => NULL,
@@ -796,7 +808,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -818,7 +830,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -846,7 +858,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -868,7 +880,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -899,7 +911,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -921,7 +933,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -946,9 +958,12 @@ if (!class_exists('MP_CORE_Metabox')){
 			//If this has never been saved before
 			else{
 				//If there is no value saved but there is a default value, user that value
-				$field_value = mp_core_value_exists( $field_preset_value ) ? $field_preset_value : $field_value;
+				$field_value = mp_core_value_exists( $field_default_attr ) ? $field_default_attr : $field_value;
 			}
-						
+			
+			//Note! We don't do a "field_default_attr" check for checkboxes like we do with other field<br />
+			//because we can't set a true default (because false is empty so it would just always be true no matter what).
+				
 			$checked = empty($field_value) ? '' : 'checked';
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
@@ -977,7 +992,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1002,7 +1017,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//If this has never been saved before
 			else{
 				//If there is no value saved but there is a default value, user that value
-				$field_values = mp_core_value_exists( $field_preset_value ) ? $field_preset_value : $field_value;
+				$field_values = mp_core_value_exists( $field_default_attr ) ? $field_default_attr : $field_value;
 			}
 			
 			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
@@ -1042,7 +1057,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1073,7 +1088,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1095,7 +1110,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1126,7 +1141,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
+			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1148,7 +1163,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1179,7 +1194,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
+			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1201,7 +1216,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1232,7 +1247,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
-			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
+			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1254,7 +1269,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1285,7 +1300,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
+			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
 			echo $field_value;
 			echo '</textarea>';
 			echo '</div>'; 
@@ -1309,7 +1324,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1356,7 +1371,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1389,7 +1404,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo '</label></div>';
 			?>
 			
-            <select name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> >
+            <select name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>">
                 <option value=""></option>
                 <?php foreach ( $field_select_values as $select_value => $select_text) : ?>
                 <option value="<?php echo esc_attr( $select_value ); ?>" <?php selected( $select_value, $field_value ); ?>>
@@ -1420,7 +1435,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1452,7 +1467,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-			<input name="<?php echo $field_id; ?>" list="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> value="<?php echo $field_value; ?>" />
+			<input name="<?php echo $field_id; ?>" list="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> value="<?php echo $field_value; ?>" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>"/>
             <datalist id="<?php echo $field_id; ?>">
                 <option value="">
                 <?php foreach ( $field_select_values as $select_value => $select_text) : ?>
@@ -1482,7 +1497,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1518,7 +1533,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			foreach ( $field_select_values as $select_value => $select_text) : ?>
                 <div class="mp-core-radio-element">
                     <div class="mp-core-radio-button">
-                    	<input type="radio" class="<?php echo $field_input_class; ?>" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $select_value ); ?>" <?php checked( $select_value, $field_value ); ?> <?php echo $field_required_output; ?>>
+                    	<input type="radio" class="<?php echo $field_input_class; ?>" name="<?php echo $field_id; ?>" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>" value="<?php echo esc_attr( $select_value ); ?>" <?php checked( $select_value, $field_value ); ?> <?php echo $field_required_output; ?>>
                     </div>
                     <div class="mp-core-radio-description">
 						<?php 
@@ -1550,7 +1565,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1579,7 +1594,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> ><input type="number" class="<?php echo $field_input_class; ?>_output mp_core_input_range_output">
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> ><input type="number" class="<?php echo $field_input_class; ?>_output mp_core_input_range_output">
 			<?php        
 			echo '</div>'; 
 		}
@@ -1602,7 +1617,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1631,7 +1646,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</label></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" mp_default_value="'<?php echo $field_default_attr; ?>" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
 			<?php        
 			echo '</div>'; 
 		}
@@ -1654,7 +1669,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1685,7 +1700,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</label></div>';
-			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1707,7 +1722,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1741,7 +1756,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>       
 			<!-- Upload button and text field -->
             <div class="mp_media_upload">
-                <input class="custom_media_url <?php echo $field_input_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" <?php echo $field_placeholder; ?> type="text" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
+                <input class="custom_media_url <?php echo $field_input_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" <?php echo $field_placeholder; ?> type="text" name="<?php echo $field_id; ?>" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
                 <a href="#" class="button custom_media_upload"><?php _e('Upload', 'mp_core'); ?></a>
 			</div>
 			<?php
@@ -1776,7 +1791,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1822,7 +1837,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			?>       
 			<!-- Upload button and text field -->
             <div class="mp-icon-font-select">
-                <input class="custom_media_url <?php echo $field_input_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" <?php echo $field_placeholder; ?> type="hidden" name="<?php echo $field_id; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
+                <input class="custom_media_url <?php echo $field_input_class; ?>" id="<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" <?php echo $field_placeholder; ?> type="hidden" name="<?php echo $field_id; ?>" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>" value="<?php echo esc_attr( $field_value ); ?>" <?php echo $field_required_output; ?>>
                 <a href="#TB_inline?width=750&inlineId=mp-thickbox-<?php echo str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ); ?>" class="thickbox button"><?php _e('Select', 'mp_core'); ?></a>
 			</div>
             
@@ -1881,7 +1896,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1934,7 +1949,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
@@ -1981,7 +1996,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_input_class' => NULL,
 				'field_container_class' => NULL,
 				'field_select_values' => NULL,
-				'field_preset_value' => NULL,
+				'field_default_attr' => NULL,
 				'field_required' => NULL,
 				'field_showhider' => NULL,
                 'field_placeholder' => NULL,
