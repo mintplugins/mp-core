@@ -54,6 +54,11 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 		$image_url = wp_get_attachment_image_src($image_id,'full');  
 		$image_url = $image_url[0];
 		
+		if (is_ssl()) {
+			//action to take for page using SSL
+			$image_url = str_replace( 'http://', 'https://', $image_url );
+		}
+		
 		return $before . mp_aq_resize( $image_url, $width, $height, $crop ) . $after;    
 	}
            
