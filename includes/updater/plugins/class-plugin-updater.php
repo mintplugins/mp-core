@@ -325,7 +325,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'slug' => $_data['slug'],
 					'author' => '', //$this->version - not working for some reason
 					'license_key' => $this->software_license,
-					'old_license_key' => get_option( $_data['slug'] . '_license_key' )
+					'old_license_key' => get_option( $_data['slug'] . '_license_key' ),
+					'site_activating' => get_bloginfo( 'wpurl' )
 				);
 			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
 									
