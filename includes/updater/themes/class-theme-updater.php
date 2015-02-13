@@ -263,7 +263,8 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 				'slug' => $args['theme_name_slug'],
 				'theme' => true,
 				'license_key' => $license_key,
-				'old_license_key' => get_option( $args['theme_name_slug'] . '_license_key' )	 
+				'old_license_key' => get_option( $args['theme_name_slug'] . '_license_key' ),
+				'site_activating' => get_bloginfo( 'wpurl' )
 			);
 							
 			$response = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['theme_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );
