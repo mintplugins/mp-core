@@ -620,7 +620,7 @@ if (!class_exists('MP_CORE_Metabox')){
 					
 					//Update single post:
 					//get value from $_POST
-					if ( $field['field_type'] == 'checkbox' ){
+					if ( $field['field_type'] == 'checkbox' || $field['field_type'] == 'multiple_checkboxes' ){
 						$post_value = isset( $_POST[$field['field_id']] ) ? $_POST[$field['field_id']] : '';
 					}
 					else if ( isset($_POST[$field['field_id']] ) ){
