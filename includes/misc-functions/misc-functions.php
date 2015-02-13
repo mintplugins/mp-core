@@ -1070,7 +1070,7 @@ function mp_core_drop_shadow_css( $post_id, $meta_prefix ){
 	$shadow_y = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_y', 50 );
 	$shadow_y = ($shadow_y - 50) / 5;
 	
-	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 1 );
+	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 50 );
 	$shadow_blur = $shadow_blur / 5;
 	
 	$shadow_color_hex = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_color', '#000' );
