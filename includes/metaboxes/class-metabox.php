@@ -205,8 +205,9 @@ if (!class_exists('MP_CORE_Metabox')){
 					continue;	
 				}
 				
+				//Just realized I'm checking a nonce for EVERY field. Whoa there cowboy! Might be some overkill here....
 				// Set up nonce for verification
-				wp_nonce_field( plugin_basename( __FILE__ ), $field['field_id'] . '_metabox_nonce' );	
+				//wp_nonce_field( plugin_basename( __FILE__ ), $field['field_id'] . '_metabox_nonce' );	
 				
 				// Filter for title of this field
 				$field['field_title'] = has_filter('mp_' . $field['field_id'] . '_title') ? apply_filters( 'mp_' . $field['field_id'] . '_title', $field['field_title'], $this->_post_id) : $field['field_title'];
@@ -217,8 +218,9 @@ if (!class_exists('MP_CORE_Metabox')){
 				//This is the first field in a set of repeater
 				if ( isset($field['field_repeater']) && $prev_repeater != $field['field_repeater']){
 					
+					//Just realized I'm checking a nonce for EVERY field. Whoa there cowboy! Might be some overkill here....
 					// Set up nonce for verification
-					wp_nonce_field( plugin_basename( __FILE__ ), $field['field_repeater'] . '_metabox_nonce' );	
+					//wp_nonce_field( plugin_basename( __FILE__ ), $field['field_repeater'] . '_metabox_nonce' );	
 					
 					//Make sure a post number has been set
 					if ( isset($this->_post_id) ){
@@ -507,14 +509,15 @@ if (!class_exists('MP_CORE_Metabox')){
 					continue;	
 				}
 				
+				//Just realized I'm checking a nonce for EVERY field. Whoa there cowboy! Might be some overkill here....
 				// verify this came from our screen and with proper authorization,
 				// because save_post can be triggered at other times
-				if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
-					if ( !wp_verify_nonce( $_POST[$field['field_id'] . '_metabox_nonce'], plugin_basename( __FILE__ ) ) )
-					  return;
-				}else{
-					return;
-				}
+				//if ( isset($_POST[$field['field_id'] . '_metabox_nonce']) ){
+				//	if ( !wp_verify_nonce( $_POST[$field['field_id'] . '_metabox_nonce'], plugin_basename( __FILE__ ) ) )
+				//	  return;
+				//}else{
+				//	return;
+				//}
 				
 				// Check permissions
 				if ( $this->_args['metabox_posttype'] == $_POST['post_type'] ) {
