@@ -73,7 +73,7 @@ function mp_core_verify_license( $args ){
 	}
 								
 	//Check the response from the repo if this license is valid					
-	$mp_repo_response = wp_remote_post( $args['software_api_url']  . '/repo/' . $software_name_slug . '/?license_check=true&license_key=' . $args['software_license_key'] . '&old_license_key=' . $old_license_key, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false ) );
+	$mp_repo_response = wp_remote_post( $args['software_api_url']  . '/repo/' . $software_name_slug . '/?license_check=true&license_key=' . $args['software_license_key'] . '&site_activating="' . get_bloginfo( 'wpurl' ) . '"&old_license_key=' . $old_license_key, array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false ) );
 												
 	//Retreive the body from the response - which should only have a 1 or a 0
 	$mp_repo_response_boolean = ( json_decode( wp_remote_retrieve_body( $mp_repo_response ) ) );
