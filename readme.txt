@@ -34,6 +34,18 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.1.1 = February X, 2015
+* Add 'site_activating' parameter to all update and licensing functions.
+* Set the default for shadow blur to 50 to make default accurate.
+* Fix for featured images on SSL using mp_core_the_featured_image
+* Reduce unneeded nonces for Metabox saves.
+* BIG METABOX CHANGE: Only save meta if field value is different. When retrieving meta fields, make sure defaults in code use mp_core_get_post_meta and have an accurate default set.
+* Removed jquery.velocity.min.js and replaced it with velocity.min.js (version 1.2.1)
+* Metabox Jquery: Remove the 'checked' attr when duplicating a repeat in a metabox.
+* Added versioning to enqueues in the Metabox class.
+* Various animation function upgrades.
+* Change “Install Items” > “Installing Required Items” in the plugin checker.
+
 = 1.0.1.0 = February 4, 2015
 * Plugin Checker Class: Only install 3 dependant plugins at a time.
 
