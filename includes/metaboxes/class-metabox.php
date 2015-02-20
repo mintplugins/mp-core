@@ -226,7 +226,7 @@ if (!class_exists('MP_CORE_Metabox')){
 					if ( isset($this->_post_id) ){
 									
 						//Get the array of variables stored in the database for this repeater
-						$current_stored_repeater = mp_core_get_post_meta( $this->_post_id, $key = $field['field_repeater'], isset( $field['field_value'] ) ? $field['field_value'] : NULL );
+						$current_stored_repeater = get_post_meta( $this->_post_id, $key = $field['field_repeater'], true );
 												
 						//This is a brand new repeater
 						$repeat_counter = 0;
@@ -262,27 +262,19 @@ if (!class_exists('MP_CORE_Metabox')){
 									if ( isset($thefield['field_repeater']) && $thefield['field_repeater'] == $field['field_repeater']){
 										//formula to match all field in the rows they were saved to the rows they are displayed in  = $field_position_in_repeater*$number_of_repeats+$i
 																				
-										//If a value has been saved
+										//If a value has been saved for this specific field
 										if (isset($repeater_set[$thefield['field_id']])){
-											//If this is an empty checkbox, set the field value to be empty
-											if ($thefield['field_type'] == 'checkbox' && empty($repeater_set[$thefield['field_id']])){
-												$field_value = '';
-											}
-											//Otherwise use the saved value.
-											else{
-												$field_value = $repeater_set[$thefield['field_id']];
-											}
+											
+											//Use the saved value.
+											$field_value = $repeater_set[$thefield['field_id']];
+											
 										} 
 										//If a value has not been saved, check if there has been a passed-in value. If so use it, if not, set it to be empty
 										else{
-											 //If this is an empty checkbox, set the field value to be empty
-											if ($thefield['field_type'] == 'checkbox' && empty($repeater_set[$thefield['field_id']])){
-												$field_value = '';
-											}
-											//Otherwise use the saved value.
-											else{
-												$field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
-											}
+							
+											//Otherwise use the passed-in, default value.
+											$field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
+											
 										}								
 										
 										//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
@@ -579,6 +571,19 @@ if (!class_exists('MP_CORE_Metabox')){
 									
 									if ( isset($child_loop_field['field_repeater']) ){
 										
+										//If the current passed-in field is a checkbox
+										if( $child_loop_field['field_type'] == 'checkbox' ){
+											
+											//If it does NOT exist in the submitted POST for this repeat	
+											if ( !array_key_exists( $child_loop_field['field_id'], $repeater ) ){
+												//Set it to be empty so it at least saves SOMETHING (because empty checkboxes don't even get submitted through POST)
+												//This way we know whether this checkbox has ever been saved, or if it was just saved to be empty/unchecked.
+												$these_repeater_field_id_values[$repeater_counter][$child_loop_field['field_id']] = '';
+											}
+											
+											
+										}
+											
 										//If the current iteration of passed-in field's repeater matches the repeater we're on in the master loop
 										if ( $child_loop_field['field_repeater'] == $field['field_repeater']){
 											
