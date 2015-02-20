@@ -24,6 +24,10 @@
  */
 function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_animate, $animation_repeater ){
 	
+	if ( empty($animation_repeater ) ){
+		return;	
+	}
+	
 	//Set the first frame CSS
 	$js_output = '<style type="text/css" id="' . str_replace(' ', '', str_replace('.', '', str_replace('#', '', $mouse_over_string)) . '_' . str_replace('.', '', str_replace('#', '', $child_to_animate))) . '">';
 	
@@ -39,7 +43,6 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 		jQuery(document).ready(function($){ 
 			
 			$( document ).on( \'mp_core_animation_set_first_keyframe_trigger\', function(event){
-				
 				' . mp_core_js_animate_set_first_keyframe( "$(this).find('" . $mouse_over_string . ' ' . $child_to_animate . "')", $animation_repeater ) . '
 			});
 			
@@ -74,10 +77,12 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 			
 				$js_output .= '
 					$( document ).on( \'mouseenter\', \'' . $mouse_over_string . '\', function(event){
+						$(this).css("z-index", "9999999999");
 						' . mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
 					'}); 
 					
 					$( document ).on( \'mouseleave\', \'' . $mouse_over_string . '\', function(event){
+						$(this).css("z-index", "");
 						' . mp_core_js_reverse_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
 					'});';
 			}
@@ -126,17 +131,13 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 			$unit = NULL;
 			
 			//If this value is 'opacity'
-			if ( $id == 'opacity' ){
+			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
 			
 				//Opacity
 				$value = $value / 100;
 				
-				//If this is set to be 0
-				if ( empty( $value ) && is_numeric( $value ) ){	
-					 $value =  '0';
-				}
 				//If it has a value
-				else if ( !empty( $value ) ){	
+				if ( mp_core_value_exists( $value ) ){	
 					$value = $value;
 				}
 				//If it has no value
@@ -148,27 +149,31 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 			//If this is a color animation
 			if ( $id == 'backgroundColor' ){
 				
-				$rgb_array = mp_core_hex2rgb( $value );
-				
-				echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
-				echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
-				echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+				if ( !empty( $value ) ){
+					$rgb_array = mp_core_hex2rgb( $value );
+					
+					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
+					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
+					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+				}
 					
 			}
 			
 			//If this is rotation
 			if ( $id == 'rotateZ' ){
+				$value = empty( $value ) ? 0 : $value;
 				$unit = 'deg';
 			}
 			
 			//If this is X or Y
 			if ( $id == 'translateX' || $id == 'translateY' ){
+				$value = empty( $value ) ? 0 : $value;
 				$unit = 'px';
 			}
 			
 			//If this is scale
 			if ( $id == 'scale' ){
-				$value = $value / 100;
+				$value = empty($value) ? 1 : $value / 100;
 			}
 			
 			//Output the value for this keyframe value
@@ -225,17 +230,13 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
 			$unit = NULL;
 			
 			//If this value is 'opacity'
-			if ( $id == 'opacity' ){
-			
+			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
+								
 				//Opacity
 				$value = $value / 100;
 				
-				//If this is set to be 0
-				if ( empty( $value ) && is_numeric( $value ) ){	
-					 $value =  '0';
-				}
 				//If it has a value
-				else if ( !empty( $value ) ){	
+				if ( mp_core_value_exists( $value ) ){	
 					$value = $value;
 				}
 				//If it has no value
@@ -247,35 +248,43 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
 			//If this is a color animation
 			if ( $id == 'backgroundColor' ){
 				
-				$rgb_array = mp_core_hex2rgb( $value );
+				if ( !empty( $value ) ){
+					
+					$rgb_array = mp_core_hex2rgb( $value );
 				
-				echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
-				echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
-				echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
+					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
+					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+				}
 					
 			}
 			
 			//If this is rotation
 			if ( $id == 'rotateZ' ){
+				$value = empty( $value ) ? 0 : $value;
 				$unit = 'deg';
 			}
 			
-			//If this is rotation
+			//If this is X or Y
 			if ( $id == 'translateX' || $id == 'translateY' ){
+				$value = empty( $value ) ? 0 : $value;
 				$unit = 'px';
 			}
 			
 			//If this is scale
 			if ( $id == 'scale' ){
-				$value = $value / 100;
+				$value = empty($value) ? 1 : $value / 100;
 			}
 			
 			//Output the value for this keyframe value
-			echo $id . ': "' . $value . $unit . '"';
+			if ( mp_core_value_exists( $value ) ){
+				echo  $id . ': "' . $value . $unit . '"';
+				
+				//If this isn't the last item in the keyframe
+				if ($value_counter < $value_forlength){
+					echo ',';	
+				}
 			
-			//If this isn't the last item in the keyframe
-			if ($value_counter < $value_forlength){
-				echo ',';	
 			}
 			
 			$value_counter = $value_counter + 1;
@@ -364,17 +373,13 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 			$unit = NULL;
 			
 			//If this value is 'opacity'
-			if ( $id == 'opacity' ){
+			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
 			
 				//Opacity
 				$value = $value / 100;
 				
-				//If this is set to be 0
-				if ( empty( $value ) && is_numeric( $value ) ){	
-					 $value =  '0';
-				}
 				//If it has a value
-				else if ( !empty( $value ) ){	
+				if ( mp_core_value_exists( $value ) ){	
 					$value = $value;
 				}
 				//If it has no value
@@ -383,29 +388,47 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 				}
 			}
 			
-			//If this is rotation
-			if ( $id == 'rotateZ' ){
-				$unit = 'deg';
+			//If this is a color animation
+			if ( $id == 'backgroundColor' ){
+				
+				if ( !empty( $value ) ){
+					$rgb_array = mp_core_hex2rgb( $value );
+					
+					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
+					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
+					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+				}
+					
 			}
 			
 			//If this is rotation
+			if ( $id == 'rotateZ' ){
+				$value = empty( $value ) ? 0 : $value;
+				$unit = 'deg';
+			}
+			
+			//If this is X or Y
 			if ( $id == 'translateX' || $id == 'translateY' ){
+				$value = empty( $value ) ? 0 : $value;
 				$unit = 'px';
 			}
 			
 			//If this is scale
 			if ( $id == 'scale' ){
-				$value = $value / 100;
+				$value = empty($value) ? 1 : $value / 100;
 			}
 			
 			//Output the value for this keyframe value
-			echo $id . ': "' . $value . $unit . '"';
+			if ( mp_core_value_exists( $value ) ){
+				echo  $id . ': "' . $value . $unit . '"';
+				
+				//If this isn't the last item in the keyframe
+				if ($value_counter < $value_forlength){
+					echo ',';	
+				}
 			
-			//If this isn't the last item in the keyframe
-			if ($value_counter < $value_forlength){
-				echo ',';	
 			}
-			
+						
 			$value_counter = $value_counter + 1;
 		
 		}
@@ -433,16 +456,14 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 					echo '500';
 				} 
 			}
-			
-		echo '})';
 		
 		if ( $counter < $forlength){
-			echo '.velocity(
+			echo '}).velocity(
 						{';
 		} else{ 
-			echo ';';
+			echo '});';
 		} 
-		
+		 
 		$counter = $counter + 1;
 	
 	}
