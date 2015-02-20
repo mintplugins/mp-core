@@ -2,7 +2,7 @@ jQuery(document).ready(function($){
 	
 	//When the main form gets submitted
 	var mp_core_defaults_checked = false;
-	//Check to see if a field is different htan its default value.
+	//Check to see if a field is different than its default value.
 	$(document).on( 'submit', '#post', function( event ) {
 		
 		//If we haven't checked the defaults of each post already
@@ -69,6 +69,8 @@ jQuery(document).ready(function($){
 		//Set any of the clone's textbox values to be empty
 		theclone.find('.mp_repeater').each(function() {
 			this.value = '';		
+			//Also remove any "checked" attributes from checkboxes as the value is now empty
+			$(this).removeAttr('checked');
 		});	
 		
 		//Hide any of the clones media images
