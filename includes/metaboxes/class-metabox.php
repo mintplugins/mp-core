@@ -94,19 +94,19 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Only load if we are on a post based page
 			if ( $current_page->base == 'post' ){
 				//mp_core_metabox_css
-				wp_enqueue_style( 'mp_core_metabox_css', plugins_url('css/core/mp-core-metabox.css', dirname(__FILE__)) );
+				wp_enqueue_style( 'mp_core_metabox_css', plugins_url('css/core/mp-core-metabox.css', dirname(__FILE__)), MP_CORE_VERSION );
 				//color picker scripts
 				wp_enqueue_style( 'wp-color-picker' );
 				wp_enqueue_script( 'wp-color-picker' );
-				wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker') );
+				wp_enqueue_script( 'wp-color-picker-load', plugins_url( 'js/core/wp-color-picker.js', dirname(__FILE__)),  array( 'jquery', 'wp-color-picker'), MP_CORE_VERSION );
 				//mp-ajax-popup script used for popup help tips and videos to help the user
-				wp_enqueue_script( 'mp-ajax-popup-js', plugins_url( 'js/core/mp-ajax-popup.js', dirname(__FILE__)),  array( 'jquery' ) );
+				wp_enqueue_script( 'mp-ajax-popup-js', plugins_url( 'js/core/mp-ajax-popup.js', dirname(__FILE__)),  array( 'jquery' ), MP_CORE_VERSION );
 				//media upload scripts
 				wp_enqueue_media();
 				//image uploader script
-				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ) );
+				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ), MP_CORE_VERSION );
 				//Metabox scripts for duplicating fields etc
-				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable', 'mp-ajax-popup-js' ) );	 	
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable', 'mp-ajax-popup-js' ), MP_CORE_VERSION );	 	
 				
 				//If this script has already been localized, don't do it again. We only need it once. Global var used so other class calls don't duplicate output.
 				global $mp_core_metabox_js_localized;
@@ -275,7 +275,14 @@ if (!class_exists('MP_CORE_Metabox')){
 										} 
 										//If a value has not been saved, check if there has been a passed-in value. If so use it, if not, set it to be empty
 										else{
-											 $field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
+											 //If this is an empty checkbox, set the field value to be empty
+											if ($thefield['field_type'] == 'checkbox' && empty($repeater_set[$thefield['field_id']])){
+												$field_value = '';
+											}
+											//Otherwise use the saved value.
+											else{
+												$field_value = isset($thefield['field_value']) ? $thefield['field_value'] : '';
+											}
 										}								
 										
 										//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
@@ -957,7 +964,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			}
 			//If this has never been saved before
 			else{
-				//If there is no value saved but there is a default value, user that value
+				//If there is no value saved but there is a default value, use that value
 				$field_value = mp_core_value_exists( $field_default_attr ) ? $field_default_attr : $field_value;
 			}
 			
