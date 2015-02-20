@@ -45,6 +45,8 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 * Added versioning to enqueues in the Metabox class.
 * Various animation function upgrades.
 * Change “Install Items” > “Installing Required Items” in the plugin checker.
+* Make checkboxes in repeaters save an empty value (before they were removed from the repeater array if unchecked). This way we can check if the field key exists to know whether it has ever been saved before.
+* Added function called “mp_core_get_post_meta_checkbox” which allows us to set a default for checkboxes when retrieving them.
 
 = 1.0.1.0 = February 4, 2015
 * Plugin Checker Class: Only install 3 dependant plugins at a time.
