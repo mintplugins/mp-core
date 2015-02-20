@@ -227,6 +227,31 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = ar
 }
 
 /**
+ * Get a post meta value for a single checkbox and return a default if it has never been saved previously
+ *
+ * @since    1.0.0
+ * @link     https://mintplugins.com/doc/mp_core_get_post_meta
+ * @param    int $post_id The id of the post this meta value is attached to.
+ * @param    string $meta_key The key for the value we want to get.
+ * @param    mixed $default The default value for this if it has never been previously saved
+ * @return   mixed $meta_value Either the meta value saved or the default passed-in.
+ */
+function mp_core_get_post_meta_checkbox( $post_id, $meta_key, $default = true ){
+					
+	//Get the post meta field we are looking for
+	$meta_value = mp_core_get_post_meta_or_never_been_saved($post_id, $meta_key);
+	
+	//If this checkbox has never been saved before, return the default value passed-in:
+	if ( $meta_value == 'never_been_saved_73698363746983746' ){
+		return $default;	
+	}
+	
+	//Othewise, if it has been saved before, return its saved value.			
+	return $meta_value;	
+	
+}
+
+/**
  * Return a line of CSS if a value exists
  *
  * @access   public
