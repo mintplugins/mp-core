@@ -110,80 +110,17 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 		
 	ob_start(); 
 	
-	echo $selector_string . '.velocity(
+	echo $selector_string . '.each(function(){ $(this).velocity(
 					{';
     
     //Loop through each keyframe
 	foreach( $animation_repeater as $repeat ){
 		
-		$value_counter = 2;
-		$value_forlength = count($repeat);
-		
-		//Loop through each value in this keyframe
-		foreach( $repeat as $id => $value ){
-			
-			//Don't export the animation length parameter because we use that differently altogether
-			if ( $id == 'animation_length' ){
-				continue;	
-			}
-			
-			//Default for the unit 
-			$unit = NULL;
-			
-			//If this value is 'opacity'
-			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
-			
-				//Opacity
-				$value = $value / 100;
-				
-				//If it has a value
-				if ( mp_core_value_exists( $value ) ){	
-					$value = $value;
-				}
-				//If it has no value
-				else{
-					$value = 1;
-				}
-			}
-			
-			//If this is a color animation
-			if ( $id == 'backgroundColor' ){
-				
-				if ( !empty( $value ) ){
-					$rgb_array = mp_core_hex2rgb( $value );
-					
-					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
-					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
-					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
-				}
-					
-			}
-			
-			//If this is rotation
-			if ( $id == 'rotateZ' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'deg';
-			}
-			
-			//If this is X or Y
-			if ( $id == 'translateX' || $id == 'translateY' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'px';
-			}
-			
-			//If this is scale
-			if ( $id == 'scale' ){
-				$value = empty($value) ? 1 : $value / 100;
-			}
-			
-			//Output the value for this keyframe value
-			echo $id . ': "' . $value . $unit . '",';
-			
-		}
+		mp_core_animation_echo_values( $repeat );
         
 		//Animation Length: This is formatted weird like this so it looks nicer on the front end
 		echo '}, 
-						{duration: 0 });'; 
+						{duration: 0 });});'; 
 		
 		//We only need to apply the first keyframe, so break this.
 		break;
@@ -215,80 +152,7 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
     //Loop through each keyframe
 	foreach( $animation_repeater as $repeat ){
 		
-		$value_counter = 2;
-		$value_forlength = count($repeat);
-		
-		//Loop through each value in this keyframe
-		foreach( $repeat as $id => $value ){
-			
-			//Don't export the animation length parameter because we use that differently altogether
-			if ( $id == 'animation_length' ){
-				continue;	
-			}
-			
-			//Default for the unit 
-			$unit = NULL;
-			
-			//If this value is 'opacity'
-			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
-								
-				//Opacity
-				$value = $value / 100;
-				
-				//If it has a value
-				if ( mp_core_value_exists( $value ) ){	
-					$value = $value;
-				}
-				//If it has no value
-				else{
-					$value = 1;
-				}
-			}
-			
-			//If this is a color animation
-			if ( $id == 'backgroundColor' ){
-				
-				if ( !empty( $value ) ){
-					
-					$rgb_array = mp_core_hex2rgb( $value );
-				
-					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
-					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
-					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
-				}
-					
-			}
-			
-			//If this is rotation
-			if ( $id == 'rotateZ' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'deg';
-			}
-			
-			//If this is X or Y
-			if ( $id == 'translateX' || $id == 'translateY' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'px';
-			}
-			
-			//If this is scale
-			if ( $id == 'scale' ){
-				$value = empty($value) ? 1 : $value / 100;
-			}
-			
-			//Output the value for this keyframe value
-			if ( mp_core_value_exists( $value ) ){
-				echo  $id . ': "' . $value . $unit . '"';
-				
-				//If this isn't the last item in the keyframe
-				if ($value_counter < $value_forlength){
-					echo ',';	
-				}
-			
-			}
-			
-			$value_counter = $value_counter + 1;
-		}
+		mp_core_animation_echo_values( $repeat );
         
 		//Animation Length: This is formatted weird like this so it looks nicer on the front end
 		echo '}, 
@@ -358,80 +222,7 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
     //Loop through each keyframe
 	foreach( $animation_repeater as $repeat ){
     	
-		$value_counter = 2;
-		$value_forlength = count($repeat);
-		
-		//Loop through each value in this keyframe
-		foreach( $repeat as $id => $value ){
-			
-			//Don't export the animation length parameter because we use that differently altogether
-			if ( $id == 'animation_length' ){
-				continue;	
-			}
-			
-			//Default for the unit 
-			$unit = NULL;
-			
-			//If this value is 'opacity'
-			if ( $id == 'opacity' || $id == 'backgroundColorAlpha' ){
-			
-				//Opacity
-				$value = $value / 100;
-				
-				//If it has a value
-				if ( mp_core_value_exists( $value ) ){	
-					$value = $value;
-				}
-				//If it has no value
-				else{
-					$value = 1;
-				}
-			}
-			
-			//If this is a color animation
-			if ( $id == 'backgroundColor' ){
-				
-				if ( !empty( $value ) ){
-					$rgb_array = mp_core_hex2rgb( $value );
-					
-					echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
-					echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
-					echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
-				}
-					
-			}
-			
-			//If this is rotation
-			if ( $id == 'rotateZ' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'deg';
-			}
-			
-			//If this is X or Y
-			if ( $id == 'translateX' || $id == 'translateY' ){
-				$value = empty( $value ) ? 0 : $value;
-				$unit = 'px';
-			}
-			
-			//If this is scale
-			if ( $id == 'scale' ){
-				$value = empty($value) ? 1 : $value / 100;
-			}
-			
-			//Output the value for this keyframe value
-			if ( mp_core_value_exists( $value ) ){
-				echo  $id . ': "' . $value . $unit . '"';
-				
-				//If this isn't the last item in the keyframe
-				if ($value_counter < $value_forlength){
-					echo ',';	
-				}
-			
-			}
-						
-			$value_counter = $value_counter + 1;
-		
-		}
+		mp_core_animation_echo_values( $repeat );
         
 		//This is formatted weird like this so it looks nicer on the front end
 		echo '}, 
@@ -472,3 +263,118 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 		
 }
 	
+	
+function mp_core_animation_echo_values( $repeat ){
+	$value_counter = 2;
+	$value_forlength = count($repeat);
+	
+	//Loop through each value in this keyframe
+	foreach( $repeat as $id => $value ){
+		
+		//Don't export the animation length parameter because we use that differently altogether
+		if ( $id == 'animation_length' ){
+			continue;	
+		}
+		
+		//Default for the unit 
+		$unit = NULL;
+		
+		//If this value is 'opacity'
+		if ( $id == 'opacity' ){
+						
+			//If it has a value
+			if ( mp_core_value_exists( $value ) ){	
+				
+				//Reduce it to a 0 or 1 value
+				$value = $value / 100;
+			
+			}
+			//If it has no value
+			else{
+				$value = 1;
+			}
+		}
+					
+		//If this is a color animation
+		if ( $id == 'backgroundColor' ){
+			
+			if ( !empty( $value ) ){
+				
+				//This is used in the next iteration
+				$output_background_alpha = true;
+				
+				$rgb_array = mp_core_hex2rgb( $value );
+				
+				echo 'backgroundColorRed: "' . $rgb_array[0] . '",';
+				echo 'backgroundColorGreen: "' . $rgb_array[1] . '",';
+				echo 'backgroundColorBlue: "' . $rgb_array[2] . '",';
+				
+			}
+			else{
+				echo 'backgroundColor: function() { 
+					if ( $(this).attr("mp-default-bg-color") ){
+						return $(this).attr("mp-default-bg-color");		
+					}
+					else{
+						return false;	
+					}
+				},';	
+				$value_counter = $value_counter + 1;
+				continue;
+			}
+				
+		}
+		
+		//When creating the meta array, make sure the background alpha is directly after the background color or it won't work right
+		if ( $id == 'backgroundColorAlpha' ){
+			if ( isset( $output_background_alpha ) ){
+						
+				//If it has a value
+				if ( mp_core_value_exists( $value ) ){	
+					
+					//Reduce it to a 0 or 1 value
+					$value = $value / 100;
+	
+				}
+				//If it has no value
+				else{
+					$value = 1;
+				}
+			}
+			else{
+				$value_counter = $value_counter + 1;
+				continue;	
+			}
+		}
+		
+		//If this is rotation
+		if ( $id == 'rotateZ' ){
+			$value = empty( $value ) ? 0 : $value;
+			$unit = 'deg';
+		}
+		
+		//If this is X or Y
+		if ( $id == 'translateX' || $id == 'translateY' ){
+			$value = empty( $value ) ? 0 : $value;
+			$unit = 'px';
+		}
+		
+		//If this is scale
+		if ( $id == 'scale' ){
+			$value = empty($value) ? 1 : $value / 100;
+		}
+		
+		//Output the value for this keyframe value
+		if ( mp_core_value_exists( $value ) ){
+			echo  $id . ': "' . $value . $unit . '"';
+			
+			//If this isn't the last item in the keyframe
+			if ($value_counter < $value_forlength){
+				echo ',';	
+			}
+		
+		}
+		
+		$value_counter = $value_counter + 1;
+	}
+}
