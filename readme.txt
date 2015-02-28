@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.0
+Stable tag: 1.0.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,19 +34,21 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.1.1 = February X, 2015
+= 1.0.1.1 = February 27, 2015
 * Add 'site_activating' parameter to all update and licensing functions.
 * Set the default for shadow blur to 50 to make default accurate.
 * Fix for featured images on SSL using mp_core_the_featured_image
 * Reduce unneeded nonces for Metabox saves.
 * BIG METABOX CHANGE: Only save meta if field value is different. When retrieving meta fields, make sure defaults in code use mp_core_get_post_meta and have an accurate default set.
-* Removed jquery.velocity.min.js and replaced it with velocity.min.js (version 1.2.1)
+* Deprecated jquery.velocity.min.js and replaced it with velocity.min.js (version 1.2.1)
 * Metabox Jquery: Remove the 'checked' attr when duplicating a repeat in a metabox.
 * Added versioning to enqueues in the Metabox class.
 * Various animation function upgrades.
 * Change “Install Items” > “Installing Required Items” in the plugin checker.
 * Make checkboxes in repeaters save an empty value (before they were removed from the repeater array if unchecked). This way we can check if the field key exists to know whether it has ever been saved before.
 * Added function called “mp_core_get_post_meta_checkbox” which allows us to set a default for checkboxes when retrieving them.
+* Animation upgrades for background color.
+* Disabled 3 plugin loop check introduced in 1.0.1.0.
 
 = 1.0.1.0 = February 4, 2015
 * Plugin Checker Class: Only install 3 dependant plugins at a time.
