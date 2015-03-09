@@ -104,18 +104,14 @@ jQuery(document).ready(function($){
 					if ( this.className == 'wp-editor-area') {
 						//$(this).css('display', 'block');
 						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+						
+						//If tinymce is supposed to be active for this text area
+						if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
 							
-						//Set the class for the container to be for visual - we're forcing visual mode as the default
-						$(this).parent().parent().find('.quicktags-toolbar').css('display', 'none' );
-						$(this).parent().parent().find('.wp-editor-tabs').remove();
-						
-						if ( $(this).parent().parent().find('.mce-container').css( 'display' ) == 'none' ){
-							$(this).parent().parent().find('.wp-editor-area').css( 'display', '' );
+							//Reactivate tinymce
+							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+								
 						}
-						
-						$(this).parent().parent().parent().find( '.wp-editor-wrap' ).addClass('tmce-active');
-						$(this).parent().parent().parent().find( '.wp-editor-wrap' ).removeClass('html-active');
 					}
 				});	
 			}
@@ -145,18 +141,14 @@ jQuery(document).ready(function($){
 					if ( this.className == 'wp-editor-area') {
 						//$(this).css('display', 'block');
 						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-						tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+						
+						//If tinymce is supposed to be active for this text area
+						if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
 							
-						//Set the class for the container to be for visual - we're forcing visual mode as the default
-						$(this).parent().parent().find('.quicktags-toolbar').css('display', 'none' );
-						$(this).parent().parent().find('.wp-editor-tabs').remove();
-						
-						if ( $(this).parent().parent().find('.mce-container').css( 'display' ) == 'none' ){
-							$(this).parent().parent().find('.wp-editor-area').css( 'display', '' );
+							//Reactivate tinymce
+							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+								
 						}
-						
-						$(this).parent().parent().parent().find( '.wp-editor-wrap' ).addClass('tmce-active');
-						$(this).parent().parent().parent().find( '.wp-editor-wrap' ).removeClass('html-active');
 																				
 					}
 					
@@ -235,7 +227,6 @@ jQuery(document).ready(function($){
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
 					}
-					//tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA1BBBBB', 'AAAAA0BBBBB');
@@ -247,7 +238,6 @@ jQuery(document).ready(function($){
 						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('[1]', '[0]') );
 					}
 					
-					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 				});	
 			}else{
 				$(this).find('*').each(function() {
@@ -255,11 +245,9 @@ jQuery(document).ready(function($){
 						this.name = this.name.replace('['+ (name_number+1) +']', '[' + (name_number) +']');
 					}
 					
-					//tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
 					if ( this.id ){
 						this.id= this.id.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
 					}
-					//tinyMCE.execCommand( 'mceAddEditor', true, $(this).attr('id') );
 					
 					if ( this.className ){
 						this.className = this.className.replace('AAAAA'+ (name_number+1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB');
@@ -471,7 +459,13 @@ jQuery(document).ready(function($){
 						//Re-initialize tinymce for each TInyMCE area in this repeater
 						if ( this.className == 'wp-editor-area') {
 							tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+							
+							//If tinymce is supposed to be active for this text area
+							if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
+							
+								tinyMCE.execCommand( 'mceAddEditor', true, this.id );
+							
+							}
 						}
 				
 				});
@@ -674,7 +668,7 @@ jQuery(document).ready(function($){
 		$(this).prev().val($(this).val());
 	});
 
-	//Conditional Fields - Fields that are only shown if a dropdown is set to a specific value
+	//Conditional Fields - Fields that are only shown if a dropdown/checkbox is set to a specific value
 	$(document).find("[mp_conditional_field_id]").each(function(){
 		
 		//Get the name of this fields parent conditional field
@@ -682,39 +676,27 @@ jQuery(document).ready(function($){
 				
 		//Get the name of this value that parent needs to be set to in order for this field to be visible
 		var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
-						
-		//If the parent's value is set to what it should be for this field to be visible
-		if ( $.inArray( $( '[name="' + parent_conditional_field_name + '"]' ).val(), desired_conditional_field_values ) != -1 ){
-						
-			//Show this field
-			$(this).css( 'visibility', 'visible');
-			$(this).css( 'position', '');
-				
-		}
-		else{
-			//Hide this field - we don't use display block because the showhiders already use it
-			$(this).css( 'visibility', 'hidden');
-			$(this).css( 'position', 'absolute');
-		}
 		
-	});
-	
-	//When any mp_field select is changed
-	$( document ).on( 'change', '.mp_field select', function(){
-		
-		//Store this select field's class name and object
-		parent_name = $(this).attr('name');
-		parent_conditional_field = $(this);
-		
-		//Find any fields that have this field as a conditional parent
-		$(document).find('[mp_conditional_field_id="' + parent_name + '"]').each(function(){
+		//If the parent is a checkbox
+		if ( $( '[name="' + parent_conditional_field_name + '"]' ).attr( 'type' ) == 'checkbox' ){
 			
-			//Get the name of this value that parent needs to be set to in order for this field to be visible
-			var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
-					
-			//If the parent's value is set to what one of the values should be for this field to be visible
-			if ( $.inArray( $( parent_conditional_field ).val(), desired_conditional_field_values ) != -1 ){
+			if ( $( '[name="' + parent_conditional_field_name + '"]' ).is(':checked')){
+				//Show this field
+				$(this).css( 'visibility', 'visible');
+				$(this).css( 'position', '');
+			}
+			else{
+				//Hide this field - we don't use display block because the showhiders already use it
+				$(this).css( 'visibility', 'hidden');
+				$(this).css( 'position', 'absolute');
+			}
 				
+		}
+		//If the parent is not a checkbox
+		else{
+			//If the parent's value is set to what it should be for this field to be visible
+			if ( $.inArray( $( '[name="' + parent_conditional_field_name + '"]' ).val(), desired_conditional_field_values ) != -1 ){
+							
 				//Show this field
 				$(this).css( 'visibility', 'visible');
 				$(this).css( 'position', '');
@@ -724,6 +706,50 @@ jQuery(document).ready(function($){
 				//Hide this field - we don't use display block because the showhiders already use it
 				$(this).css( 'visibility', 'hidden');
 				$(this).css( 'position', 'absolute');
+			}
+		}
+	});
+	
+	//When any mp_field select is changed
+	$( document ).on( 'change', '.mp_field select, .mp_field :checkbox', function(){
+				
+		//Store this select field's class name and object
+		parent_name = $(this).attr('name');
+		parent_conditional_field = $(this);
+		
+		//Find any fields that have this field as a conditional parent
+		$(document).find('[mp_conditional_field_id="' + parent_name + '"]').each(function(){
+			
+			//Get the name of this value that parent needs to be set to in order for this field to be visible
+			var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
+			
+			if ( parent_conditional_field.attr('type') == 'checkbox' ){
+				
+				if ( parent_conditional_field.is(':checked')){
+					//Show this field
+					$(this).css( 'visibility', 'visible');
+					$(this).css( 'position', '');
+				}
+				else{
+					//Hide this field - we don't use display block because the showhiders already use it
+					$(this).css( 'visibility', 'hidden');
+					$(this).css( 'position', 'absolute');
+				}
+			}
+			else{
+				//If the parent's value is set to what one of the values should be for this field to be visible
+				if ( $.inArray( $( parent_conditional_field ).val(), desired_conditional_field_values ) != -1 ){
+					
+					//Show this field
+					$(this).css( 'visibility', 'visible');
+					$(this).css( 'position', '');
+						
+				}
+				else{
+					//Hide this field - we don't use display block because the showhiders already use it
+					$(this).css( 'visibility', 'hidden');
+					$(this).css( 'position', 'absolute');
+				}
 			}
 			
 		});
