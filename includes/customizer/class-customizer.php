@@ -227,12 +227,34 @@ class MP_CORE_Customizer{
 			
 		}
 		
-		//Display
+		//Font-Size
 		elseif( $css_arg == "font-size(px)" ){
 			
 			if ( !empty( $theme_mod_value ) ){
 			
 				echo 'font-size' . ':' . $theme_mod_value . 'px;';
+				
+			}
+			
+		}
+		
+		//Border-width
+		elseif( $css_arg == "border-width" ){
+			
+			if ( !empty( $theme_mod_value ) ){
+			
+				echo 'border-width' . ':' . $theme_mod_value . 'px;';
+				
+			}
+			
+		}
+		
+		//Border-radius
+		elseif( $css_arg == "border-radius" ){
+			
+			if ( !empty( $theme_mod_value ) ){
+			
+				echo 'border-radius' . ':' . $theme_mod_value . 'px;';
 				
 			}
 			

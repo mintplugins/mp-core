@@ -93,10 +93,48 @@
 						}
 						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + '\' );');
 					}
+					
+					//Font-Size
+					else if( element_css_arg == "font-size(px)" ){
+						
+						if (newval == null || newval == '' || newval == false){
+						
+							newval = '0';
+							
+						}
+						
+						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + 'font-size' + '\', \'' + newval + 'px\' );');
+						
+					}
+					
+					//Border-width
+					else if( element_css_arg == "border-width" ){
+						
+						if (newval == null || newval == '' || newval == false){
+							
+							newval = '0';
+							
+						}
+						
+						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + 'px\' );');
+						
+					}
+					
+					//Border-radius
+					else if( element_css_arg == "border-radius" ){
+						
+						if (newval == null || newval == '' || newval == false){
+							
+							newval = '0';
+							
+						}
+						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + 'px\' );');
+						
+					}
 					//Other
 					else{
 						if (newval == null || newval == '' || newval == false){
-							newval = 'inherit';	
+							newval = '';	
 						}
 						eval('$( \'' + element_id + '\' ).' + jquery_function_name + '( \'' + element_css_arg + '\', \'' + newval + '\' );');
 					}
