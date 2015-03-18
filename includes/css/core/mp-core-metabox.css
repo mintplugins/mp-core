@@ -44,6 +44,9 @@
 	padding:0;
 	margin:10px 0px 0px 0px;
 }
+.repeater_container h3{
+	overflow:hidden;	
+}
 .repeater_container li{
 	border-color: #dfdfdf;
 	border-width: 1px;
@@ -262,6 +265,15 @@ output {
 }
 .repeater_container > li:first-child .mp_animation_length{
 	display:none!important;	
+}
+
+/*Hide Repeater Description if its on the right side */
+#side-sortables .mp-core-repeater-values-description,
+#side-sortables .mp-core-repeater-description{
+	display:none;
+}
+.repeater_container .mp_field{
+	margin-left:0px!important;	
 }
 
 /* Help Popup */
