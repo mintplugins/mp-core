@@ -18,7 +18,7 @@ jQuery(document).ready(function($){
 		
 		$(document).find( '[mp_default_value]' ).each( function(){
 			
-			console.log($(this).attr( 'mp_default_value' ));
+			//console.log($(this).attr( 'mp_default_value' ));
 			
 			//If this field WAS something different than the default, and now its the default again
 			if( $(this).attr( 'mp_default_value' ) == $(this).val() && $(this).attr( 'mp_saved_value' ) != $(this).val() ){
