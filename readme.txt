@@ -34,6 +34,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.1.2 = March 9, 2015
+* TinyMCE Fix: Only re-initialize TinyMCE after Repeaters duplicated or re-ordered if it was previously set to be in “Visual” mode. Otherwise don’t reinitialize. This fixes the issue of having multiple text areas in one area upon repeater changes.
+* Removed "Please Wait" from "Installing Items" in plugin installer.
+* Customizer: fontsize, borderwidth, borderradius control options added.
+
 = 1.0.1.1 = February 27, 2015
 * Add 'site_activating' parameter to all update and licensing functions.
 * Set the default for shadow blur to 50 to make default accurate.
