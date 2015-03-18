@@ -56,6 +56,7 @@ class MP_CORE_Shortcode_Insert{
 			'shortcode_title' => NULL,
 			'shortcode_description' => NULL,
 			'shortcode_icon_spot' => NULL,
+			'shortcode_icon_dashicon_code' => NULL,
 			'shortcode_options' => array()
 		);
 		
@@ -137,14 +138,27 @@ class MP_CORE_Shortcode_Insert{
 			//If we are on a newer than 3.5 WordPress	
 			} else {
 				
-				//Output new style button
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+				//If we should show a dashicon on the Shortcode button
+				if ( !empty( $this->_args['shortcode_icon_dashicon_class'] ) ){
+					//Output new style button
+					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '" style="padding-left:5px;">';
+						$output .= '<span class="wp-media-buttons-icon dashicons ' . $this->_args['shortcode_icon_dashicon_class'] . '" style="font-size:17px;" id="' . $this->_args['shortcode_id'] . '-media-button"></span>';
+					$output .= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
+				}
+				//If we should just output a space for an icon (image icon)
+				else if( !empty( $this->_args['shortcode_icon_spot'] ) ){
+					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+						$output .= '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>';
+					$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
+				}
+				else{
 				
-				//If we passed the plugin location, there is most likely an image so create a place for it
-				$output .= !empty( $this->_args['shortcode_icon_spot'] ) ? '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>' : '';
-				
-				//Finish the output
-				$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
+					//Output old style button
+					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+					
+					//Finish the output
+					$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
+				}
 			}
 		}
 		
