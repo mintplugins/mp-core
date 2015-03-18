@@ -1086,7 +1086,16 @@ function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = f
  * @param    $enabled_by_default boolean If true, this shadow will be on by default and return code if the user has never changed the meta setting.
  * @return   void
  */
-function mp_core_drop_shadow_css( $post_id, $meta_prefix ){
+function mp_core_drop_shadow_css( $post_id, $meta_prefix, $args = array() ){
+	
+	$default_args = array(
+		'include_webkit_css' => true,
+		'include_svg_css' => true,
+	);	
+	
+	$args = wp_parse_args( $args, $default_args );
+	
+	$css_output = NULL;
 			
 	//Get the shadow settings
 	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 50 );
@@ -1107,13 +1116,20 @@ function mp_core_drop_shadow_css( $post_id, $meta_prefix ){
 	//Set the the RGBA string including the alpha
 	$shadow_color = 'rgba( ' . $shadow_color[0] . ', ' . $shadow_color[1] . ', ' . $shadow_color[2] . ', ' . $shadow_opacity . ')';
 	
-	//http://stackoverflow.com/questions/3186688/drop-shadow-for-png-image-in-css
-	$css_output = "-webkit-filter: drop-shadow(" . $shadow_x . "px " . $shadow_y . "px " . $shadow_blur . "px " . $shadow_color . ");
-    
-	filter: url(\"data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='" . $shadow_blur . "'/><feOffset dx='" . $shadow_x ."' dy='" . $shadow_y . "' result='offsetblur'/><feFlood flood-color='" . $shadow_color . "'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow\");
-    -ms-filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";
-    filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";";
+	$css_output .= 'transition: -webkit-filter 0.5s ease-in-out;';
 	
+	//If we should include the webkit css output
+	if ( $args['include_webkit_css'] ){
+		//http://stackoverflow.com/questions/3186688/drop-shadow-for-png-image-in-css
+		$css_output .= "-webkit-filter: drop-shadow(" . $shadow_x . "px " . $shadow_y . "px " . $shadow_blur . "px " . $shadow_color . ");";
+	}
+    
+	//If we should include the svg css output
+	if ( $args['include_svg_css'] ){
+		$css_output .= "filter: url(\"data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='" . $shadow_blur . "'/><feOffset dx='" . $shadow_x ."' dy='" . $shadow_y . "' result='offsetblur'/><feFlood flood-color='" . $shadow_color . "'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow\");
+		-ms-filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";
+		filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";";
+	}
 	
 	return $css_output;
 }
