@@ -51,6 +51,9 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 		jQuery(document).ready(function($){ 
 						
 			$( window ).load(function(){
+								
+				//Set the first frame of the animation and pause there
+				' . mp_core_js_animate_set_first_keyframe( "$(document).find('" . $element_id . ' ' . $child_to_animate . "')", $animation_repeater ) .'
 				
 				//Variable which tells us the current state of the animation: \'start\' or \'end\';
 				var ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
@@ -99,7 +102,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 						}
 					  }
 					
-					console.log( "Going " + direction );
+					//console.log( "Going " + direction );
 					
 					//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
 					$(document).find("#' . sanitize_title( $child_to_animate ) . '").remove(); 
@@ -127,7 +130,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							}
 						  }
 						
-						console.log( "Going " + direction );
+						//console.log( "Going " + direction );
 						
 						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
 						$(document).find("#' . sanitize_title( $child_to_animate ) . '").remove(); 
@@ -153,7 +156,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							
 						  }
 						
-						console.log( "Going " + direction );
+						//console.log( "Going " + direction );
 						
 						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
 						$(document).find("#' . sanitize_title( $child_to_animate ) . '").remove(); 
@@ -179,7 +182,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							}
 						  }
 						
-						console.log( "Going " + direction );
+						//console.log( "Going " + direction );
 						
 						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
 						$(document).find("#' . sanitize_title( $child_to_animate ) . '").remove(); 
@@ -467,7 +470,13 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
         
 		//Animation Length: This is formatted weird like this so it looks nicer on the front end
 		echo '}, 
-						{duration: 0 });});'; 
+						{duration: 0, begin: function() { 
+			
+		}, complete: function() { 
+			
+			console.log( \'set default\');
+			
+		} });});'; 
 		
 		//We only need to apply the first keyframe, so break this.
 		break;
@@ -492,9 +501,7 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
 	$forlength = count($animation_repeater);
 		
 	ob_start(); 
-	
-	echo '$( document ).trigger( "mp_core_animation_start" );';
-	
+		
 	echo $selector_string . '.velocity("stop").velocity(
 					{';
     
@@ -570,9 +577,7 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 	$animation_repeater = array_reverse( $animation_repeater );
 		
 	ob_start();
-	
-	echo '$( document ).trigger( "mp_core_animation_start" );';
-	
+		
 	//Apply the velocity animation to the element	
 	echo $selector_string . ' .velocity("stop").velocity(
 					{';
