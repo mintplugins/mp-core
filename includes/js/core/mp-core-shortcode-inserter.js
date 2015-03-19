@@ -9,7 +9,8 @@ jQuery(document).ready(function($){
 		$(this).parent().parent().find( '.mp-icon-font-field-container .mp-icon-font-field' ).val($(this).find(' > div > div').html());
 		
 		//Show the icon in the thumbnail area preview
-		$(this).parent().parent().find( '.mp_font_icon_thumbnail' ).attr( 'class', $(this).find(' > div > div').html() + " mp-core-icon-thumb" );
+		//$(this).parent().parent().find( '.mp_font_icon_thumbnail' ).attr( 'class', '');
+		$(this).parent().parent().find( '.mp_font_icon_thumbnail' ).attr( 'class', $(this).find(' > div > div').html() + " mp-core-icon-thumb mp_font_icon_thumbnail" );
 		$( '.mp_font_icon_thumbnail' ).css( 'display', 'inline-block' );
 		
 		//Hide the Icon Picker div
