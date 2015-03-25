@@ -667,7 +667,7 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 			
 		}, complete: function() { 
 			
-			console.log( \'set default\');
+			//console.log( \'set default\');
 			
 		} });});'; 
 		
