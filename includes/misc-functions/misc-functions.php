@@ -1152,7 +1152,7 @@ function mp_core_stroke_css( $post_id, $meta_prefix ){
 	$stroke_color = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_color', '#FFF' );
 	$stroke_color = mp_core_hex2rgb( $stroke_color );
 	
-	$stroke_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_opacity', '50' );
+	$stroke_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_opacity', '100' );
 	$stroke_opacity = $stroke_opacity / 100;
 	
 	//Set the the RGBA string including the alpha
