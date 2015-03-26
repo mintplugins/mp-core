@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.2
+Stable tag: 1.0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.1.3 = March 26, 2015
+* Make sure stroke default opacities are 100%
 
 = 1.0.1.2 = March 24, 2015
 * TinyMCE Fix: Only re-initialize TinyMCE after Repeaters duplicated or re-ordered if it was previously set to be in “Visual” mode. Otherwise don’t reinitialize. This fixes the issue of having multiple text areas in one area upon repeater changes.
