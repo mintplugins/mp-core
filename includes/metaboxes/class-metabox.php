@@ -717,11 +717,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  .  $conditional_output . '><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  .  $conditional_output . '><div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '</div>'; 
 		}
 		
@@ -766,12 +766,12 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . ' repeatertitle" ' . $field_showhider  . $conditional_output . '><div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . ' repeatertitle" ' . $field_showhider  . $conditional_output . '><div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '</div>'; 
 		}
 		
@@ -815,11 +815,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
@@ -865,11 +865,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			
 			
-			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
@@ -918,11 +918,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -977,11 +977,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//because we can't set a true default (because false is empty so it would just always be true no matter what).
 				
 			$checked = empty($field_value) ? '' : 'checked';
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="checkbox" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" class="' . $field_input_class . '" value="' . $field_id . '" ' . $checked . ' />';
 			echo '</div>'; 
 		}
@@ -1032,11 +1032,11 @@ if (!class_exists('MP_CORE_Metabox')){
 				$field_values = mp_core_value_exists( $field_default_attr ) ? $field_default_attr : $field_value;
 			}
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 						
 			//Loop through each checkbox option
 			foreach( $field_select_values as $field_slug => $field_readable_name ){
@@ -1095,11 +1095,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -1148,11 +1148,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -1201,11 +1201,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -1254,11 +1254,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -1307,11 +1307,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
 			echo $field_value;
 			echo '</textarea>';
@@ -1356,11 +1356,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 						
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo wp_editor( html_entity_decode($field_value) , 'mp_core_wp_editor_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
 			echo '</div>'; 
 		}
@@ -1409,11 +1409,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			?>
 			
             <select name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>">
@@ -1473,11 +1473,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			?>
 			<input name="<?php echo $field_id; ?>" list="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" <?php echo $field_required_output; ?> value="<?php echo $field_value; ?>" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>"/>
             <datalist id="<?php echo $field_id; ?>">
@@ -1535,11 +1535,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			
 			//Loop through each Radio Button 
 			foreach ( $field_select_values as $select_value => $select_text) : ?>
@@ -1601,10 +1601,10 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			?>
             <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" <?php echo $field_default_attr; ?> mp_saved_value="<?php echo $field_value; ?>" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> ><input type="number" class="<?php echo $field_input_class; ?>_output mp_core_input_range_output">
 			<?php        
@@ -1653,10 +1653,10 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
-			echo '</label></div>';
+			echo '</div></div>';
 			?>
             <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" mp_default_value="'<?php echo $field_default_attr; ?>" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
 			<?php        
@@ -1707,11 +1707,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
@@ -1760,11 +1760,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 						
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			?>       
 			<!-- Upload button and text field -->
             <div class="mp_media_upload">
@@ -1833,11 +1833,11 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
-			echo '</label></div>';
+			echo '</div></div>';
 			
 			//Font thumbnail
 			echo '<div class="mp_font_icon_thumbnail">';
@@ -1926,7 +1926,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			foreach ($field_select_values as $help_array){
 				echo '<div class="mp_core_help">';		
@@ -1934,7 +1934,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				echo '</div>';		
 			}
 			echo '<div style="clear: both;"></div>';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '</div>'; 
 		}
 		
@@ -1980,13 +1980,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><label for="' . $field_id . '">';
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			
 			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '">' . $field_title . '</a>';
 			
 			echo '<div style="clear: both;"></div>';
-			echo '</label></div>';
+			echo '</div></div>';
 			echo '</div>'; 
 		}
 		
