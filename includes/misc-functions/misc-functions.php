@@ -1004,6 +1004,9 @@ function mp_core_simple_action_page( $args ){
 			}
 	
 	</style>
+    
+    <script type='text/javascript' src="<?php echo get_bloginfo( 'wpurl' ); ?>/wp-includes/js/jquery/jquery.js"></script>
+    
 	</head>
 	<body id="error-page">
 		<p><h2><?php echo $args['h2_title']; ?></h2></p>
