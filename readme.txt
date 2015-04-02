@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.3
+Stable tag: 1.0.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,12 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.1.4 = April 2, 2015
+* Convert meta field "labels" to "divs" so that links in field descriptions are clickable.
+* Add jquery to simple action page function
+* Plugin Installer: Fixed issue where "Successfully Installed" was shown even if it wasn't. 
+* In the simple action page misc function, a html_head output was added for plugins to use javascript and custom css on those pages.
 
 = 1.0.1.3 = March 26, 2015
 * Make sure stroke default opacities are 100%
