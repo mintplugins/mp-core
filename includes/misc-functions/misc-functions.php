@@ -879,6 +879,7 @@ function mp_core_simple_action_page( $args ){
 	
 	$default_args = array(
 		'page_title' => NULL,
+		'html_head' => NULL,
 		'h2_title' => NULL,
 		'page_body_html' => NULL,
 	);
@@ -1005,7 +1006,7 @@ function mp_core_simple_action_page( $args ){
 	
 	</style>
     
-    <script type='text/javascript' src="<?php echo get_bloginfo( 'wpurl' ); ?>/wp-includes/js/jquery/jquery.js"></script>
+    <?php echo $args['html_head']; ?>
     
 	</head>
 	<body id="error-page">
