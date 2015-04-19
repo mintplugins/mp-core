@@ -401,7 +401,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                                 <label for="current-page-selector" class="screen-reader-text"><?php echo __( 'Select Page', 'mp_core' ); ?></label>
                                 <input class="page" type="hidden" name="page" value="<?php echo $this->_args['slug']; ?>">
                                 <input class="mp_core_directory_tab" type="hidden" name="mp_core_directory_tab" value="<?php echo $this->_mp_directory_tab; ?>">
-                                <input class="current-page" id="current-page-selector" title="Current page" type="text" name="mp_core_directory_paged" value="<?php echo !empty( $this->response['page'] ) ? $this->response['page'] : $_GET['mp_core_directory_paged']; ?>" size="4">
+                                <input class="current-page" id="current-page-selector" title="Current page" type="text" name="mp_core_directory_paged" value="<?php echo !empty( $_GET['mp_core_directory_paged'] ) ? $_GET['mp_core_directory_paged'] : 1; ?>" size="4">
                             </form> <?php echo __( 'of', 'mp_core' ); ?> <span class="total-pages"><?php echo $this->response['total_pages']; ?></span>
                         </span>
                         
@@ -563,6 +563,51 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				do_action( 'mp_core_directory_footer_' . $this->_args['slug'] );
 			
 			echo '</div>';
+			
+			?><div class="tablenav top">
+				<div class="alignleft actions">
+				</div>
+				<div class="tablenav-pages">
+                	<span class="displaying-num"><?php echo $this->response['total_items']; ?> <?php echo __( 'items', 'mp_core' ); ?></span>
+					<span class="pagination-links">
+                    	
+                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => 1 
+						), admin_url( 'admin.php' ) ); ?>">«</a>
+						
+                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->_mp_directory_paged == 1 ? 1 : $this->_mp_directory_paged - 1
+						), admin_url( 'admin.php' ) ); ?>">‹</a>
+                        
+						<span class="paging-input">
+                        	<form class="mp-core-directory-paged-form" action="<?php echo admin_url( 'admin.php' ); ?>" method="get">
+                                <label for="current-page-selector" class="screen-reader-text"><?php echo __( 'Select Page', 'mp_core' ); ?></label>
+                                <input class="page" type="hidden" name="page" value="<?php echo $this->_args['slug']; ?>">
+                                <input class="mp_core_directory_tab" type="hidden" name="mp_core_directory_tab" value="<?php echo $this->_mp_directory_tab; ?>">
+                                <input class="current-page" id="current-page-selector" title="Current page" type="text" name="mp_core_directory_paged" value="<?php echo !empty( $_GET['mp_core_directory_paged'] ) ? $_GET['mp_core_directory_paged'] : 1; ?>" size="4">
+                            </form> <?php echo __( 'of', 'mp_core' ); ?> <span class="total-pages"><?php echo $this->response['total_pages']; ?></span>
+                        </span>
+                        
+						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->_mp_directory_paged == $this->response['total_pages'] ? $this->_mp_directory_paged : $this->_mp_directory_paged + 1
+						), admin_url( 'admin.php' ) ); ?>">›</a>
+                        
+						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+							'page' => $this->_args['slug'], 
+							'mp_core_directory_tab' => $this->_mp_directory_tab, 
+							'mp_core_directory_paged' => $this->response['total_pages']
+						), admin_url( 'admin.php' ) ); ?>">»</a>
+                        
+                    </span>
+               </div>				
+               
+			</div><?php
 			
 		}
 			
