@@ -865,7 +865,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			
 			
-			echo '<div style="display:none;" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider . '> <div class="mp_title"><div for="' . $field_id . '">';
+			echo '<div style="display:none;" class="mp_field mp_field_hidden mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<strong>' .  $field_title . '</strong>';
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
