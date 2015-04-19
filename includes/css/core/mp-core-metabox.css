@@ -347,3 +347,7 @@ output {
 .mp-multiple-checkboxes-desc{
 	margin-right:10px;	
 }
+
+.mp_field_hidden{
+	display:none!important;	
+}
