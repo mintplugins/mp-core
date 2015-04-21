@@ -156,7 +156,7 @@ if ( !class_exists( 'MP_CORE_Theme_Updater' ) ){
 			$update_data = $this->check_for_update();
 			
 			//Add the license to the package URL if the license passed in is not NULL - this is now done in the mp_repo plugin
-			//$update_data['package'] = $args['software_license'] != NULL ? add_query_arg('license', $args['software_license'], $update_data['package'] ) : $update_data['package'];
+			//$update_data['package'] = $args['software_license'] != NULL ? mp_core_add_query_arg('license', $args['software_license'], $update_data['package'] ) : $update_data['package'];
 					
 			if ( $update_data ) {
 				$value->response[ $args['theme_slug'] ] = $update_data;
