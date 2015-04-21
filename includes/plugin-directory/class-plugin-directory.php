@@ -64,7 +64,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 			$this->_mp_page_source = isset($_GET['mp-source']) ? $_GET['mp-source'] : NULL;
 			$this->_mp_directory_tab = isset($_GET['mp_core_directory_tab']) ? $_GET['mp_core_directory_tab'] : NULL;
 			$this->_mp_directory_paged = isset($_GET['mp_core_directory_paged']) ? $_GET['mp_core_directory_paged'] : 1;
-			$this->_plugin_success_link = add_query_arg( array('page' => $this->_args['slug'], 'mp_core_directory_tab' => $this->_mp_directory_tab ), admin_url('admin.php') );
+			$this->_plugin_success_link = mp_core_add_query_arg( array('page' => $this->_args['slug'], 'mp_core_directory_tab' => $this->_mp_directory_tab ), admin_url('admin.php') );
 			
 			//If we are on the install page for this plugin
 			if ( strpos( $this->_page, 'mp_core_install_plugin_page_' ) !== false && $this->_mp_page_source == 'mp_core_directory' ){
@@ -95,7 +95,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					elseif ( $this->_mp_directory_tab == 'search' ){
 						
 						//Get list of Plugins to show, Listen for Licenses, And if we are on an Installation page, Create install page for that plugin		
-						$this->setup_functions( add_query_arg( array( 
+						$this->setup_functions( mp_core_add_query_arg( array( 
 							'limit_to_repo_group' => $this->_args['limit_search_to_repo_group_slug'], 
 							's' => isset( $_GET['search']  ) ? $_GET['search'] : NULL
 						), $this->_args['search_api_url'] ) );
@@ -288,7 +288,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 				$plugin['plugin_license'] = $license;
 				
 				//Redirect when complete back to Directory page
-				$plugin['plugin_success_link'] = add_query_arg( array( 
+				$plugin['plugin_success_link'] = mp_core_add_query_arg( array( 
 					'page' => isset( $_GET['mp_core_directory_page'] ) ? $_GET['mp_core_directory_page'] : 'mp_core_plugin_directory', 
 					'mp_core_directory_tab' => isset( $_GET['mp_core_directory_tab'] ) ? $_GET['mp_core_directory_tab'] : NULL 
 					
@@ -349,14 +349,14 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
 					//If we are doing a search
 					if ( $this->_mp_directory_tab == 'search' ){?>
 						
-                        <li class="plugin-install-search"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => 'search' ), admin_url( 'admin.php' ) ); ?>" class=" current"><?php echo __( 'Search Results', 'mp_core' ); ?></a> </li>
+                        <li class="plugin-install-search"><a href="<?php echo mp_core_add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => 'search' ), admin_url( 'admin.php' ) ); ?>" class=" current"><?php echo __( 'Search Results', 'mp_core' ); ?></a> </li>
 
 					<?php }
 					
 					//Loop through each Directory List URL passed-in
 					foreach ( $this->_args['directory_list_urls'] as $directory_list_slug => $directory_list_array ){ ?>
 						
-						<li class="<?php echo $directory_list_slug; ?>"><a href="<?php echo add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => $directory_list_slug ), admin_url( 'admin.php' ) ); ?>" <?php echo $this->_mp_directory_tab ==  $directory_list_slug ? 'class="current"' : NULL; ?>><?php echo $directory_list_array['title']; ?></a> </li>
+						<li class="<?php echo $directory_list_slug; ?>"><a href="<?php echo mp_core_add_query_arg( array( 'page' => $this->_args['slug'], 'mp_core_directory_tab' => $directory_list_slug ), admin_url( 'admin.php' ) ); ?>" <?php echo $this->_mp_directory_tab ==  $directory_list_slug ? 'class="current"' : NULL; ?>><?php echo $directory_list_array['title']; ?></a> </li>
 					
 					<?php 
 						$description = $this->_mp_directory_tab ==  $directory_list_slug ? $directory_list_array['description'] : $description;
@@ -384,13 +384,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                 	<span class="displaying-num"><?php echo $this->response['total_items']; ?> <?php echo __( 'items', 'mp_core' ); ?></span>
 					<span class="pagination-links">
                     	
-                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => 1 
 						), admin_url( 'admin.php' ) ); ?>">«</a>
 						
-                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo add_query_arg( array( 
+                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->_mp_directory_paged == 1 ? 1 : $this->_mp_directory_paged - 1
@@ -405,13 +405,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                             </form> <?php echo __( 'of', 'mp_core' ); ?> <span class="total-pages"><?php echo $this->response['total_pages']; ?></span>
                         </span>
                         
-						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo add_query_arg( array( 
+						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->_mp_directory_paged == $this->response['total_pages'] ? $this->_mp_directory_paged : $this->_mp_directory_paged + 1
 						), admin_url( 'admin.php' ) ); ?>">›</a>
                         
-						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->response['total_pages']
@@ -533,7 +533,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                         <div class="plugin-card-top">
                             <a href="<?php echo $plugin['plugin_buy_url']; ?>" class="plugin-icon" target="_blank"><img src="<?php echo str_replace( 'http://', 'https://', $plugin['plugin_image'] ); ?>"></a>
                             <div class="name column-name">
-                                <h4><a href="<?php echo add_query_arg( array( 'TB_iframe' => true, 'width' => '772', 'height' => '373' ), $plugin['plugin_buy_url'] ); ?>" class="thickbox" target="_blank"><?php echo $plugin['plugin_name']; ?></a></h4>
+                                <h4><a href="<?php echo mp_core_add_query_arg( array( 'TB_iframe' => true, 'width' => '772', 'height' => '373' ), $plugin['plugin_buy_url'] ); ?>" class="thickbox" target="_blank"><?php echo $plugin['plugin_name']; ?></a></h4>
                             </div>
                             <div class="action-links mp-core-directory-price">
                					<h4><?php echo $plugin['plugin_price']; ?></h4>
@@ -571,13 +571,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                 	<span class="displaying-num"><?php echo $this->response['total_items']; ?> <?php echo __( 'items', 'mp_core' ); ?></span>
 					<span class="pagination-links">
                     	
-                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+                        <a class="first-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the first page', 'mp_core' ); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => 1 
 						), admin_url( 'admin.php' ) ); ?>">«</a>
 						
-                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo add_query_arg( array( 
+                        <a class="prev-page <?php echo $this->_mp_directory_paged == 1 ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the previous page', 'mp_core' ); ?>" href="<?php 					echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->_mp_directory_paged == 1 ? 1 : $this->_mp_directory_paged - 1
@@ -592,13 +592,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                             </form> <?php echo __( 'of', 'mp_core' ); ?> <span class="total-pages"><?php echo $this->response['total_pages']; ?></span>
                         </span>
                         
-						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo add_query_arg( array( 
+						<a class="next-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the next page', 'mp_core'); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->_mp_directory_paged == $this->response['total_pages'] ? $this->_mp_directory_paged : $this->_mp_directory_paged + 1
 						), admin_url( 'admin.php' ) ); ?>">›</a>
                         
-						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo add_query_arg( array( 
+						<a class="last-page <?php echo $this->_mp_directory_paged == $this->response['total_pages'] ? 'disabled' : NULL; ?>" title="<?php echo __( 'Go to the last page', 'mp_core' ); ?>" href="<?php echo mp_core_add_query_arg( array( 
 							'page' => $this->_args['slug'], 
 							'mp_core_directory_tab' => $this->_mp_directory_tab, 
 							'mp_core_directory_paged' => $this->response['total_pages']
