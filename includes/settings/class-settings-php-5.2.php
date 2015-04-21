@@ -155,7 +155,7 @@ class MP_CORE_Settings{
 	 *
 	 * @access   public
 	 * @since    1.0.0
-	 * @see      add_query_arg()
+	 * @see      mp_core_add_query_arg()
 	 * @see      get_admin_url()
 	 * @return   void
 	 */
@@ -168,7 +168,7 @@ class MP_CORE_Settings{
 		$active_class = $active_tab == $this->_args['slug'] . '_' . $tab_info['slug'] ? 'nav-tab-active' : NULL;
 		
 		//Set tab link based on whether there is a parent_slug
-		$tab_link = add_query_arg( array('page' => $this->_args['slug'], 'tab' => $this->_args['slug'] . '_' . $tab_info['slug']), get_admin_url() . $parent_slug );
+		$tab_link = mp_core_add_query_arg( array('page' => $this->_args['slug'], 'tab' => $this->_args['slug'] . '_' . $tab_info['slug']), get_admin_url() . $parent_slug );
 		
 		//echo HTML for tab
 		echo '<a href="' . $tab_link . '" class="nav-tab ' . $active_class . '">' . $tab_info['title'] . '</a>';
