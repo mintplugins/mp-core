@@ -1196,17 +1196,33 @@ function mp_core_stroke_css( $post_id, $meta_prefix ){
 }
 
 /**
- * Adds esc_url to the mp_core_add_query_arg function. This is for security with XSS. 
+ * Adds esc_url to the add_query_arg function. This is for security with XSS. 
  * See: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html
  *
  * @access   public
  * @since    1.0.0
  * @param    $keys_values An array of URL variables to add with each key being the variable name and the value being the value of that variable.
- * @param    $base_url TThe url to add the aforementioned variables to
+ * @param    $base_url The url to add the aforementioned variables to
  * @return   A URL, sanitized and with all url variables added.
  */
-function mp_core_mp_core_add_query_arg( $keys_values, $base_url ){
+function mp_core_add_query_arg( $keys_values, $base_url ){
 	
-	return esc_url( mp_core_add_query_arg( $keys_values, $base_url ) );
+	return esc_url( add_query_arg( $keys_values, $base_url ) );
+	
+}
+
+/**
+ * Adds esc_url to the remove_query_arg function. This is for security with XSS. 
+ * See: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $keys_to_remove An array of URL variables to remove with each value being the variable name.
+ * @param    $base_url The url to remove the aforementioned variables from
+ * @return   A URL, sanitized and with all url variables added.
+ */
+function mp_core_remove_query_arg( $keys_to_remove, $base_url ){
+	
+	return esc_url( remove_query_arg( $keys_values, $base_url ) );
 	
 }
