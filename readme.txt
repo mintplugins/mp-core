@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.5
+Stable tag: 1.0.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.1.6 = April X, 2015
+= 1.0.1.6 = April 24, 2015
 * Removed previously jquery.velocity.min.js (deprecated as of version 1.0.1.1) and was replaced with velocity.min.js.
 * Make sure hidden meta fields are hidden always
 * Added Isotope JS to utility js scripts folder.
