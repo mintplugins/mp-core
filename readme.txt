@@ -34,6 +34,15 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.1.6 = April X, 2015
+* Removed previously jquery.velocity.min.js (deprecated as of version 1.0.1.1) and was replaced with velocity.min.js.
+* Make sure hidden meta fields are hidden always
+* Added Isotope JS to utility js scripts folder.
+* Added mp_core_get_post_meta_multiple_checkboxes function for retrieving multiple checkboxes easily.
+* Addon-Directory pages have nav at bottom and top now
+* Security Fix: All "add_query_arg" function changed to "mp_core_add_query_arg" to properly sanitize the URLs
+* Security Fix: All "remove_query_arg" function changed to "mp_core_remove_query_arg" to properly sanitize the URLs
+
 = 1.0.1.5 = April 2, 2015
 * Added admin notice for if Theme is installed but not active to the Plugin Checker class.
 
