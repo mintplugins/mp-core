@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.6
+Stable tag: 1.0.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.1.7 = April 25, 2015
+* Proper error for ajax plugin updates when failed
+* esc_url for mp_core_add_query_arg now uses esc_url_raw
+* Better error for bulk installs with incorrect license.
 
 = 1.0.1.6 = April 24, 2015
 * Removed previously jquery.velocity.min.js (deprecated as of version 1.0.1.1) and was replaced with velocity.min.js.
