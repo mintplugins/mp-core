@@ -1207,7 +1207,7 @@ function mp_core_stroke_css( $post_id, $meta_prefix ){
  */
 function mp_core_add_query_arg( $keys_values, $base_url ){
 	
-	return esc_url( add_query_arg( $keys_values, $base_url ) );
+	return esc_url_raw( add_query_arg( $keys_values, $base_url ) );
 	
 }
 
@@ -1223,6 +1223,6 @@ function mp_core_add_query_arg( $keys_values, $base_url ){
  */
 function mp_core_remove_query_arg( $keys_to_remove, $base_url ){
 	
-	return esc_url( remove_query_arg( $keys_values, $base_url ) );
+	return esc_url_raw( remove_query_arg( $keys_to_remove, $base_url ) );
 	
 }
