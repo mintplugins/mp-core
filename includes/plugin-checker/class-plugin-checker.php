@@ -302,8 +302,16 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 							
 							<div id="<?php echo $plugin_name_slug; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
 								
-								<p class="plugin-description"><?php echo __( "You need a license for ", 'mp_core' ) . $plugin['plugin_name']; ?></p>
-								
+                                <?php 
+								//If there is nothing entered for the license key, tell the user they need one.
+								if ( empty( $license_key ) ){ ?>
+									<p class="plugin-description"><?php echo __( "You need a license for ", 'mp_core' ) . $plugin['plugin_name']; ?></p><?php 
+								} 
+								//If there is a license key entered, let the user know it is invalid
+								else{?>
+									<p class="plugin-description"><?php echo __( "The license key is invalid for ", 'mp_core' ) . $plugin['plugin_name']; ?></p><?php 
+								}?>
+                                
 								<form method="post">
 													
 									<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
