@@ -146,7 +146,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			if( false !== $api_response && is_object( $api_response ) ) {
 			
 				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
-				if( $this->version != $api_response->new_version ){				
+				if( $this->version != $api_response->new_version ){
+					$api_response->plugin = $this->name;				
 					$custom_api_plugins->response[$this->name] = $api_response;
 				}
 								
@@ -200,9 +201,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Get all plugins		
 			$all_plugins = get_plugins();
-			
-
-						
+				
 			//Loop through all plugins
 			foreach ( (array)$all_plugins as $plugin_file => $plugin_data) {
 				
@@ -627,6 +626,7 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 				
 				//Add each custom plugin to the pre_set_site_transient_update_plugins value
 				$_transient_data->response[$plugin_name] = $api_response;
+								
 			}
 		}
 	
@@ -644,3 +644,51 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 
 }
 add_filter( 'pre_set_site_transient_update_plugins', 'pre_set_site_transient_update_plugins_filter' );
+
+/**
+ * The ajax plugin update intrduced in WP 4.2 returned true even if it shouldn't. This double checks our custom plugins to make the version number mat up when updating via ajax
+ * NOTE: While this function does send all the right information to fail when a plugin doesn't update (eg: bad license), WordPress doesn't currently display the error properly.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
+function mp_core_ajax_upgrader_process_complete( $Plugin_Upgrader, $args ){
+			
+	//If this is an ajax plugin update
+	if ( defined('DOING_AJAX') && DOING_AJAX ){
+		
+		$update_plugins_transient = get_site_transient( 'update_plugins' );
+		$plugins_in_question = $update_plugins_transient->response;
+		
+		foreach( $plugins_in_question as $name_of_plugin_name => $plugin_in_question ){
+			break;
+		}
+
+		$latest_version_available = $plugin_in_question->new_version;		
+		
+		//Get all plugins		
+		$all_plugins = get_plugins();
+			
+		//Loop through all plugins
+		foreach ( (array)$all_plugins as $plugin_file => $plugin_data) {
+			
+			//If this is the plugin we are looking for
+			if ( $plugin_file == $name_of_plugin_name ){
+				
+				//If the versions don't match up, it failed
+				if ( $latest_version_available != $plugin_data['Version']){
+					
+					$status['errorCode'] = 'mintplugins_license_invalid';
+					$status['error'] = __( 'The plugin license entered is invalid. Please double check.', 'mp_core' );
+					wp_send_json_error( $status );
+				}
+				
+			}
+			else{
+				//do nothing because it successfully updated
+			}
+		}
+	}
+}
+add_action( 'upgrader_process_complete', 'mp_core_ajax_upgrader_process_complete', 10, 2 );
