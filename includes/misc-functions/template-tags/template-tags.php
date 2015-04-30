@@ -223,8 +223,53 @@ function mp_core_oembed_get($video_url, $args = NULL){
 		//If this is not a supported oembed url (like youtube.com/embed/...")
 		else{
 			
-			//Embed it in an iframe					
-			$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px; border:none;" src="' . $video_url . '" /></iframe>';
+			//If this is an mp4
+			if ( strpos( $video_url, 'mp4' ) !== false ){
+				
+				//If the video should not have controls
+				if ( strpos( $video_url, 'controls=false' ) !== false ){ 
+					$controls = NULL;
+				}
+				//If this video should have controls
+				else{
+					$controls = 'controls ';	
+				}
+				
+				//If the video should loop
+				if ( strpos( $video_url, 'loop=true' ) !== false ){ 
+					$loop = 'loop="" ';
+				}
+				//If this video should not Loop
+				else{
+					$loop = NULL;	
+				}
+				
+				//If the video should autoplay
+				if ( strpos( $video_url, 'autoplay=true' ) !== false ){ 
+					$autoplay = 'autoplay="" ';
+				}
+				//If this video should not autoplay
+				else{
+					$autoplay = NULL;
+				}
+				
+				$iframe_code = '<video width="100%" height="100%" class="mp-core-html5-video-autoplay" style="position:absolute; top:0; left:0;" preload="auto" ' . $controls . $loop . $autoplay . '>';
+					$iframe_code .= '<source src="' . $video_url . '" type="video/mp4" />';
+				$iframe_code .= '</video>';
+				
+				$iframe_code .= "<script type=\"text/javascript\">
+					jQuery(document).ready(function($){
+						$('.mp-core-html5-video-autoplay').each( function(){
+							$(this).get(0).play();
+						});
+					});
+				</script>";
+			}
+			//If we aren't sure what type of file this is
+			else{
+				//Embed it in an iframe					
+				$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px; border:none;" src="' . $video_url . '" /></iframe>';
+			}
 							
 		}
 			
@@ -255,7 +300,7 @@ function mp_core_oembed_get($video_url, $args = NULL){
 	$html_output .= !empty( $args['max_width'] ) ? ' max-width:' . $args['max_width'] . 'px; margin: 0px auto 0px auto;' : NULL;
 	$html_output .= '">';
 		$html_output .= '<img class="mp-core-oembed-full-width-img" style="position:relative; display:block; padding:0px; margin:0px; width:100%; border:none;'; 
-		$html_output .= '" width="100%" src="' . plugins_url( 'images/16x9.gif', dirname(dirname(__FILE__))) . '"/>';
+		$html_output .= '" width="100%" src="' . plugins_url( 'images/16x9.png', dirname(dirname(__FILE__))) . '"/>';
 		$html_output .= $iframe_code;
 	$html_output .= '</div>';
 	
