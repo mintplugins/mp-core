@@ -501,6 +501,7 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 			//If we are on an iphone, ipad, android, or other touch enabled screens, run the animations on the first touch, then go to the link on the second
 			if ( mp_core_is_iphone() || mp_core_is_ipad() || mp_core_is_android() ){
 				
+				/* For now, hover triggered animations don't happen on touch devices
 				$js_output .= '
 				//On mobile, the first click runs the animation and the second goes to the link.
 				$( document ).on( \'touchend\', \'' . $mouse_over_string . '\', function(event){
@@ -521,6 +522,7 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 						
 					}
 				});';
+				*/
 			}
 			//If we are not on mobile, run the animations on mouseenter and mouseleave
 			else{
