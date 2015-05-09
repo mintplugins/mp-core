@@ -623,17 +623,19 @@ function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
 		$return_items_array = $options_prior;
 		
 		//Loop through each passed-in field
-		foreach ( $new_fields as $new_field ){
+		foreach ( $new_fields as $new_key => $new_field ){
 			
 			//Add new field to array
-			array_push($return_items_array, $new_field);
+			//array_push($return_items_array, $new_field);
+			$return_items_array[$new_key] = $new_field;
 			
 		}
 		
 		//Re-add fields that came after our split point
-		foreach ($options_after as $option){
+		foreach ($options_after as $old_key => $old_option){
 			//Add all fields that came after
-			array_push($return_items_array, $option);
+			//array_push($return_items_array, $option);
+			$return_items_array[$old_key] = $old_option;
 		}
 		
 	}
