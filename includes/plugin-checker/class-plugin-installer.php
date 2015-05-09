@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -253,7 +253,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					
 				//Download the plugin file defined in the passed in array
 				$saved_file = $wp_filesystem->get_contents( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) );
-			
+							
 				//Save the contents into a temp.zip file (string stored in $filename)
 				$wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE);
 				
@@ -268,7 +268,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 				);
 				
 				//Hook to use CURL for people with poor/bad server configurations. Activate the "MP Curl Plugin Checker" Plugin to hook here
-				do_action( 'mp_core_curl_plugin_installer', $curl_args );					
+				if ( has_action( 'mp_core_curl_plugin_installer' ) ){
+					do_action( 'mp_core_curl_plugin_installer', $curl_args );
+				}
+				else{
+					echo __( 'Oops! Your Web Host is badly configured! Let your web host know they need to have "allow_url_fopen" turned on.', 'mp_core' );
+					die();
+				}
 				
 			}
 			
