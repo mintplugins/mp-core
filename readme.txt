@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.8
+Stable tag: 1.0.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,13 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.1.9 = May 13, 2015
+* Use esc_url_raw instead of mp_core_add_query_arg for plugin checker/installer
+* Better message if "allow_url_fopen" isn't "on" in class-plugin-installer.php. Lets user know what action to take.
+* Hover animations are now disabled for touch devices because hovering isn't a thing on touch devices. Previously, if the user clicked once, the animation fired. This proved to be frustrating for mobile users so the action is now disabled entirely to reduce clicks.
+* Change: mp_core_get_post_meta now only returns the "default" setting if its value has never been saved before. This way, if the user desires to have a "blank" value saved, they can. Previously, if the value was blank, it would return the default value no matter what.
+* Fix: Preserve keys in mp_core_insert_meta. When inserting a meta option using mp_core_insert_meta, the meta key was removed. If you wanted to then insert more meta options later in the page, you couldn't because the keys were removed and replaced with array numbers eg array[0] instead of array['mykey'].
 
 = 1.0.1.8 = April 30, 2015
 * Changed 16x9 image from gif to transparent png
