@@ -182,12 +182,7 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = ar
 	$args = wp_parse_args( $args, $default_args );
 			
 	//Get the post meta field we are looking for
-	$meta_value = mp_core_get_post_meta_or_never_been_saved($post_id, $meta_key);
-	
-	//If this field has never been saved before, return the default value passed-in:
-	if ( $meta_value == 'never_been_saved_73698363746983746' ){
-		return $default;	
-	}
+	$meta_value = get_post_meta($post_id, $meta_key, true);
 	
 	//If the meta_value is empty 
 	if ( empty( $meta_value ) ){
@@ -211,8 +206,8 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = ar
 		//If it is truly just empty
 		else{
 			
-			//return an empty value
-			return '';
+			//return the default value
+			return $default;
 		}
 		
 	}
