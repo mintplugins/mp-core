@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.1
-Stable tag: 1.0.1.9
+Stable tag: 1.0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.0 = May 13, 2015
+* Revert Change in 1.0.1.9 of mp_core_get_post_meta back to the way it was in 1.0.1.8.
 
 = 1.0.1.9 = May 13, 2015
 * Use esc_url_raw instead of mp_core_add_query_arg for plugin checker/installer
