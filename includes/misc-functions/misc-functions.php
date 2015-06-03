@@ -1230,24 +1230,26 @@ function mp_core_remove_query_arg( $keys_to_remove, $base_url ){
 }
 
 /**
- * De-activates plugins known to be evil.
+ * De-activates plugins that cause problems.
  *
  * @access   public
  * @since    1.0.0
  * @param    VOID
  * @return   VOID
  */
-function mp_deactivate_evil_plugins(){
+function mp_deactivate_problematic_plugins(){
 	
 	$all_plugins = get_plugins();
 	
 	foreach( $all_plugins as $plugin_path => $plugin_info ){
 		
-		//If this is the nextGEN plugin, riddled with thousands of errors, out of date, and insecure - it's an evil plugin.
-		if ( strpos( $plugin_path, 'nggallery.php' ) !== false ){
+		//If this is a problematic plugin which causes more confusion/problems than it is worth...
+		if ( 
+		strpos( $plugin_path, 'nggallery.php' ) !== false ||
+		strpos( $plugin_path, 'mojo-marketplace.php' ) !== false ){
 			//De-activate that garbage.
 			deactivate_plugins( $plugin_path );		
 		}
 	}
 }
-add_action( 'admin_init', 'mp_deactivate_evil_plugins' );
+add_action( 'admin_init', 'mp_deactivate_problematic_plugins' );
