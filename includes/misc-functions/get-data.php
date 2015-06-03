@@ -122,7 +122,7 @@ function mp_core_get_all_hierarchical_post_types($args = array('public' => true,
  * @see      taxonomy_exists()
  * @see      get_terms()
  * @param    string $slug (required) The slug of the taxonomy
- * @return   array $return_array An array with all the  terms in a given tax structured with the key as the term ID and the value as the Term Name
+ * @return   array $return_array An array with all the terms in a given tax structured with the key as the term ID and the value as the Term Name
  */
 function mp_core_get_all_terms_by_tax($slug) {
 	if (taxonomy_exists($slug)){
@@ -137,7 +137,7 @@ function mp_core_get_all_terms_by_tax($slug) {
 }
 
 /**
- * Get all taxonomiy terms for ALL taxonomies. That's right, EVERY taxonomy term in existence on this WordPress.
+ * Get all taxonomy terms for ALL taxonomies. That's right, EVERY taxonomy term in existence on this WordPress.
  *
  * This is a sample return array. Do an explode at the * for the key
  * array( '12*my_category' => 'My Category Term' );
