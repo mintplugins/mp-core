@@ -136,7 +136,13 @@ jQuery(document).ready(function($){
 					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
 						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('['+ (name_number-1) +']', '[' + (name_number) +']') );
 					}
-					
+					if ( this.hasAttribute( 'showhider' ) ){
+						this.setAttribute( 'showhider', this.getAttribute( 'showhider' ).replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB') );
+					}
+					if ( this.hasAttribute( 'showhidergroup' ) ){
+						this.setAttribute( 'showhidergroup', this.getAttribute( 'showhidergroup' ).replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB') );
+					}
+									
 					//Re-initialize tinymce for each TInyMCE area in this repeater
 					if ( this.className == 'wp-editor-area') {
 						//$(this).css('display', 'block');
@@ -754,42 +760,10 @@ jQuery(document).ready(function($){
 			
 		});
 		
-	});
-	
-	//Showhider indentation for showhiders that repeat
-	$(document).find('[showhider$="BBBBB"]').each(function(){
-		
-		//Get the name of this fields parent showhider
-		var showhider_name = $(this).attr('showhider');
-				
-		//Get the margin of the parent showhider field
-		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
-		
-		
-		margin_left = parseInt(margin_left) + 13;	
-		
-		
-		//Add the showhider parent's margin to this field
-		$( this ).css( 'margin-left', (parseInt( $( this ).css( 'margin-left' ).replace(/[^-\d\.]/g, '') ) + parseInt( margin_left) )  + 'px' );
-		
-	});
-	
-	//Showhider indentation for showhiders that don't repeat
-	$(document).find('[showhider]').each(function(){
-		
-		//Get the name of this fields parent showhider
-		var showhider_name = $(this).attr('showhider');
-				
-		//Get the margin of the parent showhider field
-		var margin_left = $( '[showhidergroup="' + showhider_name + '"]' ).parent().parent().parent().css('margin-left').replace(/[^-\d\.]/g, '');
-		
-		//Add the showhider parent's margin to this field
-		$( this ).css( 'margin-left', (parseInt( $( this ).css( 'margin-left' ).replace(/[^-\d\.]/g, '') ) + parseInt( margin_left) )  + 'px' );
-		
-	});
+	});	
 	
 	//Showhider function which shows and hides fields based on their parent showhider
-	$( ".mp_core_showhider_button.closed" ).on('click', function(event){
+	$( document ).on('click', ".mp_core_showhider_button.closed", function(event){
 			
 			event.preventDefault;
 			
@@ -809,7 +783,7 @@ jQuery(document).ready(function($){
 						
 	});
 	//When showhiders are closed
-	$(document).on('click', '.mp_core_showhider_button.open', function(event){
+	$( document ).on('click', '.mp_core_showhider_button.open', function(event){
 		
 			event.preventDefault;
 						

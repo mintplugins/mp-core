@@ -172,8 +172,6 @@
 }	
 [showhider]{
 	display:none;
-	margin-left: 10px;
-	margin-right: 10px;
 	background-color: #f2fafc;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -350,4 +348,7 @@ output {
 
 .mp_field_hidden{
 	display:none!important;	
+}
+.showhider_group{
+	margin-left:10px;
 }

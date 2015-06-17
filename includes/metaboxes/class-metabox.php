@@ -279,9 +279,10 @@ if (!class_exists('MP_CORE_Metabox')){
 										
 										//Set up the showhider attr based on whether it's parent showhidergroup repeats or if the entire repeater is in a parent showhider
 										if ( isset( $thefield['field_showhider'] ) ){
-											
+																		
 											//If the showhider repeats with the repeater
 											if ( isset( $thefield['field_showhider_repeats'] ) && $thefield['field_showhider_repeats'] ){
+												
 												$showhider = 'showhider="' . $thefield['field_repeater'] . 'AAAAA' . $repeat_counter . 'BBBBBAAAAA' . $thefield['field_showhider'] . 'BBBBB' . '"';
 											}
 											//If the showhider does not repeat with this repeater
@@ -291,9 +292,9 @@ if (!class_exists('MP_CORE_Metabox')){
 											
 										}
 										else{
-											$showhider = NULL;	
-										}
-									
+											$showhider = NULL;
+										}	
+										 									
 										//Make array to pass to callback function
 										$callback_args = array(
 											'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']', 
@@ -311,9 +312,11 @@ if (!class_exists('MP_CORE_Metabox')){
 											'field_conditional_values' => isset( $thefield['field_conditional_values'] ) ? $thefield['field_conditional_values'] : NULL
 										);
 										
+										//Output the closing </div> tag for showhiders if needed.
+										$this->close_showhiders( !empty( $thefield['field_showhider'] ) ? $thefield['field_showhider'] : NULL );	
+										
 										//call function for field type (callback function name stored in $this->$field['field_type']
 										$this->$thefield['field_type']( $callback_args );	
-														
 									}	
 								}
 								
@@ -352,9 +355,10 @@ if (!class_exists('MP_CORE_Metabox')){
 										else{
 											$showhider = 'showhider="' . $thefield['field_showhider'] . '"';
 										}
-										
+																				
 									}
 									else{
+								
 										$showhider = NULL;	
 									}
 																		
@@ -376,9 +380,12 @@ if (!class_exists('MP_CORE_Metabox')){
 										'field_conditional_values' => isset( $thefield['field_conditional_values'] ) ? $thefield['field_conditional_values'] : NULL
 									);
 									
+									//Output the closing </div> tag for showhiders if needed.
+									$this->close_showhiders( !empty( $thefield['field_showhider'] ) ? $thefield['field_showhider'] : NULL );	
+									
 									//call function for field type (callback function name stored in $this->$field['field_type']
 									$this->$thefield['field_type']( $callback_args );	
-													
+												
 								}	
 							}
 							
@@ -420,7 +427,13 @@ if (!class_exists('MP_CORE_Metabox')){
 						$field_default_attr = isset($field['field_value']) ? ' mp_default_value="' . $field['field_value'] . '" ' : ' mp_default_value="" ';
 						
 						//set the showhider
-						$showhider_value = isset($field['field_showhider']) ? 'showhider="' . $field['field_showhider'] . '"' : '';
+						if ( isset($field['field_showhider']) ){
+							$showhider_value = 'showhider="' . $field['field_showhider'] . '"';
+						}
+						else{
+							$showhider_value = NULL;
+						}
+										
 						//set the field container class
 						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '' . ' ' . $field['field_id'];
 						//set the field input class
@@ -452,9 +465,68 @@ if (!class_exists('MP_CORE_Metabox')){
 							'field_conditional_values' => $field_conditional_values
 						);
 						
+						//Output the closing </div> tag for showhiders if needed.
+						$this->close_showhiders( !empty( $field['field_showhider'] ) ? $field['field_showhider'] : NULL );
+												
 						//call function for field type (function name stored in $this->$field['field_type']
 						$this->$field['field_type']( $callback_args );
+						
 					}
+				}
+			}
+			
+			//End any open still-unclosed showhiders
+			if ( isset( $this->_current_showhiders_depth ) && $this->_current_showhiders_depth != 0 ){
+				
+				for ( $i = 1; $i <= $this->_current_showhiders_depth; $i++ ) {
+					echo '</div>';
+				}
+				
+				$this->_current_showhiders_depth = 0;
+				
+			}
+			
+		}
+		
+		/**
+		 * Function which checks if this is the end of a showhider and outputs the closing <div> tag accordingly.
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @return   void
+		 */	
+		public function close_showhiders( $current_field_showhider ){
+			
+			//End any open showhiders as needed
+			if ( isset( $this->_current_showhiders_depth ) && $this->_current_showhiders_depth != 0 ){
+				
+				//If this field has a showhider
+				if ( !empty( $current_field_showhider ) ){
+					
+					//If this showhider is different than the previous field's showhider, it is either the first or the last field in a nested, non-first-level showhider.
+					if ( strpos( $this->_current_show_hiders[$this->_current_showhiders_depth], $current_field_showhider ) === false ){
+																				
+							echo '</div><!--endshowhidergroup__stank' . $this->_current_show_hiders[$this->_current_showhiders_depth] . '__' . $current_field_showhider . '-->';	
+							$this->_current_showhiders_depth = $this->_current_showhiders_depth - 1;
+
+					}
+						
+				}
+				//If this field does not have a showhider but the previous field did, it is a non-nested showhider that has ended
+				if ( empty( $current_field_showhider ) ){
+					
+					//End any open still-unclosed showhiders
+					if ( isset( $this->_current_showhiders_depth ) && $this->_current_showhiders_depth != 0 ){
+						
+						for ( $i = 1; $i <= $this->_current_showhiders_depth; $i++ ) {
+							echo '</div><!--endshowhidergroup__wozniak-->';	
+						}
+						
+						$this->_current_showhiders_depth = 0;
+						$this->_current_show_hiders = array();
+						
+					}
+
 				}
 			}
 		}
@@ -1969,25 +2041,35 @@ if (!class_exists('MP_CORE_Metabox')){
 				'field_conditional_id' => NULL,
 				'field_conditional_values' => NULL,
 			);
-			
-			//Get and parse args
-			$args = wp_parse_args( $args, $args_defaults );
-			
+						
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
+			
+			//Set the current showhider
+			$this->_current_showhiders_depth = !isset( $this->_current_showhiders_depth ) ? 1 : $this->_current_showhiders_depth + 1;
+			
+			//Showhider Nest-Depth and Showhider name stored in a globally accessible variable
+			$this->_current_show_hiders[$this->_current_showhiders_depth] = str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id );
+
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 			
-			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
+			echo '<div id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
 			echo '<div style="clear: both;"></div>';
 			
 			echo '<a class="mp_core_showhider_button closed" alt="' . $field_title . '" showhidergroup="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '">' . $field_title . '</a>';
 			
 			echo '<div style="clear: both;"></div>';
 			echo '</div></div>';
-			echo '</div>'; 
+			echo '</div>';
+			echo '<!--showhidergroupstart--><div id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . 'showhider_group" class="showhider_group">';
+			//echo '<br /><br />';
+			//echo $this->_current_showhiders_depth;
+			//echo '<br /><br />';
 		}
 		
 		/**
