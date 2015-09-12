@@ -201,7 +201,7 @@ function mp_core_number_postpercat($term_id) {
     global $wpdb;
     $query = "SELECT count FROM $wpdb->term_taxonomy WHERE term_id = $term_id";
     $num = $wpdb->get_col($query);
-    return $num[0];
+    return isset( $num[0] ) ? $num[0] : NULL;
 }
 
 /**
