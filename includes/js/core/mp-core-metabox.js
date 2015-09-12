@@ -5,41 +5,41 @@ jQuery(document).ready(function($){
 	//Check to see if a field is different than its default value.
 	$(document).on( 'submit', '#post', function( event ) {
 		
-		//If we haven't checked the defaults of each post already
+		//If we have checked the defaults of each post already
 		if ( mp_core_defaults_checked === true ){
-			mp_core_defaults_checked = false; // reset flag
 			$(document).trigger('mp_core_post_submitted');
-			return;	
+		}
+		else{
+		
+			
+			//Prevent the form from being submitted just yet
+			event.preventDefault();
+			
+			$(document).find( '[mp_default_value]' ).each( function(){
+				
+				//console.log($(this).attr( 'mp_default_value' ));
+				
+				//If this field WAS something different than the default, and now its the default again
+				if( $(this).attr( 'mp_default_value' ) == $(this).val() && $(this).attr( 'mp_saved_value' ) != $(this).val() ){
+					//Let this field stay because it WAS something different than the default, and now its the default again - so it needs to be resaved
+				}
+				//If this field's value matches its default value OR it matches its saved value, don't submit it - it's a waste to submit it. 
+				else if ( $(this).attr( 'mp_saved_value' ) == $(this).val() || $(this).attr( 'mp_default_value' ) == $(this).val() ){
+					$(this).remove();
+				}
+				
+				
+			});
+			
+			//Set our flag to true so we don't repeat this and create an endless loop
+			mp_core_defaults_checked = true;
+			
+			//re-submit the form.
+			$(document).find('#post').submit();
 		}
 		
-			
-		//Prevent the form from being submitted just yet
-		event.preventDefault();
-		
-		$(document).find( '[mp_default_value]' ).each( function(){
-			
-			//console.log($(this).attr( 'mp_default_value' ));
-			
-			//If this field WAS something different than the default, and now its the default again
-			if( $(this).attr( 'mp_default_value' ) == $(this).val() && $(this).attr( 'mp_saved_value' ) != $(this).val() ){
-				//Let this field stay because it WAS something different than the default, and now its the default again - so it needs to be resaved
-			}
-			//If this field's value matches its default value OR it matches its saved value, don't submit it - it's a waste to submit it. 
-			else if ( $(this).attr( 'mp_saved_value' ) == $(this).val() || $(this).attr( 'mp_default_value' ) == $(this).val() ){
-				$(this).remove();
-			}
-			
-			
-		});
-		
-		//Set our flag to true so we don't repeat this and create an endless loop
-		mp_core_defaults_checked = true;
-		
-		//re-submit the form.
-		$(document).find('#post').submit();
-		
 	});
-		
+			
 	/**
 	 * Handle "Repeaters"
 	 */
