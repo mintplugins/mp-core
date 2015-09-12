@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -63,7 +63,7 @@ class MP_CORE_Shortcode_Insert{
 		//Get and parse args
 		$this->_args = wp_parse_args( $args, $args_defaults );
 		
-		add_filter( 'media_buttons_context', array( $this, 'mp_core_shortcode_button' ) );
+		add_action( 'media_buttons', array( $this, 'mp_core_shortcode_button' ), 11 );
 		add_action( 'admin_footer', array( $this, 'mp_core_shortcode_admin_footer_for_thickbox' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
 	}
@@ -127,7 +127,7 @@ class MP_CORE_Shortcode_Insert{
 		$output = '';
 	
 		/** Only run in post/page creation and edit screens */
-		if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
+		if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) || ( defined('DOING_AJAX') && DOING_AJAX ) ) {
 			
 			//Check current WP version - If we are on an older version than 3.5
 			if ( version_compare( $wp_version, '3.5', '<' ) ) {
@@ -163,7 +163,8 @@ class MP_CORE_Shortcode_Insert{
 		}
 		
 		//Add new button to list of buttons to output
-		return $context . $output;
+		//return $context . $output;
+		echo $output;
 	}
 	
 	/**
@@ -182,7 +183,7 @@ class MP_CORE_Shortcode_Insert{
 		
 		// Only run in post/page creation and edit screens
 		if ( in_array( $pagenow, array( 'post.php', 'page.php', 'post-new.php', 'post-edit.php' ) ) ) {
-			$downloads = get_posts( array( 'post_type' => 'mp_slide', 'posts_per_page' => -1 ) );
+			
 			?>
 			<script type="text/javascript">
 	
@@ -643,3 +644,23 @@ class MP_CORE_Shortcode_Insert{
 
 	}
 } 
+
+/**
+ * This function creates an action hook (mp_core_shortcode_setup) which should be used by plugins wanting to create Shortcodes by setting up the MP_CORE_Shortcode_Insert class.
+ * If we are doing ajax, because we dont have the context of the post_type, the mp_core_shortcode_setup hook is called in the class-metabox.php file in mp_core and context is provided there.
+ *
+ * @since    1.0.0
+ * @link     https://codex.wordpress.org/Plugin_API/Action_Reference/current_screen
+ * @param    array $current_screen See link for description.
+ * @return   void
+ */
+function mp_core_shortcode_setup( $current_screen ){
+	
+	if ( defined('DOING_AJAX') && DOING_AJAX ){
+		return;	
+	}
+	
+	do_action( 'mp_core_shortcode_setup', $current_screen->post_type );
+	
+}
+add_action( 'current_screen', 'mp_core_shortcode_setup' );
