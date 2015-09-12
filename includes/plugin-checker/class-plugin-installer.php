@@ -253,15 +253,32 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					
 				//Download the plugin file defined in the passed in array
 				$saved_file = $wp_filesystem->get_contents( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) );
-							
+				
+				//If the file the came back was blank, try getting it another way.
+				if ( empty( $saved_file ) ){
+					$saved_file = wp_remote_retrieve_body( wp_remote_get( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) ) );					
+				}
+				
+				//If it's still empty
+				if ( empty( $saved_file ) ){
+					echo __( 'Oops! There was an error downloading the file', 'mp_core' ); 
+					die();	
+				}
+				
 				//Save the contents into a temp.zip file (string stored in $filename)
-				$wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE);
+				if ( !$wp_filesystem->put_contents( $filename, $saved_file, FS_CHMOD_FILE) ){
+					
+					//If the file was unable to be created, output an error and die
+					echo __( 'Oops! The plugin file was unable to be created. Check with your webhost to see if the "wp-content" directory is "Writable".', 'mp_core' ); 
+					die();	
+						
+				}
 				
 			}
 			//For people with poor/bad server configurations which don't have access to allow_url_fopen, try using curl with an error message.
 			else{
 				
-				echo __( 'Oops! Your Web Host is badly configured! Let your web host know they need to have "allow_url_fopen" turned on.', 'mp_core' );
+				echo '<p>' . __( 'Oops! Your Web Host is badly configured! Let your web host know they need to have "allow_url_fopen" turned on.', 'mp_core' ) . '</p>';
 								
 				// Initializing curl
 				$ch = curl_init();
@@ -300,8 +317,32 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 			}
 			
 			//Unzip the temp zip file
-			unzip_file($filename, trailingslashit($upload_dir) . '/' );
-						
+			$unzip_result = unzip_file($filename, trailingslashit($upload_dir) . '/' );
+			
+			//If there was a problem unzipping the file
+			if ( is_wp_error( $unzip_result ) ) {
+				
+				$zip = new ZipArchive;
+				if ($zip->open($filename) === TRUE) {
+					$zip->extractTo(trailingslashit($upload_dir) );
+					$zip->close();
+				} else {
+			
+					echo '<p>' . __( 'Error Unzipping ', 'mp_core' ) .  $this->_args['plugin_name']  . '</p>';
+					
+					//If the file was unable to be unzipped, it's likely this webhost has a strange temp directory - where wordpress stores files that are being unzipped.
+					echo '<p>' . __( 'Your Web Host appears to have an improperly configured WordPress "temp" directory.', 'mp_core' ) . '</p>'; 
+					
+					echo '<p>' . __( 'The WordPress "temp" directory appears to be set to: ', 'mp_core' ) . '<strong>"' . get_temp_dir() . '"</strong> ' . __( 'and is preventing files from being properly unzipped by WordPress', 'mp_core' ) . '</p>';
+					
+					echo '<p>' . __( 'The actual error from PHP is: ', 'mp_core' ) . '</p><p>';
+					print_r( $unzip_result ) . '</p>';	
+				
+					die();
+				}
+				
+			}
+			
 			//Delete the temp zipped file
 			$wp_filesystem->rmdir($filename);
 												
