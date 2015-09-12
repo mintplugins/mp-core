@@ -52,7 +52,10 @@
 	border-width: 1px;
 	border-style: solid;
 	overflow: hidden;
-	height:35px;
+	height:inherit;
+}
+.repeater_container li.closed{
+	height:35px;	
 }
 .repeater_container li .mp_field{
 	padding: 0px 12px 12px;
