@@ -355,3 +355,45 @@ output {
 .showhider_group{
 	margin-left:10px;
 }
+
+.wp-media-buttons .button{
+	margin-right: 5px!important;
+	margin-bottom: 4px!important;
+	padding-left: 7px!important;
+	padding-right: 7px!important;	
+}
+
+/* Loading Spinner */
+@keyframes mp-core-loading-spinner {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mp-core-loading-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 15px auto 7px auto;
+  border-radius: 50%;
+  border: 6px solid transparent;
+  border-bottom: 6px solid #f1f1f1;
+  border-top: 6px solid #f1f1f1;
+  animation-duration: 1.5s;
+  animation-name: mp-core-loading-spinner;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  // animation: spin 1s infinite linear;
+  box-sizing: border-box;
+}
+
+/* Hide the default editor that gets added to each post page */
+#wp-mp_core_wpeditor_init-wrap{
+	display:none!important;	
+}
+
+body > .mce-toolbar-grp{
+	display:none!important;	
+}
