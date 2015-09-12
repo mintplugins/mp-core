@@ -34,6 +34,20 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.2.1 = June X, 2015
+* Showhiders are now wrapped in a div for indenting instead of indented via JS.
+* Apply specific height to repeater containers only when closed.
+* Added Spinner Animation for ajax metaboxes.
+* Customizer Options now have default priority of 0. Previous to this release it was 10.
+* Made Fonts able to be output via ajax in Font Class.
+* Fixed bug with ACF plugin to make sure #post is resubmitted properly after default checks are complete.
+* Added mp_core_reset_all_wp_editors function
+* Make admin Color Pickers re-apply when ajax is complete
+* Made metabox content able to be loaded via ajax. This way options are only loaded if the user needs them.
+* Made animations have jQuery namespaces so they can be turned .off() if their code is reloaded via ajax.
+* Plugin installer: Some webhosts have strange temp directories and they were causing errors. While this doesn't fix that, it does give a useful error message to the user to help them trouble shoot with their webhost.
+* Shortcode Class update: media_buttons_context is deprecated by WordPress. It now uses media_buttons filter.
+
 = 1.0.2.0 = May 13, 2015
 * Revert Change in 1.0.1.9 of mp_core_get_post_meta back to the way it was in 1.0.1.8.
 
