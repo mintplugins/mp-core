@@ -352,7 +352,7 @@ class MP_CORE_Customizer{
 				) );
 				
 				//Set default for priority if not filled out
-				 $setting['priority'] = !empty( $setting['priority'] ) ? $setting['priority'] : 10;
+				$setting['priority'] = !empty( $setting['priority'] ) ? $setting['priority'] : 0;
 				
 				//Call the function to add the control for this type
 				$this->$setting['type']( $wp_customize, $section['section_id'], $setting_id, $setting );
