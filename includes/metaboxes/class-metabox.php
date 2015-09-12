@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -55,23 +55,83 @@ if (!class_exists('MP_CORE_Metabox')){
 				'metabox_title' => NULL, 
 				'metabox_posttype' => NULL, 
 				'metabox_context' => NULL, 
-				'metabox_priority' => NULL 
+				'metabox_priority' => NULL,
+				
+				//If this is passed, the metabox container itself is not created by this class and this class is only used to ajax-load the options and save.
+				'metabox_content_via_ajax' => false, 
+				
+				//If this is passed, it means that the content will be loaded-in to the metabox if it gets "opened" by the user. 
+				'metabox_load_content_when_opened' => false 
 			);
-			
-			if( !session_id() ){
-				session_start();
-			}
-			
+						
 			//Get and parse args
 			$this->_args = wp_parse_args( $args, $args_defaults );
 			
 			//Get metabox items array
 			$this->_metabox_items_array = $items_array;
 			
-			add_action( 'add_meta_boxes', array( $this, 'mp_core_add_metabox' ) );
+			//If we are doing an ajax callback for the metabox content
+			if ( isset( $_POST['mp_core_metabox_ajax'] ) ){
+				
+				//If, for some reason, this Class is being run for a metabox that isn't the one being called-for by ajax, stop running and get out of here.
+				if ( $this->_args['metabox_id'] != $_POST['mp_core_metabox_id_ajax'] ){
+					return;	
+				}
+				
+				//This hook allows Insert Shortcode class instances to be run properly for ajax metaboxes and know the context of the page (the post type).
+				do_action( 'mp_core_shortcode_setup', $this->_args['metabox_posttype'] );
+				
+				//Output the metabox content to the $metabox_content variable
+				ob_start();
+				$this->mp_core_metabox_content();
+				$metabox_content = ob_get_clean();
+				
+				//Get required CSS Stylesheets
+				$css_stylesheets = apply_filters( 'mp_core_metabox_ajax_admin_css_stylesheets', array(), $this->_args['metabox_id'] );
+				
+				//Get required JS Scripts
+				$js_scripts = apply_filters( 'mp_core_metabox_ajax_admin_js_scripts', array(), $this->_args['metabox_id'] );
+				
+				echo json_encode( array( 
+						//'shortcode_init' => $shortcode_init,
+						'js_scripts' => $js_scripts,
+						'css_stylesheets' => $css_stylesheets,
+						'metabox_content' => $metabox_content,
+					)
+				);
+				
+				die();
+			}
+			
+			//If we should load the metabox directly (not via ajax)
+			if ( !$this->_args['metabox_content_via_ajax'] ){
+				add_action( 'add_meta_boxes', array( $this, 'mp_core_add_metabox' ) );
+			}
+			
 			add_action( 'save_post', array( $this, 'mp_core_save_data' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'mp_core_enqueue_scripts' ) );
+			add_action( 'admin_footer', array( $this, 'mp_core_wp_editor_init' ) );
 			
+		}
+		
+		//Load a bogus wp_editor in the admin footer so that the TinyMCE Scripts are all loaded and set up for us to use in other TinyMCE's loaded via ajax.
+		function mp_core_wp_editor_init(){
+			global $mp_core_editor_initialized;
+			
+			//Get current page
+			$current_page = get_current_screen();
+			
+			//Only load if we are on a post based page
+			if ( $current_page->base == 'post' ){
+				
+				if ( $mp_core_editor_initialized ){
+					
+				}
+				else{
+					wp_editor( 'mp_core_wpeditor_init', 'mp_core_wpeditor_init' );
+					$mp_core_editor_initialized = true;
+				}
+			}
 		}
 		
 		/**
@@ -106,7 +166,7 @@ if (!class_exists('MP_CORE_Metabox')){
 				//image uploader script
 				wp_enqueue_script( 'image-upload', plugins_url( 'js/core/image-upload.js', dirname(__FILE__) ),  array( 'jquery' ), MP_CORE_VERSION );
 				//Metabox scripts for duplicating fields etc
-				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable', 'mp-ajax-popup-js' ), MP_CORE_VERSION );	 	
+				wp_enqueue_script( 'mp-core-metabox-js', plugins_url( 'js/core/mp-core-metabox.js', dirname(__FILE__) ),  array( 'jquery', 'jquery-ui-sortable', 'mp-ajax-popup-js' ), MP_CORE_VERSION );	
 				
 				//If this script has already been localized, don't do it again. We only need it once. Global var used so other class calls don't duplicate output.
 				global $mp_core_metabox_js_localized;
@@ -140,7 +200,13 @@ if (!class_exists('MP_CORE_Metabox')){
 		public function mp_core_add_metabox() {
 			
 			global $post;
-			$this->_post_id = isset($post->ID) ? $post->ID : '';
+			
+			if ( !empty( $this->_args['ajax_post_id'] ) ) {
+				$this->_post_id = $this->_args['ajax_post_id'];
+			}
+			else{
+				$this->_post_id = isset($post->ID) ? $post->ID : '';
+			}
 						
 			//Get current page
 			$current_page = get_current_screen();
@@ -155,14 +221,46 @@ if (!class_exists('MP_CORE_Metabox')){
 				return;	
 			}
 			
-			add_meta_box( 
-				$this->_args['metabox_id'],
-				$this->_args['metabox_title'],
-				array( &$this, 'mp_core_metabox_callback' ),
-				$metabox_posttype,
-				$metabox_context,
-				$metabox_priority
-			);
+			//If we should wait to load this content via ajax until the metabox is "open"
+			if ( $this->_args['metabox_load_content_when_opened'] ){
+				add_meta_box( 
+					$this->_args['metabox_id'],
+					$this->_args['metabox_title'],
+					array( &$this, 'mp_core_metabox_content_placeholder' ),
+					$metabox_posttype,
+					$metabox_context,
+					$metabox_priority
+				);
+			}
+			//If we should load this content right away - no ajax at all.
+			else{
+				add_meta_box( 
+					$this->_args['metabox_id'],
+					$this->_args['metabox_title'],
+					array( &$this, 'mp_core_metabox_content' ),
+					$metabox_posttype,
+					$metabox_context,
+					$metabox_priority
+				);	
+			}
+			
+			
+		}
+		
+		/**
+		 * This function prints a placeholder which ajax will use to load the contents once the user has "opened" the metabox
+		 *
+		 * @access   public
+		 * @since    1.0.0
+		 * @return   void
+		 */	
+		public function mp_core_metabox_content_placeholder(){
+			
+			global $post;
+			
+			$post_id = isset($post->ID) ? $post->ID : '';
+			
+			echo '<div class="mp_core_metabox_ajax_placeholder" mp_core_metabox_id="' . $this->_args['metabox_id'] . '" mp_core_post_id="' . $post_id . '" ></div>';
 		}
 		
 		/**
@@ -189,13 +287,23 @@ if (!class_exists('MP_CORE_Metabox')){
 		 * @see      MP_CORE_Metabox::number()		 
 		 * @return   void
 		 */	
-		public function mp_core_metabox_callback() {
+		public function mp_core_metabox_content() {
 			
 			global $post;
 			
-			$this->_post_id = isset($post->ID) ? $post->ID : '';
+			//If we are retrieving these fields for an ajax callback
+			if ( isset( $_POST['mp_core_metabox_post_id'] ) ) {
+				$this->_post_id = $_POST['mp_core_metabox_post_id'];
+			}
+			//If we are setting up these fields for a non-ajax callback
+			else{
+				$this->_post_id = isset($post->ID) ? $post->ID : '';
+			}
 						
 			$prev_repeater = false;
+			
+			//Output a hidden field which will let the "save_post" function know that we want to be saving these fields when the post is saved.
+			echo '<input id="mp_core_save_' . $this->_args['metabox_id'] . '" name="mp_core_save_' . $this->_args['metabox_id'] . '" type="hidden" />';
 			
 			//Loop through the pre-set, passed-in array of fields
 			foreach ($this->_metabox_items_array as $field){
@@ -415,7 +523,7 @@ if (!class_exists('MP_CORE_Metabox')){
 							//Set the value to be the pre-set value for this field passed-in.					
 							$value = isset($field['field_value']) ? $field['field_value'] : '';
 						}
-						
+												
 						//If field required hasn't been set, set it to be false
 						$field_required = isset( $field['field_required'] ) ? $field['field_required'] : false;
 						//if $field_select_values hasn't been set, set it to be NULL
@@ -435,7 +543,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						}
 										
 						//set the field container class
-						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '' . ' ' . $field['field_id'];
+						$field_container_class = isset($field['field_container_class']) ? $field['field_container_class'] : '';
 						//set the field input class
 						$field_input_class = isset($field['field_input_class']) ? $field['field_input_class'] . ' ' . $field['field_id'] : $field['field_id'];
 						//set the placeholder
@@ -487,7 +595,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			}
 			
 		}
-		
+				
 		/**
 		 * Function which checks if this is the end of a showhider and outputs the closing <div> tag accordingly.
 		 *
@@ -506,9 +614,18 @@ if (!class_exists('MP_CORE_Metabox')){
 					//If this showhider is different than the previous field's showhider, it is either the first or the last field in a nested, non-first-level showhider.
 					if ( strpos( $this->_current_show_hiders[$this->_current_showhiders_depth], $current_field_showhider ) === false ){
 																				
-							echo '</div><!--endshowhidergroup__stank' . $this->_current_show_hiders[$this->_current_showhiders_depth] . '__' . $current_field_showhider . '-->';	
+							echo '</div><!--endshowhidergroup__' . $this->_current_show_hiders[$this->_current_showhiders_depth] . '__' . $current_field_showhider . '-->';	
 							$this->_current_showhiders_depth = $this->_current_showhiders_depth - 1;
-
+							
+							//This deals with additional showhiders at the second level after a first showhider
+							//If this showhider is different than the previous field's showhider, it is either the first or the last field in a nested, non-first-level showhider.
+							if ( strpos( $this->_current_show_hiders[$this->_current_showhiders_depth], $current_field_showhider ) === false ){
+																						
+									echo '</div><!--endshowhidergroup__' . $this->_current_show_hiders[$this->_current_showhiders_depth] . '__' . $current_field_showhider . '-double-->';	
+									$this->_current_showhiders_depth = $this->_current_showhiders_depth - 1;
+							
+							}
+					
 					}
 						
 				}
@@ -519,7 +636,7 @@ if (!class_exists('MP_CORE_Metabox')){
 					if ( isset( $this->_current_showhiders_depth ) && $this->_current_showhiders_depth != 0 ){
 						
 						for ( $i = 1; $i <= $this->_current_showhiders_depth; $i++ ) {
-							echo '</div><!--endshowhidergroup__wozniak-->';	
+							echo '</div><!--endshowhidergroup-->';	
 						}
 						
 						$this->_current_showhiders_depth = 0;
@@ -546,16 +663,18 @@ if (!class_exists('MP_CORE_Metabox')){
 		 * @return   void
 		 */	
 		public function mp_core_save_data() {
-			
-			if( !session_id() )
-				session_start();
-				
+							
 			//Check if post type has been set
 			$this_post_type = isset( $_POST['post_type'] ) ? $_POST['post_type'] : NULL;				
 			
 			//If we are saving this post type - we dont' want to save every single metabox that has been created using this class - only this post type
 			if ( $this->_args['metabox_posttype'] != $this_post_type ) {
 				return;	
+			}
+			
+			//We also only want to save this metabox if the ID of the metabox has been sent in the $_POST var.
+			if ( !isset( $_POST[ 'mp_core_save_' . $this->_args['metabox_id'] ] ) ){
+				return;
 			}
 									
 		    global $post;
@@ -1398,7 +1517,7 @@ if (!class_exists('MP_CORE_Metabox')){
 		* @return   void
 		*/
 		function wp_editor( $args ){
-			
+						
 			//Set defaults for args		
 			$args_defaults = array(
 				'field_id' => NULL, 
@@ -1423,8 +1542,6 @@ if (!class_exists('MP_CORE_Metabox')){
 			//Make each array item into its own variable
 			extract( $args, EXTR_SKIP );
 			
-			
-			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
 						
@@ -1433,8 +1550,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</div></div>';
-			echo wp_editor( html_entity_decode($field_value) , 'mp_core_wp_editor_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = array('textarea_rows' => 6, 'textarea_name' => $field_id));			
-			echo '</div>'; 
+			echo wp_editor( html_entity_decode($field_value) , 'mp_core_wp_editor_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ), $settings = 
+				array(
+					'textarea_rows' => 6, 
+					'textarea_name' => $field_id,
+					//'quicktags' => false
+				));			
+			echo '</div>'; 			
 		}
 		
 		/**
