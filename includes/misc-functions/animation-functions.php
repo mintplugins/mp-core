@@ -7,7 +7,7 @@
  * @package    MP Core
  * @subpackage Functions
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -22,39 +22,23 @@
  * @param    $animation_repeater Array The array, saved using mp_core_metabox class, retrieved using get_post_meta
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse_play_upon_out = false ){
+function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse_play_upon_out = false, $include_script_tags = true ){
 	
 	if ( empty($animation_repeater ) ){
 		return;	
 	}
 	
-	//Set the first frame CSS
-	$js_output = '<style scoped type="text/css" id="mp-core-temp-css-' . sanitize_title( $element_id ) . '">';
+	$js_output = NULL;
 	
-		$js_output .= $element_id . '{';
-			
-			//Temporarily set it to be non-visible
-			$js_output .= 'visibility: hidden;';
+	//Hide the element until the animation starts
+	$js_output .= mp_core_animation_hider_css( $element_id );
 	
-	$js_output .= '}
-	</style>';
-	
-	//If there is no javascript enabled in this user's browser, make the item visible again
-	$js_output .= '
-	<noscript>
-		<style scoped type="text/css">
-			' . $element_id . ' {visibility:visible;}
-		</style>
-	</noscript>';
-	
-	$js_output .= '<script type="text/javascript">
-		jQuery(document).ready(function($){ 
-						
-			$( window ).load(function(){
-								
+	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
+		$js_output .= 'jQuery(document).ready(function($){ 
+														
 				//Set the first frame of the animation and pause there
-				' . mp_core_js_animate_set_first_keyframe( "$(document).find('" . $element_id . "')", $animation_repeater ) .'
-				
+				' . mp_core_js_animate_set_first_keyframe( $element_id, $animation_repeater ) .'
+							
 				//Variable which tells us the current state of the animation: \'start\' or \'end\';
 				var ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
 				
@@ -75,11 +59,8 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 				if ( mp_brick_y > 0 && mp_brick_y_plus_25_percent < windowHeight){
 										
 					//Animate the brick in
-					' . mp_core_js_animate_element( "$('" . $element_id . "')", $animation_repeater ) . '
+					' . mp_core_js_animate_element( "$('" . $element_id . "')", $element_id, $animation_repeater ) . '
 					' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
-					
-					//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-					$(document).find("#mp-core-temp-css-' . sanitize_title( $element_id ) . '").remove(); 
 				}
 				
 				
@@ -97,15 +78,13 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 						
 						//If we\'re scrolling down, animate it into view
 						if ( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "start" ){
-							' . mp_core_js_animate_element( "$('" . $element_id . "')", $animation_repeater ) . '
+							' . mp_core_js_animate_element( "$('" . $element_id . "')", $element_id, $animation_repeater ) . '
 							' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
 						}
 					  }
 					
 					//console.log( "Going " + direction );
 					
-					//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-					$(document).find("#mp-core-temp-css-' . sanitize_title( $element_id ) . '").remove(); 
 				  },
 				  offset: function() {
 					//return this.element.clientHeight/2
@@ -126,15 +105,13 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 							
 							//If we\'re scrolling down, animate it out of view
 							if( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "end" ){
-								' . mp_core_js_reverse_animate_element( "$('" . $element_id . "')", $animation_repeater ) . '
+								' . mp_core_js_reverse_animate_element( "$('" . $element_id . "')", $element_id, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
 							}
 						  }
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $element_id ) . '").remove(); 
 					  },
 					   //When this brick\'s bottom edge is 20% from touching the top of the window (and travelling "upwards")
 					  offset: function() {
@@ -151,7 +128,7 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 							
 							//If we\'re scrolling up, animate it back into view
 							if ( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "start" ){
-								' . mp_core_js_animate_element( "$('" . $element_id . "')", $animation_repeater ) . '
+								' . mp_core_js_animate_element( "$('" . $element_id . "')", $element_id, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
 							}
 							
@@ -159,8 +136,6 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $element_id ) . '").remove(); 
 					  },
 					   //When this brick\'s bottom edge is 20% from touching the top of the window (and travelling "downwards")
 					  offset: function() {
@@ -178,15 +153,13 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 							
 							//If we\'re scroll up, animate it out of view
 							if( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "end" ){
-								' . mp_core_js_reverse_animate_element( "$('" . $element_id . "')", $animation_repeater ) . '
+								' . mp_core_js_reverse_animate_element( "$('" . $element_id . "')", $element_id, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
 							}
 						  }
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $element_id ) . '").remove(); 
 					  },
 					  //When this brick\'s top edge is 20% from touching the bottom of the window (and travelling "downwards" )
 					  offset: function() {
@@ -197,9 +170,9 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 			
 			}
 			
-		$js_output .= '});		
-		});
-	</script>';
+		$js_output .= '});';
+				
+	$js_output .= $include_script_tags ? '</script>' : '';
 	
 	return $js_output;
 }
@@ -214,38 +187,22 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
  * @param    $animation_repeater Array The array, saved using mp_core_metabox class, retrieved using get_post_meta
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $animation_repeater, $reverse_play_upon_out = false ){
+function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $animation_repeater, $reverse_play_upon_out = false, $include_script_tags = true ){
 	
 	if ( empty($animation_repeater ) ){
 		return;	
 	}
 	
-	//Set the first frame CSS
-	$js_output = '<style scoped type="text/css" id="mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '">';
+	$js_output = NULL;
 	
-		$js_output .= $element_id . ' ' . $child_to_animate . '{';
-			
-			//Temporarily set it to be non-visible
-			$js_output .= 'visibility: hidden;';
+	//Hide the element until the animation starts
+	$js_output .= mp_core_animation_hider_css( $element_id . ' ' . $child_to_animate );
 	
-	$js_output .= '}
-	</style>';
-	
-	//If there is no javascript enabled in this user's browser, make the item visible again
-	$js_output .= '
-	<noscript>
-		<style scoped type="text/css">
-			' . $element_id . ' ' . $child_to_animate . ' {visibility:visible;}
-		</style>
-	</noscript>';
-	
-	$js_output .= '<script type="text/javascript">
-		jQuery(document).ready(function($){ 
-						
-			$( window ).load(function(){
-								
+	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
+	$js_output .= 'jQuery(document).ready(function($){ 
+														
 				//Set the first frame of the animation and pause there
-				' . mp_core_js_animate_set_first_keyframe( "$(document).find('" . $element_id . ' ' . $child_to_animate . "')", $animation_repeater ) .'
+				' . mp_core_js_animate_set_first_keyframe( $element_id . ' ' . $child_to_animate, $animation_repeater ) .'
 				
 				//Variable which tells us the current state of the animation: \'start\' or \'end\';
 				var ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
@@ -267,11 +224,8 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 				if ( mp_brick_y > 0 && mp_brick_y_plus_25_percent < windowHeight){
 										
 					//Animate the brick in
-					' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $animation_repeater ) . '
+					' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $element_id . " " . $child_to_animate, $animation_repeater ) . '
 					' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
-					
-					//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-					$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
 				}
 				
 				
@@ -289,15 +243,13 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 						
 						//If we\'re scrolling down, animate it into view
 						if ( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "start" ){
-							' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $animation_repeater ) . '
+							' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $element_id . " " . $child_to_animate, $animation_repeater ) . '
 							' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
 						}
 					  }
 					
 					//console.log( "Going " + direction );
 					
-					//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-					$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
 				  },
 				  offset: function() {
 					//return this.element.clientHeight/2
@@ -318,15 +270,13 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							
 							//If we\'re scrolling down, animate it out of view
 							if( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "end" ){
-								' . mp_core_js_reverse_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $animation_repeater ) . '
+								' . mp_core_js_reverse_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $element_id . " " . $child_to_animate, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
 							}
 						  }
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
 					  },
 					   //When this brick\'s bottom edge is 20% from touching the top of the window (and travelling "upwards")
 					  offset: function() {
@@ -343,7 +293,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							
 							//If we\'re scrolling up, animate it back into view
 							if ( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "start" ){
-								' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $animation_repeater ) . '
+								' . mp_core_js_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $element_id . " " . $child_to_animate, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "end";
 							}
 							
@@ -351,8 +301,6 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
 					  },
 					   //When this brick\'s bottom edge is 20% from touching the top of the window (and travelling "downwards")
 					  offset: function() {
@@ -370,15 +318,13 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 							
 							//If we\'re scroll up, animate it out of view
 							if( ' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position == "end" ){
-								' . mp_core_js_reverse_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $animation_repeater ) . '
+								' . mp_core_js_reverse_animate_element( "$('" . $element_id . " " . $child_to_animate . "')", $element_id . " " . $child_to_animate, $animation_repeater ) . '
 								' . str_replace( '-', '_', sanitize_title( $element_id ) ) . '_animation_position = "start";
 							}
 						  }
 						
 						//console.log( "Going " + direction );
 						
-						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-						$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
 					  },
 					  //When this brick\'s top edge is 20% from touching the bottom of the window (and travelling "downwards" )
 					  offset: function() {
@@ -389,9 +335,8 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 			
 			}
 			
-		$js_output .= '});		
-		});
-	</script>';
+		$js_output .= '});';
+	$js_output .= $include_script_tags ? '</script>' : '';
 	
 	return $js_output;
 }
@@ -407,48 +352,32 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
  * @param    $animation_repeater Array The array, saved using mp_core_metabox class, retrieved using get_post_meta
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_page_load_animate_child( $element_id, $child_to_animate, $animation_repeater ){
+function mp_core_js_page_load_animate_child( $element_selector_string, $child_to_animate, $animation_repeater, $include_script_tags = true ){
 	
 	if ( empty($animation_repeater ) ){
 		return;	
 	}
+
+	$js_output = NULL;
 	
-	//Set the first frame CSS (we wrap this in a script tag so that if the user has no javascript, it doesn't auto hide animated objects);
-	$js_output = '<style scoped type="text/css" id="mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '">';
+	//Hide the element until the animation starts
+	$js_output .= mp_core_animation_hider_css( $element_selector_string . ' ' . $child_to_animate );
 	
-		$js_output .= $element_selector_string . ' ' . $child_to_animate . '{';
-			
-			//Temporarily set it to be non-visible
-			$js_output .= 'visibility: hidden;';
-	
-	$js_output .= '}
-	</style>';
-	
-	//If there is no javascript enabled in this user's browser, make the item visible again
-	$js_output .= '
-	<noscript>
-		<style scoped type="text/css">
-			' . $element_selector_string . ' ' . $child_to_animate . ' {visibility:visible;}
-		</style>
-	</noscript>';
-	
-	$js_output .= '<script type="text/javascript">
-		jQuery(document).ready(function($){ 
+	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
+	$js_output .= 'jQuery(document).ready(function($){ 
 			
 			$(document).on( "load", function($){ 
-				' . mp_core_js_animate_set_first_keyframe( "$(this).find('" . $element_selector_string . ' ' . $child_to_animate . "')", $animation_repeater ) . '			
+				' . mp_core_js_animate_set_first_keyframe( $element_selector_string . ' ' . $child_to_animate, $animation_repeater ) . '			
 				$( document ).trigger(\'mp_core_animation_set_first_keyframe_trigger\');
 			});';
 				
 			
-			$js_output .= mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater );
+			$js_output .= mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $element_selector_string . ' ' . $child_to_animate, $animation_repeater );
 				
 			$js_output .= '
 						
-			//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-			$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
-		});
-	</script>';
+		});';
+	$js_output .= $include_script_tags ? '</script>' : '';
 	
 	return $js_output;
 }
@@ -464,36 +393,25 @@ function mp_core_js_page_load_animate_child( $element_id, $child_to_animate, $an
  * @param    $bring_to_forefront Bool If true, this item's z-index will bump super high upon mouse over and back to nothing on mouse out
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_animate, $animation_repeater, $bring_to_forefront = true ){
+function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_animate, $animation_repeater, $bring_to_forefront = true, $include_script_tags = true, $namespace = NULL ){
 	
 	if ( empty($animation_repeater ) ){
 		return;	
 	}
 	
-	//Set the first frame CSS (we wrap this in a script tag so that if the user has no javascript, it doesn't auto hide animated objects);
-	$js_output = '<style scoped type="text/css" id="mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '">';
+	$js_output = NULL;
 	
-		$js_output .= $mouse_over_string . ' ' . $child_to_animate . '{';
+	//Check if a jquery namespace has been passed here
+	$namespace = !empty( $namespace ) ? '.' . $namespace : NULL;
+	
+	//Hide the element until the animation starts 
+	$js_output .= mp_core_animation_hider_css( $mouse_over_string . ' ' . $child_to_animate );
+
+	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
+	$js_output .= 'jQuery(document).ready(function($){ 
 			
-			//Temporarily set it to be non-visible
-			$js_output .= 'visibility: hidden;';
-	
-	$js_output .= '}
-	</style>';
-	
-	//If there is no javascript enabled in this user's browser, make the item visible again
-	$js_output .= '
-	<noscript>
-		<style scoped type="text/css">
-			' . $mouse_over_string . ' ' . $child_to_animate . ' {visibility:visible;}
-		</style>
-	</noscript>';
-	
-	$js_output .= '<script type="text/javascript">
-		jQuery(document).ready(function($){ 
-			
-			$( document ).on( \'mp_core_animation_set_first_keyframe_trigger\', function(event){
-				' . mp_core_js_animate_set_first_keyframe( "$(this).find('" . $mouse_over_string . ' ' . $child_to_animate . "')", $animation_repeater ) . '
+			$( document ).on( \'mp_core_animation_set_first_keyframe_trigger' . $namespace . '\', function(event){
+				' . mp_core_js_animate_set_first_keyframe( $mouse_over_string . ' ' . $child_to_animate, $animation_repeater ) . '
 			});
 			
 			$( document ).trigger(\'mp_core_animation_set_first_keyframe_trigger\');';
@@ -526,25 +444,25 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 			}
 			//If we are not on mobile, run the animations on mouseenter and mouseleave
 			else{
-			
+				
 				$js_output .= '
-					$( document ).on( \'mouseenter\', \'' . $mouse_over_string . '\', function(event){
+					
+					//Add this animation event to the mouseenter event
+					$( document ).on( \'mouseenter' . $namespace . '\', \'' . $mouse_over_string . '\', function(event){
 						' . ( $bring_to_forefront ? '$(this).css("z-index", "9999999999");' : NULL ) . '
-						' . mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
+						' . mp_core_js_animate_element( "$(this).find('" . $child_to_animate . "')", $mouse_over_string . ' ' . $child_to_animate, $animation_repeater ) . 
 					'}); 
 					
-					$( document ).on( \'mouseleave\', \'' . $mouse_over_string . '\', function(event){
+					$( document ).on( \'mouseleave' . $namespace . '\', \'' . $mouse_over_string . '\', function(event){
 						' . ( $bring_to_forefront ? '$(this).css("z-index", "");' : NULL ) . '
-						' . mp_core_js_reverse_animate_element( "$(this).find('" . $child_to_animate . "')", $animation_repeater ) . 
+						' . mp_core_js_reverse_animate_element( "$(this).find('" . $child_to_animate . "')", $mouse_over_string . ' ' . $child_to_animate, $animation_repeater ) . 
 					'});';
 			}
 			
 			$js_output .= '
 						
-			//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-			$(document).find("#mp-core-temp-css-' . sanitize_title( $child_to_animate ) . '").remove(); 
-		});
-	</script>';
+		});';
+	$js_output .= $include_script_tags ? '</script>' : '';
 	
 	return $js_output;
 }
@@ -559,36 +477,25 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
  * @param    $bring_to_forefront Bool If true, this item's z-index will bump super high upon mouse over and back to nothing on mouse out
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater, $bring_to_forefront = true ){
+function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater, $bring_to_forefront = true, $include_script_tags = true, $namespace = NULL ){
 	
 	if ( empty($animation_repeater ) ){
 		return;	
 	}
 	
-	//Set the first frame CSS (we wrap this in a script tag so that if the user has no javascript, it doesn't auto hide animated objects);
-	$js_output = '<style scoped type="text/css" id="mp-core-temp-css-' . sanitize_title( $mouse_over_string ) . '">';
+	$js_output = NULL;
 	
-		$js_output .= $mouse_over_string . '{';
+	//Check if a jquery namespace has been passed here
+	$namespace = !empty( $namespace ) ? '.' . $namespace : NULL;
+	
+	//Hide the element until the animation starts
+	$js_output .= mp_core_animation_hider_css( $mouse_over_string );
+	
+	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
+	$js_output .= 'jQuery(document).ready(function($){ 
 			
-			//Temporarily set it to be non-visible
-			$js_output .= 'visibility: hidden;';
-	
-	$js_output .= '}
-	</style>';
-	
-	//If there is no javascript enabled in this user's browser, make the item visible again
-	$js_output .= '
-	<noscript>
-		<style scoped type="text/css">
-			' . $mouse_over_string . ' ' . '{visibility:visible;}
-		</style>
-	</noscript>';
-	
-	$js_output .= '<script type="text/javascript">
-		jQuery(document).ready(function($){ 
-			
-			$( document ).on( \'mp_core_animation_set_first_keyframe_trigger\', function(event){
-				' . mp_core_js_animate_set_first_keyframe( "$(this).find('" . $mouse_over_string . "')", $animation_repeater ) . '
+			$( document ).on( \'mp_core_animation_set_first_keyframe_trigger' . $namespace . '\', function(event){
+				' . mp_core_js_animate_set_first_keyframe( $mouse_over_string, $animation_repeater ) . '
 			});
 			
 			$( document ).trigger(\'mp_core_animation_set_first_keyframe_trigger\');';
@@ -596,6 +503,7 @@ function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater,
 			//If we are on an iphone, ipad, android, or other touch enabled screens, run the animations on the first touch, then go to the link on the second
 			if ( mp_core_is_iphone() || mp_core_is_ipad() || mp_core_is_android() ){
 				
+				/*
 				$js_output .= '
 				//On mobile, the first click runs the animation and the second goes to the link.
 				$( document ).on( \'touchend\', \'' . $mouse_over_string . '\', function(event){
@@ -606,7 +514,7 @@ function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater,
 						
 						event.preventDefault();
 											
-						' . mp_core_js_animate_element( "this_element", $animation_repeater ) . '
+						' . mp_core_js_animate_element( "this_element", $mouse_over_string, $animation_repeater ) . '
 						
 						setInterval(function(){ 
 							
@@ -616,28 +524,31 @@ function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater,
 						
 					}
 				});';
+				*/
 			}
 			//If we are not on mobile, run the animations on mouseenter and mouseleave
 			else{
-			
+				
+				$function_name_mouse_enter = 'mp_core_mouseenter_' . str_replace( '-', '_', sanitize_title( $mouse_over_string ) );
+				$function_name_mouse_leave = 'mp_core_mouseleave_' . str_replace( '-', '_', sanitize_title( $mouse_over_string ) );
+				
 				$js_output .= '
-					$( document ).on( \'mouseenter\', \'' . $mouse_over_string . '\', function(event){
+					
+					$( document ).on( \'mouseenter' . $namespace . '\', \'' . $mouse_over_string . '\', function(event){
 						' . ( $bring_to_forefront ? '$(this).css("z-index", "9999999999");' : NULL ) . '
-						' . mp_core_js_animate_element( "$(this)", $animation_repeater ) . 
+						' . mp_core_js_animate_element( "$(this)", $mouse_over_string, $animation_repeater ) . 
 					'}); 
 					
-					$( document ).on( \'mouseleave\', \'' . $mouse_over_string . '\', function(event){
+					$( document ).on( \'mouseleave' . $namespace . '\', \'' . $mouse_over_string . '\', function(event){
 						' . ( $bring_to_forefront ? '$(this).css("z-index", "");' : NULL ) . '
-						' . mp_core_js_reverse_animate_element( "$(this)", $animation_repeater ) . 
+						' . mp_core_js_reverse_animate_element( "$(this)", $mouse_over_string, $animation_repeater ) . 
 					'});';
 			}
 			
 			$js_output .= '
 						
-			//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
-			$(document).find("#mp-core-temp-css-' . sanitize_title( $mouse_over_string ) . '").remove(); 
-		});
-	</script>';
+		});';
+	$js_output .= $include_script_tags ? '</script>' : '';
 	
 	return $js_output;
 }
@@ -655,27 +566,36 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
 		
 	ob_start(); 
 	
-	echo $selector_string . '.each(function(){ $(this).velocity(
-					{';
-    
-    //Loop through each keyframe
-	foreach( $animation_repeater as $repeat ){
+	//echo 'console.log( "setting frist frame" );';
+	
+	echo '$( "' . $selector_string . '" ).each( function(){
 		
-		mp_core_animation_echo_values( $repeat );
-        
-		//Animation Length: This is formatted weird like this so it looks nicer on the front end
-		echo '}, 
-						{duration: 0, begin: function() { 
-			
-		}, complete: function() { 
-			
-			//console.log( \'set default\');
-			
-		} });});'; 
+		$(this).velocity(
+			{';
 		
-		//We only need to apply the first keyframe, so break this.
-		break;
-	}
+				//Loop through each keyframe
+				foreach( $animation_repeater as $repeat ){
+					
+					mp_core_animation_echo_values( $repeat );
+					
+					//We only need to apply the first keyframe, so break this.
+					break;
+				}
+			
+			//Animation Length:
+			echo '},
+				{
+					duration: 0.000001, 
+					begin: function() { 
+					}, 
+					complete: function() { 
+						//console.log( \'set default for\' + \'' . $selector_string . '\');
+						//Remove the visibility:hidden for this element once the javascript has loaded the first keyframe
+						$("#mp-core-temp-css-' . sanitize_title( $selector_string ) . '").remove(); 
+					}
+				} 
+			);
+		});';
 	
 	return ob_get_clean(); 
 		
@@ -690,7 +610,7 @@ function mp_core_js_animate_set_first_keyframe( $selector_string, $animation_rep
  * @param    $animation_repeater Array The array, saved using mp_core_metabox class, retrieved using get_post_meta
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_animate_element( $selector_string, $animation_repeater ){
+function mp_core_js_animate_element( $selector_string, $css_first_frame_hider_string, $animation_repeater ){
 	
 	$counter = 1;
 	$forlength = count($animation_repeater);
@@ -739,6 +659,8 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
 				
 			$( document ).trigger( "mp_core_animation_start" ); 
 			
+			$(document).find("#mp-core-temp-css-' . sanitize_title( $css_first_frame_hider_string ) . '").remove();
+			
 		}, complete: function() { 
 				
 			$( document ).trigger( "mp_core_animation_end" ); 
@@ -764,7 +686,7 @@ function mp_core_js_animate_element( $selector_string, $animation_repeater ){
  * @param    $animation_repeater Array The array, saved using mp_core_metabox class, retrieved using get_post_meta
  * @return   $js_output String The javascript code which, when run, would cause the element to be animated
  */
-function mp_core_js_reverse_animate_element( $selector_string, $animation_repeater ){
+function mp_core_js_reverse_animate_element( $selector_string, $css_first_frame_hider_string, $animation_repeater ){
 	
 	$counter = 1;
 	$forlength = count($animation_repeater);
@@ -813,6 +735,7 @@ function mp_core_js_reverse_animate_element( $selector_string, $animation_repeat
 			echo ', begin: function() { 
 					
 				$( document ).trigger( "mp_core_animation_start" ); 
+				$( document).find("#mp-core-temp-css-' . sanitize_title( $css_first_frame_hider_string ) . '").remove();
 				
 			}, complete: function() { 
 					
@@ -950,4 +873,33 @@ function mp_core_animation_echo_values( $repeat ){
 		
 		$value_counter = $value_counter + 1;
 	}
+}
+
+/**
+ * This function is hooked to the wp_footer to output the css for hiding/showing the element in question before the animation happens.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @param    $element_id string 
+ * @return   void 
+ */	
+function mp_core_animation_hider_css( $element_id ){
+		
+	//Set the first frame CSS
+	$css_output = '<div id="mp-core-temp-css-' . sanitize_title( $element_id  ) . '"><style scoped type="text/css">';
+	
+		$css_output .= $element_id  . '{';
+			
+			//Temporarily set it to be non-visible
+			$css_output .= 'visibility: hidden;';
+	
+	$css_output .= '}</style>';
+	
+	//If there is no javascript enabled in this user's browser, make the item visible again
+	$css_output .= '
+	<noscript>
+		<style scoped type="text/css">' . $element_id  . ' {visibility:visible;}</style>
+	</noscript></div>';
+	
+	return $css_output;
 }
