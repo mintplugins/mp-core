@@ -111,12 +111,12 @@ function mp_core_fix_nbsp( $string ){
  */
 function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
 	if ( ! is_numeric( $object_id ) ) {
-		return false;
+		return 'never_been_saved_73698363746983746';
 	}
 
 	$object_id = absint( $object_id );
 	if ( ! $object_id ) {
-		return false;
+		return 'never_been_saved_73698363746983746';
 	}
 
 	/**
@@ -523,13 +523,15 @@ function mp_core_word_count($html) {
  * @since    1.0.0
  * @param    $text  string The string whose words we want to limit
  * @param    $limit int The number of words to limit the text to
+ * @param    $limit int The text that should be added if a cut is made to the string. You might pass "..." or "...Read More". Defaults to nothing.
  * @return   $text  string The limited string
  */
-function mp_core_limit_text_to_words($text, $limit) {	
+function mp_core_limit_text_to_words($text, $limit, $text_to_add_if_cut = false) {	
   if (mp_core_word_count($text) > $limit) {
 	  $words = str_word_count($text, 2);
 	  $pos = array_keys($words);
 	  $text = isset( $pos[$limit] ) ? substr($text, 0, $pos[$limit]) : $text;
+	  $text = $text . $text_to_add_if_cut;
   }
   return $text;
 }
@@ -1253,3 +1255,15 @@ function mp_deactivate_problematic_plugins(){
 	}
 }
 add_action( 'admin_init', 'mp_deactivate_problematic_plugins' );
+
+/**
+ * This function prints ajax placeholder metabox content - which will be swapped out using ajax when needed.
+ * You can find an example of how to set up the ajax javascript in the mp-stacks-admin.js file and searching the code for "mp_core_metabox_ajax".
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */	
+function mp_core_metabox_content_ajax_placeholder() {
+	echo '<div class="mp_core_metabox_ajax_placeholder"></div>';
+}
