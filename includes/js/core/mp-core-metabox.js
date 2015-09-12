@@ -98,22 +98,7 @@ jQuery(document).ready(function($){
 		metabox_container.find(therepeaterclass).each(function(){
 			if (name_number == 0){
 				
-				//Loop through all elements in this repeater and rename
-				$(this).find('*').each(function() {
-					//Re-initialize tinymce for each TInyMCE area in this repeater
-					if ( this.className == 'wp-editor-area') {
-						//$(this).css('display', 'block');
-						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-						
-						//If tinymce is supposed to be active for this text area
-						if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
-							
-							//Reactivate tinymce
-							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
-								
-						}
-					}
-				});	
+				
 			}
 			else{
 				
@@ -142,21 +127,6 @@ jQuery(document).ready(function($){
 					if ( this.hasAttribute( 'showhidergroup' ) ){
 						this.setAttribute( 'showhidergroup', this.getAttribute( 'showhidergroup' ).replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB') );
 					}
-									
-					//Re-initialize tinymce for each TInyMCE area in this repeater
-					if ( this.className == 'wp-editor-area') {
-						//$(this).css('display', 'block');
-						tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-						
-						//If tinymce is supposed to be active for this text area
-						if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
-							
-							//Reactivate tinymce
-							tinyMCE.execCommand( 'mceAddEditor', true, this.id );
-								
-						}
-																				
-					}
 					
 				});	
 			}
@@ -174,6 +144,9 @@ jQuery(document).ready(function($){
 		});
 		
 		name_repeaters();
+		
+		//Reset all the wp_editors on the page
+		mp_core_reset_all_wp_editors();
 		
 		//"Action Hook" trigger after repeater is cloned
 		$(window).trigger("mp_core_duplicate_repeater_after", [ theoriginal, theclone ] );
@@ -268,6 +241,8 @@ jQuery(document).ready(function($){
 			}
 			name_number = name_number + 1;
 		});
+		
+		mp_core_reset_all_wp_editors();
 				
 		return false;   
 		    
@@ -341,6 +316,7 @@ jQuery(document).ready(function($){
 				$(this).find('li').css( 'height', 'inherit');
 			}
 	});
+
 	
 	//When we click on the toggle for this repeater - hide or show this repeater
 	$(document).on("click", '.repeater_container .hndle, .repeater_container .handlediv', function(){
@@ -417,7 +393,12 @@ jQuery(document).ready(function($){
 	}
 	
 	//Apply names of repeater metaboxes on ready
-	name_repeaters();
+	$( window ).on( 'load', function(){
+		name_repeaters();
+	});
+	$( document ).ajaxComplete( function(){
+		name_repeaters();
+	});
 	
 	//Apply names of repeater metaboxes when typing in the first field	
 	$( document ).on('keyup click blur focus change paste', '.repeater_container li > .mp_field input', function() {
@@ -425,65 +406,112 @@ jQuery(document).ready(function($){
 	});
 	
 	//Handle dragging and dropping of repeaters to re-order them. Uses the "sortable" jquery plugin
-	$('.repeater_container').sortable({
-		handle: '.mp_drag.hndle',
-		axis: 'y',
-		opacity: 0.5,
-		
-		start: function(e, ui){
+	function mp_core_sortable_repeaters(){
+		$('.repeater_container').sortable({
+			handle: '.mp_drag.hndle',
+			axis: 'y',
+			opacity: 0.5,
 			
-			//Remove control for Tiny MCE
-			$(this).find('.wp-editor-area').each(function(){
-				tinyMCE.execCommand( 'mceRemoveEditor', true, $(this).attr('id') );
-			});
-			
-		},
-		update: function(e,ui) {
-			
-			name_number = 0;
-						
-			//Loop through all elements in this repeater and rename
-			$(this).children().each(function() {
-										
-				$(this).find('*').each(function() {
-									
-						if ( this.name ){
-							this.name = this.name.replace(/\[[0-9]\]/g, '[' + (name_number) +']');
-						}
-						
-						if ( this.id ){
-							this.id= this.id.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
-						}
-						
-						if ( this.className ){
-							this.className = this.className.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
-						}
-						if ( this.href ){
-							this.href = this.href.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBBB');
-						}
-						
-						//Re-initialize tinymce for each TInyMCE area in this repeater
-						if ( this.className == 'wp-editor-area') {
-							tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
-							
-							//If tinymce is supposed to be active for this text area
-							if ( $(this).parent().parent().parent().find( '.wp-editor-wrap' ).hasClass('tmce-active') ){
-							
-								tinyMCE.execCommand( 'mceAddEditor', true, this.id );
-							
-							}
-						}
+			start: function(e, ui){
 				
-				});
-				name_number = name_number + 1;		
-			});	
-			
-			
-			//Submit the form
-		  	//$('#post').submit();
-		}
-	});
+				
+				
+			},
+			update: function(e,ui) {
+				
+				name_number = 0;
+							
+				//Loop through all elements in this repeater and rename
+				$(this).children().each(function() {
+											
+					$(this).find('*').each(function() {
+										
+							if ( this.name ){
+								this.name = this.name.replace(/\[[0-9]\]/g, '[' + (name_number) +']');
+							}
+							
+							if ( this.id ){
+								//For some reason we need 4 B's to get 5. I'm not good with regex - but this works.
+								this.id= this.id.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBB'); 
+							}
+							
+							if ( this.className ){
+								//For some reason we need 4 B's to get 5. I'm not good with regex - but this works.
+								this.className = this.className.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBB');
+							}
+							if ( this.href ){
+								//For some reason we need 4 B's to get 5. I'm not good with regex - but this works.
+								this.href = this.href.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBB');
+							}
+							
+							
+					
+					});
+					name_number = name_number + 1;		
+				});	
+				
+				mp_core_reset_all_wp_editors();
+				
+				//Submit the form
+				//$('#post').submit();
+			}
+		});
+	}
+	mp_core_sortable_repeaters();
+	$(document).ajaxComplete( function() {
+        mp_core_sortable_repeaters();
+    });							
 	
+	/**
+	 * For metaboxes set to "metabox_load_content_when_open", load their contents once the metabox is "Opened" by the user.
+	 */
+	 $( document ).on( 'click', '.postbox .handlediv, .postbox .hndle', function( event ){
+		
+		var content_placeholder = $(this).parent().find( '.mp_core_metabox_ajax_placeholder');
+		var metabox_id = content_placeholder.attr( 'mp_core_metabox_id' ) ? content_placeholder.attr( 'mp_core_metabox_id' ) : false;
+		
+		//Put the loading animation into the placeholder
+		content_placeholder.html( '<div class="mp-core-loading-spinner"></div>' );
+				
+		//If this metabox doesn't have an ajax placeholder in which to load the content, get out of here.
+		if ( !metabox_id ){
+			return;	
+		}
+		 
+		//Load in the metabox content via ajax
+		var postData = {
+			action: metabox_id,
+			mp_core_metabox_ajax: true,
+			mp_core_metabox_id_ajax: metabox_id,
+			mp_core_metabox_post_id: post_id
+		};
+		
+		//Run the Ajax
+		$.ajax({
+			type: "POST",
+			data: postData,
+			dataType:"json",
+			url: 'admin-ajax.php',
+			success: function (response) {
+				
+				//If the response is false (or "0"), something went wrong.
+				if ( response == 0 ){
+					$( content_placeholder ).replaceWith( 'Oops! Something went wrong while trying to load these options for ' + metabox_id + '.' );
+				}
+				else{
+					
+					//Place the metabox controls into the metabox in question.			
+					mp_core_load_ajax_metabox_contents( response, '#' + metabox_id );
+					
+				}
+				
+			}
+		}).fail(function (data) {
+			console.log(data);
+		});
+		
+	 });
+					
 	/**
 	 * Icon Font Picker
 	 */
@@ -511,82 +539,83 @@ jQuery(document).ready(function($){
 	
 	/**
 	 * Required Fields - make them red if they are empty
-	 */
-	 
-	//Loop through all required fields
-	$('.mp_required').each(function(){
+	 */	
+	$( window ).on( 'load', function(){
 		
-		//If this field has a valuein it, make it white
-		if( $(this).val() ){
-								
-			$(this).css('background-color', '#FFFFFF');	
-
-		}
-		
-		//When we click on or away from this field
-		$(this).on('blur', function() {
-			
-			//If there is a value
-			if( $(this).val() ){
-								
-				$(this).removeAttr( 'style' );
-				
-				$(this).css('background-color', '#FFFFFF');	
-			//If there isn't a value
-			}else{
-				
-				//Make it red
-				$(this).css('background-color', '#FFC8C8');	
-				$(this).css('display', 'inline-block');
-				
-			}
-			
-		});
-		
-	});
-	
-	//When the publish button is clicked
-	$("#publish").on('click', function(event){
-		
-		//Make sure all our required fields are visible
+		//Loop through all required fields
 		$('.mp_required').each(function(){
-			if( !$(this).val() ){
-				$(this).css('display', 'inline-block');	
-			}
-		});
-		
-	});
-	
-	//Loop through all required fields
-	$('.mp_required').each(function(){
-		
-		//If this field has a valuein it, make it white
-		if( $(this).val() ){
-								
-			$(this).css('background-color', '#FFFFFF');	
-
-		}
-		
-		//When we click on or away from this field
-		$(this).on('blur', function() {
 			
-			//If there is a value
+			//If this field has a valuein it, make it white
 			if( $(this).val() ){
-								
-				$(this).removeAttr( 'style' );
-				
+									
 				$(this).css('background-color', '#FFFFFF');	
-			//If there isn't a value
-			}else{
-				
-				//Make it red
-				$(this).css('background-color', '#FFC8C8');	
-				$(this).css('display', 'inline-block');
-				
+	
 			}
+			
+			//When we click on or away from this field
+			$(this).on('blur', function() {
+				
+				//If there is a value
+				if( $(this).val() ){
+									
+					$(this).removeAttr( 'style' );
+					
+					$(this).css('background-color', '#FFFFFF');	
+				//If there isn't a value
+				}else{
+					
+					//Make it red
+					$(this).css('background-color', '#FFC8C8');	
+					$(this).css('display', 'inline-block');
+					
+				}
+				
+			});
 			
 		});
 		
+		//When the publish button is clicked
+		$("#publish").on('click', function(event){
+			
+			//Make sure all our required fields are visible
+			$('.mp_required').each(function(){
+				if( !$(this).val() ){
+					$(this).css('display', 'inline-block');	
+				}
+			});
+			
+		});
+	
+		$('.mp_required').each(function(){
+			
+			//If this field has a valuein it, make it white
+			if( $(this).val() ){
+									
+				$(this).css('background-color', '#FFFFFF');	
+	
+			}
+			
+			//When we click on or away from this field
+			$(this).on('blur', function() {
+				
+				//If there is a value
+				if( $(this).val() ){
+									
+					$(this).removeAttr( 'style' );
+					
+					$(this).css('background-color', '#FFFFFF');	
+				//If there isn't a value
+				}else{
+					
+					//Make it red
+					$(this).css('background-color', '#FFC8C8');	
+					$(this).css('display', 'inline-block');
+					
+				}
+				
+			});
+			
+		});
 	});
 	
 	//When the publish button is clicked
@@ -656,8 +685,10 @@ jQuery(document).ready(function($){
 	});
 	
 	//Show each range slider's value bseide it when the page loads
-	$(document).find("input[type='range']").each(function(){
-		$(this).next().val($(this).val());
+	$( window ).on( 'load', function(){
+		$(document).find("input[type='range']").each(function(){
+			$(this).next().val($(this).val());
+		});
 	});
 	
 	//When a user types into the input range output field, update the range slider to match the value
@@ -675,45 +706,53 @@ jQuery(document).ready(function($){
 	});
 
 	//Conditional Fields - Fields that are only shown if a dropdown/checkbox is set to a specific value
-	$(document).find("[mp_conditional_field_id]").each(function(){
-		
-		//Get the name of this fields parent conditional field
-		var parent_conditional_field_name = $(this).attr('mp_conditional_field_id');
-				
-		//Get the name of this value that parent needs to be set to in order for this field to be visible
-		var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
-		
-		//If the parent is a checkbox
-		if ( $( '[name="' + parent_conditional_field_name + '"]' ).attr( 'type' ) == 'checkbox' ){
+	function mp_core_set_conditional_fields(){
+		$(document).find("[mp_conditional_field_id]").each(function(){
 			
-			if ( $( '[name="' + parent_conditional_field_name + '"]' ).is(':checked')){
-				//Show this field
-				$(this).css( 'visibility', 'visible');
-				$(this).css( 'position', '');
-			}
-			else{
-				//Hide this field - we don't use display block because the showhiders already use it
-				$(this).css( 'visibility', 'hidden');
-				$(this).css( 'position', 'absolute');
-			}
+			//Get the name of this fields parent conditional field
+			var parent_conditional_field_name = $(this).attr('mp_conditional_field_id');
+					
+			//Get the name of this value that parent needs to be set to in order for this field to be visible
+			var desired_conditional_field_values = $(this).attr('mp_conditional_field_values').split(', ');
+			
+			//If the parent is a checkbox
+			if ( $( '[name="' + parent_conditional_field_name + '"]' ).attr( 'type' ) == 'checkbox' ){
 				
-		}
-		//If the parent is not a checkbox
-		else{
-			//If the parent's value is set to what it should be for this field to be visible
-			if ( $.inArray( $( '[name="' + parent_conditional_field_name + '"]' ).val(), desired_conditional_field_values ) != -1 ){
-							
-				//Show this field
-				$(this).css( 'visibility', 'visible');
-				$(this).css( 'position', '');
+				if ( $( '[name="' + parent_conditional_field_name + '"]' ).is(':checked')){
+					//Show this field
+					$(this).css( 'visibility', 'visible');
+					$(this).css( 'position', '');
+				}
+				else{
+					//Hide this field - we don't use display block because the showhiders already use it
+					$(this).css( 'visibility', 'hidden');
+					$(this).css( 'position', 'absolute');
+				}
 					
 			}
+			//If the parent is not a checkbox
 			else{
-				//Hide this field - we don't use display block because the showhiders already use it
-				$(this).css( 'visibility', 'hidden');
-				$(this).css( 'position', 'absolute');
+				//If the parent's value is set to what it should be for this field to be visible
+				if ( $.inArray( $( '[name="' + parent_conditional_field_name + '"]' ).val(), desired_conditional_field_values ) != -1 ){
+								
+					//Show this field
+					$(this).css( 'visibility', 'visible');
+					$(this).css( 'position', '');
+						
+				}
+				else{
+					//Hide this field - we don't use display block because the showhiders already use it
+					$(this).css( 'visibility', 'hidden');
+					$(this).css( 'position', 'absolute');
+				}
 			}
-		}
+		});
+	}
+	$( window ).on( 'load', function(){
+		mp_core_set_conditional_fields();
+	});
+	$( document ).ajaxComplete(function() {
+		mp_core_set_conditional_fields();
 	});
 	
 	//When any mp_field select is changed
@@ -847,3 +886,111 @@ jQuery(document).ready(function($){
 	});
 
 });
+
+/**
+ * This function loads all of the responses from the mp_core_metabox_ajax ajax callback. For a complete example, open the mp-stacks-admin.js file and search for "mp_core_metabox_ajax".
+ */
+function mp_core_load_ajax_metabox_contents( response, metabox_id_string ){
+	
+	jQuery(document).ready(function($){
+		
+		//Loop through all the enqueued css stylesheets that were passed back from ajax
+		if ( response.css_stylesheets ){
+			$.each( response.css_stylesheets, function( stylesheet_counter, stylesheet_href ) {
+				
+				//If this stylesheet has not already been output to the page
+				if ( $('link[href="' + stylesheet_href + '"]').length === 0 ){
+					
+					//Output this stylesheet link into the document head so the browser loads it
+					$( 'head' ).append( '<link rel="stylesheet" href="' + stylesheet_href + '" />' );
+					
+				}
+				
+			});
+		}
+		
+		//Place the content-type controls into the designated metabox 
+		$( metabox_id_string + ' .inside' ).html( response.metabox_content );
+		
+		//Reset all the wp_editors on the page
+		mp_core_reset_all_wp_editors();
+			
+		//Loop through all the js scripts that were passed back from ajax
+		if ( response.js_scripts ){
+			$.each( response.js_scripts, function( script_counter, script_output_src ) {
+				
+				//If this script has not already been output to the page
+				if ( $('script[src="' + script_output_src + '"]').length === 0 ){
+					
+					//Output this script into the footer so the browser loads it
+					$( 'body' ).append( '<script type="text/javascript" src="' + script_output_src + '"></script>' );
+					
+				}
+				
+			});
+		}
+	});
+}
+		
+function mp_core_reset_all_wp_editors(){
+	
+	jQuery(document).ready(function($){
+		
+		var wp_editor_init_script = $( "script:contains('tinyMCEPreInit = {')" ).html().replace(/\s\s+/g, ' ');
+		
+		$(document).find('.wp-editor-area').each(function() {
+					
+			tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
+			$( '.quicktags-toolbar' ).remove();
+			
+			var this_wp_editor_id = $(this).attr( 'id' );
+			
+			if ( wp_editor_init_script.search( this_wp_editor_id ) == -1 ){
+				//Add the tinyMCE values to the init array for this wp_editor
+				mceInit_string = 
+				'\'' + this_wp_editor_id + '\': {' +
+					'selector: "#' + this_wp_editor_id + '",' +
+					'resize: "vertical",' +
+					'menubar: false,' +
+					'wpautop: true,' +
+					'indent: false,' +
+					'toolbar1: "bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv",' +
+					'toolbar2: "formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help",' +
+					'toolbar3: "",' +
+					'toolbar4: "",' +
+					'tabfocus_elements: ":prev,:next",' +
+					'body_class: "' + this_wp_editor_id + ' post-status-publish locale-en-us"' +
+				'}';
+					
+				wp_editor_init_script = wp_editor_init_script.replace( '}}, qtInit', '},' + mceInit_string + '}, qtInit' );
+				
+				//Add the quicktags to the init array for this wp_editor
+				qtInit_string = "'" + this_wp_editor_id + "': {";
+						qtInit_string += 'id: "' + this_wp_editor_id + '",';
+						qtInit_string += 'buttons: "strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"';
+				qtInit_string += '}';
+					
+				wp_editor_init_script = wp_editor_init_script.replace( '}}, ref', '},' + qtInit_string + '}, ref' );
+		
+				//Replace the old wp_editor init script with the newly adjusted script.
+				$( "script:contains('tinyMCEPreInit = {')" ).replaceWith( '<script id="mp_core_wp_editor_init" type="text/javascript">' + wp_editor_init_script + '</script>' );
+				//$( "script:contains('tinyMCEPreInit')" ).prependTo( $( 'head' ) );
+			}
+			
+		});	
+		
+		//console.log( 'addingfooterscripts. now..');
+		
+		//Refresh the scripts which initialize the wp_editors (tinyMCE)
+		$( "script:contains('tinymce')" ).each( function( script_count, script_tag ){
+			var script_html = $(this).html();
+			$(this).after( '<script class="mp-core-tinymce-scripts-updated">' + script_html + '</script>' );
+			$(this).remove();
+			$( '.quicktags-toolbar' ).remove();
+			
+		});
+		
+		//$( '.quicktags-toolbar' ).remove();
+		
+	});	
+}
