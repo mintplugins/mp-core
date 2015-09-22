@@ -160,7 +160,7 @@ class MP_CORE_Font{
 	* @see      wp_remote_get()
 	* @return   void
  	*/
-	function mp_core_output_google_font_styles() {
+	public function mp_core_output_google_font_styles() {
 		
 		if ( $this->_args['echo_google_font_css'] ){
 			echo $this->mp_core_get_google_font_styles();
