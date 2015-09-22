@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.1
-Stable tag: 1.0.2.0
+Tested up to: 4.3
+Stable tag: 1.0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.2.1 = June X, 2015
+= 1.0.2.1 = September 21, 2015
 * Showhiders are now wrapped in a div for indenting instead of indented via JS.
 * Apply specific height to repeater containers only when closed.
 * Added Spinner Animation for ajax metaboxes.

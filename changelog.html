@@ -1,4 +1,19 @@
 <p>
+<strong> 1.0.2.1 = September 21, 2015</strong>
+<ul>
+    <li>Showhiders are now wrapped in a div for indenting instead of indented via JS.</li>
+    <li>Apply specific height to repeater containers only when closed.</li>
+    <li>Added Spinner Animation for ajax metaboxes.</li>
+    <li>Customizer Options now have default priority of 0. Previous to this release it was 10.</li>
+    <li>Made Fonts able to be output via ajax in Font Class.</li>
+    <li>Fixed bug with ACF plugin to make sure #post is resubmitted properly after default checks are complete.</li>
+    <li>Added mp_core_reset_all_wp_editors function</li>
+    <li>Make admin Color Pickers re-apply when ajax is complete</li>
+    <li>Made metabox content able to be loaded via ajax. This way options are only loaded if the user needs them.</li>
+    <li>Made animations have jQuery namespaces so they can be turned .off() if their code is reloaded via ajax.</li>
+    <li>Plugin installer: Some webhosts have strange temp directories and they were causing errors. While this doesn't fix that, it does give a useful error message to the user to help them trouble shoot with their webhost.</li>
+    <li>Shortcode Class update: media_buttons_context is deprecated by WordPress. It now uses media_buttons filter.</li>
+</ul>
 <strong>1.0.2.0 = May 13, 2015</strong>
 <ul>
 	<li>Revert Change in 1.0.1.9 of mp_core_get_post_meta back to the way it was in 1.0.1.8.</li>
