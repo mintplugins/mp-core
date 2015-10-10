@@ -114,6 +114,16 @@ class MP_CORE_Font{
 			//Fetch the font from Google's server
 			$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $fetch_string );
 			
+			//If the result was a WP error or some kind, return that error.
+			if ( is_wp_error( $google_font_face ) ){
+				
+				//Add this font family to the array of font families so we dont re-create it again
+				$mp_core_font_families[$this->_css_font_family] = $google_font_face->get_error_message();
+				
+				return NULL;
+				
+			}
+			
 			//If the entered font is not found on Google (ie it was spelled wrong or a style doesn't exist for it)
 			if ( strpos( $google_font_face['body'], 'The requested font families are not available' ) !== false ){
 				
