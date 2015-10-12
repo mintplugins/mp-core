@@ -259,9 +259,21 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 					$saved_file = wp_remote_retrieve_body( wp_remote_get( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) ) ) );					
 				}
 				
+				//If the file still came back empty, try without using SSL
+				if ( empty( $saved_file ) ){
+					$plugin_download_link = str_replace( 'https', 'http', $this->_args['plugin_download_link'] );
+					$saved_file = wp_remote_retrieve_body( wp_remote_get( esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $plugin_download_link ) ) ) );					
+					
+					echo __( 'Oops! Your Web Host is poorly configured and doesn\'t allow secure connections over SSH!! Let them know they need to allow connections over SSH in order for WordPress to properly function. This can sometimes be caused by an out-dated version of OpenSSL.', 'mp_core' ); 
+					
+					die(); 
+				}
+				
 				//If it's still empty
 				if ( empty( $saved_file ) ){
 					echo __( 'Oops! There was an error downloading the file', 'mp_core' ); 
+					echo '<br />' . __( 'The URL to the file is: ', 'mp_core' ) . $saved_file;
+					echo esc_url_raw( add_query_arg( array( 'site_activating' => get_bloginfo( 'wpurl' ) ), $this->_args['plugin_download_link'] ) );
 					die();	
 				}
 				
