@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.2
+Stable tag: 1.0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.3 = October 24, 2015
+* Add check to plugin installer for if connections aren't allowed over SSL because of a poor webhost configuration. Output helpful error message if so.
+* Make sure Icon Font Pickers work in non-repeated metaboox items.
 
 = 1.0.2.2 = October 10, 2015
 * Check for wp_error on google font face before doing anything else in the font class.
