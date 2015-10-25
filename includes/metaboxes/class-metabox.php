@@ -2021,8 +2021,13 @@ if (!class_exists('MP_CORE_Metabox')){
 			
 			
 			//Get the non-repeater field ID and use it as a class for the icon
-			$icon_class = explode( '[', $field_id );
-			$icon_class = explode( ']', $icon_class[2] );
+			if ( strpos( $field_id, '[' ) === true) {
+				$icon_class = explode( '[', $field_id );
+				$icon_class = explode( ']', $icon_class[2] );
+			}
+			else{
+				$icon_class = $field_id;
+			}	
 			
 			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
 			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
