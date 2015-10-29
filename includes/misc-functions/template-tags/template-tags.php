@@ -96,7 +96,11 @@ function mp_core_get_avatar( $id_or_email, $size ){
 	$avatar_tag = get_avatar( $id_or_email, $size_doubled );
 		
 	//Explode the img tag
-	$exploded_avatar = explode( "src='", $avatar_tag );	
+	$exploded_avatar = explode( "src='", $avatar_tag );
+	
+	if ( !isset( $exploded_avatar[1] ) ){
+		return NULL;	
+	}
 	$avatar_url = explode( "'", $exploded_avatar[1] ); 
 	$avatar_url = trim( $avatar_url[0]);
 	
