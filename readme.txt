@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.3
+Stable tag: 1.0.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.4 = October 29, 2015
+* Only output microformats if a queried post id actually exists in wp_query. This fixes errors with plugins that have pseudo pages like BuddyPress.
+* Make sure avatars exist as expected before using their php-exploded arrays. This fixes another compaitibiltiy bug with BuddyPress.
 
 = 1.0.2.3 = October 24, 2015
 * Add check to plugin installer for if connections aren't allowed over SSL because of a poor webhost configuration. Output helpful error message if so.
