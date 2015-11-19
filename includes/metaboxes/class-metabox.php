@@ -2235,3 +2235,67 @@ if (!class_exists('MP_CORE_Metabox')){
 		
 	}
 }
+
+/**
+ * Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste. 
+ * This way people don't accidentally paste in HTML styles. Styles can still be pasted using the "Text" mode (and not "Visual").
+ *
+ * @author     Philip Johnston
+ * @link       http://mintplugins.com/doc/
+ * @since      1.0.0
+ * @return     void
+ */
+class MP_CORE_PasteAsPlainText {
+	
+	function __construct() {
+		
+		//If we are doing an ajax callback for the metabox content
+		if ( isset( $_POST['mp_core_metabox_ajax'] ) ){
+				
+			add_action( 'admin_init', array( $this, 'init' ) );
+		
+		}
+
+	}
+
+	function init() {
+
+		add_filter( 'tiny_mce_before_init', array( $this, 'forcePasteAsPlainText' ) );
+		add_filter( 'teeny_mce_before_init', array( $this, 'forcePasteAsPlainText' ) );
+		add_filter( 'teeny_mce_plugins', array( $this, 'loadPasteInTeeny' ) );
+		add_filter( 'mce_buttons_2', array( $this, 'removePasteAsPlainTextButton' ) );
+
+	}
+
+	function forcePasteAsPlainText( $mceInit ) {
+
+		global $tinymce_version;
+
+		if ( $tinymce_version[0] < 4 ) {
+			$mceInit[ 'paste_text_sticky' ] = true;
+			$mceInit[ 'paste_text_sticky_default' ] = true;
+		} else {
+			$mceInit[ 'paste_as_text' ] = true;
+		}
+
+		return $mceInit;
+	}
+
+	function loadPasteInTeeny( $plugins ) {
+
+		return array_merge( $plugins, (array) 'paste' );
+
+	}
+
+	function removePasteAsPlainTextButton( $buttons ) {
+
+		if( ( $key = array_search( 'pastetext', $buttons ) ) !== false ) {
+			unset( $buttons[ $key ] );
+		}
+
+		return $buttons;
+
+	}
+
+}
+new MP_CORE_PasteAsPlainText();
