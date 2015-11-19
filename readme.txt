@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.4
+Stable tag: 1.0.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.5 = November 18, 2015
+* Make Ajax Loaded TinyMCE's use ALL of the default 'mp_core_wpeditor_init ' tiny MCE's settings.
+* Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste. 
+* Update Packaged Isotope JS Script to v2.2.2
 
 = 1.0.2.4 = October 29, 2015
 * Only output microformats if a queried post id actually exists in wp_query. This fixes errors with plugins that have pseudo pages like BuddyPress.
