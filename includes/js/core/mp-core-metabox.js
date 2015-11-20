@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-
+	
 	//When the main form gets submitted
 	var mp_core_defaults_checked = false;
 	//Check to see if a field is different than its default value.
@@ -935,14 +935,8 @@ function mp_core_load_ajax_metabox_contents( response, metabox_id_string ){
 function mp_core_reset_all_wp_editors(){
 	
 	jQuery(document).ready(function($){
-		 
+		
 		var wp_editor_init_script = $( "script:contains('tinyMCEPreInit = {')" ).html().replace(/\s\s+/g, ' ');
-				
-		//Get JUST the init values so we can use them again to set up new editors with identical settings
-		var wp_editor_init_script_for_split = wp_editor_init_script;
-		var wp_editor_init_values_array = wp_editor_init_script_for_split.split( '\'mp_core_wpeditor_init\':{theme');
-		wp_editor_init_values_array = wp_editor_init_values_array[1].split( '}}, qtInit:' );
-		wp_editor_init_values = wp_editor_init_values_array[0] + ',';
 		
 		$(document).find('.wp-editor-area').each(function() {
 					
@@ -954,8 +948,19 @@ function mp_core_reset_all_wp_editors(){
 			if ( wp_editor_init_script.search( this_wp_editor_id ) == -1 ){
 				//Add the tinyMCE values to the init array for this wp_editor
 				mceInit_string = 
-				'\'' + this_wp_editor_id + '\': { theme' +
-				wp_editor_init_values + 'selector: "#' + this_wp_editor_id + '",' + 'body_class: "' + this_wp_editor_id + ' post-status-publish locale-en-us" }';
+				'\'' + this_wp_editor_id + '\': {' +
+					'selector: "#' + this_wp_editor_id + '",' +
+					'resize: "vertical",' +
+					'menubar: false,' +
+					'wpautop: true,' +
+					'indent: false,' +
+					'toolbar1: "bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv",' +
+					'toolbar2: "formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help",' +
+					'toolbar3: "",' +
+					'toolbar4: "",' +
+					'tabfocus_elements: ":prev,:next",' +
+					'body_class: "' + this_wp_editor_id + ' post-status-publish locale-en-us"' +
+				'}';
 					
 				wp_editor_init_script = wp_editor_init_script.replace( '}}, qtInit', '},' + mceInit_string + '}, qtInit' );
 				
