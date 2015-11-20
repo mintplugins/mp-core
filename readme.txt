@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.5
+Stable tag: 1.0.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-= 1.0.2.5 = November 18, 2015
+= 1.0.2.6 = November 20, 2015
+* Temporary Revert to mp-core-metabox.js from version 1.0.2.4 until bugs ar worked out of full replacement.
+
+= 1.0.2.5 = November 19, 2015
 * Make Ajax Loaded TinyMCE's use ALL of the default 'mp_core_wpeditor_init ' tiny MCE's settings.
 * Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste. 
 * Update Packaged Isotope JS Script to v2.2.2
