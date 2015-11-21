@@ -1,5 +1,5 @@
 jQuery(document).ready(function($){
-	
+
 	//When the main form gets submitted
 	var mp_core_defaults_checked = false;
 	//Check to see if a field is different than its default value.
@@ -127,11 +127,19 @@ jQuery(document).ready(function($){
 					if ( this.hasAttribute( 'showhidergroup' ) ){
 						this.setAttribute( 'showhidergroup', this.getAttribute( 'showhidergroup' ).replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB') );
 					}
+					if ( $(this).attr( 'data-wp-editor-id' ) ){
+						$(this).attr( 'data-wp-editor-id', $(this).attr( 'data-wp-editor-id').replace('AAAAA'+ (name_number-1) +'BBBBB', 'AAAAA' + (name_number) +'BBBBB') );
+					}
 					
 				});	
 			}
 			name_number = name_number + 1;
 		});
+		
+		name_repeaters();
+		
+		//Reset all the wp_editors on the page
+		mp_core_reset_all_wp_editors();
 		
 		//Reset the textarea for each wp_editor/tinymce field in this repeater
 		theclone.find('.wp-editor-area').each(function() {
@@ -142,11 +150,6 @@ jQuery(document).ready(function($){
 		theclone.find('.mce-container > iframe').contents().find('body').each(function() {
 			$(this).html("");
 		});
-		
-		name_repeaters();
-		
-		//Reset all the wp_editors on the page
-		mp_core_reset_all_wp_editors();
 		
 		//"Action Hook" trigger after repeater is cloned
 		$(window).trigger("mp_core_duplicate_repeater_after", [ theoriginal, theclone ] );
@@ -216,6 +219,9 @@ jQuery(document).ready(function($){
 					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
 						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('[1]', '[0]') );
 					}
+					if ( $(this).attr( 'data-wp-editor-id' ) ){
+						$(this).attr( 'data-wp-editor-id', $(this).attr( 'data-wp-editor-id').replace('[1]', '[0]') );
+					}
 					
 				});	
 			}else{
@@ -237,6 +243,10 @@ jQuery(document).ready(function($){
 					if ( this.hasAttribute( 'mp_conditional_field_id' ) ){
 						this.setAttribute( 'mp_conditional_field_id', this.getAttribute( 'mp_conditional_field_id' ).replace('['+ (name_number+1) +']', '[' + (name_number) +']') );
 					}
+					if ( $(this).attr( 'data-wp-editor-id' ) ){
+						$(this).attr( 'data-wp-editor-id', $(this).attr( 'data-wp-editor-id').replace('['+ (name_number+1) +']', '[' + (name_number) +']') );
+					}
+							
 				});	
 			}
 			name_number = name_number + 1;
@@ -363,9 +373,18 @@ jQuery(document).ready(function($){
 			
 			//Reset the description for this repeater
 			thedescription = '';
+			pre_description = '';
 					
 			//Loop through each field in this repeat
 			$(this).find('.mp_field').each(function(index){
+				
+				//If this field is a wp_editor, make it first
+				if ( $(this).find('.wp-editor-area').text() ){
+					var wp_editor_text = $(this).find('.wp-editor-area').text();
+					
+					pre_description += $(wp_editor_text).text() + ' | ';
+				}
+				
 				
 				if ( $(this).find('> input').val() ){
 					
@@ -385,6 +404,8 @@ jQuery(document).ready(function($){
 				}
 				
 			});
+			
+			thedescription = pre_description + thedescription;
 						
 			$(this).find( '> .mp_drag > .mp-core-repeater-values-description').html(thedescription);
 			
@@ -414,8 +435,16 @@ jQuery(document).ready(function($){
 			
 			start: function(e, ui){
 				
+				//Switch all editors to tinymce mode before re-ordering.
+				$( '.switch-tmce' ).trigger( 'click' );
 				
+				$(document).find('.wp-editor-area').each(function() {
+					
+					tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
 				
+				});
+			
+			
 			},
 			update: function(e,ui) {
 				
@@ -443,8 +472,10 @@ jQuery(document).ready(function($){
 								//For some reason we need 4 B's to get 5. I'm not good with regex - but this works.
 								this.href = this.href.replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBB');
 							}
-							
-							
+							if ( $(this).attr( 'data-wp-editor-id' ) ){
+								//For some reason we need 4 B's to get 5. I'm not good with regex - but this works.
+								$(this).attr( 'data-wp-editor-id', $(this).attr( 'data-wp-editor-id').replace(/\AAAAA[0-9]\BBBBB/g, 'AAAAA' + (name_number) +'BBBB') );
+							}
 					
 					});
 					name_number = name_number + 1;		
@@ -935,50 +966,47 @@ function mp_core_load_ajax_metabox_contents( response, metabox_id_string ){
 function mp_core_reset_all_wp_editors(){
 	
 	jQuery(document).ready(function($){
-		
+		 
 		var wp_editor_init_script = $( "script:contains('tinyMCEPreInit = {')" ).html().replace(/\s\s+/g, ' ');
 		
+		var new_tiny_mce_code = JSON.parse( JSON.stringify( tinyMCEPreInit ) );
+								
 		$(document).find('.wp-editor-area').each(function() {
-					
+				
+			//console.log( new_tiny_mce_code );
+						
 			tinyMCE.execCommand( 'mceRemoveEditor', true, this.id );
 			$( '.quicktags-toolbar' ).remove();
 			
 			var this_wp_editor_id = $(this).attr( 'id' );
 			
-			if ( wp_editor_init_script.search( this_wp_editor_id ) == -1 ){
-				//Add the tinyMCE values to the init array for this wp_editor
-				mceInit_string = 
-				'\'' + this_wp_editor_id + '\': {' +
-					'selector: "#' + this_wp_editor_id + '",' +
-					'resize: "vertical",' +
-					'menubar: false,' +
-					'wpautop: true,' +
-					'indent: false,' +
-					'toolbar1: "bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,wp_more,spellchecker,fullscreen,wp_adv",' +
-					'toolbar2: "formatselect,underline,alignjustify,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help",' +
-					'toolbar3: "",' +
-					'toolbar4: "",' +
-					'tabfocus_elements: ":prev,:next",' +
-					'body_class: "' + this_wp_editor_id + ' post-status-publish locale-en-us"' +
-				'}';
-					
-				wp_editor_init_script = wp_editor_init_script.replace( '}}, qtInit', '},' + mceInit_string + '}, qtInit' );
-				
-				//Add the quicktags to the init array for this wp_editor
-				qtInit_string = "'" + this_wp_editor_id + "': {";
-						qtInit_string += 'id: "' + this_wp_editor_id + '",';
-						qtInit_string += 'buttons: "strong,em,link,block,del,ins,img,ul,ol,li,code,more,close"';
-				qtInit_string += '}';
-					
-				wp_editor_init_script = wp_editor_init_script.replace( '}}, ref', '},' + qtInit_string + '}, ref' );
-		
-				//Replace the old wp_editor init script with the newly adjusted script.
-				$( "script:contains('tinyMCEPreInit = {')" ).replaceWith( '<script id="mp_core_wp_editor_init" type="text/javascript">' + wp_editor_init_script + '</script>' );
-				//$( "script:contains('tinyMCEPreInit')" ).prependTo( $( 'head' ) );
-			}
+			//TinyMCE
+			new_tiny_mce_code['mceInit'][this_wp_editor_id] = JSON.parse(JSON.stringify( tinyMCEPreInit['mceInit']['mp_core_wpeditor_init'] ));			
+			new_tiny_mce_code['mceInit'][this_wp_editor_id]['selector']  = '#' + this_wp_editor_id;			
+			new_tiny_mce_code['mceInit'][this_wp_editor_id]['body_class']  = this_wp_editor_id + ' post-status-publish locale-en-us';
 			
+			//QuickTags
+			new_tiny_mce_code['qtInit'][this_wp_editor_id] = JSON.parse(JSON.stringify( tinyMCEPreInit['qtInit']['mp_core_wpeditor_init'] ));			
+			new_tiny_mce_code['qtInit'][this_wp_editor_id]['id'] = this_wp_editor_id;
+						
 		});	
 		
+		//Stringify the array so it can be placed back into the script tag				
+		var new_tiny_mce_code = 'tinyMCEPreInit = ' + JSON.stringify(new_tiny_mce_code) + '; This will help with giving us something to search and replace.';
+		
+		//Store the load_ext code in a var so we can add it to the string.
+		var load_ext_script = '}, "load_ext": function(url, lang) {' +
+			'var sl = tinymce.ScriptLoader;' +
+			'sl.markDone(url + \'/langs/\' + lang + \'.js\');' +
+			'sl.markDone(url + \'/langs/\' + lang + \'_dlg.js\');'+
+		'} };';
+		
+		//Add the load_ext code to the end of the stringified array
+		new_tiny_mce_code = new_tiny_mce_code.replace( '}}; This will help with giving us something to search and replace.', load_ext_script );
+						
+		//Replace the old wp_editor init script with the newly adjusted script.
+		$( "script:contains('tinyMCEPreInit = {')" ).replaceWith( '<script id="mp_core_wp_editor_init" type="text/javascript">' + new_tiny_mce_code + '</script>' );
+				
 		//console.log( 'addingfooterscripts. now..');
 		
 		//Refresh the scripts which initialize the wp_editors (tinyMCE)
@@ -989,6 +1017,7 @@ function mp_core_reset_all_wp_editors(){
 			$( '.quicktags-toolbar' ).remove();
 			
 		});
+		
 		
 		//$( '.quicktags-toolbar' ).remove();
 		
