@@ -6,6 +6,9 @@
 .mp-core-directory .mp-directory-browser a{
 	text-decoration:none;
 }
+.mp-core-directory .mp-directory-browser a img{
+	width:100%;
+}
 .mp-core-directory .plugin-card-bottom{
 	position:relative;	
 }
