@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.7
+Stable tag: 1.0.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.8 = December 9, 2015
+* Make directory images size correctly for WP 4.4.
 
 = 1.0.2.7 = November 21, 2015
 * Fix for TinyMCE when re-ordering. FIxes previous bug in Firefox and allows all plugins to be loaded. This fix works by copying the preTinyMCEInit variable, adding new editors to the array, changing the body class and selector id, changing the array into a string, and replacing the existing javascript preTinyMCEInit variable on the page, and then refreshing all scripts that have the term tinymce in them.
