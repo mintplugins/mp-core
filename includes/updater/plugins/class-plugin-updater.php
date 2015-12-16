@@ -8,7 +8,7 @@
  * @package    MP Core
  * @subpackage Classes
  *
- * @copyright  Copyright (c) 2014, Mint Plugins
+ * @copyright  Copyright (c) 2015, Mint Plugins
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
@@ -95,7 +95,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @since 1.0
 		 * @return void
 		 */
-		public function delete_transients () {
+		public function delete_transients() {
 			delete_site_transient( 'update_plugins' );
 		}
 					
@@ -108,16 +108,47 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		private function hook() {
 			
+			$this->delete_transients();
+			
 			//Show Option Page on Plugins page as well
 			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 			
 					
-			add_filter( 'mp_core_custom_plugins', array( $this, 'add_custom_plugin' ) );
+			add_filter( 'mp_core_custom_plugins_needing_updates', array( $this, 'compare_plugin_version' ), 10, 2 );
+			
+			add_filter( 'mp_core_custom_plugins_to_check', array( $this, 'add_plugin_to_list_of_plugins_to_check' ) );
+			
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
 		}
 		
+		function add_plugin_to_list_of_plugins_to_check( $plugins_to_check ){
+			
+			//Set plugin vars like software license, name, slug	, version
+			$this->set_plugin_vars();
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$args['software_api_url'] = has_filter( 'mp_core_plugin_update_package_url' ) ? apply_filters( 'mp_core_plugin_update_package_url', $args['software_api_url'] ) : $args['software_api_url'];
+			
+			$api_params = array(
+				'slug' => $this->slug,
+				'author' => '', //$this->version - not working for some reason
+				'license_key' => $this->software_license,
+				'old_license_key' => get_option( $this->slug . '_license_key' ),
+				'site_activating' => get_bloginfo( 'wpurl' ),
+			);
+				
+			$plugins_to_check[$args['software_api_url']][$this->slug] = $api_params;
+					
+			return $plugins_to_check;
+				
+		}
+		
 		/**
-		 * Check for Updates at the defined API endpoint and modify the update array.
+		 * Checks  API returned version information and compares with current version to see if update is needed.
+		 * If so, it adds this plugin to the list of plugins to udpate with the required info to update as well.
 		 *
 		 * This function is run when the 'mp_core_custom_plugins' filter is run. It injects the custom plugin data retrieved from the API.
 		 * It is reassembled from parts of the native Wordpress plugin update code.
@@ -129,8 +160,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @param array $_transient_data Update array build by Wordpress.
 		 * @return array Modified update array with custom plugin data.
 		 */
-		function add_custom_plugin( $custom_api_plugins ) {
-			
+		function compare_plugin_version( $custom_api_plugins, $plugin_response ) {
+						
 			//Set plugin vars like software license, name, slug	, version
 			$this->set_plugin_vars();
 			
@@ -140,15 +171,15 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$to_send = array( 'slug' => $this->slug );
 						
 			//Check the API for a new version and return the info object
-			$api_response = $this->api_request( 'plugin_latest_version', $to_send );
+			//$api_response = $this->api_request( 'plugin_latest_version', $to_send );
 					
 			//If the response exists
-			if( false !== $api_response && is_object( $api_response ) ) {
+			if( false !== $plugin_response && is_object( $plugin_response ) ) {
 			
-				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $api_response->new_version, '<' ) ){
-				if( $this->version != $api_response->new_version ){
-					$api_response->plugin = $this->name;				
-					$custom_api_plugins->response[$this->name] = $api_response;
+				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $plugin_response->new_version, '<' ) ){
+				if( $this->version != $plugin_response->new_version ){
+					$plugin_response->plugin = $this->name;				
+					$custom_api_plugins->response[$this->name] = $plugin_response;
 				}
 								
 			}
@@ -236,7 +267,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					//If this software does not require a license, check for update from MP repo
 					else{
 																				
-						$license_key = NULL;		
+						$license_key = false;		
 					}
 								
 					//Set variables
@@ -327,7 +358,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'old_license_key' => get_option( $_data['slug'] . '_license_key' ),
 					'site_activating' => get_bloginfo( 'wpurl' )
 				);
-			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 15, 'sslverify' => false, 'body' => $api_params ) );				
+			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 5, 'sslverify' => false, 'body' => $api_params ) );				
 									
 			if ( !is_wp_error( $request ) ){
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
@@ -616,8 +647,48 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 			
 		$custom_api_plugins = new stdClass();
 		
-		//My wp_remote_post to my custom api is in a function which hooks to this filter:
-		$custom_api_plugins = apply_filters( 'mp_core_custom_plugins', $custom_api_plugins );
+		//Add each installed plugin that needs to be checked
+		$plugins_to_check = apply_filters( 'mp_core_custom_plugins_to_check', array() );
+				
+		//Loop through each API URL
+		foreach( $plugins_to_check as $api_url => $plugins_to_check_on_this_api ){
+			
+			//This filter can be used to change the API URL. Useful when calling for updates to the API site's plugins which need to be loaded from a separate URL (see mp_repo_mirror)
+			$api_url = apply_filters( 'mp_core_plugin_update_package_url', $api_url );
+					
+			$api_params = array(
+				'mp_repo_plugin_statuses' => true,
+				'plugins_to_check_on_this_api' => $plugins_to_check_on_this_api,
+			);	
+			
+			//Do the call to the API repo to get the status of all installed & activated plugins from this api
+			$request = wp_remote_post( $api_url, array( 
+				'method' => 'POST', 
+				'timeout' => 5, 
+				'sslverify' => false, 
+				'body' => $api_params 
+			) );
+						
+			if ( !is_wp_error( $request ) ){
+				$request = json_decode( wp_remote_retrieve_body( $request ) );
+				
+				//Loop through the response for each plugin's information (latest version, etc )
+				foreach( $request as $plugin_slug => $plugin_response ){
+				
+					set_site_transient( $plugin_slug, $plugin_response );
+
+					if( $plugin_response ){
+						
+						$plugin_response->sections = maybe_unserialize( $plugin_response->sections );
+						
+						//My wp_remote_post to my custom api is in a function which hooks to this filter:
+						$custom_api_plugins = apply_filters( 'mp_core_custom_plugins_needing_updates', $custom_api_plugins, $plugin_response );
+						
+					}
+					
+				}
+			}		
+		}
 						
 		//If there are plugins passed into this filter
 		if ( is_object($custom_api_plugins) && (count(get_object_vars($custom_api_plugins)) > 0) ){
