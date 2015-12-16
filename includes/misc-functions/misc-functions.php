@@ -1267,3 +1267,19 @@ add_action( 'admin_init', 'mp_deactivate_problematic_plugins' );
 function mp_core_metabox_content_ajax_placeholder() {
 	echo '<div class="mp_core_metabox_ajax_placeholder"></div>';
 }
+
+/**
+ * A quick and easy way to check a server's php configuration from admin.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */	
+function mp_core_php_info_test(){
+	
+	if ( isset( $_GET['mp_core_php_info_test'] ) ){
+		phpinfo();
+		die();
+	}
+}
+add_action( 'admin_init', 'mp_core_php_info_test' );
