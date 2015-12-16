@@ -335,7 +335,7 @@ function mp_core_get_attachment_id_from_url( $attachment_url = '' ) {
  * @return   string $url The current Page's URL
  */
 function mp_core_get_current_url() {
-  $url  = @( $_SERVER["HTTPS"] != 'on' ) ? 'http://'.$_SERVER["SERVER_NAME"] :  'https://'.$_SERVER["SERVER_NAME"];
+  $url  = isset( $_SERVER["HTTPS"] ) && @( $_SERVER["HTTPS"] == 'on' ) ? 'https://'.$_SERVER["SERVER_NAME"] :  'http://'.$_SERVER["SERVER_NAME"];
   $url .= $_SERVER["REQUEST_URI"];
   return $url;
 }
