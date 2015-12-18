@@ -533,10 +533,10 @@ if ( !class_exists( 'MP_CORE_Plugin_Directory' ) ){
                         <div class="plugin-card-top">
                             <a href="<?php echo $plugin['plugin_buy_url']; ?>" class="plugin-icon" target="_blank"><img src="<?php echo str_replace( 'http://', 'https://', $plugin['plugin_image'] ); ?>"></a>
                             <div class="name column-name">
-                                <h4><a href="<?php echo mp_core_add_query_arg( array( 'TB_iframe' => true, 'width' => '772', 'height' => '373' ), $plugin['plugin_buy_url'] ); ?>" class="thickbox" target="_blank"><?php echo $plugin['plugin_name']; ?></a></h4>
+                                <h3><a href="<?php echo mp_core_add_query_arg( array( 'TB_iframe' => true, 'width' => '772', 'height' => '373' ), $plugin['plugin_buy_url'] ); ?>" class="thickbox" target="_blank"><?php echo $plugin['plugin_name']; ?></a></h3>
                             </div>
                             <div class="action-links mp-core-directory-price">
-               					<h4><?php echo $plugin['plugin_price']; ?></h4>
+               					<h3><?php echo $plugin['plugin_price']; ?></h3>
                             </div>
                             <div class="desc column-description">
                                 <p><?php echo $plugin['plugin_description']; ?></p>
