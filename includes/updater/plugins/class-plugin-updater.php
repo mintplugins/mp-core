@@ -108,12 +108,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 */
 		private function hook() {
 			
-			$this->delete_transients();
+			//Uncomment for testing purposes to call the repo on every update page load.
+			//$this->delete_transients();
 			
 			//Show Option Page on Plugins page as well
 			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 			
-					
-			add_filter( 'mp_core_custom_plugins_needing_updates', array( $this, 'compare_plugin_version' ), 10, 2 );
 			
 			add_filter( 'mp_core_custom_plugins_to_check', array( $this, 'add_plugin_to_list_of_plugins_to_check' ) );
 			
@@ -121,6 +120,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 		}
 		
+		/**
+		 * Checks  API returned version information and compares with current version to see if update is needed.
+		 * If so, it adds this plugin to the list of plugins to udpate with the required info to update as well.
+		 *
+		 * This function is run when the 'mp_core_custom_plugins' filter is run. It injects the custom plugin data retrieved from the API.
+		 * It is reassembled from parts of the native Wordpress plugin update code.
+		 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
+		 *
+		 * @see api_request()
+		 * @see MP_CORE_Plugin_Updater::set_plugin_vars()
+		 *
+		 * @param array $_transient_data Update array build by Wordpress.
+		 * @return array Modified update array with custom plugin data.
+		 */
 		function add_plugin_to_list_of_plugins_to_check( $plugins_to_check ){
 			
 			//Set plugin vars like software license, name, slug	, version
@@ -138,6 +151,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				'license_key' => $this->software_license,
 				'old_license_key' => get_option( $this->slug . '_license_key' ),
 				'site_activating' => get_bloginfo( 'wpurl' ),
+				'currently_installed_version' => $this->version,
+				'dir_and_name' => $this->name
 			);
 				
 			$plugins_to_check[$args['software_api_url']][$this->slug] = $api_params;
@@ -145,49 +160,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			return $plugins_to_check;
 				
 		}
-		
-		/**
-		 * Checks  API returned version information and compares with current version to see if update is needed.
-		 * If so, it adds this plugin to the list of plugins to udpate with the required info to update as well.
-		 *
-		 * This function is run when the 'mp_core_custom_plugins' filter is run. It injects the custom plugin data retrieved from the API.
-		 * It is reassembled from parts of the native Wordpress plugin update code.
-		 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
-		 *
-		 * @see api_request()
-		 * @see MP_CORE_Plugin_Updater::set_plugin_vars()
-		 *
-		 * @param array $_transient_data Update array build by Wordpress.
-		 * @return array Modified update array with custom plugin data.
-		 */
-		function compare_plugin_version( $custom_api_plugins, $plugin_response ) {
-						
-			//Set plugin vars like software license, name, slug	, version
-			$this->set_plugin_vars();
-			
-			if( empty( $custom_api_plugins ) ) return $custom_api_plugins;
-			
-			//Add the slug to the info to send to the API
-			$to_send = array( 'slug' => $this->slug );
-						
-			//Check the API for a new version and return the info object
-			//$api_response = $this->api_request( 'plugin_latest_version', $to_send );
-					
-			//If the response exists
-			if( false !== $plugin_response && is_object( $plugin_response ) ) {
-			
-				//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $plugin_response->new_version, '<' ) ){
-				if( $this->version != $plugin_response->new_version ){
-					$plugin_response->plugin = $this->name;				
-					$custom_api_plugins->response[$this->name] = $plugin_response;
-				}
-								
-			}
-			
-			return $custom_api_plugins;
-		
-		}
-									
+											
 		/**
 		 * Updates information on the "View version x.x details" page with custom data.
 		 *
@@ -681,9 +654,12 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 						
 						$plugin_response->sections = maybe_unserialize( $plugin_response->sections );
 						
-						//My wp_remote_post to my custom api is in a function which hooks to this filter:
-						$custom_api_plugins = apply_filters( 'mp_core_custom_plugins_needing_updates', $custom_api_plugins, $plugin_response );
-						
+						//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $plugin_response->new_version, '<' ) ){
+						if( $plugins_to_check_on_this_api[$plugin_slug]['currently_installed_version'] != $plugin_response->new_version ){
+							$plugin_response->plugin = $plugins_to_check_on_this_api[$plugin_slug]['dir_and_name'];				
+							$custom_api_plugins->response[$plugins_to_check_on_this_api[$plugin_slug]['dir_and_name']] = $plugin_response;
+						}
+										
 					}
 					
 				}
