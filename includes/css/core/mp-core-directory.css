@@ -24,9 +24,9 @@
 .mp-core-directory-license-input{
 	margin:0;	
 }
-.mp-core-directory .mp-core-directory-price{
+.mp-core-directory .mp-core-directory-price h3{
 	text-align:right;
-	color:#dedede;
+	color:#0073AA;
 }
 .mp-core-directory .authors{
 	display:inline;
