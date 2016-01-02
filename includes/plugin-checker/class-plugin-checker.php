@@ -200,15 +200,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 		 * @access   public
 		 * @since    1.0.0
 		 * @see      MP_CORE_Plugin_Checker::mp_core_check_plugins()
-		 * @see      screen_icon()
 		 * @see      MP_CORE_Plugin_Installer
 	 	 * @return   void
 		 */
 		public function mp_core_install_check_callback() {
 								
 			echo '<div class="wrap">';
-			
-			screen_icon();
 						
 			echo '<h2>' . __('Installing Required Items.', 'mp_core') . '</h2>';
 						
@@ -314,7 +311,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
                                 
 								<form method="post">
 													
-									<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
+									<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php sanitize_text_field( $license_key ); ?>" />						
 									
 									<?php wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ); ?>
 											
@@ -369,7 +366,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									
 									<form method="post">
 														
-										<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
+										<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php sanitize_text_field( $license_key ); ?>" />						
 										
 										<?php wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ); ?>
 												
@@ -418,7 +415,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									
 									<form method="post">
 														
-										<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />						
+										<input style="float:left; margin-right:10px;" id="<?php echo $plugin_name_slug; ?>_license_key" name="<?php echo $plugin_name_slug; ?>_license_key" type="text" class="regular-text" value="<?php sanitize_text_field( $license_key ); ?>" />						
 										
 										<?php wp_nonce_field( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ); ?>
 												
@@ -550,7 +547,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									echo $plugin['plugin_message'] . '</p>';		
 																		
 									//Activate Theme
-									echo '<a href="' . wp_nonce_url('themes.php?action=activate&stylesheet=' . $theme_slug, 'switch-theme_' . $theme_slug ) . '" title="' . esc_attr__('Activate this theme') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>'; 
+									echo '<a href="' . wp_nonce_url('themes.php?action=activate&stylesheet=' . $theme_slug, 'switch-theme_' . $theme_slug ) . '" title="' . esc_attr__('Activate this theme', 'mp_core') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>'; 
 									//Dismiss button
 									$this->mp_core_dismiss_button( $plugin );
 								
@@ -659,7 +656,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									echo $plugin['plugin_message'] . '</p>';					
 									
 									//Activate button
-									echo '<a href="' . wp_nonce_url('plugins.php?action=activate&plugin=' . $plugin_directory . $plugin['plugin_filename'] . '&plugin_status=all&paged=1&s=', 'activate-plugin_' . $plugin_directory . $plugin['plugin_filename']) . '" title="' . esc_attr__('Activate this plugin') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>'; 
+									echo '<a href="' . wp_nonce_url('plugins.php?action=activate&plugin=' . $plugin_directory . $plugin['plugin_filename'] . '&plugin_status=all&paged=1&s=', 'activate-plugin_' . $plugin_directory . $plugin['plugin_filename']) . '" title="' . esc_attr__('Activate this plugin', 'mp_core') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>'; 
 									//Dismiss button
 									$this->mp_core_dismiss_button( $plugin );
 									

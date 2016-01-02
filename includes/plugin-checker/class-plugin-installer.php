@@ -112,15 +112,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Installer' ) ){
 		 *
 		 * @access   public
 		 * @since    1.0.0
-		 * @see      screen_icon()
 		 * @see      MP_CORE_Plugin_Installer::mp_core_install_plugin()
 	 	 * @return   void
 		 */
 		public function mp_core_install_check_callback() {
 			
 			echo '<div class="wrap">';
-			
-			screen_icon();
 						
 			echo '<h2>' . __('Install ', 'mp_core') . $this->_args['plugin_name'] . '</h2>';
 			
