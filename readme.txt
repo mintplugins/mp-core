@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.3
-Stable tag: 1.0.2.8
+Stable tag: 1.0.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,13 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.2.9 = January 2, 2016
+* Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.
+* Make sure that HTTPS exists in $_SERVER before using it.
+* Added mp_core_php_info_test function to assist with support more quickly.
+* Removed screen_icon() function in plugin installer and updater.
+* Change "esc_attr_e" to "sanitize_text_field" for value paramater on license key fields in class-plugin-checker.php.
 
 = 1.0.2.8 = December 9, 2015
 * Make directory images size correctly for WP 4.4.

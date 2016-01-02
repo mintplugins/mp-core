@@ -1,4 +1,12 @@
 <p>
+<strong>= 1.0.2.9 = January 2, 2015</strong>
+<ul>	
+    <li>Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.</li>
+    <li>Make sure that HTTPS exists in $_SERVER before using it.</li>
+    <li>Added mp_core_php_info_test function to assist with support more quickly.</li>
+    <li>Removed screen_icon() function in plugin installer and updater.</li>
+    <li>Change "esc_attr_e" to "sanitize_text_field" for value paramater on license key fields in class-plugin-checker.php.</li>
+<ul>
 <strong>= 1.0.2.8 = December 9, 2015</strong>
 <ul>	
     <li>Make directory images size correctly for WP 4.4.</li>
