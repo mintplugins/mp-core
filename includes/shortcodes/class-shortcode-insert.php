@@ -133,7 +133,7 @@ class MP_CORE_Shortcode_Insert{
 			if ( version_compare( $wp_version, '3.5', '<' ) ) {
 				
 				//Output old style button
-				$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
+				$output = '<a href="#TB_inline?width=100%&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">' . $img . '</a>';
 				
 			//If we are on a newer than 3.5 WordPress	
 			} else {
@@ -141,20 +141,20 @@ class MP_CORE_Shortcode_Insert{
 				//If we should show a dashicon on the Shortcode button
 				if ( !empty( $this->_args['shortcode_icon_dashicon_class'] ) ){
 					//Output new style button
-					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '" style="padding-left:5px;">';
+					$output = '<a href="#TB_inline?width=100%&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '" style="padding-left:5px;">';
 						$output .= '<span class="wp-media-buttons-icon dashicons ' . $this->_args['shortcode_icon_dashicon_class'] . '" style="font-size:17px;" id="' . $this->_args['shortcode_id'] . '-media-button"></span>';
 					$output .= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
 				}
 				//If we should just output a space for an icon (image icon)
 				else if( !empty( $this->_args['shortcode_icon_spot'] ) ){
-					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+					$output = '<a href="#TB_inline?width=100%&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
 						$output .= '<span class="wp-media-buttons-icon" id="' . $this->_args['shortcode_id'] . '-media-button"></span>';
 					$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
 				}
 				else{
 				
 					//Output old style button
-					$output = '<a href="#TB_inline?width=640&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
+					$output = '<a href="#TB_inline?width=100%&inlineId=choose-' . $this->_args['shortcode_id'] . '" class="thickbox button ' . $this->_args['shortcode_id'] . '-thickbox" title="' . __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '">';
 					
 					//Finish the output
 					$output.= __('Add ', 'mp_core') . $this->_args['shortcode_title'] . '</a>';
@@ -267,7 +267,7 @@ class MP_CORE_Shortcode_Insert{
 					foreach ($this->_args['shortcode_options'] as $option){ 
 					
                        	//Call the function for this option type. EG textbox, select, checkbox etc
-					    $this->$option['option_type'](
+					    $this->{$option['option_type']}(
 							$this->_args['shortcode_id'] . '_' . $option['option_id'], //<-- $field_id
 							$option['option_title'], //<-- $field_title
 							$option['option_description'], //<-- $field_description
