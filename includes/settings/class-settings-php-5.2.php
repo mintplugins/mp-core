@@ -778,7 +778,7 @@ function mp_core_get_option($registration, $key='') {
 	//Return a single option if the key has been set
 	if ($key != '') {
 		if (isset($options[ $key ])){
-			return html_entity_decode($options[ $key ]);
+			return html_entity_decode($options[ $key ], ENT_QUOTES);
 		}else{
 			return '';	
 		}
