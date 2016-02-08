@@ -424,7 +424,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										$this->close_showhiders( !empty( $thefield['field_showhider'] ) ? $thefield['field_showhider'] : NULL );	
 										
 										//call function for field type (callback function name stored in $this->$field['field_type']
-										$this->$thefield['field_type']( $callback_args );	
+										$this->{$thefield['field_type']}( $callback_args );	
 									}	
 								}
 								
@@ -492,7 +492,7 @@ if (!class_exists('MP_CORE_Metabox')){
 									$this->close_showhiders( !empty( $thefield['field_showhider'] ) ? $thefield['field_showhider'] : NULL );	
 									
 									//call function for field type (callback function name stored in $this->$field['field_type']
-									$this->$thefield['field_type']( $callback_args );	
+									$this->{$thefield['field_type']}( $callback_args );	
 												
 								}	
 							}
@@ -577,7 +577,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$this->close_showhiders( !empty( $field['field_showhider'] ) ? $field['field_showhider'] : NULL );
 												
 						//call function for field type (function name stored in $this->$field['field_type']
-						$this->$field['field_type']( $callback_args );
+						$this->{$field['field_type']}( $callback_args );
 						
 					}
 				}
@@ -785,6 +785,9 @@ if (!class_exists('MP_CORE_Metabox')){
 												if ( $child_loop_field['field_type'] == 'textarea' ){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = wp_kses( mp_core_fix_quotes( esc_html( $field_value ) ), $allowed_tags ); 
 												}
+												elseif ( $child_loop_field['field_type'] == 'html' ){
+													$these_repeater_field_id_values[$repeater_counter][$field_id] = mp_core_fix_quotes( esc_html( $field_value ) ); 
+												}
 												elseif ( $child_loop_field['field_type'] == 'multiple_checkboxes' ){
 													$these_repeater_field_id_values[$repeater_counter][$field_id] = json_encode( $field_value ); 
 												}
@@ -837,7 +840,10 @@ if (!class_exists('MP_CORE_Metabox')){
 					$allowed_tags = wp_kses_allowed_html( 'post' );
 					
 					if ( $field['field_type'] == 'textarea' ){
-						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html($post_value ) ) ), $allowed_tags );
+						$data = wp_kses( mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( $post_value ) ) ), $allowed_tags );
+					}
+					elseif ( $field['field_type'] == 'html' ){
+						$data = mp_core_fix_quotes( mp_core_fix_nbsp( esc_html( $post_value ) ) );
 					}
 					elseif ( $field['field_type'] == 'multiple_checkboxes' ){
 						$data = json_encode( $post_value ); 
@@ -1012,6 +1018,61 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
 			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '</div>'; 
+		}
+		
+		/**
+		* html field
+		*
+		* @access   public
+		* @since    1.0.0
+		* @return   void
+		*/
+		function html( $args ){
+			
+			//Set defaults for args		
+			$args_defaults = array(
+				'field_id' => NULL, 
+				'field_title' => NULL,
+				'field_description' => NULL,
+				'field_value' => NULL,
+				'field_input_class' => NULL,
+				'field_container_class' => NULL,
+				'field_select_values' => NULL,
+				'field_default_attr' => NULL,
+				'field_required' => NULL,
+				'field_showhider' => NULL,
+                'field_placeholder' => NULL,
+				'field_popup_help' => NULL,
+				'field_conditional_id' => NULL,
+				'field_conditional_values' => NULL,
+			);
+			
+			//Get and parse args
+			$args = wp_parse_args( $args, $args_defaults );
+			
+			//Make each array item into its own variable
+			extract( $args, EXTR_SKIP );
+			
+			//Add mp_required to the classes if it is required
+			$field_input_class = $field_required == true ? $field_input_class . ' mp_required' : $field_input_class;
+			
+			//Set the output for html5 required field
+			$field_required_output = $field_required == true ? 'required="required"' : '';
+			
+			
+			
+			//Set the conditional output which tells this field it is only visible if the parent's conditional value is $field_conditional_values
+			$conditional_output = !empty( $field_conditional_id ) ? ' mp_conditional_field_id="' . $field_conditional_id . '" mp_conditional_field_values="' . implode(', ', $field_conditional_values ) . '" ' : NULL;
+			
+			echo '<div class="mp_field mp_field_' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . ' ' . $field_container_class . '" ' . $field_showhider  . $conditional_output . '> <div class="mp_title"><div for="' . $field_id . '">';
+			echo '<strong>' .  $field_title . '</strong>';
+			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
+			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
+			echo '</div></div>';
+			echo '<textarea id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" name="' . $field_id . '" ' . $field_placeholder . ' ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" rows="4" cols="50" '. $field_required_output . '>';
+			echo $field_value;
+			echo '</textarea>';
 			echo '</div>'; 
 		}
 		

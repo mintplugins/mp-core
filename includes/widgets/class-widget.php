@@ -88,7 +88,7 @@ class MP_CORE_Widget extends WP_Widget {
 			
 		foreach ($this->_form as $formkey => $formentry){	
 			//Show the field type and pass the variables
-			$this->$formentry['field_type']( 
+			$this->{$formentry['field_type']}( 
 				$formentry['field_id'], 
 				$formentry['field_title'], 
 				$formentry['field_description'], 

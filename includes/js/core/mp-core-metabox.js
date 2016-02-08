@@ -503,6 +503,9 @@ jQuery(document).ready(function($){
 		
 		//Put the loading animation into the placeholder
 		content_placeholder.html( '<div class="mp-core-loading-spinner"></div>' );
+		
+		//Open the metabox
+		$( '#' + metabox_id ).removeClass( 'closed' ).addClass( 'open' );
 				
 		//If this metabox doesn't have an ajax placeholder in which to load the content, get out of here.
 		if ( !metabox_id ){
@@ -514,7 +517,7 @@ jQuery(document).ready(function($){
 			action: metabox_id,
 			mp_core_metabox_ajax: true,
 			mp_core_metabox_id_ajax: metabox_id,
-			mp_core_metabox_post_id: post_id
+			//mp_core_metabox_post_id: post_id 
 		};
 		
 		//Run the Ajax
@@ -530,7 +533,7 @@ jQuery(document).ready(function($){
 					$( content_placeholder ).replaceWith( 'Oops! Something went wrong while trying to load these options for ' + metabox_id + '.' );
 				}
 				else{
-					
+		
 					//Place the metabox controls into the metabox in question.			
 					mp_core_load_ajax_metabox_contents( response, '#' + metabox_id );
 					
@@ -960,14 +963,20 @@ function mp_core_load_ajax_metabox_contents( response, metabox_id_string ){
 				
 			});
 		}
+		
 	});
 }
 		
 function mp_core_reset_all_wp_editors(){
-	
+		
 	jQuery(document).ready(function($){
 		 
-		var wp_editor_init_script = $( "script:contains('tinyMCEPreInit = {')" ).html().replace(/\s\s+/g, ' ');
+		var wp_editor_init_script = $( "script:contains('tinyMCEPreInit = {')" );
+		
+		if ( wp_editor_init_script ){
+			
+			wp_editor_init_script = wp_editor_init_script.html().replace(/\s\s+/g, ' ');
+		}
 		
 		var new_tiny_mce_code = JSON.parse( JSON.stringify( tinyMCEPreInit ) );
 								
