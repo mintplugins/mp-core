@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.3
-Stable tag: 1.0.2.9
+Tested up to: 4.4
+Stable tag: 1.0.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,12 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.3.0 = February 8, 2016
+* Make all code compatible with PHP7
+* Make metabox Text Fields use 50% of the available space
+* Add ENT_QUOTES to html_entity_decode for mp_core_get_option
+* Make Shortcode thickbox inner use 100% of the space available
 
 = 1.0.2.9 = January 2, 2016
 * Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.

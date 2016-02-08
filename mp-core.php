@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
 Description: A core group of classes and functions shared by all MintPlugins creating efficiency, robustness, and speed.
-Version: 1.0.2.9
+Version: 1.0.3.0
 Author: Mint Plugins
 Author URI: https://mintplugins.com
 Text Domain: mp_core
@@ -11,7 +11,7 @@ Domain Path: languages
 License: GPL2
 */
 
-/*  Copyright 2015  Phil Johnston  (email : phil@mintplugins.com)
+/*  Copyright 2016  Phil Johnston  (email : phil@mintplugins.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 // Plugin version
 if( !defined( 'MP_CORE_VERSION' ) )
-	define( 'MP_CORE_VERSION', '1.0.2.9' );
+	define( 'MP_CORE_VERSION', '1.0.3.0' );
 
 // Plugin Folder URL
 if( !defined( 'MP_CORE_PLUGIN_URL' ) )
