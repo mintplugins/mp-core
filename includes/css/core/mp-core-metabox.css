@@ -15,6 +15,10 @@
 .mp_field > label{
 	margin:0px 0px 5px 0px!important;	
 }
+.mp_field > input:not([type="checkbox"]),
+.mp_field > textarea{
+	min-width:50%;	
+}
 .mp_field > input[type=number]{
 	width:60px;
 }
