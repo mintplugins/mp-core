@@ -251,13 +251,35 @@ function mp_core_oembed_get($video_url, $args = NULL){
 				//If the video should autoplay
 				if ( strpos( $video_url, 'autoplay=true' ) !== false ){ 
 					$autoplay = 'autoplay="" ';
+					$autoplay_class = 'mp-core-html5-video-autoplay';
 				}
 				//If this video should not autoplay
 				else{
 					$autoplay = NULL;
+					$autoplay_class = NULL;
 				}
 				
-				$iframe_code = '<video width="100%" height="100%" class="mp-core-html5-video-autoplay" style="position:absolute; top:0; left:0;" preload="auto" ' . $controls . $loop . $autoplay . '>';
+				//if the video url contains "?poster="
+				if ( strpos( $video_url, 'poster=' ) !== false ){
+					$video_url_poster_str = parse_url($video_url, PHP_URL_QUERY);
+					parse_str($video_url_poster_str, $video_url_output);
+					
+					if ( isset( $video_url_output['poster'] ) ){
+						$video_poster = $video_url_output['poster'];
+					}
+					elseif( isset( $video_url_output['amp;poster'] ) ){
+						$video_poster = $video_url_output['amp;poster'];
+					}
+					else{
+						$video_poster = NULL;	
+					}
+				
+				}
+				else{ 
+					$video_poster = NULL; 
+				}
+				
+				$iframe_code = '<video width="100%" height="100%" class="' . $autoplay_class . '" style="position:absolute; top:0; left:0;" preload="auto" ' . $controls . $loop . $autoplay . ' poster="' . $video_poster . '">';
 					$iframe_code .= '<source src="' . $video_url . '" type="video/mp4" />';
 				$iframe_code .= '</video>';
 				
