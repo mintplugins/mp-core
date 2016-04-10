@@ -34,6 +34,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
+= 1.0.3.1 = April X, 2016
+* Made auto play and video posters work for custom videos
+
 = 1.0.3.0 = February 8, 2016
 * Make all code compatible with PHP7
 * Make metabox Text Fields use 50% of the available space
