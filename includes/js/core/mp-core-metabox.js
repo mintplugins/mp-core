@@ -500,6 +500,7 @@ jQuery(document).ready(function($){
 		
 		var content_placeholder = $(this).parent().find( '.mp_core_metabox_ajax_placeholder');
 		var metabox_id = content_placeholder.attr( 'mp_core_metabox_id' ) ? content_placeholder.attr( 'mp_core_metabox_id' ) : false;
+		var post_id = content_placeholder.attr( 'mp_core_post_id' ) ? content_placeholder.attr( 'mp_core_post_id' ) : false;
 		
 		//Put the loading animation into the placeholder
 		content_placeholder.html( '<div class="mp-core-loading-spinner"></div>' );
@@ -517,7 +518,7 @@ jQuery(document).ready(function($){
 			action: metabox_id,
 			mp_core_metabox_ajax: true,
 			mp_core_metabox_id_ajax: metabox_id,
-			//mp_core_metabox_post_id: post_id 
+			mp_core_metabox_post_id: post_id 
 		};
 		
 		//Run the Ajax
