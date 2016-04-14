@@ -397,7 +397,3 @@ output {
 #wp-mp_core_wpeditor_init-wrap{
 	display:none!important;	
 }
-
-body > .mce-toolbar-grp{
-	display:none!important;	
-}
