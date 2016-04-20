@@ -297,8 +297,10 @@ function mp_core_comment_form(){
 	
 	//Get current user info
 	global $current_user, $user_identity;
-	get_currentuserinfo();
 	
+	$current_user = wp_get_current_user();
+	$email        = $current_user->user_email;
+			
 	//Variables
 	$commenter = wp_get_current_commenter();
 	$req = get_option( 'require_name_email' );
