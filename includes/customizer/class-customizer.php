@@ -99,11 +99,16 @@ class MP_CORE_Customizer{
 	 */
 	function mp_core_customize_preview_js() {
 		
-		wp_enqueue_script( 'mp_core_customizer_js' . $this->_args[0]['section_id'], plugins_url( 'js/core/customizer.js', dirname(__FILE__)), array( 'jquery' , 'customize-preview' ), NULL, true );
+		foreach( $this->_args as $key => $value ){
+			$customizer_script_slug = 'mp_core_customizer_js_' . $value['section_id'];
+			break;
+		}
+		
+		wp_enqueue_script( $customizer_script_slug, plugins_url( 'js/core/customizer.js', dirname(__FILE__)), array( 'jquery' , 'customize-preview' ), NULL, true );
 				
 		$mp_core_customizer_js_vars = $this->_args;
 		
-		wp_localize_script('mp_core_customizer_js' . $this->_args[0]['section_id'], 'mp_core_customizer_vars', $mp_core_customizer_js_vars );		
+		wp_localize_script( $customizer_script_slug, 'mp_core_customizer_vars', $mp_core_customizer_js_vars );		
 	}
 	
 	/**
