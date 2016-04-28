@@ -46,6 +46,15 @@ class MP_CORE_Font{
 		
 		$args = wp_parse_args( $args, $defaults_args );
 		
+		//If a subset has been passed (Lobster&subset=latin-ext,greek)
+		if ( strpos( $font_family, '&subset' ) !== false ){
+			parse_str($font_family, $output);
+			$this->_subset = '&subset=' . $output['subset'];
+		}
+		else{
+			$this->_subset = NULL;	
+		}
+		
 		//Break the font into it's parts
 		$font_explode = explode( ':', $font_family );
 		
@@ -53,7 +62,8 @@ class MP_CORE_Font{
 		$this->_args = $args;	
 		
 		//Set font family var
-		$this->_font_family = $font_explode[0];	
+		$this->_font_family = explode( '&', $font_explode[0] );	//Removes any additional things from the font family name
+		$this->_font_family = $this->_font_family[0];
 		
 		//Set font extras. EG 400italic,400,700,800
 		$this->_font_family_extras = isset( $font_explode[1] ) ? $font_explode[1] : NULL;
@@ -110,9 +120,9 @@ class MP_CORE_Font{
 			else{
 				$fetch_string = $this->_font_family_slug;
 			}	
-			
+						
 			//Fetch the font from Google's server
-			$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $fetch_string );
+			$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $fetch_string . $this->_subset );
 			
 			//If the result was a WP error or some kind, return that error.
 			if ( is_wp_error( $google_font_face ) ){
@@ -128,7 +138,7 @@ class MP_CORE_Font{
 			if ( strpos( $google_font_face['body'], 'The requested font families are not available' ) !== false ){
 				
 				//Try getting the font without the extras (which might not exist)
-				$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug );
+				$google_font_face = wp_remote_get( 'https://fonts.googleapis.com/css?family=' . $this->_font_family_slug . $this->_subset );
 				
 				//If the font is still not found on Google Fonts
 				if ( strpos( $google_font_face['body'], 'The requested font families are not available' ) !== false || strpos( $google_font_face['body'], 'error' ) !== false ){
