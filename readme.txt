@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.0.3.3
+Stable tag: 1.0.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+= 1.0.3.4 = April 28, 2016
+* Added ability to add "&subset=latin-ext" to a Google font in class-font.php.
 
 = 1.0.3.3 = April 20, 2016
 * Make sure customizer script slugs exist
