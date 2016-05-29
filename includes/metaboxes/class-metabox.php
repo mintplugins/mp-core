@@ -85,13 +85,13 @@ if (!class_exists('MP_CORE_Metabox')){
 				ob_start();
 				$this->mp_core_metabox_content();
 				$metabox_content = ob_get_clean();
-				
+					
 				//Get required CSS Stylesheets
 				$css_stylesheets = apply_filters( 'mp_core_metabox_ajax_admin_css_stylesheets', array(), $this->_args['metabox_id'] );
 				
 				//Get required JS Scripts
 				$js_scripts = apply_filters( 'mp_core_metabox_ajax_admin_js_scripts', array(), $this->_args['metabox_id'] );
-				
+												
 				echo json_encode( array( 
 						//'shortcode_init' => $shortcode_init,
 						'js_scripts' => $js_scripts,
@@ -1017,7 +1017,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '<input type="text" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -1122,7 +1122,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . '/>';
+			echo '<input type="hidden" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" '. $field_required_output . '/>';
 			echo '</div>'; 
 		}
 		
@@ -1175,7 +1175,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="password" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1352,7 +1352,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="url" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1405,7 +1405,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="30" '. $field_required_output . ' />';
+			echo '<input type="date" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" size="30" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1458,7 +1458,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="50" '. $field_required_output . ' />';
+			echo '<input type="time" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" size="50" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1511,7 +1511,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';   
 			echo '</div></div>';
-			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value ) . '" size="20" '. $field_required_output . ' />';
+			echo '<input type="number" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_placeholder . ' name="' . $field_id . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  class="' . $field_input_class . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" size="20" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
@@ -1967,7 +1967,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo !empty( $field_popup_help ) ? '<div class="mp-core-popup-help-icon" mp_ajax_popup="' . $field_popup_help . '"></div>' : NULL;
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</div></div>';
-			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  name="' . $field_id . '" value="' . htmlentities( $field_value ) . '" '. $field_required_output . ' />';
+			echo '<input type="text" class="of-color ' . $field_input_class . '" id="' . str_replace( array( '[', ']' ), array('AAAAA', 'BBBBB'), $field_id ) . '" ' . $field_default_attr . ' mp_saved_value="' . $field_value . '"  name="' . $field_id . '" value="' . htmlentities( $field_value, ENT_QUOTES, 'UTF-8') . '" '. $field_required_output . ' />';
 			echo '</div>'; 
 		}
 		
