@@ -223,22 +223,28 @@ class MP_CORE_Shortcode_Insert{
 				});
 				function insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode() {
 					
-					// Send the shortcode to the editor ?>
- -					window.send_to_editor('[<?php echo $this->_args['shortcode_id']; 
+					var shortcode_string = '[<?php echo $this->_args['shortcode_id']; ?>'; 
 						
+						<?php
 						foreach ($this->_args['shortcode_options'] as $option){
 							
 							//If this is a checkbox
 							if ($option['option_type'] == 'checkbox'){
-								echo ' ' . $option['option_id'] . '="'; ?>' + <?php echo $option['option_id']; ?> + '<?php echo '"'; 
+								?>shortcode_string += '<?php echo ' ' . $option['option_id'] . '="'; ?>' + <?php echo $option['option_id']; ?> + '<?php echo '"'; 
 							}
 							//If this is not a checkbox
 							else{
-								echo ' ' . $option['option_id'] . '="'; ?>' + jQuery('#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>').val() + '<?php echo '"'; 
+								?>
+								if ( jQuery('#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>').val() ){ <?php
+									?>shortcode_string += '<?php echo ' ' . $option['option_id'] . '="'; ?>' + jQuery('#<?php echo $this->_args['shortcode_id'] . '_' . $option['option_id']; ?>').val() + '<?php echo '"';?>';
+								}<?php
 							}
 						}
 					
-					?>]');
+					?>shortcode_string += ']';
+					
+					// Send the shortcode to the editor ?>
+ -					window.send_to_editor( shortcode_string );
 					
 					<?php 
 					//Use this hook to execute functions that need to be called when the shortcode is inserted into the active tinymce editor
@@ -255,33 +261,38 @@ class MP_CORE_Shortcode_Insert{
 			
             <!--Create the hidden div which will display in the Thickbox -->	
 			<div id="choose-<?php echo $this->_args['shortcode_id']; ?>" style="display: none;">
-				<div class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+				<div id="<?php echo $this->_args['shortcode_id']; ?>_shortcode_form" class="wrap" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 				<?php
 				
 				do_action( 'mp_core_before_' . $this->_args['shortcode_id'] . '_shortcode_output' ); 
                 
-				if ( $this->_args['shortcode_options'] ) {
-					echo '<p>' . $this->_args['shortcode_description'] . '</p>';
+				?>
+				<div id="<?php echo $this->_args['shortcode_id']; ?>_shortcode_options">
+					<?php
 					
-					//Loop through each option in this shortcode and display the corresponding function 
-					foreach ($this->_args['shortcode_options'] as $option){ 
+					if ( $this->_args['shortcode_options'] ) {
+						echo '<p>' . $this->_args['shortcode_description'] . '</p>';
+						
+						//Loop through each option in this shortcode and display the corresponding function 
+						foreach ($this->_args['shortcode_options'] as $option){ 
+						
+							//Call the function for this option type. EG textbox, select, checkbox etc
+							$this->{$option['option_type']}(
+								$this->_args['shortcode_id'] . '_' . $option['option_id'], //<-- $field_id
+								$option['option_title'], //<-- $field_title
+								$option['option_description'], //<-- $field_description
+								$option['option_value'], //<-- $value
+								isset( $option['option_conditional_id'] ) ? $this->_args['shortcode_id'] . '_' . $option['option_conditional_id'] : NULL, //<-- The id of the field which we want to check the value of - to see if this field should be shown at all
+								isset( $option['option_conditional_values'] ) ? $option['option_conditional_values'] : NULL //<-- array of values which, if selected from the conditional id, will show this field
+							);
+						}
+						?>
+						<p class="submit">
+							<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode();" />
+							<a id="<?php echo $this->_args['shortcode_id']; ?>_cancel_download_insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
+						</p>
+                    </div>
 					
-                       	//Call the function for this option type. EG textbox, select, checkbox etc
-					    $this->{$option['option_type']}(
-							$this->_args['shortcode_id'] . '_' . $option['option_id'], //<-- $field_id
-							$option['option_title'], //<-- $field_title
-							$option['option_description'], //<-- $field_description
-							$option['option_value'], //<-- $value
-							isset( $option['option_conditional_id'] ) ? $this->_args['shortcode_id'] . '_' . $option['option_conditional_id'] : NULL, //<-- The id of the field which we want to check the value of - to see if this field should be shown at all
-							isset( $option['option_conditional_values'] ) ? $option['option_conditional_values'] : NULL //<-- array of values which, if selected from the conditional id, will show this field
-						);
-                    }
-					?>
-					<p class="submit">
-						<input type="button" id="<?php echo $this->_args['shortcode_id']; ?>" class="button-primary" value="<?php echo __('Insert ', 'mp_core') . $this->_args['shortcode_title']; ?>" onclick="insert_<?php echo $this->_args['shortcode_id']; ?>_Shortcode();" />
-						<a id="<?php echo $this->_args['shortcode_id']; ?>_cancel_download_insert" class="button-secondary" onclick="tb_remove();" title="<?php _e( 'Cancel', 'mp_core' ); ?>"><?php _e( 'Cancel', 'mp_core' ); ?></a>
-					</p>
-                    
                     <?php do_action( 'mp_core_after_' . $this->_args['shortcode_id'] . '_shortcode_output' ); ?>
 				
 				</div>
