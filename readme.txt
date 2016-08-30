@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.0.3.5
+Stable tag: 1.0.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.3.6 = August 30, 2016
+* Added esc functions for mp_core_oembed_get
+* Give shortcode forms ID selectors
+* Error detection for plugin updater. Make sure that get_current_screen function exists before trying to use. This makes MP Core-powered plugin updates integrate with InifiniteWP.
 
 1.0.3.5 = May 28, 2016
 * Added UTF-8 for metabox htmlentities. This fixes meta options with special characters.
