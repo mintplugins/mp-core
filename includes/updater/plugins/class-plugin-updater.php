@@ -82,9 +82,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			//Plugin Name Slug
 			$args['software_name_slug'] = sanitize_title ( $args['software_name'] ); //EG move-plugins-core		
 			
-			//Get current screen
-			$this->current_screen = get_current_screen();
-			
+			if ( function_exists( 'get_current_screen' ) ){
+				//Get current screen
+				$this->current_screen = get_current_screen();
+			}
+			else{
+				$this->current_screen = NULL;	
+			}
 			return $args;	
 		}
 				
