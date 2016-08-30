@@ -133,10 +133,10 @@ function mp_core_oembed_get($video_url, $args = NULL){
 	$args = wp_parse_args( $args, $args_defaults );
 	
 	//Set CSS ID	
-	$args['iframe_css_id'] = !empty( $args['iframe_css_id'] ) ? 'id="' . $args['iframe_css_id'] . '"' : '';
+	$args['iframe_css_id'] = !empty( $args['iframe_css_id'] ) ? 'id="' . esc_attr( $args['iframe_css_id'] ) . '"' : '';
 	
 	//Set CSS Class	
-	$args['iframe_css_class'] = !empty( $args['iframe_css_class'] ) ? 'class="' . $args['iframe_css_class'] . '"' : '';
+	$args['iframe_css_class'] = !empty( $args['iframe_css_class'] ) ? 'class="' . esc_attr( $args['iframe_css_class'] ) . '"' : '';
 	
 	//Check if iframe exists in the video url
 	$iframe = strpos( html_entity_decode($video_url), '<iframe' );
@@ -279,8 +279,8 @@ function mp_core_oembed_get($video_url, $args = NULL){
 					$video_poster = NULL; 
 				}
 				
-				$iframe_code = '<video width="100%" height="100%" class="' . $autoplay_class . '" style="position:absolute; top:0; left:0;" preload="auto" ' . $controls . $loop . $autoplay . ' poster="' . $video_poster . '">';
-					$iframe_code .= '<source src="' . $video_url . '" type="video/mp4" />';
+				$iframe_code = '<video width="100%" height="100%" class="' . esc_attr( $autoplay_class ) . '" style="position:absolute; top:0; left:0;" preload="auto" ' . $controls . $loop . $autoplay . ' poster="' . $video_poster . '">';
+					$iframe_code .= '<source src="' . esc_url( $video_url ) . '" type="video/mp4" />';
 				$iframe_code .= '</video>';
 				
 				$iframe_code .= "<script type=\"text/javascript\">
@@ -294,7 +294,7 @@ function mp_core_oembed_get($video_url, $args = NULL){
 			//If we aren't sure what type of file this is
 			else{
 				//Embed it in an iframe					
-				$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px; border:none;" src="' . $video_url . '" /></iframe>';
+				$iframe_code = '<iframe ' . $args['iframe_css_id'] . ' ' . $args['iframe_css_class'] . ' seamless="seamless" scrolling=no" style="position:absolute; width:100%; height:100%; top:0; left:0px; border:none;" src="' . esc_url( $video_url ) . '" /></iframe>';
 			}
 							
 		}
