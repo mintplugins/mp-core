@@ -31,7 +31,7 @@ function mp_core_js_waypoint_animate( $element_id, $animation_repeater, $reverse
 	$js_output = NULL;
 	
 	//Hide the element until the animation starts
-	$js_output .= mp_core_animation_hider_css( $element_id );
+	//$js_output .= mp_core_animation_hider_css( $element_id );
 	
 	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
 		$js_output .= 'jQuery(document).ready(function($){ 
