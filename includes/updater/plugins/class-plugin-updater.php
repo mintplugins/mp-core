@@ -113,7 +113,9 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		private function hook() {
 			
 			//Uncomment for testing purposes to call the repo on every update page load.
-			//$this->delete_transients();
+			if ( defined( 'WP_CLI' ) || WP_DEBUG ){
+				$this->delete_transients();
+			}
 			
 			//Show Option Page on Plugins page as well
 			add_action( 'load-plugins.php', array( $this, 'plugins_page') ); 			
