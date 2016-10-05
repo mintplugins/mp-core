@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.0.3.7
+Stable tag: 1.0.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.3.8 = September 20, 2016
+* Fix animation issues in Firefox. Remove the use of mp_core_animation_hider_css from all animation functions.
 
 1.0.3.7 = September 20, 2016
 * Disable animation hider.
