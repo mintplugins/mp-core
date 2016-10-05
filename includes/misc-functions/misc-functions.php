@@ -427,9 +427,17 @@ function mp_core_true_false_light($args = array() ) {
  */
 function mp_core_zip_directory($source, $destination)
 {
-    if (!extension_loaded('zip') || !file_exists($source)) {
+    if (!extension_loaded('zip') ) {
+		echo __( 'The zip extension for PHP is not installed on this server. Contact your webhost to let them know you need zip for PHP.', 'mp_core' );
+		die();
         return false;
     }
+	
+	if ( !file_exists($source) ){
+		echo __( 'The file to unzip does not exist on this server.', 'mp_core' );
+		die();
+        return false;
+	}
 
     $zip = new ZipArchive();
     if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
