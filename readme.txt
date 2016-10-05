@@ -34,8 +34,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-1.0.3.8 = September 20, 2016
+1.0.3.8 = October 4, 2016
 * Fix animation issues in Firefox. Remove the use of mp_core_animation_hider_css from all animation functions.
+* Improved error messages for unzipping.
 
 1.0.3.7 = September 20, 2016
 * Disable animation hider.
