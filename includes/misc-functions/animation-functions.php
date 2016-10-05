@@ -196,7 +196,7 @@ function mp_core_js_waypoint_animate_child( $element_id, $child_to_animate, $ani
 	$js_output = NULL;
 	
 	//Hide the element until the animation starts
-	$js_output .= mp_core_animation_hider_css( $element_id . ' ' . $child_to_animate );
+	//$js_output .= mp_core_animation_hider_css( $element_id . ' ' . $child_to_animate );
 	
 	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
 	$js_output .= 'jQuery(document).ready(function($){ 
@@ -361,7 +361,7 @@ function mp_core_js_page_load_animate_child( $element_selector_string, $child_to
 	$js_output = NULL;
 	
 	//Hide the element until the animation starts
-	$js_output .= mp_core_animation_hider_css( $element_selector_string . ' ' . $child_to_animate );
+	//$js_output .= mp_core_animation_hider_css( $element_selector_string . ' ' . $child_to_animate );
 	
 	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
 	$js_output .= 'jQuery(document).ready(function($){ 
@@ -405,7 +405,7 @@ function mp_core_js_mouse_over_animate_child( $mouse_over_string, $child_to_anim
 	$namespace = !empty( $namespace ) ? '.' . $namespace : NULL;
 	
 	//Hide the element until the animation starts 
-	$js_output .= mp_core_animation_hider_css( $mouse_over_string . ' ' . $child_to_animate );
+	//$js_output .= mp_core_animation_hider_css( $mouse_over_string . ' ' . $child_to_animate );
 
 	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
 	$js_output .= 'jQuery(document).ready(function($){ 
@@ -489,7 +489,7 @@ function mp_core_js_mouse_over_animate( $mouse_over_string, $animation_repeater,
 	$namespace = !empty( $namespace ) ? '.' . $namespace : NULL;
 	
 	//Hide the element until the animation starts
-	$js_output .= mp_core_animation_hider_css( $mouse_over_string );
+	//$js_output .= mp_core_animation_hider_css( $mouse_over_string );
 	
 	$js_output .= $include_script_tags ? '<script type="text/javascript">' : NULL;
 	$js_output .= 'jQuery(document).ready(function($){ 
