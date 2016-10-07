@@ -45,10 +45,12 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Get args
 			$this->_args = $args;		
-				
-			//If we are not in the admin section of WP, get out of here
-			if ( !is_admin() ){
-				return;	
+			
+			if ( !defined( 'WP_CLI' ) ){
+				//If we are not in the admin section of WP, get out of here
+				if ( !is_admin() ){
+					return;	
+				}
 			}
 									
 			//Set up hooks.
@@ -129,6 +131,19 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
+			
+			/** If plugins_api isn't available, load the file that holds the function */
+			if ( !function_exists( 'plugins_api' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+			}
+			
+			//Parse the args
+			$args = $this->parse_the_args( $this->_args );
+			
+			//Check if this plugin exists in the WP Repo
+			$args = array( 'slug' => $args['software_name_slug'] );
+			$api = plugins_api( 'plugin_information', $args );	
+			
 		}
 		
 		/**
@@ -192,7 +207,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			if ( ( $_action != 'plugin_information' ) || !isset( $_args->slug ) || ( $_args->slug != $this->slug ) ) return $_data;
 	
 			$to_send = array( 'slug' => $this->slug );
-	
+			
 			$api_response = $this->api_request( 'plugin_information', $to_send );
 			if ( false !== $api_response ) $_data = $api_response;
 			
@@ -213,6 +228,11 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			//Parse the args
 			$args = $this->parse_the_args( $this->_args );
+			
+			/** If plugins_api isn't available, load the file that holds the function */
+			if ( !function_exists( 'get_plugins' ) ) {
+				require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+			}
 			
 			//Get all plugins		
 			$all_plugins = get_plugins();
@@ -261,7 +281,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					$this->version  = $plugin_data['Version'];
 					
 				}
-			}					
+			}		
 		}
 		
 		/**
@@ -280,6 +300,13 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		private function api_request( $_action, $_data ) {
 			
 			global $wp_version;
+			
+			//If using WP CLI, set a fresh transient with the API value, and return that value too right now.
+			if ( defined( 'WP_CLI' ) ){ 
+				
+				return $this->actually_do_api_request( $_action, $_data );
+				
+			}
 			
 			//Get the transient where we store the api request for this plugin for 24 hours
 			$mp_api_request_transient = get_site_transient( 'mp_api_request_' . $this->slug );
@@ -324,7 +351,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 		 * @return false||object
 		 */
 		function actually_do_api_request( $_action, $_data ){
-			
+		
 			//Parse the args
 			$args = $this->parse_the_args( $this->_args );
 			
@@ -333,7 +360,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			if( $_data['slug'] != $this->slug )
 				return;
-	
+			
 			$api_params = array(
 					'api' => 'true',
 					'slug' => $_data['slug'],
@@ -342,7 +369,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'old_license_key' => get_option( $_data['slug'] . '_license_key' ),
 					'site_activating' => get_bloginfo( 'wpurl' )
 				);
-			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 5, 'sslverify' => false, 'body' => $api_params ) );				
+			$request = wp_remote_post( $args['software_api_url']  . '/repo/' . $args['software_name_slug'], array( 'method' => 'POST', 'timeout' => 5, 'sslverify' => false, 'body' => $api_params ) );
 									
 			if ( !is_wp_error( $request ) ){
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
