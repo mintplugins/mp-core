@@ -131,18 +131,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			
 			add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3);
 			
+			if ( defined( 'WP_CLI' ) ){
+				
+				/** If plugins_api isn't available, load the file that holds the function */
+				if ( !function_exists( 'plugins_api' ) ) {
+					require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+				}
 			
-			/** If plugins_api isn't available, load the file that holds the function */
-			if ( !function_exists( 'plugins_api' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+				//Parse the args
+				$args = $this->parse_the_args( $this->_args );
+				
+				//Check if this plugin exists in the WP Repo
+				$args = array( 'slug' => $args['software_name_slug'] );
+				$api = plugins_api( 'plugin_information', $args );	
 			}
-			
-			//Parse the args
-			$args = $this->parse_the_args( $this->_args );
-			
-			//Check if this plugin exists in the WP Repo
-			$args = array( 'slug' => $args['software_name_slug'] );
-			$api = plugins_api( 'plugin_information', $args );	
 			
 		}
 		
