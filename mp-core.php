@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
 Description: A core group of classes and functions shared by all MintPlugins creating efficiency, robustness, and speed.
-Version: 1.0.4.0
+Version: 1.0.4.1
 Author: Mint Plugins
 Author URI: https://mintplugins.com
 Text Domain: mp_core
@@ -14,7 +14,7 @@ License: GPL2
 /*  Copyright 2016  Phil Johnston  (email : phil@mintplugins.com)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Mint Plugins Core.
 
     This program is distributed in the hope that it will be useful,
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 // Plugin version
 if( !defined( 'MP_CORE_VERSION' ) )
-	define( 'MP_CORE_VERSION', '1.0.4.0' );
+	define( 'MP_CORE_VERSION', '1.0.4.1' );
 
 // Plugin Folder URL
 if( !defined( 'MP_CORE_PLUGIN_URL' ) )
@@ -50,7 +50,7 @@ if( !defined( 'MP_CORE_PLUGIN_DIR' ) )
 // Plugin Root File
 if( !defined( 'MP_CORE_PLUGIN_FILE' ) )
 	define( 'MP_CORE_PLUGIN_FILE', __FILE__ );
-	
+
 // Javascripts URL - Used as a prefix to load javascript scripts (non core related) included with the core
 if( !defined( 'MP_CORE_JS_SCRIPTS_URL' ) )
 	define( 'MP_CORE_JS_SCRIPTS_URL', plugin_dir_url( __FILE__ ) . 'includes/js/utility/' );

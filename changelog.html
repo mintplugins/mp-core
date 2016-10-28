@@ -1,4 +1,8 @@
 <p>
+<strong>1.0.4.1 = October 28, 2016</strong>
+	<ul>
+		<li>Add check to make sure an mp core metabox is on page before doing default checks. Fixes issue with posts being auto saved as drafts.</li>
+	</ul>
 <strong>1.0.4.0 = October 11, 2016</strong>
 <ul>
 	<li>Additional support for WP CLI plugin updates.</li>
@@ -36,25 +40,25 @@
    <li>Remove use of get_currentuserinfo in comments.php</li>
 </ul>
 <strong>= 1.0.3.2 = April 14, 2016</strong>
-<ul>	
+<ul>
     <li>Fix CSS blocking new inline link editor in WP 4.5</li>
 </ul>
 <strong>= 1.0.3.1 = April 10, 2016</strong>
-<ul>	
+<ul>
     <li>Make all code compatible with PHP7</li>
 	<li>Make metabox Text Fields use 50% of the available space</li>
 	<li>Add ENT_QUOTES to html_entity_decode for mp_core_get_option</li>
 	<li>Make Shortcode thickbox inner use 100% of the space available</li>
 <ul>
 <strong>= 1.0.3.0 = February 8, 2016</strong>
-<ul>	
+<ul>
     <li>Make all code compatible with PHP7</li>
 	<li>Make metabox Text Fields use 50% of the available space</li>
 	<li>Add ENT_QUOTES to html_entity_decode for mp_core_get_option</li>
 	<li>Make Shortcode thickbox inner use 100% of the space availabel</li>
 <ul>
 <strong>= 1.0.2.9 = January 2, 2016</strong>
-<ul>	
+<ul>
     <li>Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.</li>
     <li>Make sure that HTTPS exists in $_SERVER before using it.</li>
     <li>Added mp_core_php_info_test function to assist with support more quickly.</li>
@@ -62,11 +66,11 @@
     <li>Change "esc_attr_e" to "sanitize_text_field" for value paramater on license key fields in class-plugin-checker.php.</li>
 <ul>
 <strong>= 1.0.2.8 = December 9, 2015</strong>
-<ul>	
+<ul>
     <li>Make directory images size correctly for WP 4.4.</li>
 <ul>
 <strong>= 1.0.2.7 = November 21, 2015</strong>
-<ul>	
+<ul>
     <li>Fix for TinyMCE when re-ordering. FIxes previous bug in Firefox and allows all plugins to be loaded. This fix works by copying the preTinyMCEInit variable, adding new editors to the array, changing the body class and selector id, changing the array into a string, and replacing the existing javascript preTinyMCEInit variable on the page, and then refreshing all scripts that have the term tinymce in them.</li>
 	<li>Repeaters now do a check if there's a wp_editor inside them and puts the content from the wp_editor in the Repeater Title first. </li>
 <ul>
@@ -188,11 +192,11 @@
 </ul>
 
 <strong>1.0.1.0 February 4, 2015</strong>
-<ul>    
+<ul>
     <li>Plugin Checker Class: Only install 3 dependant plugins at a time.</li>
 </ul>
 <strong>1.0.0.9 February 1, 2015</strong>
-<ul>    
+<ul>
     <li>You can now set a font size in pixels through the customizer class using the arg font-size(px)</li>
     <li>License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.</li>
     <li>Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts</li>

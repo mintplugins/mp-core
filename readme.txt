@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.0.4.0
+Stable tag: 1.0.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ This section describes how to install the plugin and get it working.
 
 1. Upload the 'mp-core’ folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Build Bricks under the “Stacks and Bricks” menu. 
+3. Build Bricks under the “Stacks and Bricks” menu.
 4. Visit the Documentation/API page to learn how to build on MP Core
 
 == Frequently Asked Questions ==
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.4.1 = October 28, 2016
+* Add check to make sure an mp core metabox is on page before doing default checks. Fixes issue with posts being auto saved as drafts.
 
 1.0.4.0 = October 11, 2016
 * Additional support for WP CLI plugin updates.
@@ -87,14 +90,14 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 = 1.0.2.7 = November 21, 2015
 * Fix for TinyMCE when re-ordering. FIxes previous bug in Firefox and allows all plugins to be loaded. This fix works by copying the preTinyMCEInit variable, adding new editors to the array, changing the body class and selector id, changing the array into a string, and replacing the existing javascript preTinyMCEInit variable on the page, and then refreshing all scripts that have the term tinymce in them.
-* Repeaters now do a check if there's a wp_editor inside them and puts the content from the wp_editor in the Repeater Title first. 
+* Repeaters now do a check if there's a wp_editor inside them and puts the content from the wp_editor in the Repeater Title first.
 
 = 1.0.2.6 = November 20, 2015
 * Temporary Revert to mp-core-metabox.js from version 1.0.2.4 until bugs ar worked out of full replacement.
 
 = 1.0.2.5 = November 19, 2015
 * Make Ajax Loaded TinyMCE's use ALL of the default 'mp_core_wpeditor_init ' tiny MCE's settings.
-* Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste. 
+* Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste.
 * Update Packaged Isotope JS Script to v2.2.2
 
 = 1.0.2.4 = October 29, 2015
@@ -156,7 +159,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 = 1.0.1.4 = April 2, 2015
 * Convert meta field "labels" to "divs" so that links in field descriptions are clickable.
 * Add jquery to simple action page function
-* Plugin Installer: Fixed issue where "Successfully Installed" was shown even if it wasn't. 
+* Plugin Installer: Fixed issue where "Successfully Installed" was shown even if it wasn't.
 * In the simple action page misc function, a html_head output was added for plugins to use javascript and custom css on those pages.
 
 = 1.0.1.3 = March 26, 2015
@@ -231,7 +234,7 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 = 1.0.0.4 = December 12, 2014
 * Changed metabox save routine to save all fields if it is the first time it is ever being saved
-* Took port number out of mp_core_get_current_url function. 
+* Took port number out of mp_core_get_current_url function.
 * Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently
 * Changed html_entities on metabox saves to esc_html
 * Added mp_core_fix_nbsp function to fix the black diamond question mark that shows up in tinymce fields
