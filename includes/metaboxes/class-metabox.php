@@ -532,7 +532,7 @@ if (!class_exists('MP_CORE_Metabox')){
 						$preset_value = isset($field['field_value']) ? $field['field_value'] : '';
 
 						//Default Field Attribute String:
-						$field_default_attr = isset($field['field_value']) ? ' mp_default_value="' . $field['field_value'] . '" ' : ' mp_default_value="" ';
+						$field_default_attr = isset($field['field_value']) && !empty( $field['field_value'] ) ? ' mp_default_value="' . $field['field_value'] . '" ' : '';
 
 						//set the showhider
 						if ( isset($field['field_showhider']) ){
@@ -1912,7 +1912,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			echo $field_description != "" ? ' ' . '<em>' . $field_description . '</em>' : '';
 			echo '</div></div>';
 			?>
-            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" mp_default_value="'<?php echo $field_default_attr; ?>" value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
+            <input type="range" name="<?php echo $field_id; ?>" class="<?php echo $field_input_class; ?>" min="0" max="100" <?php echo $field_default_attr; ?> value ="<?php echo $field_value; ?>" <?php echo $field_required_output; ?> >
 			<?php
 			echo '</div>';
 		}
