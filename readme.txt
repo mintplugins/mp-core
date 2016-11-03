@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.5
-Stable tag: 1.0.4.1
+Stable tag: 1.0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.4.2 = November 3, 2016
+* Set mp_default_value to empty if no default exists for metabox fields.
 
 1.0.4.1 = October 28, 2016
 * Add check to make sure an mp core metabox is on page before doing default checks. Fixes issue with posts being auto saved as drafts.
