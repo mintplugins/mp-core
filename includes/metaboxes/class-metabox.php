@@ -75,7 +75,7 @@ if (!class_exists('MP_CORE_Metabox')){
 
 				//If, for some reason, this Class is being run for a metabox that isn't the one being called-for by ajax, stop running and get out of here.
 				if ( $this->_args['metabox_id'] != $_POST['mp_core_metabox_id_ajax'] ){
-					return $post_id;
+					return;
 				}
 
 				//This hook allows Insert Shortcode class instances to be run properly for ajax metaboxes and know the context of the page (the post type).
