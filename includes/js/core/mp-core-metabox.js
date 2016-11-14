@@ -17,8 +17,6 @@ jQuery(document).ready(function($){
 			//Prevent the form from being submitted just yet
 			event.preventDefault();
 
-			console.log( 'submit prevented' );
-
 			$(document).find( '[mp_default_value]' ).each( function(){
 
 				//If this field WAS something different than the default, and now its the default again
@@ -491,8 +489,8 @@ jQuery(document).ready(function($){
 	}
 	mp_core_sortable_repeaters();
 	$(document).ajaxComplete( function() {
-        mp_core_sortable_repeaters();
-    });
+		mp_core_sortable_repeaters();
+	});
 
 	/**
 	 * For metaboxes set to "metabox_load_content_when_open", load their contents once the metabox is "Opened" by the user.
