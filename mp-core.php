@@ -3,7 +3,7 @@
 Plugin Name: MP Core
 Plugin URI: http://mintplugins.com
 Description: A core group of classes and functions shared by all MintPlugins creating efficiency, robustness, and speed.
-Version: 1.0.4.2
+Version: 1.0.4.3
 Author: Mint Plugins
 Author URI: https://mintplugins.com
 Text Domain: mp_core
@@ -13,18 +13,18 @@ License: GPL2
 
 /*  Copyright 2016  Phil Johnston  (email : phil@mintplugins.com)
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as
-    published by the Free Software Mint Plugins Core.
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License, version 2, as
+	published by the Free Software Mint Plugins Core.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Mint Plugins Core, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Mint Plugins Core, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 // Exit if accessed directly
@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 // Plugin version
 if( !defined( 'MP_CORE_VERSION' ) )
-	define( 'MP_CORE_VERSION', '1.0.4.2' );
+	define( 'MP_CORE_VERSION', '1.0.4.3' );
 
 // Plugin Folder URL
 if( !defined( 'MP_CORE_PLUGIN_URL' ) )

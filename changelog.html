@@ -1,4 +1,9 @@
 <p>
+<strong>1.0.4.3 = November 14, 2016</strong>
+<ul>
+	<li>Fix: Instead of returning post_id (which doesn't exist), return blank from construct of metabox when doing ajax but not for this metabox.</li>
+	<li>Remove Shadow SVG output</li>
+</ul>
 <strong>1.0.4.2 = October 28, 2016</strong>
 	<ul>
 		<li>Set mp_default_value to empty if no default exists for metabox fields.</li>
@@ -13,22 +18,22 @@
 </ul>
 <strong>1.0.3.9 = October 5, 2016</strong>
 <ul>
-    <li>Add support for wp cli plugin updates</li>
+	<li>Add support for wp cli plugin updates</li>
 </ul>
 <strong>1.0.3.8 = October 4, 2016</strong>
 <ul>
-    <li>Fix animation issues in Firefox. Remove the use of mp_core_animation_hider_css from all animation functions.</li>
-    <li>Improved error messages for unzipping.</li>
+	<li>Fix animation issues in Firefox. Remove the use of mp_core_animation_hider_css from all animation functions.</li>
+	<li>Improved error messages for unzipping.</li>
 </ul>
 <strong>1.0.3.7 = September 20, 2016</strong>
 <ul>
-    <li>Disable animation hider.</li>
+	<li>Disable animation hider.</li>
 </ul>
 <strong>1.0.3.6 = August 30, 2016</strong>
 <ul>
-    <li>Added esc functions for mp_core_oembed_get</li>
-    <li>Give shortcode forms ID selectors</li>
-    <li>Error detection for plugin updater. Make sure that get_current_screen function exists before trying to use. This makes MP Core-powered plugin updates integrate with InifiniteWP.</li>
+	<li>Added esc functions for mp_core_oembed_get</li>
+	<li>Give shortcode forms ID selectors</li>
+	<li>Error detection for plugin updater. Make sure that get_current_screen function exists before trying to use. This makes MP Core-powered plugin updates integrate with InifiniteWP.</li>
 </ul>
 <strong>= 1.0.3.5 = May 28, 2016</strong>
 <ul>
@@ -45,37 +50,37 @@
 </ul>
 <strong>= 1.0.3.2 = April 14, 2016</strong>
 <ul>
-    <li>Fix CSS blocking new inline link editor in WP 4.5</li>
+	<li>Fix CSS blocking new inline link editor in WP 4.5</li>
 </ul>
 <strong>= 1.0.3.1 = April 10, 2016</strong>
 <ul>
-    <li>Make all code compatible with PHP7</li>
+	<li>Make all code compatible with PHP7</li>
 	<li>Make metabox Text Fields use 50% of the available space</li>
 	<li>Add ENT_QUOTES to html_entity_decode for mp_core_get_option</li>
 	<li>Make Shortcode thickbox inner use 100% of the space available</li>
 <ul>
 <strong>= 1.0.3.0 = February 8, 2016</strong>
 <ul>
-    <li>Make all code compatible with PHP7</li>
+	<li>Make all code compatible with PHP7</li>
 	<li>Make metabox Text Fields use 50% of the available space</li>
 	<li>Add ENT_QUOTES to html_entity_decode for mp_core_get_option</li>
 	<li>Make Shortcode thickbox inner use 100% of the space availabel</li>
 <ul>
 <strong>= 1.0.2.9 = January 2, 2016</strong>
 <ul>
-    <li>Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.</li>
-    <li>Make sure that HTTPS exists in $_SERVER before using it.</li>
-    <li>Added mp_core_php_info_test function to assist with support more quickly.</li>
-    <li>Removed screen_icon() function in plugin installer and updater.</li>
-    <li>Change "esc_attr_e" to "sanitize_text_field" for value paramater on license key fields in class-plugin-checker.php.</li>
+	<li>Update to plugin updater which does bulk calls to each API endpoint instead of a single call for each plugin. This speeds up update checks especially if many plugins from one api are installed.</li>
+	<li>Make sure that HTTPS exists in $_SERVER before using it.</li>
+	<li>Added mp_core_php_info_test function to assist with support more quickly.</li>
+	<li>Removed screen_icon() function in plugin installer and updater.</li>
+	<li>Change "esc_attr_e" to "sanitize_text_field" for value paramater on license key fields in class-plugin-checker.php.</li>
 <ul>
 <strong>= 1.0.2.8 = December 9, 2015</strong>
 <ul>
-    <li>Make directory images size correctly for WP 4.4.</li>
+	<li>Make directory images size correctly for WP 4.4.</li>
 <ul>
 <strong>= 1.0.2.7 = November 21, 2015</strong>
 <ul>
-    <li>Fix for TinyMCE when re-ordering. FIxes previous bug in Firefox and allows all plugins to be loaded. This fix works by copying the preTinyMCEInit variable, adding new editors to the array, changing the body class and selector id, changing the array into a string, and replacing the existing javascript preTinyMCEInit variable on the page, and then refreshing all scripts that have the term tinymce in them.</li>
+	<li>Fix for TinyMCE when re-ordering. FIxes previous bug in Firefox and allows all plugins to be loaded. This fix works by copying the preTinyMCEInit variable, adding new editors to the array, changing the body class and selector id, changing the array into a string, and replacing the existing javascript preTinyMCEInit variable on the page, and then refreshing all scripts that have the term tinymce in them.</li>
 	<li>Repeaters now do a check if there's a wp_editor inside them and puts the content from the wp_editor in the Repeater Title first. </li>
 <ul>
 <strong> 1.0.2.6 = November 20, 2015</strong>
@@ -85,18 +90,18 @@
 <strong> 1.0.2.5 = November 19, 2015</strong>
 <ul>
 	<li>Make Ajax Loaded TinyMCE's use ALL of the default 'mp_core_wpeditor_init ' tiny MCE's settings.</li>
-    <li>Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste.</li>
-    <li>Update Packaged Isotope JS Script to v2.2.2</li>
+	<li>Make TinyMCEs in wp_editors loaded through ajax take out any styling upon paste.</li>
+	<li>Update Packaged Isotope JS Script to v2.2.2</li>
 </ul>
 <strong> 1.0.2.4 = October 29, 2015</strong>
 <ul>
 	<li>Only output microformats if a queried post id actually exists in wp_query. This fixes errors with plugins that have pseudo pages like BuddyPress.</li>
-    <li>Make sure avatars exist as expected before using their php-exploded arrays. This fixes another compaitibiltiy bug with BuddyPress.</li>
+	<li>Make sure avatars exist as expected before using their php-exploded arrays. This fixes another compaitibiltiy bug with BuddyPress.</li>
 </ul>
 <strong> 1.0.2.3 = October 24, 2015</strong>
 <ul>
 	<li>Add check to plugin installer for if connections aren't allowed over SSL because of a poor webhost configuration. Output helpful error message if so.</li>
-    <li>Make sure Icon Font Pickers work in non-repeated metaboox items.</li>
+	<li>Make sure Icon Font Pickers work in non-repeated metaboox items.</li>
 </ul>
 <strong> 1.0.2.2 = October 10, 2015</strong>
 <ul>
@@ -104,18 +109,18 @@
 </ul>
 <strong> 1.0.2.1 = September 21, 2015</strong>
 <ul>
-    <li>Showhiders are now wrapped in a div for indenting instead of indented via JS.</li>
-    <li>Apply specific height to repeater containers only when closed.</li>
-    <li>Added Spinner Animation for ajax metaboxes.</li>
-    <li>Customizer Options now have default priority of 0. Previous to this release it was 10.</li>
-    <li>Made Fonts able to be output via ajax in Font Class.</li>
-    <li>Fixed bug with ACF plugin to make sure #post is resubmitted properly after default checks are complete.</li>
-    <li>Added mp_core_reset_all_wp_editors function</li>
-    <li>Make admin Color Pickers re-apply when ajax is complete</li>
-    <li>Made metabox content able to be loaded via ajax. This way options are only loaded if the user needs them.</li>
-    <li>Made animations have jQuery namespaces so they can be turned .off() if their code is reloaded via ajax.</li>
-    <li>Plugin installer: Some webhosts have strange temp directories and they were causing errors. While this doesn't fix that, it does give a useful error message to the user to help them trouble shoot with their webhost.</li>
-    <li>Shortcode Class update: media_buttons_context is deprecated by WordPress. It now uses media_buttons filter.</li>
+	<li>Showhiders are now wrapped in a div for indenting instead of indented via JS.</li>
+	<li>Apply specific height to repeater containers only when closed.</li>
+	<li>Added Spinner Animation for ajax metaboxes.</li>
+	<li>Customizer Options now have default priority of 0. Previous to this release it was 10.</li>
+	<li>Made Fonts able to be output via ajax in Font Class.</li>
+	<li>Fixed bug with ACF plugin to make sure #post is resubmitted properly after default checks are complete.</li>
+	<li>Added mp_core_reset_all_wp_editors function</li>
+	<li>Make admin Color Pickers re-apply when ajax is complete</li>
+	<li>Made metabox content able to be loaded via ajax. This way options are only loaded if the user needs them.</li>
+	<li>Made animations have jQuery namespaces so they can be turned .off() if their code is reloaded via ajax.</li>
+	<li>Plugin installer: Some webhosts have strange temp directories and they were causing errors. While this doesn't fix that, it does give a useful error message to the user to help them trouble shoot with their webhost.</li>
+	<li>Shortcode Class update: media_buttons_context is deprecated by WordPress. It now uses media_buttons filter.</li>
 </ul>
 <strong>1.0.2.0 = May 13, 2015</strong>
 <ul>
@@ -124,10 +129,10 @@
 <strong>1.0.1.9 = May 13, 2015</strong>
 <ul>
 	<li>Use esc_url_raw instead of mp_core_add_query_arg for plugin checker/installer</li>
-    <li>Better message if "allow_url_fopen" isn't "on" in class-plugin-installer.php. Lets user know what action to take.</li>
-    <li>Hover animations are now disabled for touch devices because hovering isn't a thing on touch devices. Previously, if the user clicked once, the animation fired. This proved to be frustrating for mobile users so the action is now disabled entirely to reduce clicks.</li>
-    <li>Change: mp_core_get_post_meta now only returns the "default" setting if its value has never been saved before. This way, if the user desires to have a "blank" value saved, they can. Previously, if the value was blank, it would return the default value no matter what.</li>
-    <li>Fix: Preserve keys in mp_core_insert_meta. When inserting a meta option using mp_core_insert_meta, the meta key was removed. If you wanted to then insert more meta options later in the page, you couldn't because the keys were removed and replaced with array numbers eg array[0] instead of array['mykey'].</li>
+	<li>Better message if "allow_url_fopen" isn't "on" in class-plugin-installer.php. Lets user know what action to take.</li>
+	<li>Hover animations are now disabled for touch devices because hovering isn't a thing on touch devices. Previously, if the user clicked once, the animation fired. This proved to be frustrating for mobile users so the action is now disabled entirely to reduce clicks.</li>
+	<li>Change: mp_core_get_post_meta now only returns the "default" setting if its value has never been saved before. This way, if the user desires to have a "blank" value saved, they can. Previously, if the value was blank, it would return the default value no matter what.</li>
+	<li>Fix: Preserve keys in mp_core_insert_meta. When inserting a meta option using mp_core_insert_meta, the meta key was removed. If you wanted to then insert more meta options later in the page, you couldn't because the keys were removed and replaced with array numbers eg array[0] instead of array['mykey'].</li>
 </ul>
 <strong>1.0.1.8 = April 30, 2015</strong>
 <ul>
@@ -137,89 +142,89 @@
 <strong>1.0.1.7 = April 25, 2015</strong>
 <ul>
 	<li>Proper error for ajax plugin updates when failed</li>
-    <li>esc_url for mp_core_add_query_arg now uses esc_url_raw</li>
-    <li>Better error for bulk installs with incorrect license.</li>
+	<li>esc_url for mp_core_add_query_arg now uses esc_url_raw</li>
+	<li>Better error for bulk installs with incorrect license.</li>
 </ul>
 <strong>1.0.1.6 = April 24, 2015</strong>
 <ul>
 	<li>Removed previously jquery.velocity.min.js (deprecated as of version 1.0.1.1) and was replaced with velocity.min.js.</li>
-    <li>Make sure hidden meta fields are hidden always</li>
-    <li>Added Isotope JS to utility js scripts folder.</li>
-    <li>Added mp_core_get_post_meta_multiple_checkboxes function for retrieving multiple checkboxes easily.</li>
-    <li>Addon-Directory pages have nav at bottom and top now</li>
-    <li>Security Fix: All "add_query_arg" function changed to "mp_core_add_query_arg" to properly sanitize the URLs</li>
-    <li>Security Fix: All "remove_query_arg" function changed to "mp_core_remove_query_arg" to properly sanitize the URLs</li>
+	<li>Make sure hidden meta fields are hidden always</li>
+	<li>Added Isotope JS to utility js scripts folder.</li>
+	<li>Added mp_core_get_post_meta_multiple_checkboxes function for retrieving multiple checkboxes easily.</li>
+	<li>Addon-Directory pages have nav at bottom and top now</li>
+	<li>Security Fix: All "add_query_arg" function changed to "mp_core_add_query_arg" to properly sanitize the URLs</li>
+	<li>Security Fix: All "remove_query_arg" function changed to "mp_core_remove_query_arg" to properly sanitize the URLs</li>
 </ul>
 <strong>1.0.1.5 = April 2, 2015</strong>
 <ul>
-    <li>Added admin notice for if Theme is installed but not active to the Plugin Checker class.</li>
+	<li>Added admin notice for if Theme is installed but not active to the Plugin Checker class.</li>
 </ul>
 <strong>1.0.1.4 = April 2, 2015</strong>
 <ul>
-    <li>Convert meta field "labels" to "divs" so that links in field descriptions are clickable.</li>
-    <li>Add jquery to simple action page function</li>
-    <li>Plugin Installer: Fixed issue where "Successfully Installed" was shown even if it wasn't.</li>
-    <li>In the simple action page misc function, a html_head output was added for plugins to use javascript and custom css on those pages.</li>
+	<li>Convert meta field "labels" to "divs" so that links in field descriptions are clickable.</li>
+	<li>Add jquery to simple action page function</li>
+	<li>Plugin Installer: Fixed issue where "Successfully Installed" was shown even if it wasn't.</li>
+	<li>In the simple action page misc function, a html_head output was added for plugins to use javascript and custom css on those pages.</li>
 </ul>
 <strong>1.0.1.3 = March 26, 2015</strong>
 <ul>
-    <li>Make sure stroke default opacities are 100%</li>
+	<li>Make sure stroke default opacities are 100%</li>
 </ul>
 <strong>1.0.1.2 = March 24, 2015</strong>
 <ul>
-    <li>TinyMCE Fix: Only re-initialize TinyMCE after Repeaters duplicated or re-ordered if it was previously set to be in “Visual” mode. Otherwise don’t reinitialize. This fixes the issue of having multiple text areas in one area upon repeater changes.</li>
-    <li>Removed "Please Wait" from "Installing Items" in plugin installer.</li>
-    <li>Customizer: fontsize, borderwidth, borderradius control options added.</li>
-    <li>Dashicon Support added to shortcode class</li>
-    <li>Animation Function Updates</li>
-    <li>Drop Shadow Function webkit/firefox options added.</li>
-    <li>waypoints.js updated to 3.1.1</li>
-    <li>Metabox css upgrades for repeaters on right side</li>
-    <li>Add Waypoints function to animate its own element</li>
+	<li>TinyMCE Fix: Only re-initialize TinyMCE after Repeaters duplicated or re-ordered if it was previously set to be in “Visual” mode. Otherwise don’t reinitialize. This fixes the issue of having multiple text areas in one area upon repeater changes.</li>
+	<li>Removed "Please Wait" from "Installing Items" in plugin installer.</li>
+	<li>Customizer: fontsize, borderwidth, borderradius control options added.</li>
+	<li>Dashicon Support added to shortcode class</li>
+	<li>Animation Function Updates</li>
+	<li>Drop Shadow Function webkit/firefox options added.</li>
+	<li>waypoints.js updated to 3.1.1</li>
+	<li>Metabox css upgrades for repeaters on right side</li>
+	<li>Add Waypoints function to animate its own element</li>
 </ul>
 <strong>1.0.1.1 February 27, 2015</strong>
 <ul>
-    <li>Add 'site_activating' parameter to all update and licensing functions.</li>
-    <li>Set the default for shadow blur to 50 to make default accurate.</li>
-    <li>Fix for featured images on SSL using mp_core_the_featured_image</li>
-    <li>Reduce unneeded nonces for Metabox saves.</li>
-    <li>BIG METABOX CHANGE: Only save meta if field value is different. When retrieving meta fields, make sure defaults in code use mp_core_get_post_meta and have an accurate default set.</li>
-    <li>Deprecated jquery.velocity.min.js and replaced it with velocity.min.js (version 1.2.1)</li>
-    <li>Metabox Jquery: Remove the 'checked' attr when duplicating a repeat in a metabox.</li>
-    <li>Added versioning to enqueues in the Metabox class.</li>
-    <li>Various animation function upgrades.</li>
-    <li>Change “Install Items” > “Installing Required Items” in the plugin checker.</li>
-    <li>Make checkboxes in repeaters save an empty value (before they were removed from the repeater array if unchecked). This way we can check if the field key exists to know whether it has ever been saved before.</li>
-    <li>Added function called “mp_core_get_post_meta_checkbox” which allows us to set a default for checkboxes when retrieving them.</li>
-    <li>Animation upgrades for background color</li>
-    <li>Disabled 3 plugin loop check introduced in 1.0.1.0</li>
+	<li>Add 'site_activating' parameter to all update and licensing functions.</li>
+	<li>Set the default for shadow blur to 50 to make default accurate.</li>
+	<li>Fix for featured images on SSL using mp_core_the_featured_image</li>
+	<li>Reduce unneeded nonces for Metabox saves.</li>
+	<li>BIG METABOX CHANGE: Only save meta if field value is different. When retrieving meta fields, make sure defaults in code use mp_core_get_post_meta and have an accurate default set.</li>
+	<li>Deprecated jquery.velocity.min.js and replaced it with velocity.min.js (version 1.2.1)</li>
+	<li>Metabox Jquery: Remove the 'checked' attr when duplicating a repeat in a metabox.</li>
+	<li>Added versioning to enqueues in the Metabox class.</li>
+	<li>Various animation function upgrades.</li>
+	<li>Change “Install Items” > “Installing Required Items” in the plugin checker.</li>
+	<li>Make checkboxes in repeaters save an empty value (before they were removed from the repeater array if unchecked). This way we can check if the field key exists to know whether it has ever been saved before.</li>
+	<li>Added function called “mp_core_get_post_meta_checkbox” which allows us to set a default for checkboxes when retrieving them.</li>
+	<li>Animation upgrades for background color</li>
+	<li>Disabled 3 plugin loop check introduced in 1.0.1.0</li>
 </ul>
 
 <strong>1.0.1.0 February 4, 2015</strong>
 <ul>
-    <li>Plugin Checker Class: Only install 3 dependant plugins at a time.</li>
+	<li>Plugin Checker Class: Only install 3 dependant plugins at a time.</li>
 </ul>
 <strong>1.0.0.9 February 1, 2015</strong>
 <ul>
-    <li>You can now set a font size in pixels through the customizer class using the arg font-size(px)</li>
-    <li>License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.</li>
-    <li>Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts</li>
-    <li>Shortcode Insert Class can now have conditional fields depending on parent fields.</li>
-    <li>Post Exists function: now returns false if the post is in the trash.</li>
-    <li>Directory: Images force load over ssl.</li>
-    <li>Directory: Load MP Core Directory over non ssl because it doesn’t work with NGINX but does over non SSL.</li>
-    <li>Added new functions for handling the output of css lines pertaining to box shadows and borders (strokes)</li>
-    <li>Metabox Input Ranges now have number fields that users can type in.</li>
-    <li>Showhiders can now repeat if they have a repeater AND field_showhider_repeats is true</li>
-    <li>Drop Shadow Function Added</li>
+	<li>You can now set a font size in pixels through the customizer class using the arg font-size(px)</li>
+	<li>License Checking: Now we strip any slashes off the end of the api url so we don't have duplicates and also set sslverify to false because nginx's ssl wasn't verifying even though the SSL was valid.</li>
+	<li>Enqueue admin css on every admin page using mp_core_enqueue_admin_scripts</li>
+	<li>Shortcode Insert Class can now have conditional fields depending on parent fields.</li>
+	<li>Post Exists function: now returns false if the post is in the trash.</li>
+	<li>Directory: Images force load over ssl.</li>
+	<li>Directory: Load MP Core Directory over non ssl because it doesn’t work with NGINX but does over non SSL.</li>
+	<li>Added new functions for handling the output of css lines pertaining to box shadows and borders (strokes)</li>
+	<li>Metabox Input Ranges now have number fields that users can type in.</li>
+	<li>Showhiders can now repeat if they have a repeater AND field_showhider_repeats is true</li>
+	<li>Drop Shadow Function Added</li>
 </ul>
 <strong>1.0.0.8 January 18, 2015</strong>
 <ul>
 	<li>Improved animation for touch devices. Now the first click fires the animation and the second carries out the default action.</li>
-    <li>Fixed TinyMCE Text Areas when repeated. Now they reset to the Visual Mode when moved in the DOM.</li>
-    <li>Improved Metabox Sanitation prior to saves.</li>
-    <li>Added mp_core_post_exists function to check if a post exists.</li>
-    <li>Fixed gap below videos through mp_core_oembed_get by removing float:left and replacing with vertical-align:top;</li>
+	<li>Fixed TinyMCE Text Areas when repeated. Now they reset to the Visual Mode when moved in the DOM.</li>
+	<li>Improved Metabox Sanitation prior to saves.</li>
+	<li>Added mp_core_post_exists function to check if a post exists.</li>
+	<li>Fixed gap below videos through mp_core_oembed_get by removing float:left and replacing with vertical-align:top;</li>
 </ul>
 <strong>1.0.0.7 January 4, 2015</strong>
 <ul>
@@ -231,37 +236,37 @@
 </ul>
 <strong>1.0.0.6 December 23, 2014</strong>
 <ul>
-    <li>Fixed Directory layout css where boxes weren’t lining up</li>
-    <li>Added Mint Plugins as a tab on the Plugins > Add New screen.</li>
-    <li>Fixed the hiding of TinyMCE Controls (this broke in v1.0.0.5)</li>
+	<li>Fixed Directory layout css where boxes weren’t lining up</li>
+	<li>Added Mint Plugins as a tab on the Plugins > Add New screen.</li>
+	<li>Fixed the hiding of TinyMCE Controls (this broke in v1.0.0.5)</li>
 </ul>
 <strong>1.0.0.5 December 20, 2014</strong>
 <ul>
-   	<li>Changes the save routine for single meta fields to match the changes made for repeaters in 1.0.0.4 (quotes, esc_html)</li>
+	   <li>Changes the save routine for single meta fields to match the changes made for repeaters in 1.0.0.4 (quotes, esc_html)</li>
 	<li>Make metaboxes save every field upon every save. This was supposed to save time but was failing.</li>
 	<li>Made plugin updater only run if is_admin</li>
 </ul>
 <strong>1.0.0.4 December 12, 2014</strong>
 <ul>
-    <li>Changed metabox save routine to save all fields if it is the first time it is ever being saved</li>
-    <li>Took port number out of mp_core_get_current_url function. </li>
-    <li>Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently</li>
-    <li>Changed html_entities on metabox saves to esc_html</li>
-    <li>Added mp_core_fix_nbsp function to fix the black diamond question mark that shows up in tinymce fields</li>
+	<li>Changed metabox save routine to save all fields if it is the first time it is ever being saved</li>
+	<li>Took port number out of mp_core_get_current_url function. </li>
+	<li>Changed if theme update routine gets no response from server (if repo server down etc) , it now fails silently</li>
+	<li>Changed html_entities on metabox saves to esc_html</li>
+	<li>Added mp_core_fix_nbsp function to fix the black diamond question mark that shows up in tinymce fields</li>
 </ul>
 <strong>1.0.0.3 December 1, 2014</strong>
 <ul>
-    <li>Added conditionally visible metafields - only shown if their parent has value X</li>
-    <li>Added mp_core_object_to_array, mp_core_array_to_object, mp_core_time_ago functions</li>
-    <li>Added activation tracking.</li>
+	<li>Added conditionally visible metafields - only shown if their parent has value X</li>
+	<li>Added mp_core_object_to_array, mp_core_array_to_object, mp_core_time_ago functions</li>
+	<li>Added activation tracking.</li>
 </ul>
 <strong>1.0.0.2 November 19, 2014</strong>
 <ul>
-    <li>Added the mp_core_value_exists function for checking saved values</li>
-    <li>Used new mp_core_value_exists to apply field defaults if the user has never saved it.</li>
-    <li>Added Time Ago function for getting the date in a string like (1 week ago) etc</li>
-    <li>Fixed issue with Installation of plugins from directory pages</li>
-    <li>Added function which wraps media items in their html tag equivalent (mp_core_wrap_media_url_in_html_tag)</li>
+	<li>Added the mp_core_value_exists function for checking saved values</li>
+	<li>Used new mp_core_value_exists to apply field defaults if the user has never saved it.</li>
+	<li>Added Time Ago function for getting the date in a string like (1 week ago) etc</li>
+	<li>Fixed issue with Installation of plugins from directory pages</li>
+	<li>Added function which wraps media items in their html tag equivalent (mp_core_wrap_media_url_in_html_tag)</li>
 </ul>
 <strong>1.0.0.1 October 9, 2014</strong>
 <ul>
