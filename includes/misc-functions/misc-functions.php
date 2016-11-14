@@ -11,13 +11,13 @@
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @author     Philip Johnston
  */
- 
- 
+
+
 //Front end scripts
 function mp_core_enqueue_scripts(){
- 
- 	//no front end scripts currently
-			
+
+	 //no front end scripts currently
+
 }
 add_action( 'wp_enqueue_scripts', 'mp_core_enqueue_scripts' );
 
@@ -28,29 +28,29 @@ add_action( 'wp_enqueue_scripts', 'mp_core_enqueue_scripts' );
  * @param    mixed $value_to_check See link for description.
  * @return   boolean
  */
-function mp_core_value_exists( $value_to_check ) {	
+function mp_core_value_exists( $value_to_check ) {
 
-	//If the value_to_check is empty 
+	//If the value_to_check is empty
 	if ( empty( $value_to_check ) ){
-		
+
 		//If this value_to_check is set to be the number 0
 		if ( is_numeric( $value_to_check ) ){
-			
+
 			return true;
-			
+
 		}
 		//If it is truly just empty
 		else{
-			
+
 			//return the default value
 			return false;
 		}
-		
+
 	}
 	else{
-		return true;	
+		return true;
 	}
-	
+
 }
 
 /**
@@ -62,11 +62,11 @@ function mp_core_value_exists( $value_to_check ) {
  * @param    array $args See link for description.
  * @return   void
  */
-function mp_core_addTinyMCELinkClasses( $wp ) {	
-	
+function mp_core_addTinyMCELinkClasses( $wp ) {
+
 	//Themes and plugins will hook to this to add styles to the editor
 	do_action('mp_core_editor_styles');
-	
+
 	//All inline styles including the customizer
 	//add_editor_style( plugins_url('/css/core/tinymce-css.php', dirname( __FILE__ ) ) );
 }
@@ -82,9 +82,9 @@ add_action( 'admin_init', 'mp_core_addTinyMCELinkClasses' );
  * @return   void
  */
 function mp_core_fix_quotes( $string ){
-	
+
 	return str_replace( '“', '"', str_replace( '”', '"', str_replace("‘", "'", $string ) ) );
-		
+
 }
 
 /**
@@ -97,17 +97,17 @@ function mp_core_fix_quotes( $string ){
  * @return   void
  */
 function mp_core_fix_nbsp( $string ){
-	
+
 	return str_replace( '&nbsp;', ' ', $string );
-		
+
 }
 
 /**
  * Get a post meta or, if it's never been saved, return false. This function is based on the "get_metadata" function in WP core.
  *
  * @param int $object_id ID of the object metadata is for
- * @param string $meta_key Metadata key. 
- * @return string If never been saved return: 'never_been_saved_73698363746983746' otherwise return the value saved for this meta. 
+ * @param string $meta_key Metadata key.
+ * @return string If never been saved return: 'never_been_saved_73698363746983746' otherwise return the value saved for this meta.
  */
 function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
 	if ( ! is_numeric( $object_id ) ) {
@@ -156,10 +156,10 @@ function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
 	if ( isset($meta_cache[$meta_key]) ) {
 		return maybe_unserialize( $meta_cache[$meta_key][0] );
 	}
-	
+
 	//Return string if this field has never been saved before (with the number added just to make it extremely unlikely that a field would save this exact value for another purpose. Don't hate the playa, hate the game).
 	return 'never_been_saved_73698363746983746';
-	
+
 }
 
 /**
@@ -173,57 +173,57 @@ function mp_core_get_post_meta_or_never_been_saved( $object_id, $meta_key ){
  * @return   mixed $meta_value Either the meta value saved or the default passed-in.
  */
 function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = array() ){
-	
+
 	$default_args = array(
 		'before' => NULL,
 		'after' => NULL,
 	);
-	
+
 	$args = wp_parse_args( $args, $default_args );
-			
+
 	//Get the post meta field we are looking for
 	$meta_value = get_post_meta($post_id, $meta_key, true);
-	
-	//If the meta_value is empty 
+
+	//If the meta_value is empty
 	if ( empty( $meta_value ) ){
-		
+
 		//If this meta value is set to be the number 0
 		if ( is_numeric( $meta_value ) ){
-			
+
 			//If there is a before value
 			if ( !empty( $args['before'] ) ){
 				$meta_value = $args['before'] . $meta_value;
 			}
-			
+
 			//If there is an after value
 			if ( !empty( $args['after'] ) ){
 				$meta_value = $meta_value . $args['after'];
 			}
-			
+
 			return $meta_value;
-			
+
 		}
 		//If it is truly just empty
 		else{
-			
+
 			//return the default value
 			return $default;
 		}
-		
+
 	}
-	
+
 	//If there is a before value
 	if ( !empty( $args['before'] ) ){
 		$meta_value = $args['before'] . $meta_value;
 	}
-	
+
 	//If there is an after value
 	if ( !empty( $args['after'] ) ){
 		$meta_value = $meta_value . $args['after'];
 	}
-			
-	return $meta_value;	
-	
+
+	return $meta_value;
+
 }
 
 /**
@@ -237,18 +237,18 @@ function mp_core_get_post_meta( $post_id, $meta_key, $default = NULL, $args = ar
  * @return   mixed $meta_value Either the meta value saved or the default passed-in.
  */
 function mp_core_get_post_meta_checkbox( $post_id, $meta_key, $default = true ){
-					
+
 	//Get the post meta field we are looking for
 	$meta_value = mp_core_get_post_meta_or_never_been_saved($post_id, $meta_key);
-	
+
 	//If this checkbox has never been saved before, return the default value passed-in:
 	if ( $meta_value == 'never_been_saved_73698363746983746' ){
-		return $default;	
+		return $default;
 	}
-	
-	//Othewise, if it has been saved before, return its saved value.			
-	return $meta_value;	
-	
+
+	//Othewise, if it has been saved before, return its saved value.
+	return $meta_value;
+
 }
 
 /**
@@ -262,20 +262,20 @@ function mp_core_get_post_meta_checkbox( $post_id, $meta_key, $default = true ){
  * @return   mixed $meta_value Either the meta value saved or the default passed-in.
  */
 function mp_core_get_post_meta_multiple_checkboxes( $post_id, $meta_key, $default = array() ){
-					
+
 	//Get the post meta field we are looking for
 	$meta_value = mp_core_get_post_meta_or_never_been_saved($post_id, $meta_key);
-	
+
 	//If this checkbox has never been saved before, return the default value passed-in:
 	if ( $meta_value == 'never_been_saved_73698363746983746' ){
-		return $default;	
+		return $default;
 	}
-	
+
 	//Othewise, if it has been saved before
-	$meta_value = json_decode( $meta_value, true );	
-		
-	return $meta_value;	
-	
+	$meta_value = json_decode( $meta_value, true );
+
+	return $meta_value;
+
 }
 
 /**
@@ -289,34 +289,34 @@ function mp_core_get_post_meta_multiple_checkboxes( $post_id, $meta_key, $defaul
  * @return   mixed String or NULL - If we have css to show, it's a string of css - a single line. If not, we return NULL
  */
 function mp_core_css_line( $css_name, $css_value = NULL, $css_unit_after = NULL ) {
-	
-	//If the css_value is empty 
+
+	//If the css_value is empty
 	if ( empty( $css_value ) ){
-		
+
 		//If this meta value is set to be the number 0
 		if ( is_numeric( $css_value ) ){
-			
-			$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';	
-			
+
+			$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';
+
 			return $css_line;
-			
+
 		}
 		//If it is truly just empty
 		else{
-			
+
 			//return nothing so there is no output for this CSS line
 			return NULL;
 		}
-		
+
 	}
 	//If there is a css_value
 	else{
-		
-		$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';	
-				
+
+		$css_line = $css_name . ': ' . $css_value . $css_unit_after . ';';
+
 		return $css_line;
 	}
-	
+
 }
 
 /**
@@ -328,10 +328,10 @@ function mp_core_css_line( $css_name, $css_value = NULL, $css_unit_after = NULL 
  * @return   array $rgb Format is [0]R [1]G [2]B in that order: Array ( [0] => 204 [1] => 204 [2] => 204 )
  */
 function mp_core_hex2rgb( $hex ) {
-	
+
 	if (!empty($hex)){
 	   $hex = str_replace("#", "", $hex);
-	
+
 	   if(strlen($hex) == 3) {
 		  $r = hexdec(substr($hex,0,1).substr($hex,0,1));
 		  $g = hexdec(substr($hex,1,1).substr($hex,1,1));
@@ -349,7 +349,7 @@ function mp_core_hex2rgb( $hex ) {
 		return NULL;
 	}
 }
-				
+
 /**
  * Ajax to display help content
  *
@@ -359,20 +359,20 @@ function mp_core_hex2rgb( $hex ) {
  * @return   array $rgb Format is [0]R [1]G [2]B in that order: Array ( [0] => 204 [1] => 204 [2] => 204 )
  */
 function mp_core_show_help_content_ajax(){
-	
+
 	//Get Help href
 	$help_url = $_POST['help_href'];
-	
+
 	//Get Help Type
 	$help_type = $_POST['help_type'];
-	
+
 	if ( $help_type == 'oembed' ){
 		echo mp_core_oembed_get($help_url);
 	}
 	else{
-		echo '<iframe src="' . $help_url . '" width="100%" height="400px"/>';	
+		echo '<iframe src="' . $help_url . '" width="100%" height="400px"/>';
 	}
-	
+
 	exit;
 }
 add_action( 'wp_ajax_mp_core_help_content_ajax', 'mp_core_show_help_content_ajax' );
@@ -387,7 +387,7 @@ add_action( 'wp_ajax_mp_core_help_content_ajax', 'mp_core_show_help_content_ajax
  * @return   string $string The sanitized string
  */
 function mp_core_sanitize_title_with_underscores( $string ){
-	
+
 	//Replace all whitespace and dashes to underscores
 	return str_replace("-", "_", sanitize_title( $string ) );
 }
@@ -408,12 +408,12 @@ function mp_core_true_false_light($args = array() ) {
 		'value'       => '',
 		'description' => '',
 	);
-	
+
 	$args = wp_parse_args( $args, $defaults );
 	extract( $args );
-	
+
 	$class = $value == true ? 'mp-core-green-light' : 'mp-core-red-light';
-	
+
 	?>
 	<div class="mp-core-true-false-light">
 		<div class="<?php echo $class; ?>"></div>
@@ -427,72 +427,72 @@ function mp_core_true_false_light($args = array() ) {
  */
 function mp_core_zip_directory($source, $destination)
 {
-    if (!extension_loaded('zip') ) {
+	if (!extension_loaded('zip') ) {
 		echo __( 'The zip extension for PHP is not installed on this server. Contact your webhost to let them know you need zip for PHP.', 'mp_core' );
 		die();
-        return false;
-    }
-	
+		return false;
+	}
+
 	if ( !file_exists($source) ){
 		echo __( 'The file to unzip does not exist on this server.', 'mp_core' );
 		die();
-        return false;
+		return false;
 	}
 
-    $zip = new ZipArchive();
-    if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
-        return false;
-    }
-	
+	$zip = new ZipArchive();
+	if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
+		return false;
+	}
+
 	$dirname = explode('/', $destination);
 	$dirname = explode('.', end($dirname));
 	$dirname = $dirname[0];
 
-    $source = str_replace('\\', '/', realpath($source));
+	$source = str_replace('\\', '/', realpath($source));
 
-    if (is_dir($source) === true)
-    {
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+	if (is_dir($source) === true)
+	{
+		$files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($files as $file)
-        {
-            $file = str_replace('\\', '/', $file);
+		foreach ($files as $file)
+		{
+			$file = str_replace('\\', '/', $file);
 
-            // Ignore "." and ".." folders
-            if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..')) )
-                continue;
+			// Ignore "." and ".." folders
+			if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..')) )
+				continue;
 
-            $file = realpath($file);
+			$file = realpath($file);
 
-            if (is_dir($file) === true)
-            {
-                $zip->addEmptyDir(str_replace($source . '/', $dirname . '/', $file . '/'));
-            }
-            else if (is_file($file) === true)
-            {
-                $zip->addFromString(str_replace($source . '/', $dirname . '/', $file), file_get_contents($file));
-            }
-        }
-    }
-    else if (is_file($source) === true)
-    {
-        $zip->addFromString(basename($source), file_get_contents($source));
-    }
+			if (is_dir($file) === true)
+			{
+				$zip->addEmptyDir(str_replace($source . '/', $dirname . '/', $file . '/'));
+			}
+			else if (is_file($file) === true)
+			{
+				$zip->addFromString(str_replace($source . '/', $dirname . '/', $file), file_get_contents($file));
+			}
+		}
+	}
+	else if (is_file($source) === true)
+	{
+		$zip->addFromString(basename($source), file_get_contents($source));
+	}
 
-    return $zip->close();
+	return $zip->close();
 }
 
 /**
  * Delete a directory and all of its files and subdirectories
  */
 function mp_core_remove_directory($dir) {
-    if (!file_exists($dir)) return true;
-    if (!is_dir($dir)) return unlink($dir);
-    foreach (scandir($dir) as $item) {
-        if ($item == '.' || $item == '..') continue;
-        if (!mp_core_remove_directory($dir.DIRECTORY_SEPARATOR.$item)) return false;
-    }
-    return rmdir($dir);
+	if (!file_exists($dir)) return true;
+	if (!is_dir($dir)) return unlink($dir);
+	foreach (scandir($dir) as $item) {
+		if ($item == '.' || $item == '..') continue;
+		if (!mp_core_remove_directory($dir.DIRECTORY_SEPARATOR.$item)) return false;
+	}
+	return rmdir($dir);
 }
 
 /**
@@ -534,7 +534,7 @@ function mp_core_word_count($html) {
  * @param    $limit int The text that should be added if a cut is made to the string. You might pass "..." or "...Read More". Defaults to nothing.
  * @return   $text  string The limited string
  */
-function mp_core_limit_text_to_words($text, $limit, $text_to_add_if_cut = false) {	
+function mp_core_limit_text_to_words($text, $limit, $text_to_add_if_cut = false) {
   if (mp_core_word_count($text) > $limit) {
 	  $words = str_word_count($text, 2);
 	  $pos = array_keys($words);
@@ -553,10 +553,10 @@ function mp_core_limit_text_to_words($text, $limit, $text_to_add_if_cut = false)
  * @return   $boolean boolean True if it is an iPhone, False if not.
  */
 function mp_core_is_iphone($user_agent=NULL) {
-    if(!isset($user_agent)) {
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-    }
-    return (strpos($user_agent, 'iPhone') !== FALSE);
+	if(!isset($user_agent)) {
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	}
+	return (strpos($user_agent, 'iPhone') !== FALSE);
 }
 
 /**
@@ -568,10 +568,10 @@ function mp_core_is_iphone($user_agent=NULL) {
  * @return   $boolean boolean True if it is an iPad, False if not.
  */
 function mp_core_is_ipad($user_agent=NULL) {
-    if(!isset($user_agent)) {
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-    }
-    return (strpos($user_agent, 'iPad') !== FALSE);
+	if(!isset($user_agent)) {
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	}
+	return (strpos($user_agent, 'iPad') !== FALSE);
 }
 
 /**
@@ -583,14 +583,14 @@ function mp_core_is_ipad($user_agent=NULL) {
  * @return   $boolean boolean True if it is an android, False if not.
  */
 function mp_core_is_android($user_agent=NULL) {
-    if(!isset($user_agent)) {
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-    }
-    return (strpos($user_agent, 'android') !== FALSE);
+	if(!isset($user_agent)) {
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+	}
+	return (strpos($user_agent, 'android') !== FALSE);
 }
 
 /**
- * This function will split an array of meta field formatted for MP_CORE_Metabox at a specific key, add new fields, and return it as a singe array. 
+ * This function will split an array of meta field formatted for MP_CORE_Metabox at a specific key, add new fields, and return it as a singe array.
  *
  * @access   public
  * @since    1.0.0
@@ -600,51 +600,51 @@ function mp_core_is_android($user_agent=NULL) {
  * @return   $return_items_array array The arrya of fields with the new ones inserted.
  */
 function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
-	
+
 	$counter = 0;
-	
+
 	//Loop through passed-in metabox fields
 	foreach ( $items_array as $field_key => $field_array ){
-		
+
 		//If the current loop is for the brick_bg_image
 		if ($field_key == $split_key){
-			
+
 			//Split the array after the array with the field containing 'brick_bg_image'
 			$options_prior = array_slice($items_array, 0, $counter+1, true);
 			$options_after = array_slice($items_array, $counter+1);
-			
+
 			break;
-						
+
 		}
-		
+
 		//Increment Counter
 		$counter = $counter + 1;
-	
+
 	}
-	
+
 	if ( !empty($options_prior) ){
-		
+
 		//Add the first options to the return array
 		$return_items_array = $options_prior;
-		
+
 		//Loop through each passed-in field
 		foreach ( $new_fields as $new_key => $new_field ){
-			
+
 			//Add new field to array
 			//array_push($return_items_array, $new_field);
 			$return_items_array[$new_key] = $new_field;
-			
+
 		}
-		
+
 		//Re-add fields that came after our split point
 		foreach ($options_after as $old_key => $old_option){
 			//Add all fields that came after
 			//array_push($return_items_array, $option);
 			$return_items_array[$old_key] = $old_option;
 		}
-		
+
 	}
-	
+
 	return $return_items_array;
 
 }
@@ -661,16 +661,16 @@ function mp_core_insert_meta_fields( $items_array, $new_fields, $split_key ){
 function mp_core_get_img_src_from_html( $html_string, $img_number ){
 	$doc = new DOMDocument();
 	@$doc->loadHTML( $html_string );
-	
+
 	$tags = $doc->getElementsByTagName('img');
-	
+
 	$image_counter = 1;
-	
+
 	foreach ($tags as $tag) {
 		if ( $image_counter == $img_number ){
 			return $tag->getAttribute('src');
 		}
-		$image_counter = $image_counter + 1;	   
+		$image_counter = $image_counter + 1;
 	}
 }
 
@@ -681,42 +681,42 @@ function mp_core_get_img_src_from_html( $html_string, $img_number ){
  * @since    1.0.0
  * @param    $array array The array we want to sort.
  * @param    $key String The key we wish to sort by (eg create a 'date' key in sub-arrays and pass the word 'date' to sort by that number.
- * @return   $order SORT_DESC or SORT_ASC 
+ * @return   $order SORT_DESC or SORT_ASC
  */
 function mp_core_array_sort_by_key( $array, $key, $order=SORT_ASC )
 {
-    $new_array = array();
-    $sortable_array = array();
+	$new_array = array();
+	$sortable_array = array();
 	$array = mp_core_object_to_array( $array );
 
-    if (count($array) > 0) {
-        foreach ($array as $k => $v) {
-            if (is_array($v)) {
-                foreach ($v as $k2 => $v2) {
-                    if ($k2 == $key) {
-                        $sortable_array[$k] = $v2;
-                    }
-                }
-            } else {
-                $sortable_array[$k] = $v;
-            }
-        }
+	if (count($array) > 0) {
+		foreach ($array as $k => $v) {
+			if (is_array($v)) {
+				foreach ($v as $k2 => $v2) {
+					if ($k2 == $key) {
+						$sortable_array[$k] = $v2;
+					}
+				}
+			} else {
+				$sortable_array[$k] = $v;
+			}
+		}
 
-        switch ($order) {
-            case SORT_ASC:
-                asort($sortable_array);
-            break;
-            case SORT_DESC:
-                arsort($sortable_array);
-            break;
-        }
+		switch ($order) {
+			case SORT_ASC:
+				asort($sortable_array);
+			break;
+			case SORT_DESC:
+				arsort($sortable_array);
+			break;
+		}
 
-        foreach ($sortable_array as $k => $v) {
-            $new_array[$k] = $array[$k];
-        }
-    }
+		foreach ($sortable_array as $k => $v) {
+			$new_array[$k] = $array[$k];
+		}
+	}
 
-    return $new_array;
+	return $new_array;
 }
 
 /**
@@ -770,8 +770,8 @@ function mp_core_array_to_object( $array ) {
 		return $array;
 	}
 }
- 
- 
+
+
 
 /**
  * Wrap a url in it's appropriate HTML5 tag for displaying
@@ -780,34 +780,34 @@ function mp_core_array_to_object( $array ) {
  * @since    1.0.0
  * @param    $array array The array we want to sort.
  * @param    $key String The key we wish to sort by (eg create a 'date' key in sub-arrays and pass the word 'date' to sort by that number.
- * @return   $order SORT_DESC or SORT_ASC 
+ * @return   $order SORT_DESC or SORT_ASC
  */
 function mp_core_wrap_media_url_in_html_tag( $url, $args = array() ){
-   	
+
 	$defaults = array(
 		'autoplay_videos' => false
 	);
-	
+
 	$args = wp_parse_args( $args, $defaults );
 	$autoplay = $args['autoplay_videos'] ? 'autoplay' : NULL;
-	
+
 	$info     = pathinfo($url);
 	$basename = isset( $info['basename'] ) ? $info['basename'] : NULL;
 	$ext      = isset( $info['extension'] ) ? $info['extension'] : NULL;
-	
+
 	if ( $ext == 'jpg' || $ext == 'png' ){
-		$return_html = '<img src="' . $url . '" style="max-width:100%;" />';	
+		$return_html = '<img src="' . $url . '" style="max-width:100%;" />';
 	}
 	else if ( $ext == 'mp4' ){
 		$return_html = '<video controls ' . $autoplay . ' name="media" style="max-width:100%;">
 			<source src="' . $url . '" type="video/mp4">
-		</video>';	
+		</video>';
 	}
 	else{
-		
+
 		return mp_core_oembed_get( $url );
 	}
-	
+
 	return $return_html;
 }
 
@@ -820,60 +820,60 @@ function mp_core_wrap_media_url_in_html_tag( $url, $args = array() ){
  * @return   $time_ago string The time ago that this date is
  */
 function mp_core_time_ago( $date ){
-	
-    if( empty( $date ) )
-    {
-        return "No date provided";
-    }
 
-    $periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
+	if( empty( $date ) )
+	{
+		return "No date provided";
+	}
 
-    $lengths = array("60","60","24","7","4.35","12","10");
+	$periods = array("second", "minute", "hour", "day", "week", "month", "year", "decade");
 
-    $now = time();
-	
+	$lengths = array("60","60","24","7","4.35","12","10");
+
+	$now = time();
+
 	//If the user passed a timestamp - don't try and convert it - just use it ya dingus!
 	if ( is_numeric( $date ) && (int)$date == $date ){
 		$unix_date = $date;
 	}
 	//If the user passed a date string - convert it to a timestamp.
 	else{
-    	$unix_date = strtotime( $date );
+		$unix_date = strtotime( $date );
 	}
 
-    // check validity of date
+	// check validity of date
 
-    if( empty( $unix_date ) )
-    {
-        return "Bad date";
-    }
+	if( empty( $unix_date ) )
+	{
+		return "Bad date";
+	}
 
-    // is it future date or past date
+	// is it future date or past date
 
-    if( $now > $unix_date )
-    {
-        $difference = $now - $unix_date;
-        $tense = "ago";
-    }
-    else
-    {
-        $difference = $unix_date - $now;
-        $tense = "from now";
-    }
+	if( $now > $unix_date )
+	{
+		$difference = $now - $unix_date;
+		$tense = "ago";
+	}
+	else
+	{
+		$difference = $unix_date - $now;
+		$tense = "from now";
+	}
 
-    for( $j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++ )
-    {
-        $difference /= $lengths[$j];
-    }
+	for( $j = 0; $difference >= $lengths[$j] && $j < count($lengths)-1; $j++ )
+	{
+		$difference /= $lengths[$j];
+	}
 
-    $difference = round( $difference );
+	$difference = round( $difference );
 
-    if( $difference != 1 )
-    {
-        $periods[$j].= "s";
-    }
+	if( $difference != 1 )
+	{
+		$periods[$j].= "s";
+	}
 
-    return "$difference $periods[$j] {$tense}";
+	return "$difference $periods[$j] {$tense}";
 
 }
 
@@ -894,15 +894,15 @@ function mp_core_open_graph_video_meta_tags( $video_url ){
 	//Vimeo format of open graph (og)
 	else if( strpos( $video_url, 'vimeo.com' )  !== false ){
 		$vimeo_video_code = explode( '://vimeo.com/', $video_url );
-		$og_video_url = 'http://vimeo.com/moogaloop.swf?clip_id=' . $vimeo_video_code[1];	
+		$og_video_url = 'http://vimeo.com/moogaloop.swf?clip_id=' . $vimeo_video_code[1];
 	}
 	else{
-		$og_video_url = $video_url;	
+		$og_video_url = $video_url;
 	}
-	
+
 	$content_output = '<meta property="og:video" content="' . $og_video_url . '">
 	<meta property="og:type" content="video.other">';
-	
+
 	return $content_output;
 }
 
@@ -911,23 +911,23 @@ function mp_core_open_graph_video_meta_tags( $video_url ){
  *
  * @access   public
  * @since    1.0.0
- * @param    $args The array of args to show stuff on the action page. 
+ * @param    $args The array of args to show stuff on the action page.
  * @return   $output_html string of HTML which will be used to display the action page
   */
 function mp_core_simple_action_page( $args ){
-	
+
 	$default_args = array(
 		'page_title' => NULL,
 		'html_head' => NULL,
 		'h2_title' => NULL,
 		'page_body_html' => NULL,
 	);
-	
+
 	//Parse the args
 	$args = wp_parse_args( $args, $default_args );
-	
+
 	ob_start(); ?>
-    
+
 	<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US"><head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title><?php echo $args['page_title']; ?></title>
@@ -995,30 +995,30 @@ function mp_core_simple_action_page( $args ){
 				-webkit-box-sizing: border-box;
 				-moz-box-sizing:    border-box;
 				box-sizing:         border-box;
-	
+
 				-webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.08);
 				box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.08);
 				vertical-align: top;
 			}
-	
+
 			.button.button-large {
 				height: 29px;
 				line-height: 28px;
 				padding: 0 12px;
 			}
-	
+
 			.button:hover,
 			.button:focus {
 				background: #fafafa;
 				border-color: #999;
 				color: #222;
 			}
-	
+
 			.button:focus  {
 				-webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.2);
 				box-shadow: 1px 1px 1px rgba(0,0,0,.2);
 			}
-	
+
 			.button:active {
 				background: #eee;
 				border-color: #999;
@@ -1027,7 +1027,7 @@ function mp_core_simple_action_page( $args ){
 				box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
 			}
 			input{
-				
+
 				border: 1px solid #ddd;
 				-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
 				box-shadow: inset 0 1px 2px rgba(0,0,0,.07);
@@ -1040,25 +1040,25 @@ function mp_core_simple_action_page( $args ){
 				font-size: 1em;
 				outline: 0;
 				width:100%;
-					
+
 			}
-	
+
 	</style>
-    
-    <?php echo $args['html_head']; ?>
-    
+
+	<?php echo $args['html_head']; ?>
+
 	</head>
 	<body id="error-page">
 		<p><h2><?php echo $args['h2_title']; ?></h2></p>
-		
+
 		<?php echo $args['page_body_html']; ?>
-		
+
 	</body></html>
-    
-    <?php $output_html = ob_get_contents(); 
-	
+
+	<?php $output_html = ob_get_contents();
+
 	ob_end_clean();
-	
+
 	return $output_html;
 }
 
@@ -1082,40 +1082,40 @@ add_action( 'admin_enqueue_scripts' , 'mp_core_equeue_admin_scripts' );
  * @access   public
  * @since    1.0.0
  * @param    $post_id The id of the post where the related meta is saved.
- * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @param    $meta_prefix The prefix to put before each post meta string.
  * @param    $enabled_by_default boolean If true, this shadow will be on by default and return code if the user has never changed the meta setting.
  * @return   void
  */
 function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = false ){
-			
+
 	//Get the shadow settings
 	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 0 );
 	$shadow_x = $shadow_x / 10;
-	
+
 	$shadow_y = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_y', 0 );
 	$shadow_y = $shadow_y / 10;
-	
+
 	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 1 );
 	$shadow_blur = $shadow_blur / 10;
-	
+
 	$shadow_spread = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_spread', 1 );
 	$shadow_spread = $shadow_spread / 10;
-	
+
 	$shadow_color = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_color', '#000' );
 	$shadow_color = mp_core_hex2rgb( $shadow_color );
-	
+
 	$shadow_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_opacity', '50' );
 	$shadow_opacity = $shadow_opacity / 100;
-	
+
 	//Set the the RGBA string including the alpha
 	$shadow_color = 'rgba( ' . $shadow_color[0] . ', ' . $shadow_color[1] . ', ' . $shadow_color[2] . ', ' . $shadow_opacity . ')';
-	
+
 	$shadow_placement = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_placement', 'outset' );
 	$shadow_placement = $shadow_placement == 'inset' ? 'inset' : NULL;
-	
+
 	//Create the css box-shadow string
 	$css_output =  'box-shadow:' . $shadow_x . 'px ' . $shadow_y . 'px ' . $shadow_blur . 'px ' . $shadow_spread . 'px ' . $shadow_color .' ' . $shadow_placement . ';';
-	
+
 	return $css_output;
 }
 
@@ -1125,55 +1125,48 @@ function mp_core_box_shadow_css( $post_id, $meta_prefix, $enabled_by_default = f
  * @access   public
  * @since    1.0.0
  * @param    $post_id The id of the post where the related meta is saved.
- * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @param    $meta_prefix The prefix to put before each post meta string.
  * @param    $enabled_by_default boolean If true, this shadow will be on by default and return code if the user has never changed the meta setting.
  * @return   void
  */
 function mp_core_drop_shadow_css( $post_id, $meta_prefix, $args = array() ){
-	
+
 	$default_args = array(
 		'include_webkit_css' => true,
-		'include_svg_css' => true,
-	);	
-	
+		'include_svg_css' => false,
+	);
+
 	$args = wp_parse_args( $args, $default_args );
-	
+
 	$css_output = NULL;
-			
+
 	//Get the shadow settings
 	$shadow_x = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_x', 50 );
 	$shadow_x = ($shadow_x - 50) / 5;
-	
+
 	$shadow_y = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_y', 50 );
 	$shadow_y = ($shadow_y - 50) / 5;
-	
+
 	$shadow_blur = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_blur', 50 );
 	$shadow_blur = $shadow_blur / 5;
-	
+
 	$shadow_color_hex = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_color', '#000' );
 	$shadow_color = mp_core_hex2rgb( $shadow_color_hex );
-	
+
 	$shadow_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'shadow_opacity', '50' );
 	$shadow_opacity = $shadow_opacity / 100;
-	
+
 	//Set the the RGBA string including the alpha
 	$shadow_color = 'rgba( ' . $shadow_color[0] . ', ' . $shadow_color[1] . ', ' . $shadow_color[2] . ', ' . $shadow_opacity . ')';
-	
+
 	$css_output .= 'transition: -webkit-filter 0.5s ease-in-out;';
-	
+
 	//If we should include the webkit css output
 	if ( $args['include_webkit_css'] ){
 		//http://stackoverflow.com/questions/3186688/drop-shadow-for-png-image-in-css
 		$css_output .= "-webkit-filter: drop-shadow(" . $shadow_x . "px " . $shadow_y . "px " . $shadow_blur . "px " . $shadow_color . ");";
 	}
-    
-	//If we should include the svg css output
-	if ( $args['include_svg_css'] ){
-		$css_output .= "filter: url(\"data:image/svg+xml;utf8,<svg height='0' xmlns='http://www.w3.org/2000/svg'><filter id='drop-shadow'><feGaussianBlur in='SourceAlpha' stdDeviation='" . $shadow_blur . "'/><feOffset dx='" . $shadow_x ."' dy='" . $shadow_y . "' result='offsetblur'/><feFlood flood-color='" . $shadow_color . "'/><feComposite in2='offsetblur' operator='in'/><feMerge><feMergeNode/><feMergeNode in='SourceGraphic'/></feMerge></filter></svg>#drop-shadow\");
-		-ms-filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";
-		filter: \"progid:DXImageTransform.Microsoft.Dropshadow(OffX=" . $shadow_x . ", OffY=" . $shadow_y . ", Color='" . $shadow_color_hex . "')\";";
-	}
-	
+
 	return $css_output;
 }
 
@@ -1184,31 +1177,31 @@ function mp_core_drop_shadow_css( $post_id, $meta_prefix, $args = array() ){
  * @access   public
  * @since    1.0.0
  * @param    $post_id The id of the post where the related meta is saved.
- * @param    $meta_prefix The prefix to put before each post meta string. 
+ * @param    $meta_prefix The prefix to put before each post meta string.
  * @return   void
  */
 function mp_core_stroke_css( $post_id, $meta_prefix ){
-			
+
 	//Get the stroke settings
 	$stroke_size = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_size', 0 );
-		
+
 	$stroke_color = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_color', '#FFF' );
 	$stroke_color = mp_core_hex2rgb( $stroke_color );
-	
+
 	$stroke_opacity = mp_core_get_post_meta( $post_id, $meta_prefix . 'stroke_opacity', '100' );
 	$stroke_opacity = $stroke_opacity / 100;
-	
+
 	//Set the the RGBA string including the alpha
 	$stroke_color = 'rgba( ' . $stroke_color[0] . ', ' . $stroke_color[1] . ', ' . $stroke_color[2] . ', ' . $stroke_opacity . ')';
-		
+
 	//Create the css border string
 	$css_output =  'border: solid ' . $stroke_size . 'px ' . $stroke_color . ';';
-	
+
 	return $css_output;
 }
 
 /**
- * Adds esc_url to the add_query_arg function. This is for security with XSS. 
+ * Adds esc_url to the add_query_arg function. This is for security with XSS.
  * See: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html
  *
  * @access   public
@@ -1218,13 +1211,13 @@ function mp_core_stroke_css( $post_id, $meta_prefix ){
  * @return   A URL, sanitized and with all url variables added.
  */
 function mp_core_add_query_arg( $keys_values, $base_url ){
-	
+
 	return esc_url_raw( add_query_arg( $keys_values, $base_url ) );
-	
+
 }
 
 /**
- * Adds esc_url to the remove_query_arg function. This is for security with XSS. 
+ * Adds esc_url to the remove_query_arg function. This is for security with XSS.
  * See: https://blog.sucuri.net/2015/04/security-advisory-xss-vulnerability-affecting-multiple-wordpress-plugins.html
  *
  * @access   public
@@ -1234,9 +1227,9 @@ function mp_core_add_query_arg( $keys_values, $base_url ){
  * @return   A URL, sanitized and with all url variables added.
  */
 function mp_core_remove_query_arg( $keys_to_remove, $base_url ){
-	
+
 	return esc_url_raw( remove_query_arg( $keys_to_remove, $base_url ) );
-	
+
 }
 
 /**
@@ -1248,17 +1241,17 @@ function mp_core_remove_query_arg( $keys_to_remove, $base_url ){
  * @return   VOID
  */
 function mp_deactivate_problematic_plugins(){
-	
+
 	$all_plugins = get_plugins();
-	
+
 	foreach( $all_plugins as $plugin_path => $plugin_info ){
-		
+
 		//If this is a problematic plugin which causes more confusion/problems than it is worth...
-		if ( 
+		if (
 		strpos( $plugin_path, 'nggallery.php' ) !== false ||
 		strpos( $plugin_path, 'mojo-marketplace.php' ) !== false ){
 			//De-activate that garbage.
-			deactivate_plugins( $plugin_path );		
+			deactivate_plugins( $plugin_path );
 		}
 	}
 }
@@ -1271,7 +1264,7 @@ add_action( 'admin_init', 'mp_deactivate_problematic_plugins' );
  * @access   public
  * @since    1.0.0
  * @return   void
- */	
+ */
 function mp_core_metabox_content_ajax_placeholder() {
 	echo '<div class="mp_core_metabox_ajax_placeholder"></div>';
 }
@@ -1282,9 +1275,9 @@ function mp_core_metabox_content_ajax_placeholder() {
  * @access   public
  * @since    1.0.0
  * @return   void
- */	
+ */
 function mp_core_php_info_test(){
-	
+
 	if ( isset( $_GET['mp_core_php_info_test'] ) ){
 		phpinfo();
 		die();
