@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.5
-Stable tag: 1.0.4.3
+Tested up to: 4.6
+Stable tag: 1.0.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.4.4 = December 5, 2016
+* Fix: Make plugin input fields visible on plugins page.
 
 1.0.4.3 = November 14, 2016
 * Fix: Instead of returning post_id (which doesn't exist), return blank from construct of metabox when doing ajax but not for this metabox.
