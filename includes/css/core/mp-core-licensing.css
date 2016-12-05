@@ -1,9 +1,14 @@
 .mp-core-plugin-license-wrap{
-	display:none;	
+	display:none;
 }
 #mp-core-theme-license-wrap .title{
 	font-size: 23px;
 	font-weight: 400;
 	padding: 9px 15px 4px 0;
-	line-height: 29px;	
+	line-height: 29px;
+}
+.mp-core-true-false-light{
+	clear: both;
+	padding:5px 0px 5px 0px;
+	display:table;
 }
