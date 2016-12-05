@@ -683,23 +683,25 @@ function pre_set_site_transient_update_plugins_filter( $_transient_data ) {
 			if ( !is_wp_error( $request ) ){
 				$request = json_decode( wp_remote_retrieve_body( $request ) );
 
-				//Loop through the response for each plugin's information (latest version, etc )
-				foreach( $request as $plugin_slug => $plugin_response ){
+				if ( is_object( $request ) || is_array( $request ) ){
+					//Loop through the response for each plugin's information (latest version, etc )
+					foreach( $request as $plugin_slug => $plugin_response ){
 
-					set_site_transient( $plugin_slug, $plugin_response );
+						set_site_transient( $plugin_slug, $plugin_response );
 
-					if( $plugin_response ){
+						if( $plugin_response ){
 
-						$plugin_response->sections = maybe_unserialize( $plugin_response->sections );
+							$plugin_response->sections = maybe_unserialize( $plugin_response->sections );
 
-						//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $plugin_response->new_version, '<' ) ){
-						if( $plugins_to_check_on_this_api[$plugin_slug]['currently_installed_version'] != $plugin_response->new_version ){
-							$plugin_response->plugin = $plugins_to_check_on_this_api[$plugin_slug]['dir_and_name'];
-							$custom_api_plugins->response[$plugins_to_check_on_this_api[$plugin_slug]['dir_and_name']] = $plugin_response;
+							//We could use version_compare but it doesn't account for beta versions:  if( version_compare( $this->version, $plugin_response->new_version, '<' ) ){
+							if( $plugins_to_check_on_this_api[$plugin_slug]['currently_installed_version'] != $plugin_response->new_version ){
+								$plugin_response->plugin = $plugins_to_check_on_this_api[$plugin_slug]['dir_and_name'];
+								$custom_api_plugins->response[$plugins_to_check_on_this_api[$plugin_slug]['dir_and_name']] = $plugin_response;
+							}
+
 						}
 
 					}
-
 				}
 			}
 		}
