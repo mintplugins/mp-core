@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 4.6
-Stable tag: 1.0.4.5
+Stable tag: 1.0.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.4.6 = December 6, 2016
+* Make License keys use ajax to update from plugins page
 
 1.0.4.5 = December 5, 2016
 * Fix: Issues with updates and caching.
