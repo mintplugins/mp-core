@@ -21,6 +21,7 @@ jQuery(document).ready(function($){
 		  software_name: mp_core_update_plugin_vars.name_slug,
 		  software_api_url: mp_core_update_plugin_vars.api_url,
 		  software_license_key: $( '[name="' + mp_core_update_plugin_vars.name_slug + '_license_key' + '"]' ).val(),
+		  get_license_link: $( '#' + mp_core_update_plugin_vars.name_slug + '-plugin-license-wrap .mp-get-license-link' ).attr( 'href' )
 	  }
 
 	  //Ajax verify license

@@ -565,7 +565,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$status = get_option( $args['software_name_slug'] . '_license_status_valid' );
 
 			//Get license link:
-			$get_license_link = !empty( $api_response->get_license ) ? '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL;
+			$get_license_link = !empty( $api_response->get_license ) ? '<a class="mp-get-license-link" href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL;
 
 			?>
 			<div id="<?php echo $args['software_name_slug']; ?>-plugin-license-wrap" class="wrap mp-core-plugin-license-wrap">
@@ -796,13 +796,16 @@ function mp_core_ajax_license_capture(){
 		'software_store_license' => true,
 	);
 
+	//Get license link:
+	$get_license_link = !empty( $_POST['get_license_link'] ) ? '<a class="mp-get-license-link" href="' . $_POST['get_license_link'] . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL;
+
 	$status = mp_core_verify_license( $args );
 
 	echo json_encode( array(
 		'success' => true,
 		'red_light_green_light_output' => mp_core_true_false_light( array(
 			'value' => $status,
-			'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') ),
+			'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $get_license_link ),
 			'echo' => false
 			)
 		)
