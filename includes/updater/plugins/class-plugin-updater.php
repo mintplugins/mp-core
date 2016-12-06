@@ -498,7 +498,6 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 					'ajax_nonce_value' => wp_create_nonce( 'mp-core-verify-license-nonce' ),
 					'name_slug' => $args['software_name_slug'],
 					'api_url' => $args['software_api_url'],
-					'get_license_link' => !empty( $api_response->get_license ) ? '<a href="' . $api_response->get_license . '" target="_blank" >' . __( 'Get License', 'mp_core' ) . '</a>' : NULL,
 				)
 			);
 
@@ -576,7 +575,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 				<input style="float:left; margin-right:10px;" id="<?php echo $args['software_name_slug']; ?>_license_key" name="<?php echo $args['software_name_slug']; ?>_license_key" type="text" class="regular-text" value="<?php esc_attr_e( $license_key ); ?>" />
 				<?php mp_core_true_false_light( array(
 					'value' => $status,
-					'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $get_license_link ) ) ); 
+					'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $get_license_link ) ) );
 				?>
 
 				<div class="button button-primary <?php echo $args['software_name_slug']; ?>-submit"><?php echo __( 'Submit License', 'mp_core' ); ?></div>
@@ -803,7 +802,7 @@ function mp_core_ajax_license_capture(){
 		'success' => true,
 		'red_light_green_light_output' => mp_core_true_false_light( array(
 			'value' => $status,
-			'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') . $_POST['get_license_link'] ),
+			'description' => ' ' . ( $status == true ? __('Auto-updates enabled.', 'mp_core') : __('This license is not valid! ', 'mp_core') ),
 			'echo' => false
 			)
 		)
