@@ -407,6 +407,7 @@ function mp_core_true_false_light($args = array() ) {
 		'name'        => '',
 		'value'       => '',
 		'description' => '',
+		'echo' => true
 	);
 
 	$args = wp_parse_args( $args, $defaults );
@@ -414,12 +415,17 @@ function mp_core_true_false_light($args = array() ) {
 
 	$class = $value == true ? 'mp-core-green-light' : 'mp-core-red-light';
 
-	?>
-	<div class="mp-core-true-false-light">
-		<div class="<?php echo $class; ?>"></div>
-		<?php echo $description; ?>
-	</div>
-	<?php
+	$html_output = '<div class="mp-core-true-false-light">';
+		$html_output .= '<div class="' . $class . '"></div>';
+		$html_output .= $description;
+	$html_output .= '</div>';
+
+	if ( $args['echo'] ){
+		echo $html_output;
+	}
+
+	return $html_output;
+
 }
 
 /**
