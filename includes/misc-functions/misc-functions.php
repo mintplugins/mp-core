@@ -1290,3 +1290,19 @@ function mp_core_php_info_test(){
 	}
 }
 add_action( 'admin_init', 'mp_core_php_info_test' );
+
+/**
+ * A shortcode that can be used to embed owmeddable stuff. Use instead of [embed] in places that are not run through the_content filter.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
+function mp_core_embed_shortcode( $atts ) {
+
+	$vars = shortcode_atts( array('url' => NULL), $atts );
+
+	return mp_core_oembed_get( $vars['url'] );
+
+}
+add_shortcode( 'mp_core_oembed', 'mp_core_embed_shortcode' );
