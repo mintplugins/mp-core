@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.7
-Stable tag: 1.0.4.7
+Tested up to: 4.9.4
+Stable tag: 1.0.4.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,12 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.4.8 = March 7, 2018
+* Fix: curl fallback issues with allow_url_fopen
+* Fix: bulk-plugin-deactivation nonce failing error
+* Removed: references to deprecated screen_icon function
+* Added: mp_core_oembed shortcode
 
 1.0.4.7 = March 17, 2017
 * Add function exist checks to retina resizer
