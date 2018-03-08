@@ -108,7 +108,7 @@ function mp_core_listen_for_license_and_get_validity( $plugin_args ){
 	$plugin_name_slug = sanitize_title($plugin_args['plugin_name']);
 
 	//If there's a license waiting in the $_POST var for this plugin
-	if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) ) {
+	if( isset( $_POST[ $plugin_name_slug . '_license_key' ] ) && !isset( $_POST['action'] ) ) {
 
 		//Check nonce
 		if( ! check_admin_referer( $plugin_name_slug . '_nonce', $plugin_name_slug . '_nonce' ) )
