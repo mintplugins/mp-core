@@ -440,7 +440,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Updater' ) ){
 			$software_name_slug = sanitize_title( $args['software_name'] );
 
 			//Listen for our activate button to be clicked
-			if( isset( $_POST[ $software_name_slug . '_license_key' ] ) ) {
+			if( isset( $_POST[ $software_name_slug . '_license_key' ] ) && ! isset( $_POST['action'] ) ) {
 
 				//If it has, store it in the license_key variable
 				$license_key = $_POST[ $software_name_slug . '_license_key' ];
