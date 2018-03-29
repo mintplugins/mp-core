@@ -303,7 +303,7 @@ if (!class_exists('MP_CORE_Metabox')){
 			$prev_repeater = false;
 
 			//Output a hidden field which will let the "save_post" function know that we want to be saving these fields when the post is saved.
-			echo '<input id="mp_core_save_' . $this->_args['metabox_id'] . '" name="mp_core_save_' . $this->_args['metabox_id'] . '" type="hidden" />';
+			echo '<input id="mp_core_save_' . $this->_args['metabox_id'] . '" name="mp_core_save_' . $this->_args['metabox_id'] . '" type="hidden" value="1" />';
 
 			//Loop through the pre-set, passed-in array of fields
 			foreach ($this->_metabox_items_array as $field){
