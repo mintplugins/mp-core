@@ -1306,3 +1306,15 @@ function mp_core_embed_shortcode( $atts ) {
 
 }
 add_shortcode( 'mp_core_oembed', 'mp_core_embed_shortcode' );
+
+/**
+ * Removal of block_editor editor until it's been properly tested by WP core developers.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
+function mp_core_disable_gutenberg() {
+	 add_filter( 'use_block_editor_for_post_type', '__return_false' );
+}
+add_action( 'admin_init', 'mp_core_disable_gutenberg' );
