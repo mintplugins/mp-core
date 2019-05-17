@@ -541,17 +541,20 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 							//If the currently active theme is not the one we require here
 							if ( $plugin['plugin_name'] != $current_theme_name  ){
 
-								//Output a notice that the theme needs to be activated
-								echo '<div class="updated fade"><p>';
+								// Only show the notice if it is required.
+								if ( $plugin['plugin_required'] ) {
+									//Output a notice that the theme needs to be activated
+									echo '<div class="updated fade"><p>';
 
-									echo $plugin['plugin_message'] . '</p>';
+										echo $plugin['plugin_message'] . '</p>';
 
-									//Activate Theme
-									echo '<a href="' . wp_nonce_url('themes.php?action=activate&stylesheet=' . $theme_slug, 'switch-theme_' . $theme_slug ) . '" title="' . esc_attr__('Activate this theme', 'mp_core') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>';
-									//Dismiss button
-									$this->mp_core_dismiss_button( $plugin );
+										//Activate Theme
+										echo '<a href="' . wp_nonce_url('themes.php?action=activate&stylesheet=' . $theme_slug, 'switch-theme_' . $theme_slug ) . '" title="' . esc_attr__('Activate this theme', 'mp_core') . '" class="button">' . __('Activate', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>';
+										//Dismiss button
+										$this->mp_core_dismiss_button( $plugin );
 
-								echo '</p></div>';
+									echo '</p></div>';
+								}
 							}
 
 							//Stop looping
@@ -651,6 +654,8 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 							//This plugin exists but is just not active
 							if ($plugin_exists && $show_notices){
 
+								// Only show the notice if it is required.
+								if ( $plugin['plugin_required'] ) {
 									echo '<div class="updated fade"><p>';
 
 									echo $plugin['plugin_message'] . '</p>';
@@ -661,6 +666,7 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									$this->mp_core_dismiss_button( $plugin );
 
 									echo '</p></div>';
+								}
 
 							//This plugin doesn't even exist on this server
 							}else{
@@ -671,17 +677,21 @@ if ( !class_exists( 'MP_CORE_Plugin_Checker' ) ){
 									//If we are using this function to output notices
 									if ($show_notices){
 
-										echo '<div class="updated fade"><p>';
+										// Only show the notice if it is required.
+										if ( $plugin['plugin_required'] ) {
 
-										echo $plugin['plugin_message'] . '</p>';
+											echo '<div class="updated fade"><p>';
 
-										//Display a custom download button.";
-										printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' . $plugin_name_slug . '&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
+											echo $plugin['plugin_message'] . '</p>';
 
-										//Dismiss button
-										$this->mp_core_dismiss_button( $plugin );
+											//Display a custom download button.";
+											printf( '<a class="button" href="%s" style="display:inline-block; margin-right:.7em;"> ' . __('Automatically Install', 'mp_core') . ' "' . $plugin['plugin_name'] . '"</a>', admin_url( sprintf( 'options-general.php?page=mp_core_install_plugin_page_' . $plugin_name_slug . '&action=install-plugin&_wpnonce=%s', wp_create_nonce( 'install-plugin' ) ) ) );
 
-										echo '</p></div>';
+											//Dismiss button
+											$this->mp_core_dismiss_button( $plugin );
+
+											echo '</p></div>';
+										}
 
 									}
 
