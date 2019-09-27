@@ -407,7 +407,7 @@ if (!class_exists('MP_CORE_Metabox')){
 										$callback_args = array(
 											'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']',
 											'field_title' =>  $thefield['field_title'],
-											'field_description' => $thefield['field_description'],
+											'field_description' => apply_filters( 'mp_core_field_description_repeater', $thefield['field_description'], $thefield['field_id'], $repeat_counter, $this->_post_id ),
 											'field_value' => $field_value,
 											'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater',
 											'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL,
@@ -474,7 +474,7 @@ if (!class_exists('MP_CORE_Metabox')){
 									$callback_args = array(
 										'field_id' => $thefield['field_repeater'] . '[' . $repeat_counter . '][' . $thefield['field_id'] . ']',
 										'field_title' => $thefield['field_title'],
-										'field_description' => $thefield['field_description'],
+										'field_description' => apply_filters( 'mp_core_field_description_repeater', $thefield['field_description'], $thefield['field_id'], $repeat_counter, $this->_post_id ),
 										'field_value' => isset($thefield['field_value']) ? $thefield['field_value'] : '',
 										'field_input_class' => isset($thefield['field_input_class']) ? 'mp_repeater ' . $thefield['field_input_class'] : 'mp_repeater',
 										'field_container_class' => isset($thefield['field_container_class']) ? $thefield['field_container_class'] : NULL,
