@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 4.9.4
-Stable tag: 1.0.5.1
+Tested up to: 5.4
+Stable tag: 1.0.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,11 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 == Changelog ==
 
-1.0.5.1 = March 15, 2018
+1.0.5.2 = March 14, 2020
+* Fix output for Google Fonts that were incorrectly entered or chosen (fonts chosen don't actually exist).
+* Only show plugin checker notices if the plugin is set to be required.
+
+1.0.5.1 = December 4, 2018
 * Removal of gutenberg (Block Editor) until it’s truly ready
 
 1.0.5.0 = March 15, 2018
