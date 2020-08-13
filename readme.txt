@@ -3,8 +3,8 @@ Contributors: mintplugins, johnstonphilip
 Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
-Tested up to: 5.4
-Stable tag: 1.0.5.2
+Tested up to: 5.5
+Stable tag: 1.0.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.5.3 = August 12, 2020
+* Fix broken metaboxes in WP 5.5
+* Allow full screen for youtube media embeds
 
 1.0.5.2 = March 14, 2020
 * Fix output for Google Fonts that were incorrectly entered or chosen (fonts chosen don't actually exist).
