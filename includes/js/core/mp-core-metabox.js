@@ -497,7 +497,7 @@ jQuery(document).ready(function($){
 	 */
 	 $( document ).on( 'click', '.postbox .handlediv, .postbox .hndle', function( event ){
 
-		var content_placeholder = $(this).parent().find( '.mp_core_metabox_ajax_placeholder');
+		var content_placeholder = $(this).parent().parent().parent().find( '.mp_core_metabox_ajax_placeholder' );
 		var metabox_id = content_placeholder.attr( 'mp_core_metabox_id' ) ? content_placeholder.attr( 'mp_core_metabox_id' ) : false;
 		var post_id = content_placeholder.attr( 'mp_core_post_id' ) ? content_placeholder.attr( 'mp_core_post_id' ) : false;
 
