@@ -1318,3 +1318,30 @@ function mp_core_disable_gutenberg() {
 	 add_filter( 'use_block_editor_for_post_type', '__return_false' );
 }
 add_action( 'admin_init', 'mp_core_disable_gutenberg' );
+
+/**
+ * Remove WP Core global styles output on frontend.
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
+function mp_core_remove_global_styles() {
+	remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
+	remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+}
+add_action('after_setup_theme', 'mp_core_remove_global_styles', 10, 0);
+
+/**
+ * Remove Gutenberg Block Library CSS from loading on the frontend
+ *
+ * @access   public
+ * @since    1.0.0
+ * @return   void
+ */
+function mp_core_remove_wp_block_library_css(){
+    wp_dequeue_style( 'wp-block-library' );
+    wp_dequeue_style( 'wp-block-library-theme' );
+    wp_dequeue_style( 'wc-blocks-style' ); // Remove WooCommerce block CSS
+} 
+add_action( 'wp_enqueue_scripts', 'smartwp_remove_wp_block_library_css', 100 );
