@@ -4,7 +4,7 @@ Donate link: http://mintplugins.com/
 Tags: Core, Functions, Classes, Utility
 Requires at least: 3.5
 Tested up to: 5.9
-Stable tag: 1.0.5.5
+Stable tag: 1.0.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,9 @@ See full instructions at https://mintplugins.com/doc/mp-core-api/
 
 
 == Changelog ==
+
+1.0.5.6 = April 20, 2022
+Fix incorrect function name in hook call, resolve warning.
 
 1.0.5.5 = April 4, 2022
 * Remove unneeded CSS on front-end from Gutenberg.
