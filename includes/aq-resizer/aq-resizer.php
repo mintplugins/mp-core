@@ -151,6 +151,10 @@ if ( !function_exists( 'mp_aq_resize' ) ){
 		//get image size after cropping
 		$dims = image_resize_dimensions($orig_w, $orig_h, $aq_width, $aq_height, $crop);
 
+		if ( ! $dims ) {
+			return $url;
+		}
+	
 		$dst_w = $dims[4];
 		$dst_h = $dims[5];
 

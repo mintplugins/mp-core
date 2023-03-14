@@ -49,9 +49,14 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 	//get the post thumbnail for this post
 	$image_id = get_post_thumbnail_id($post_id);
 
-	if ($image_id != ""){
+	if ( $image_id ){
 
 		$image_url = wp_get_attachment_image_src($image_id,'full');
+
+		if ( ! $image_url) {
+			return false;
+		}
+
 		$image_url = $image_url[0];
 
 		if (is_ssl()) {
@@ -61,6 +66,8 @@ function mp_core_the_featured_image( $post_id = NULL, $width = NULL, $height = N
 
 		return $before . mp_aq_resize( $image_url, $width, $height, $crop ) . $after;
 	}
+
+	return false;
 
 }
 
